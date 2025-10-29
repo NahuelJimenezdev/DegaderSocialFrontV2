@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "nombre": "Fe en tiempos difíciles.mp4",
+    "tipo": "video",
+    "autor": "Pastor Juan Pérez",
+    "fecha": "21 de Mayo, 2024",
+    "descripcion": "En 'Fe en tiempos difíciles', el Pastor Juan Pérez ofrece una reflexión profunda sobre cómo mantener la confianza en Dios cuando enfrentamos pruebas y adversidades. Incluye testimonios y herramientas prácticas para fortalecer la fe en medio de la incertidumbre."
+  },
+  {
+    "id": 2,
+    "nombre": "Esperanza en la tormenta.mp3",
+    "tipo": "audio",
+    "autor": "Pastor Juan Pérez",
+    "fecha": "21 de Mayo, 2024",
+    "descripcion": "Este mensaje, 'Esperanza en la tormenta', explora cómo encontrar paz y esperanza espiritual aun cuando la vida parece caótica. El Pastor Juan Pérez comparte pasajes bíblicos y consejos para sostener el ánimo durante las dificultades."
+  },
+  {
+    "id": 3,
+    "nombre": "Predicación del Domingo.pdf",
+    "tipo": "documento",
+    "autor": "Pastor Juan Pérez",
+    "fecha": "21 de Mayo, 2024",
+    "descripcion": "La 'Predicación del Domingo' recopila las enseñanzas dominicales del Pastor Juan Pérez, ofreciendo reflexiones bíblicas y aplicaciones prácticas para la semana. Ideal para estudio personal o grupos pequeños que buscan profundizar en la Palabra."
+  },
+  {
+    "id": 4,
+    "nombre": "Reflexiones para la familia.mp4",
+    "tipo": "video",
+    "autor": "Pastora María López",
+    "fecha": "28 de Mayo, 2024",
+    "descripcion": "Reflexiones prácticas para fortalecer los lazos familiares y vivir la fe en el hogar. Mensajes breves con ejemplos y aplicaciones para padres e hijos."
+  },
+  {
+    "id": 5,
+    "nombre": "Corazón agradecido.mp3",
+    "tipo": "audio",
+    "autor": "Hna. Ana García",
+    "fecha": "28 de Mayo, 2024",
+    "descripcion": "Una meditación sobre la gratitud como postura espiritual. Incluye oraciones y cantos suaves para fomentar un espíritu de agradecimiento diario."
+  },
+  {
+    "id": 6,
+    "nombre": "Estudio bíblico avanzado.pdf",
+    "tipo": "documento",
+    "autor": "Equipo de Formación",
+    "fecha": "28 de Mayo, 2024",
+    "descripcion": "Material de estudio profundo sobre pasajes clave, con preguntas para discusión en grupos pequeños y recursos para ampliar la comprensión teológica."
+  }
+]
