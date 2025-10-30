@@ -21,7 +21,7 @@ const Sidebar = () => {
             <NavItem to="/iglesia" icon={Building2} label="Iglesia" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/mis-carpetas" icon={Folder} label="Mis Carpetas" />
+            <NavItem to="/carpetas" icon={Folder} label="Mis Carpetas" />
           </div>
           <div className="sidebar-items">
             <NavItem to="/perfil" icon={User} label="Perfil" />

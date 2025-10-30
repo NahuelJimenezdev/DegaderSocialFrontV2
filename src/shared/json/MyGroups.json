@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "icon": "music_note",
+    "title": "Grupo de Alabanza",
+    "desc": "Organización para los ensayos y eventos del equipo de alabanza.",
+    "members": "15 miembros",
+    "date": "12 sep 2025",
+    "color": "from-indigo-500 to-purple-500",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuCGBFDTJsTlCjFh_8MQJGEl-L-RvMYjH-awZo7olJvcyUOJmpXVrmHIGgBHk3O0CSZrZlqEwrRnmpwFUmKOH6I-E-mFX8nE0ozRsApNDkqaHaN9fJga6mFEfjSdpO0YVqVcD7svhWGMUW09U0Y1uD9uRBXkeAm69_o_yAyNnGWgC9XoRCkURp9wXiUdSPO948oDVFVRns7TAlzyf79Pw02GRSS7Q3M9aOvn_Qrm0JmXumiL75NSwvHduDM2WAoElbxIED5ntKSFRg8A"
+  },
+  {
+    "id": 2,
+    "icon": "auto_stories",
+    "title": "Estudio Bíblico",
+    "desc": "Grupo de estudio semanal de las escrituras.",
+    "members": "21 miembros",
+    "date": "01 jul 2025",
+    "color": "from-green-500 to-emerald-600",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuBw93nZzGc8FqU5VbYOQgMLSZwo__Yk3p3LwvFF43xIeNalVhZt3lU0yt9wSvVW6AarSsJeWaFpdoAmDC3xcZp8o0J4zyTurb4Eb3nRcwK2AotCpIewXZC16VmNHk6xt5ceQ92J21Sejal0s9WdCD9w_vMWhhSgqYP5sFndQPUGsiJwZnEB10yYQKFmzdA17iyjIwZpzJDI1TVpFMX21AGhwQyWaSCru-0c0UAFHX4DMyuR0XOxK6DlmAQox1G4PL6R228Ysb6lPSfk"
+  }
+]

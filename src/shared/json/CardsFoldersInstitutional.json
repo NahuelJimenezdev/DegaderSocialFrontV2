@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Comunicaciones Institucionales",
+    "subtitle": "Protocolos y documentos oficiales",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuDMs09_KzPB8X-V3Pk5cgDq_8HbGVajDH2WlchGaYeBJtbdKH_W3Dx6IqMbaamFLde6sqkhjd50EOXIl5L70NRgPA2QPYsYTgqhhfS0YgxSgyTUHpkH3xE3TrLpRFLw0H13-pzHGSb4ddvJAtgExODzgn0e6LW1jSBk9bskJAIXMV8Dg5mVHJzopn6sFEnXoYAztkqyWwZGUKCMaAFS4MYB0XkZVI7WBK4ypCYVA-MhAxW9vbHFjxAAAs8vlS3tEXbbgFqewn-vUehs",
+    "iconMain": "badge",
+    "iconFolder": "folder",
+    "color": "from-gray-700/80 to-slate-500",
+    "lastUpdateText": "Actualizado: \"Reglamento interno 2025\"",
+    "timeAgo": "Hace 1 semana"
+  },
+  {
+    "id": 2,
+    "title": "Informes Financieros",
+    "subtitle": "Balances y presupuestos",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuDMs09_KzPB8X-V3Pk5cgDq_8HbGVajDH2WlchGaYeBJtbdKH_W3Dx6IqMbaamFLde6sqkhjd50EOXIl5L70NRgPA2QPYsYTgqhhfS0YgxSgyTUHpkH3xE3TrLpRFLw0H13-pzHGSb4ddvJAtgExODzgn0e6LW1jSBk9bskJAIXMV8Dg5mVHJzopn6sFEnXoYAztkqyWwZGUKCMaAFS4MYB0XkZVI7WBK4ypCYVA-MhAxW9vbHFjxAAAs8vlS3tEXbbgFqewn-vUehs",
+    "iconMain": "payments",
+    "iconFolder": "folder",
+    "color": "from-teal-500/80 to-cyan-400",
+    "lastUpdateText": "Nuevo: \"Reporte trimestral Q3\"",
+    "timeAgo": "Hace 3 días"
+  },
+  {
+    "id": 3,
+    "title": "Proyectos Institucionales",
+    "subtitle": "Iniciativas y alianzas",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuBACCmGFsR17NVQxLiX649MpA1U_woB7qCNSkp3vHthsV8Tv5NGeUWCe8iZl4FUNBRvB8LuXWLFpZKDW3fg4GmWNFnUIusX0TfmKRrZIHChMNjOLnc3_7reSNsDvxV8MiqAlkLsi8rjxmhPN2fmHNIlHGwZ33sASUweuX5OntAl2b0SzfUCtDWjRBJNnBCgGAKZg33UFl24pcGEWSyUvj9SaG13FNkyJbqjzPTtUbQjnvrr_mU-eMziznILZhoFDhpNcQJv_cyeidUJ",
+    "iconMain": "work",
+    "iconFolder": "folder",
+    "color": "from-indigo-500/80 to-blue-500",
+    "lastUpdateText": "Actualizado: \"Plan estratégico 2026\"",
+    "timeAgo": "Hace 2 semanas"
+  }
+]

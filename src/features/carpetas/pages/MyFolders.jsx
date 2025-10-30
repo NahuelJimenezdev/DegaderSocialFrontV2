@@ -2,12 +2,15 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import CarpetaCard from '../components/CarpetaCard'
 import data from '../../../shared/json/CardsFolders.json'
+import groupData from '../../../shared/json/CardsFoldersGroup.json'
+import instData from '../../../shared/json/CardsFoldersInstitutional.json'
 import { CalendarDays, FileText, FolderKanban, Image, Users, Wallet } from 'lucide-react'
 
 const icons = { FileText, FolderKanban, CalendarDays, Users, Wallet, Image }
 const MyFolders = () => {
   const navigate = useNavigate()
   const [view, setView] = useState('Grid')
+  const [section, setSection] = useState('Mis Carpetas')
   const gridClasses =
     view === 'Grid'
       ? 'grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'
@@ -27,8 +30,14 @@ const MyFolders = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
-          <div className="flex gap-4 p-4 rounded-xl cursor-pointer bg-primary text-white shadow-lg">
+        <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div
+            onClick={() => setSection('Mis Carpetas')}
+            className={`flex gap-4 p-4 rounded-xl cursor-pointer ${section === 'Mis Carpetas'
+                ? 'bg-primary text-white shadow-lg'
+                : 'bg-white dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-transparent hover:border-primary/50 dark:hover:border-primary/50'
+              }`}
+          >
             <span className="material-symbols-outlined text-2xl">folder</span>
             <div>
               <p className="font-bold">Mis Carpetas</p>
@@ -36,7 +45,13 @@ const MyFolders = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 p-4 rounded-xl cursor-pointer bg-white dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-transparent hover:border-primary/50 dark:hover:border-primary/50">
+          <div
+            onClick={() => setSection('Carpetas Grupales')}
+            className={`flex gap-4 p-4 rounded-xl cursor-pointer ${section === 'Carpetas Grupales'
+                ? 'bg-primary text-white shadow-lg'
+                : 'bg-white dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-transparent hover:border-primary/50 dark:hover:border-primary/50'
+              }`}
+          >
             <span className="material-symbols-outlined text-2xl text-[#6B7280] dark:text-[#9CA3AF]">group</span>
             <div>
               <p className="font-bold text-[#1F2937] dark:text-[#F9FAFB]">Carpetas Grupales</p>
@@ -44,18 +59,19 @@ const MyFolders = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 p-4 rounded-xl cursor-pointer bg-white dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-transparent hover:border-primary/50 dark:hover:border-primary/50">
+          <div
+            onClick={() => setSection('Institucionales')}
+            className={`flex gap-4 p-4 rounded-xl cursor-pointer ${section === 'Institucionales'
+                ? 'bg-primary text-white shadow-lg'
+                : 'bg-white dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-transparent hover:border-primary/50 dark:hover:border-primary/50'
+              }`}
+          >
             <span className="material-symbols-outlined text-2xl text-[#6B7280] dark:text-[#9CA3AF]">lock</span>
             <div>
               <p className="font-bold text-[#1F2937] dark:text-[#F9FAFB]">Institucionales</p>
               <p className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">Carpetas oficiales de la iglesia</p>
             </div>
           </div>
-        </div>
-        <div class="flex items-center gap-2 text-sm text-[#6B7280] dark:text-[#9CA3AF]">
-          <a class="hover:text-primary" href="#">Mis Carpetas</a>
-          <span class="material-symbols-outlined text-base">chevron_right</span>
-          <span class="font-semibold text-[#1F2937] dark:text-[#F9FAFB]">Sermones</span>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex-grow max-w-md">
@@ -108,10 +124,15 @@ const MyFolders = () => {
 
         {/* Tarjetas */}
         <div className={gridClasses}>
-          {data.map(folder => (
+          {(section === 'Mis Carpetas' ? data : section === 'Carpetas Grupales' ? groupData : instData).map(folder => (
             <div
               key={folder.id}
-              onClick={() => navigate(`/folder/${folder.id}`)}
+              onClick={() =>
+                navigate(
+                  `/folder/${section === 'Mis Carpetas' ? folder.id : section === 'Carpetas Grupales' ? `g-${folder.id}` : `i-${folder.id}`
+                  }`
+                )
+              }
               className="flex flex-col bg-white dark:bg-[#1F2937] rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer"
             >
               {/* HEADER con thumbnail */}

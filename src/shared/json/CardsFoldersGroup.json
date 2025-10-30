@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "title": "Escuela Dominical",
+    "subtitle": "Materiales y clases para niños",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuBfQkhUs6mD9iL7Q4xIeqYpGJ8cHeWWepmO7ZpC0ZHCy_F3GZ6zKqZ3Xq7cUwUvdIEaNfD41B5CuBnHBtAwcIT3L5ZJwB_oq3zpr1aDyvnG6dcIRk1wRY9SPLvYf9A3qYcDrHUQzZtHu2W7LixkSz2-5KcA7cZBvABEdO4r1ZqBhGfOCM5UNBG1XxYzQJY3yOZgkfa2U",
+    "iconMain": "school",
+    "iconFolder": "folder",
+    "color": "from-yellow-400/80 to-orange-400",
+    "lastUpdateText": "Nuevo: \"Guía de enseñanza: Parábolas\"",
+    "timeAgo": "Hoy"
+  },
+  {
+    "id": 2,
+    "title": "Músicos",
+    "subtitle": "Ensayos y repertorio",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuCWb7uX8AAmL-WRWUAhcwTdkcTxEq4kDaPZ0y7hn0yo_lYk3Q9c2nLhGuhgZP0NlKx_pLC8xZ3s47QqdcJP4xYZv3oRQhwO3aP2OETqzmtQp1b7XxR9qkJZ8FYChZJqvvq1LPUUUKNRHhTzyEn7Q8o5KjqwZftz0_tJvnPQjVdP3D5cp",
+    "iconMain": "music_note",
+    "iconFolder": "folder",
+    "color": "from-indigo-500/80 to-purple-400",
+    "lastUpdateText": "Actualizado: \"Lista de canciones noviembre\"",
+    "timeAgo": "Hace 2 días"
+  },
+  {
+    "id": 3,
+    "title": "Evangelismo",
+    "subtitle": "Campañas y misiones",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuB2WOl7Ug6u3zEyD_8H2cmfPIF4h7D7apGQGcsqP0xJ2TtUcbJwlCulbgrq8gqWTo7Rf1bm23G3M0Xq9Z1e2Q69yO7lRZg3z19sEt53cyLQHx5Q3uqwhKX9Kp4ac7spBIlOe0Jv2o5o7cm23lZcDq2ZfVpq7KmQzZkqzL",
+    "iconMain": "public",
+    "iconFolder": "folder",
+    "color": "from-green-500/80 to-emerald-400",
+    "lastUpdateText": "Próximo: \"Jornada evangelística en el parque\"",
+    "timeAgo": "Mañana"
+  },
+  {
+    "id": 4,
+    "title": "Intercesión",
+    "subtitle": "Reuniones y cadenas de oración",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuCY8k7v0D7zO9xFzzrMSLO3zXZceVvP0P4uXj4jupwh0fKZ2f8K0r7rfHg1ufW3tr4vM3FqG0i0wRRoKMbK4zZ1MQ9YxM6z1F6GsmK8oZkFhTn3vMejmn6C5c2LfX4H7Q7Gk4lJ92l3Qj",
+    "iconMain": "hands_prayer",
+    "iconFolder": "folder",
+    "color": "from-blue-500/80 to-cyan-400",
+    "lastUpdateText": "Actualizado: \"Lista de peticiones semanales\"",
+    "timeAgo": "Hace 3 días"
+  },
+  {
+    "id": 5,
+    "title": "Jóvenes",
+    "subtitle": "Reuniones, temas y dinámicas",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5uGZcJvQF1r5sNhSc2q8kTDFNnbmS-ZT-VZ3wNTRFi8xkArb1d1U7SWRUhJZVbzRZbsmt8Z6M6Hu53NnJc2xN9VNRN8p2DRYX6Z8bnK1kFQlq3V2MFxxmDTVR_fyRa6x0LLnA8A1eQ7QZBw",
+    "iconMain": "group",
+    "iconFolder": "folder",
+    "color": "from-pink-500/80 to-red-400",
+    "lastUpdateText": "Nuevo: \"Tema del mes: Identidad en Cristo\"",
+    "timeAgo": "Ayer"
+  },
+  {
+    "id": 6,
+    "title": "Medios y Comunicación",
+    "subtitle": "Diseños, redes y transmisiones",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuDfsa8gRj2eX7dp0h0v1Kq8mRpBdD6y4JX2m1HgM1JvGONJ0uL7eQZ4pCtKHxvX60AmM1UwF72Rt8WYoFbPUGJ2oMnV_XToLqKQURDScGRpWqJqzKFD6xCHn8OcQ2kmq",
+    "iconMain": "camera_alt",
+    "iconFolder": "folder",
+    "color": "from-gray-500/80 to-slate-400",
+    "lastUpdateText": "Actualizado: \"Banner para transmisión dominical\"",
+    "timeAgo": "Hace 5 días"
+  }
+]
