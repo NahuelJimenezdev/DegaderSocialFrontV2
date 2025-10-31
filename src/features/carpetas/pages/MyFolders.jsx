@@ -129,7 +129,7 @@ const MyFolders = () => {
               key={folder.id}
               onClick={() =>
                 navigate(
-                  `/folder/${section === 'Mis Carpetas' ? folder.id : section === 'Carpetas Grupales' ? `g-${folder.id}` : `i-${folder.id}`
+                  `/Mis_carpetas/${section === 'Mis Carpetas' ? folder.id : section === 'Carpetas Grupales' ? `g-${folder.id}` : `i-${folder.id}`
                   }`
                 )
               }

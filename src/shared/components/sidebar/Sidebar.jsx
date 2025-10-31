@@ -15,13 +15,13 @@ const Sidebar = () => {
             <NavItem to="/amigos" icon={Users} label="Amigos" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/grupos" icon={Users} label="Grupos" />
+            <NavItem to="/Mis_grupos" icon={Users} label="Grupos" />
           </div>
           <div className="sidebar-items">
             <NavItem to="/iglesia" icon={Building2} label="Iglesia" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/carpetas" icon={Folder} label="Mis Carpetas" />
+            <NavItem to="/Mis_carpetas" icon={Folder} label="Mis Carpetas" />
           </div>
           <div className="sidebar-items">
             <NavItem to="/perfil" icon={User} label="Perfil" />

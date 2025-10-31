@@ -153,8 +153,11 @@ body {
   margin-right: 350px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 2rem;
+  /* padding: 2rem; */
   background-color: #0a0e27;
+}
+.main-content.full-width {
+  margin-right: 0;
 }
 
 .main-content::-webkit-scrollbar {

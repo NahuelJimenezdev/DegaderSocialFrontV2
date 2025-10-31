@@ -94,9 +94,7 @@ const GruposPages = () => {
           {groups.map((group) => (
             <div
               key={group.id}
-              onClick={() =>
-                section === "Mis grupos" && navigate(`/group/${group.id}`)
-              }
+              onClick={() => section === "Mis grupos" && navigate(`/Mis_grupos/${group.id}`)}
               className="flex flex-col bg-white dark:bg-[#1F2937] rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer"
             >
               <div
