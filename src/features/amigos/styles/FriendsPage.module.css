@@ -1,0 +1,449 @@
+.container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.friendsCard {
+  background: var(--surface);
+  border: 1px solid var(--border) !important;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--primary-10);
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.searchIcon {
+  color: var(--muted);
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.tabsRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.tab,
+.tabActive {
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 13px;
+  /* background: var(--info); */
+}
+
+.tab {
+  background: var(--primary-10);
+  color: var(--text);
+  border: 1px solid transparent;
+}
+
+.tab:focus,
+.tab:hover {
+  outline: none;
+  box-shadow: 0 6px 14px rgba(2, 6, 23, 0.04);
+}
+
+.tabActive {
+  background: var(--primary-10);
+  color: var(--primary);
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+
+.tabCityWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  /* necesario para posicionar el dropdown absolute */
+}
+
+.cityDropdownBtn {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.cityLabel {
+  font-size: 13px;
+  color: var(--muted);
+  margin-right: 8px;
+}
+
+/* Dropdown menu para criterios de ciudad/provincia/país */
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 200px;
+  background: var(--bg-primary);
+  box-shadow: 0 8px 24px rgba(16, 34, 114, 0.351);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  z-index: 1000;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownItem {
+  background: var(--bg-primary);
+  border: none;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.dropdownItem:hover {
+  background: rgba(2, 6, 23, 0.04);
+}
+
+.dropdownActive {
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .dropdownMenu {
+    position: fixed;
+    top: 64px;
+    left: 8px;
+    right: 8px;
+    min-width: unset;
+    max-width: unset;
+    width: auto;
+  }
+}
+
+.list {
+  max-height: 420px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background .15s ease;
+  cursor: pointer;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.item+.item {
+  margin-top: 8px;
+}
+
+.item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarWrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+
+.onlineBadge {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 2px solid var(--surface);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.subtitle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.onlineText {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.offlineText {
+  color: var(--muted);
+}
+
+.cityInfo {
+  color: var(--muted);
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+.highlight {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+/* .msgBtn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+} */
+
+.actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.iconBtn {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iconBtn:hover {
+  background: rgba(2, 6, 23, 0.03);
+}
+
+.menuWrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: var(--bg-primary);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(16, 34, 114, 0.268);
+  z-index: 20;
+  min-width: 160px;
+}
+
+
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: rgba(2, 6, 23, 0.03);
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  margin: 18px 0;
+}
+
+.birthday {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-modal);
+  border-radius: 20%;
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.birthdayIcon {
+  color: var(--primary);
+}
+
+/* badge pequeño para pestaña Cumpleaños */
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent, #4f46e5);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tabBadgeCount {
+  line-height: 1;
+}
+
+/* animación pulse/scale para cambios en el contador */
+.tabBadgePulse {
+  animation: tab-badge-pulse 420ms ease-in-out;
+}
+
+@keyframes tab-badge-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.15);
+  }
+
+  60% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* animación de entrada para dropdown */
+.dropdownAnim {
+  animation: dropdownFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 420px) {
+  .friendsCard {
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .name {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+
+  .dropdownMenu,
+  .menu {
+    /* background: var(--primary); */
+    box-shadow: 0 8px 24px rgba(16, 34, 114, 0.092);
+  }
+}

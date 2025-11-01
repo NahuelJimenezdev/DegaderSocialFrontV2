@@ -11,7 +11,8 @@ const AppLayout = () => {
   // Define las rutas donde NO quieres mostrar el QuickSearch
   const hideQuickSearchRoutes = [
     /^\/Mis_grupos\/\d+$/,  // Para /Mis_grupos/1, /Mis_grupos/2, etc.
-    /^\/folder\/\d+$/,      // Para /folder/1, /folder/2, etc.
+    /^\/Mi_iglesia\//,  // Para /Mi_iglesia/1, /Mi_iglesia/2, etc.
+    /^\/Mis_Carpetas\/\d+$/,      // Para /Mis_Carpetas/1, /Mis_Carpetas/2, etc.
     // Agrega más rutas aquí según necesites
   ];
 
