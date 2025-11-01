@@ -1,7 +1,7 @@
 .iglesiaPage {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem;
   color: var(--text-color, #1f2937);
 }
 

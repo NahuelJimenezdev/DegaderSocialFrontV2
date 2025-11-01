@@ -1,0 +1,180 @@
+/* MailComposeModal.module.css */
+
+.modal {
+  position: absolute;
+  right: 2rem;
+  /* right-8 */
+  bottom: 0;
+  width: 600px;
+  height: 550px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  /* surface light */
+  border-radius: 12px 12px 8px 8px;
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.16), 0 6px 16px rgba(37, 99, 235, 0.08);
+  border: 1px solid #e5e7eb;
+  /* border-light */
+  overflow: hidden;
+  z-index: 60;
+  transition: height 200ms ease;
+}
+
+/* Minimized state */
+.minimized {
+  height: 48px;
+  /* approx h-12 */
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background-color: #f3f4f6;
+  /* gray-100 */
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  /* text dark */
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* header icon buttons */
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+  color: #475569;
+}
+
+.iconBtn:hover {
+  background-color: #e6edf9;
+  /* subtle hover */
+}
+
+/* Content (when expanded) */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  /* allow proper flex scrolling */
+}
+
+.field {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px 14px;
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+/* Textarea area */
+.editor {
+  padding: 12px 14px;
+  flex: 1;
+  min-height: 0;
+}
+
+.textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: transparent;
+  line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid #e5e7eb;
+  background: transparent;
+}
+
+.sendBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  background-color: #2563eb;
+  /* primary */
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.16);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.sendBtn:active {
+  transform: translateY(1px) scale(0.998);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #475569;
+}
+
+.iconAction {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.iconAction:hover {
+  background-color: #eef2ff;
+  color: #1e3a8a;
+}
+
+/* small responsive tweak */
+@media (max-width: 720px) {
+  .modal {
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+  }
+}

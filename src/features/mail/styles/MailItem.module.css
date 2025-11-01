@@ -1,0 +1,81 @@
+/* MailItem.module.css */
+
+.mailItem {
+  padding: 1rem;
+  /* p-4 */
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+  background: transparent;
+}
+
+/* hover similar a hover:bg-primary/5 */
+.mailItem:hover {
+  background-color: rgba(59, 130, 246, 0.06);
+  /* primary 3B82F6 at 6% */
+}
+
+/* estado seleccionado (bg-primary/10) */
+.active {
+  background-color: rgba(59, 130, 246, 0.12);
+  /* primary at 12% */
+}
+
+/* fila superior: sender + time */
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* sender estilo (font-bold text-sm truncate) */
+.sender {
+  font-weight: 700;
+  font-size: 0.875rem;
+  /* text-sm */
+  color: #0f172a;
+  /* dark text */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  flex: 1;
+}
+
+/* cuando el item está activo, el sender toma color primary */
+.active .sender {
+  color: #2563eb;
+  /* primary */
+}
+
+/* time (text-xs) */
+.time {
+  font-size: 0.75rem;
+  /* text-xs */
+  color: #475569;
+  /* slate-600-ish */
+  flex: 0 0 auto;
+  margin-left: 0.5rem;
+}
+
+/* subject (font-semibold mt-1 text-sm truncate) */
+.subject {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #0f172a;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* preview (text-sm mt-1 truncate, subtler color) */
+.preview {
+  color: #64748b;
+  /* slate-500-ish */
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

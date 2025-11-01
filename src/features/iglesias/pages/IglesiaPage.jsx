@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Building2, Calendar, Users, FolderOpen, Mail } from 'lucide-react'
 import styles from '../styles/IglesiaPage.module.css'
+import MailPage from '../../mail/pages/MailPage'
 
 // Tabs principales
 const tabs = [
@@ -91,10 +92,7 @@ export default function IglesiaPage() {
 
       case 'mail':
         return (
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Correo Interno</h3>
-            <p className={styles.cardSubtitle}>Próximamente: Sistema de mensajería interna de la iglesia</p>
-          </div>
+          <MailPage />
         )
 
       default:
@@ -105,7 +103,7 @@ export default function IglesiaPage() {
   return (
     <div className={styles.iglesiaPage}>
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
+      {/* <div className="flex items-center gap-4 mb-8">
         <span className="material-symbols-outlined text-5xl text-primary">church</span>
         <div className="flex flex-col">
           <p className="text-[#1F2937] dark:text-[#F9FAFB] text-4xl font-black leading-tight tracking-[-0.033em]">
@@ -115,7 +113,7 @@ export default function IglesiaPage() {
             Panel de administración y recursos institucionales
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* Tabs */}
       <div className={styles.tabs}>

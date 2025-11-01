@@ -1,0 +1,78 @@
+/* MailDetail.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #ffffff;
+  color: #1f2937;
+  height: 100%;
+  overflow: hidden;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.header {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.subject {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.body {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  line-height: 1.65;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+/* Text hierarchy inside mail */
+.body h1,
+.body h2,
+.body h3 {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.body p {
+  margin-bottom: 0.75rem;
+}
+
+.body ul {
+  list-style: disc;
+  margin-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.body li {
+  margin-bottom: 0.25rem;
+}
+
+.body strong {
+  font-weight: 600;
+}
+
+.body em {
+  font-style: italic;
+}
