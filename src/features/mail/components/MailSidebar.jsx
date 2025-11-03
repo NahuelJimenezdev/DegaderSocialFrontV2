@@ -53,10 +53,6 @@ export default function MailSidebar({ activeSection, onSelectSection, onCompose 
           <span className="material-symbols-outlined">settings</span>
           <span>Ajustes</span>
         </button>
-        <button className={`${styles.footerBtn} ${styles.logout}`}>
-          <span className="material-symbols-outlined">logout</span>
-          <span>Cerrar Sesión</span>
-        </button>
       </div>
     </aside>
   );

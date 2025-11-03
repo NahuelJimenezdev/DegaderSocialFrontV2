@@ -15,10 +15,10 @@ export default function MailPage() {
   const mails = mockMails[activeSection] || [];
 
   return (
-    <div className={`
-      ${style.altura_mail} 
+    <div className="
       flex 
       w-full 
+      h-[75vh]
       relative 
       rounded-xl 
       overflow-hidden 
@@ -28,7 +28,7 @@ export default function MailPage() {
       shadow-[0_2px_10px_rgba(0,0,0,0.1)]
       transition-colors
       duration-300
-    `}>
+    ">
       {/* 📂 Sidebar */}
       <MailSidebar
         activeSection={activeSection}
@@ -44,6 +44,7 @@ export default function MailPage() {
           border-r border-border-light dark:border-border-dark 
           bg-surface-light dark:bg-surface-dark 
           transition-colors
+          overflow-y-auto
           duration-300
         ">
           <MailList

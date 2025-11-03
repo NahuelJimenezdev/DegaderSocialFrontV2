@@ -1,9 +1,7 @@
 .mailList {
-  height: 100%;
-  /* gris muy claro */
-  overflow-y: auto;
+  /* NO establecer height aquí - el padre controla la altura */
   background-color: #f8fafc;
-  border-right: 1px solid #e2e8f0;
+  /* El scroll ya está manejado por el contenedor padre */
   scrollbar-width: thin;
   scrollbar-color: var(--border-dark) transparent;
   transition: background-color 0.3s, color 0.3s;
