@@ -15,16 +15,16 @@ const Sidebar = () => {
             <NavItem to="/amigos" icon={Users} label="Amigos" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/Mis_grupos" icon={() => <span className="material-symbols-outlined">groups</span>} label="Grupos" />
+            <NavItem to="/mis_grupos" icon={() => <span className="material-symbols-outlined">groups</span>} label="Grupos" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/Mi_iglesia" icon={Building2} label="Iglesia" />
+            <NavItem to="/mi_iglesia" icon={Building2} label="Iglesia" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/Mis_carpetas" icon={Folder} label="Mis Carpetas" />
+            <NavItem to="/mis_carpetas" icon={Folder} label="Mis Carpetas" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/perfil" icon={User} label="Perfil" />
+            <NavItem to="/perfil_usuario/" icon={User} label="Perfil" />
           </div>
           {/* <div className="sidebar-items">
           </div> */}

@@ -8,6 +8,7 @@ import GroupDetail from './features/grupos/pages/GroupDetail'
 import IglesiaPage from './features/iglesias/pages/IglesiaPage'
 import MyFolders from './features/carpetas/pages/MyFolders'
 import FolderDetail from './features/carpetas/pages/FolderDetail'
+import ProfilePage from './features/perfilUsuario/page/ProfilePage'
 
 export const router = createBrowserRouter([
   {
@@ -15,11 +16,12 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: ( <App /> ) },
       { path: '/amigos', element: <FriendsPage /> },
-      { path: '/Mis_grupos', element: <GruposPages /> },
-      { path: '/Mis_grupos/:id', element: <GroupDetail /> },
-      { path: '/Mi_iglesia', element: <IglesiaPage /> },
-      { path: '/Mis_carpetas', element: (<MyFolders />) }, 
-      { path: '/Mis_carpetas/:id', element: <FolderDetail /> },
+      { path: '/mis_grupos', element: <GruposPages /> },
+      { path: '/mis_grupos/:id', element: <GroupDetail /> },
+      { path: '/mi_iglesia', element: <IglesiaPage /> },
+      { path: '/mis_carpetas', element: (<MyFolders />) },
+      { path: '/mis_carpetas/:id', element: <FolderDetail /> },
+      { path: '/perfil_usuario/', element: <ProfilePage /> },
     ],
   }
 ])
