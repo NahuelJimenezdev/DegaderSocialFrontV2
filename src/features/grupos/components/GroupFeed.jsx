@@ -1,45 +1,10 @@
-// src/features/grupos/components/GroupFeed.jsx
-import React, { useState } from 'react';
-import FeedPostCard from './FeedPostCard';
+import { useState } from 'react'
+import FeedPostCard from './FeedPostCard'
+import mockPosts from '../../../shared/data/groups/mockGroupPosts.json'
 
 const GroupFeed = ({ groupData }) => {
-  // Datos de ejemplo de publicaciones
-  const [posts] = useState([
-    {
-      id: 1,
-      userName: 'Jane Doe',
-      userAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKi4vYLPeWlFhKz-xu2vUxec0O4srhER-tUMZTnfFuci4bvVxJ0qq0mhvMehdyaR9mlHYzCD8nOG9ghQEWvG7SF3LfPZo7Mo7VBRyVFs4nAZvRLLP1HZ8_xMibGqlZPxUg7yUhg4kumKZn5tb7FcXTPu7kMPCNKdYVvqfNi0Dnfpg5IPBdbpAjAWxCsXBmBjCNMh7YlJTrUcK1xh3SPLkTpOLDeuSRWcwa-JbRUPdMf10IBjczJQM6uOe8rauvDkPiVln6rneeY-8-',
-      timeAgo: '1 day ago',
-      content: 'Had an amazing time at the youth group retreat this weekend! So blessed to be part of this community.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAIcIfh197SK9cUNpSd2OIRAcM-KjFZA1aAsSrvffHbDaxX9SBKMT82jjLukXojexSTZSBArm_R3V8ba4hqPa8VVmsdoHkvmysqO7pIMUV8VmDGyPOnTRP_Dy0EYH-EslnHyL9koLySln6J47ZEES7pR1hD7hbH04cSX4VKyNaGiVBF8YkhU39U9HKcGxZwrdAEt74ZOl6IHclhqBLTuWRnvlEVG2c79Ii0m3K712zAUD5LLj_xf2h_Y71SBBJFL-buEgzUA5YIGIE_',
-      imageAlt: 'Youth group members sitting around a campfire',
-      likes: 12,
-      comments: 3,
-      isLiked: false
-    },
-    {
-      id: 2,
-      userName: 'John Smith',
-      userAvatar: 'https://i.pravatar.cc/150?img=12',
-      timeAgo: '2 days ago',
-      content: '¡Gracias a todos por sus oraciones! Dios es fiel y está obrando en mi vida de maneras increíbles.',
-      likes: 24,
-      comments: 8,
-      isLiked: false
-    },
-    {
-      id: 3,
-      userName: 'María González',
-      userAvatar: 'https://i.pravatar.cc/150?img=5',
-      timeAgo: '3 days ago',
-      content: 'Recordatorio: El próximo estudio bíblico será el viernes a las 7 PM. ¡Nos vemos ahí! 📖✨',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=450&fit=crop',
-      imageAlt: 'Bible study materials',
-      likes: 18,
-      comments: 5,
-      isLiked: true
-    }
-  ]);
+  // Usar datos mock centralizados
+  const [posts] = useState(mockPosts)
 
   const [newPost, setNewPost] = useState('');
 

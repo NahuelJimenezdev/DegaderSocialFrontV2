@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { Building2, Calendar, Users, FolderOpen, Mail } from 'lucide-react'
 import styles from '../styles/IglesiaPage.module.css'
-import MailPage from '../../mail/pages/MailPage'
+import IglesiaInfo from '../components/IglesiaInfo'
+import IglesiaEventos from '../components/IglesiaEventos'
+import IglesiaMiembros from '../components/IglesiaMiembros'
+import IglesiaCarpetas from '../components/IglesiaCarpetas'
+import IglesiaCorreo from '../components/IglesiaCorreo'
+import mockUser from '../../../shared/data/church/mockChurchUser.json'
 
 // Tabs principales
 const tabs = [
@@ -15,88 +20,21 @@ const tabs = [
 export default function IglesiaPage() {
   const [activeTab, setActiveTab] = useState('overview')
 
-  // 🧩 MockUp de usuario institucional
-  const user = {
-    rolUsuario: 'Director de Jóvenes',
-    estructuraOrganizacional: {
-      area: 'Ministerio Juvenil',
-      nivel: 'Regional Norte'
-    }
-  }
-
-  // 🔄 Render dinámico según pestaña activa
+  // Renderizar contenido según pestaña activa
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
-        return (
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Bienvenido a tu Iglesia</h3>
-            <p className={styles.cardSubtitle}>
-              Aquí encontrarás toda la información y recursos de tu comunidad de fe.
-            </p>
-
-            {user?.estructuraOrganizacional && (
-              <div className={styles.userInfo}>
-                <h4 className={styles.sectionTitle}>Tu información institucional</h4>
-                <div className={styles.infoGrid}>
-                  <div className={styles.infoItem}>
-                    <strong>Área:</strong> {user.estructuraOrganizacional.area}
-                  </div>
-                  <div className={styles.infoItem}>
-                    <strong>Nivel:</strong> {user.estructuraOrganizacional.nivel}
-                  </div>
-                  <div className={styles.infoItem}>
-                    <strong>Rol:</strong> {user.rolUsuario}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )
-
+        return <IglesiaInfo user={mockUser} />
       case 'events':
-        return (
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Eventos de la Iglesia</h3>
-            <ul className={styles.list}>
-              <li><strong>Retiro Juvenil:</strong> 15 - 17 Noviembre</li>
-              <li><strong>Conferencia Regional:</strong> 5 Diciembre</li>
-              <li><strong>Ayuno Congregacional:</strong> 12 Diciembre</li>
-            </ul>
-          </div>
-        )
-
+        return <IglesiaEventos />
       case 'members':
-        return (
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Directorio de Miembros</h3>
-            <ul className={styles.list}>
-              <li>Juan Pérez — Líder de Alabanza</li>
-              <li>Ana Gómez — Maestra de Escuela Dominical</li>
-              <li>Carlos Ruiz — Coordinador de Jóvenes</li>
-            </ul>
-          </div>
-        )
-
+        return <IglesiaMiembros />
       case 'folders':
-        return (
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>Carpetas Grupales</h3>
-            <ul className={styles.list}>
-              <li>📁 Recursos Juveniles</li>
-              <li>📁 Material de Oración</li>
-              <li>📁 Planes de Estudio Bíblico</li>
-            </ul>
-          </div>
-        )
-
+        return <IglesiaCarpetas />
       case 'mail':
-        return (
-          <MailPage />
-        )
-
+        return <IglesiaCorreo />
       default:
-        return null
+        return <IglesiaInfo user={mockUser} />
     }
   }
 
