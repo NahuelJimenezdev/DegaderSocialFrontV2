@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "nombre": "Juan Pérez",
+    "avatar": "https://i.pravatar.cc/50?img=30",
+    "rol": "Administrador"
+  },
+  {
+    "id": "2",
+    "nombre": "María González",
+    "avatar": "https://i.pravatar.cc/50?img=31",
+    "rol": "Moderador"
+  },
+  {
+    "id": "3",
+    "nombre": "Pedro López",
+    "avatar": "https://i.pravatar.cc/50?img=32",
+    "rol": "Miembro"
+  }
+]
