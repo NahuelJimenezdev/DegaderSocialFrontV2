@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "title": "Sermones",
+    "subtitle": "Videos y audios",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuD6hOhfuzmvC2AzaW6wefLuvIGDz0XKdU3daFtiypgTb4mav6_-oyWV0svUrpdd-8SxhfbSnuTx9CgeA4PluVBjv5BtF5XXLPI7nyBrBse2bKgmX12Q7sSQi6esK6kqOrVMaHd9r0tCYSmslebe3YycdVhjjFQgRmyU9OEmvWPP55IFjqnh5-nWuGfdCQLTQJB3AT1qIkUQfugtZOE6V62On5GoZwpIudILncpL4myx774Fdq88ypcos1MB-SOaHgInlIBWeCd91VcD",
+    "iconMain": "play_circle",
+    "iconFolder": "folder",
+    "color": "from-primary/80 to-blue-400",
+    "lastUpdateText": "Último: \"Fe en Tiempos de Incertidumbre\"",
+    "timeAgo": "Hace 3 días"
+  },
+  {
+    "id": 2,
+    "title": "Estudios Bíblicos",
+    "subtitle": "PDFs y guías de estudio",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuBw93nZzGc8FqU5VbYOQgMLSZwo__Yk3p3LwvFF43xIeNalVhZt3lU0yt9wSvVW6AarSsJeWaFpdoAmDC3xcZp8o0J4zyTurb4Eb3nRcwK2AotCpIewXZC16VmNHk6xt5ceQ92J21Sejal0s9WdCD9w_vMWhhSgqYP5sFndQPUGsiJwZnEB10yYQKFmzdA17iyjIwZpzJDI1TVpFMX21AGhwQyWaSCru-0c0UAFHX4DMyuR0XOxK6DlmAQox1G4PL6R228Ysb6lPSfk",
+    "iconMain": "description",
+    "iconFolder": "folder",
+    "color": "from-green-500/80 to-green-400",
+    "lastUpdateText": "Nuevo: \"El Libro de Proverbios\"",
+    "timeAgo": "Ayer"
+  },
+  {
+    "id": 3,
+    "title": "Material para Niños",
+    "subtitle": "Actividades y cuentos",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuARA0vGMdVo_BHFZdJqTsqMqA5S9fQrrq1uDxKBxKdVEWJpLbDjCsAbJJrJQDCOgieTg9XTeUgbs7Y5ggawNR5ZNB2EGPGSN_D9zxb3ZssQZwTHye3IywREEE79W79JoKTDKUwSQttBa0Q1uDlLPgpqHfSRV_fZG2zFob43G7R7dIni_R_XT8YjQWzXXV8X7XeztFRKWN5WWY71aGESOhswXYVsiRXoODnEBt_CRV5HbOuRn0xFk0xptBV7ZUwYJQmAHywikBDSzA2B",
+    "iconMain": "palette",
+    "iconFolder": "folder",
+    "color": "from-yellow-500/80 to-orange-400",
+    "lastUpdateText": "Reciente: \"Historias Bíblicas Ilustradas\"",
+    "timeAgo": "Hace 1 semana"
+  },
+  {
+    "id": 4,
+    "title": "Eventos y Actividades",
+    "subtitle": "Calendario y flyers",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuDwbWU0tpbxcVk4TDFKNmfi6ekBH3qWTkTRyEM6gsRxsCmF9A0PEG6Z9S22CK80bNNhIzERG7Ig3UIWmg_4CqmOlKbztPbIDU_-glZDHkfRiVSFu1CZuLsuJVhhn3j4b3rsHW3gGxZXGAT9SxXPDwD2S3iEBeDypwOSaGnbMgeohpcc9f2NBydA7bwnV52IPgF46-OYw1AG5Pxcm2Trh5ZtZXBGioRoc-dWl-7m8D6BUG_4gJ-Ujs79ZGU9lY0HkbXbL19Yqp-9IX3T",
+    "iconMain": "event",
+    "iconFolder": "folder",
+    "color": "from-purple-500/80 to-pink-400",
+    "lastUpdateText": "Próximo: \"Retiro Juvenil\"",
+    "timeAgo": "24 de Mayo"
+  },
+  {
+    "id": 5,
+    "title": "Testimonios",
+    "subtitle": "Historias de fe",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuA_c5yZ9RYTVsMLYssB6NJWrxNeCjSwXvQdRYRrcihNL1WiLjqsGMIWtb5MFYXisMFXyOWyOFoudPgWyIa9hiMW26N031aqqz3V66gmKv6jDsbhYoQmWiQhZbx8wRK0rEnPulaTe2kjF9A_5s4BjJrA0lWabxFScvBBJT21AQnkkwRMn9fUi5UayQH1Mi7Sk1KWOxUb3O_iXHwiMm8CLeR8dc7lyl35sbXogyypnw5JawV2kwAf9gGYjFB1lCnuvJ_lCmQYBdwSZQiy",
+    "iconMain": "format_quote",
+    "iconFolder": "folder",
+    "color": "from-red-500/80 to-pink-500",
+    "lastUpdateText": "Nuevo: \"La historia de Juan P.\"",
+    "timeAgo": "Hoy"
+  },
+  {
+    "id": 6,
+    "title": "Oraciones",
+    "subtitle": "Peticiones y reflexiones",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuBACCmGFsR17NVQxLiX649MpA1U_woB7qCNSkp3vHthsV8Tv5NGeUWCe8iZl4FUNBRvB8LuXWLFpZKDW3fg4GmWNFnUIusX0TfmKRrZIHChMNjOLnc3_7reSNsDvxV8MiqAlkLsi8rjxmhPN2fmHNIlHGwZ33sASUweuX5OntAl2b0SzfUCtDWjRBJNnBCgGAKZg33UFl24pcGEWSyUvj9SaG13FNkyJbqjzPTtUbQjnvrr_mU-eMziznILZhoFDhpNcQJv_cyeidUJ",
+    "iconMain": "self_improvement",
+    "iconFolder": "folder",
+    "color": "from-indigo-500/80 to-blue-500",
+    "lastUpdateText": "Actualizado: \"Peticiones semanales\"",
+    "timeAgo": "Hace 2 días"
+  },
+  {
+    "id": 7,
+    "title": "Finanzas",
+    "subtitle": "Reportes y presupuestos",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuDMs09_KzPB8X-V3Pk5cgDq_8HbGVajDH2WlchGaYeBJtbdKH_W3Dx6IqMbaamFLde6sqkhjd50EOXIl5L70NRgPA2QPYsYTgqhhfS0YgxSgyTUHpkH3xE3TrLpRFLw0H13-pzHGSb4ddvJAtgExODzgn0e6LW1jSBk9bskJAIXMV8Dg5mVHJzopn6sFEnXoYAztkqyWwZGUKCMaAFS4MYB0XkZVI7WBK4ypCYVA-MhAxW9vbHFjxAAAs8vlS3tEXbbgFqewn-vUehs",
+    "iconMain": "payments",
+    "iconFolder": "folder",
+    "color": "from-teal-500/80 to-cyan-500",
+    "lastUpdateText": "Informe: \"Donaciones de Abril\"",
+    "timeAgo": "Hace 1 semana"
+  },
+  {
+    "id": 8,
+    "title": "Voluntariado",
+    "subtitle": "Proyectos y oportunidades",
+    "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuCGBFDTJsTlCjFh_8MQJGEl-L-RvMYjH-awZo7olJvcyUOJmpXVrmHIGgBHk3O0CSZrZlqEwrRnmpwFUmKOH6I-E-mFX8nE0ozRsApNDkqaHaN9fJga6mFEfjSdpO0YVqVcD7svhWGMUW09U0Y1uD9uRBXkeAm69_o_yAyNnGWgC9XoRCkURp9wXiUdSPO948oDVFVRns7TAlzyf79Pw02GRSS7Q3M9aOvn_Qrm0JmXumiL75NSwvHduDM2WAoElbxIED5ntKSFRg8A",
+    "iconMain": "volunteer_activism",
+    "iconFolder": "folder",
+    "color": "from-orange-500/80 to-red-400",
+    "lastUpdateText": "Nueva tarea: \"Ayuda en el Comedor\"",
+    "timeAgo": "Mañana"
+  }
+]

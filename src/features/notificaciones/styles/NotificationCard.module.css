@@ -1,0 +1,373 @@
+/* === ANIMACIONES === */
+.cardAnim {
+  animation: cardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.cardRemove {
+  animation: cardFadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cardFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.88) translateX(20px);
+    height: 0;
+    margin-bottom: 0;
+    padding: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === CARD PRINCIPAL === */
+.card {
+  display: flex;
+  align-items: flex-start;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e4e6ea;
+  padding: 16px;
+  margin-bottom: 8px;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.card:hover {
+  background: #f8f9fa;
+  border-color: #d0d7de;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card.unread {
+  background: #f0f8ff;
+  border-color: #1877f2;
+  box-shadow: 0 0 0 1px rgba(24, 119, 242, 0.1);
+}
+
+.card.unread:hover {
+  background: #e3f2fd;
+}
+
+/* Dark mode */
+:global(.dark) .card {
+  background: #242526;
+  border-color: #3a3b3c;
+}
+
+:global(.dark) .card:hover {
+  background: #3a3b3c;
+  border-color: #4e4f50;
+}
+
+:global(.dark) .card.unread {
+  background: #1a237e;
+  border-color: #3d5afe;
+}
+
+:global(.dark) .card.unread:hover {
+  background: #283593;
+}
+
+/* === CARD PROCESADA/DESHABILITADA === */
+.card.processed {
+  background: #f8f9fa;
+  border-color: #e4e6ea;
+  opacity: 0.6;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card.processed:hover {
+  background: #f8f9fa;
+  border-color: #e4e6ea;
+  transform: none;
+  box-shadow: none;
+}
+
+.card.processed .actionButton {
+  background: #e4e6ea !important;
+  color: #8a8d91 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+.card.processed .userName,
+.card.processed .message {
+  color: #8a8d91;
+}
+
+.card.processed .avatar {
+  filter: grayscale(50%);
+}
+
+/* === INDICADORES === */
+.unreadIndicator {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: #1877f2;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+}
+
+/* === AVATAR === */
+.avatarContainer {
+  flex-shrink: 0;
+  position: relative;
+  margin-right: 12px;
+  margin-left: 16px;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #f0f2f5;
+  transition: transform 0.2s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+}
+
+/* === CONTENIDO === */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 15px;
+  color: #050505;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.userName:hover {
+  color: #1877f2;
+}
+
+:global(.dark) .userName {
+  color: #e4e6ea;
+}
+
+:global(.dark) .userName:hover {
+  color: #58a6ff;
+}
+
+.timeAgo {
+  font-size: 13px;
+  color: #65676b;
+  font-weight: 400;
+}
+
+:global(.dark) .timeAgo {
+  color: #8a8d91;
+}
+
+.message {
+  font-size: 14px;
+  color: #050505;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  word-wrap: break-word;
+}
+
+:global(.dark) .message {
+  color: #b0b3b8;
+}
+
+/* === ACCIONES === */
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.actionButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.actionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.acceptButton {
+  background: #1877f2;
+  color: #ffffff;
+  min-width: 80px;
+}
+
+.acceptButton:hover:not(:disabled) {
+  background: #166fe5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(24, 119, 242, 0.3);
+}
+
+.acceptButton:active {
+  transform: translateY(0);
+}
+
+.rejectButton {
+  background: #e4e6ea;
+  color: #050505;
+  min-width: 72px;
+}
+
+.rejectButton:hover:not(:disabled) {
+  background: #d8dadf;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rejectButton:active {
+  transform: translateY(0);
+}
+
+:global(.dark) .rejectButton {
+  background: #4e4f50;
+  color: #e4e6ea;
+}
+
+:global(.dark) .rejectButton:hover:not(:disabled) {
+  background: #5a5b5c;
+}
+
+/* === MENÚ === */
+.menuButton {
+  padding: 8px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #65676b;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+}
+
+.menuButton:hover {
+  background: #f0f2f5;
+  color: #050505;
+}
+
+:global(.dark) .menuButton {
+  color: #8a8d91;
+}
+
+:global(.dark) .menuButton:hover {
+  background: #3a3b3c;
+  color: #e4e6ea;
+}
+
+/* === SPINNER === */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+  .card {
+    padding: 12px;
+    margin-bottom: 6px;
+  }
+
+  .avatarContainer {
+    margin-right: 10px;
+    margin-left: 12px;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .userName {
+    font-size: 14px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .actionButton {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 28px;
+  }
+
+  .acceptButton {
+    min-width: 70px;
+  }
+
+  .rejectButton {
+    min-width: 64px;
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "nombre": "Ana",
+    "apellido": "García",
+    "avatar": "https://i.pravatar.cc/50?img=10"
+  },
+  {
+    "id": "2",
+    "nombre": "Pedro",
+    "apellido": "López",
+    "avatar": "https://i.pravatar.cc/50?img=11"
+  },
+  {
+    "id": "3",
+    "nombre": "María",
+    "apellido": "González",
+    "avatar": "https://i.pravatar.cc/50?img=12"
+  }
+]

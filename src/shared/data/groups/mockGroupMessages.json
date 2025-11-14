@@ -1,0 +1,60 @@
+{
+  "1": [
+    {
+      "id": 1,
+      "text": "¡Hola a todos! ¿Alguien tiene planes para el próximo encuentro familiar?",
+      "time": "10:30 AM",
+      "isMine": true
+    },
+    {
+      "id": 2,
+      "text": "Yo puedo organizar un asado el sábado. ¿Qué les parece?",
+      "time": "10:35 AM",
+      "isMine": false
+    },
+    {
+      "id": 3,
+      "text": "¡Excelente idea! Contamos contigo entonces.",
+      "time": "10:40 AM",
+      "isMine": true
+    },
+    {
+      "id": 4,
+      "text": "Necesitamos confirmar cuántos seremos para las compras.",
+      "time": "10:45 AM",
+      "isMine": false
+    },
+    {
+      "id": 5,
+      "text": "Yo puedo organizar un asado el sábado. ¿Qué les parece?",
+      "time": "10:35 AM",
+      "isMine": false
+    },
+    {
+      "id": 6,
+      "text": "¡Excelente idea! Contamos contigo entonces.",
+      "time": "10:40 AM",
+      "isMine": true
+    },
+    {
+      "id": 7,
+      "text": "Necesitamos confirmar cuántos seremos para las compras.",
+      "time": "10:45 AM",
+      "isMine": false
+    }
+  ],
+  "2": [
+    {
+      "id": 1,
+      "text": "Hermanos, recordemos el tema de estudio de esta semana.",
+      "time": "09:00 AM",
+      "isMine": false
+    },
+    {
+      "id": 2,
+      "text": "¿Alguien tiene dudas sobre el pasaje de hoy?",
+      "time": "09:15 AM",
+      "isMine": true
+    }
+  ]
+}

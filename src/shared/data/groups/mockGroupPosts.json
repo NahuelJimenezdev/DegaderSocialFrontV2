@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "author": "Juan Pérez",
+    "avatar": "https://i.pravatar.cc/50?img=20",
+    "time": "Hace 2 horas",
+    "content": "¡Qué hermoso servicio tuvimos hoy! Dios realmente se movió en medio de nosotros. 🙏",
+    "likes": 12,
+    "comments": 3
+  },
+  {
+    "id": 2,
+    "author": "María González",
+    "avatar": "https://i.pravatar.cc/50?img=21",
+    "time": "Hace 5 horas",
+    "content": "Recordatorio: Ensayo de alabanza este miércoles a las 7 PM. No falten hermanos!",
+    "likes": 8,
+    "comments": 5
+  },
+  {
+    "id": 3,
+    "author": "Carlos Rodríguez",
+    "avatar": "https://i.pravatar.cc/50?img=22",
+    "time": "Ayer",
+    "content": "Gracias por sus oraciones familia. Dios es fiel y ha respondido.",
+    "likes": 25,
+    "comments": 10
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": 3,
+    "icon": "sports_soccer",
+    "title": "Jóvenes en Acción",
+    "desc": "Actividades deportivas y sociales para los jóvenes.",
+    "members": "34 miembros",
+    "date": "05 ago 2025",
+    "color": "from-yellow-500 to-orange-600",
+    "thumbnail": "/img/groups/jovenes.jpg"
+  },
+  {
+    "id": 4,
+    "icon": "notifications",
+    "title": "Familia Jiménez",
+    "desc": "Este grupo es solo para familias y extensiones de Jiménez.",
+    "members": "2 miembros",
+    "date": "18 oct 2025",
+    "color": "from-rose-500 to-pink-600",
+    "thumbnail": "/img/groups/familia.jpg"
+  }
+]

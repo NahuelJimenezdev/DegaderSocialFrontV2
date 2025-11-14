@@ -1,0 +1,38 @@
+.mailList {
+  /* NO establecer height aquí - el padre controla la altura */
+  background-color: #f8fafc;
+  /* El scroll ya está manejado por el contenedor padre */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-dark) transparent;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Scrollbar para Chrome, Edge, Safari */
+.mailList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mailList::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.4);
+  border-radius: 4px;
+}
+
+.mailList::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 120, 120, 0.6);
+}
+
+.mailList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.emptyState {
+  padding: 1.5rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+/* Separador entre mails */
+.mailList>div:not(:last-child) {
+  border-bottom: 1px solid #e2e8f0;
+}

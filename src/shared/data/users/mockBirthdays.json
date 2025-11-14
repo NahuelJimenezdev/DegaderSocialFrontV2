@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "nombre": "Lucía",
+    "apellido": "Fernández",
+    "avatar": "https://i.pravatar.cc/50?img=1",
+    "fechaNacimientoUsuario": "1995-10-31"
+  },
+  {
+    "id": "2",
+    "nombre": "Carlos",
+    "apellido": "Muñoz",
+    "avatar": "https://i.pravatar.cc/50?img=2",
+    "fechaNacimientoUsuario": "1990-10-29"
+  },
+  {
+    "id": "3",
+    "nombre": "Daniela",
+    "apellido": "Ruiz",
+    "avatar": "https://i.pravatar.cc/50?img=3",
+    "fechaNacimientoUsuario": "1998-11-15"
+  },
+  {
+    "id": "4",
+    "nombre": "Joel",
+    "apellido": "Benítez",
+    "avatar": "https://i.pravatar.cc/300?img=4",
+    "fechaNacimientoUsuario": "1993-12-02"
+  },
+  {
+    "id": "5",
+    "nombre": "Fabián",
+    "apellido": "Gómez",
+    "avatar": "https://i.pravatar.cc/301?img=5",
+    "fechaNacimientoUsuario": "1991-10-30"
+  }
+]
