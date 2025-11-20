@@ -14,6 +14,7 @@ import ProtectedRoute from './features/auth/components/ProtectedRoute'
 import ProfilePage from './features/perfilUsuario/page/ProfilePage'
 import MensajesPage from './features/mensajes/pages/MensajesPage'
 import PerfilVisitantePage from './features/perfilVisitante/page/PerfilVisitantePage'
+import { ReunionesPage } from './features/reuniones/pages/ReunionesPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
       { path: '/amigos', element: <FriendsPage /> },
       { path: '/mensajes', element: <MensajesPage /> },
       { path: '/mensajes/:id', element: <MensajesPage /> },
+      { path: '/Mis_reuniones', element: <ReunionesPage /> },
       { path: '/Mis_grupos', element: <GruposPages /> },
       { path: '/Mis_grupos/:id', element: <GroupDetail /> },
       { path: '/Mi_iglesia', element: <IglesiaPage /> },

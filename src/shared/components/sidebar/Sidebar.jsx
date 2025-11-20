@@ -1,4 +1,4 @@
-import { Building2, Folder, Home, Settings, User, Users, MessageCircle } from "lucide-react";
+import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video } from "lucide-react";
 import NavItem from "../navItem/NavItem";
 import styles from './styles/Sidebar.module.css';
 
@@ -16,6 +16,9 @@ const Sidebar = () => {
           </div>
           <div className="sidebar-items">
             <NavItem to="/mensajes" icon={MessageCircle} label="Mensajes" />
+          </div>
+          <div className="sidebar-items">
+            <NavItem to="/Mis_reuniones" icon={Video} label="Mis Reuniones" />
           </div>
           <div className="sidebar-items">
             <NavItem to="/Mis_grupos" icon={() => <span className="material-symbols-outlined">groups</span>} label="Grupos" />

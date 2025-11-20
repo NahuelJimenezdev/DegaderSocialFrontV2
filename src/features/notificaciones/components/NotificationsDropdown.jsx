@@ -379,8 +379,19 @@ export default function NotificationsDropdown() {
     }
   };
 
-  // Manejar navegación al perfil del usuario
+  // Manejar navegación al perfil del usuario o a reuniones
   const handleProfileClick = (notificacion) => {
+    // Si es una notificación de reunión, navegar a reuniones con el meetingId
+    if (notificacion.tipo === 'evento' && notificacion.metadata?.meetingId) {
+      console.log('📅 Navegando a reunión específica:', notificacion.metadata.meetingId);
+      navigate('/Mis_reuniones', {
+        state: { scrollToMeetingId: notificacion.metadata.meetingId }
+      });
+      setOpen(false);
+      return;
+    }
+
+    // Si no, navegar al perfil
     const profileUserId = notificacion.remitenteId?._id ||
       notificacion.remitenteId ||
       notificacion.datos?.fromUserId;
@@ -424,6 +435,20 @@ export default function NotificationsDropdown() {
                   displayName = `${n.emisor?.nombre || ''} ${n.emisor?.apellido || ''}`.trim() || 'Usuario';
                   displayAvatar = n.emisor?.avatar;
                   displayMessage = n.contenido;
+                }
+
+                // Para notificaciones de reuniones (tipo === 'evento')
+                if (n.tipo === 'evento') {
+                  const eventType = n.metadata?.eventType;
+                  const titles = {
+                    meeting_created: 'Nueva Reunión',
+                    meeting_reminder: 'Recordatorio',
+                    meeting_starting: 'Reunión en Curso',
+                    meeting_cancelled: 'Reunión Cancelada'
+                  };
+                  displayName = titles[eventType] || 'Notificación de Reunión';
+                  displayMessage = n.contenido;
+                  displayAvatar = null; // Sin avatar, se mostrará icono
                 }
 
                 return (

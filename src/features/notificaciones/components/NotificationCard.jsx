@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { getAvatarUrl, handleImageError } from '../../../shared/utils/avatarUtils';
+import { Calendar, Clock, XCircle, AlertCircle } from 'lucide-react';
 import styles from '../styles/NotificationCard.module.css';
 
 // Función utilitaria para tiempo relativo
@@ -76,6 +77,28 @@ export default function NotificationCard({
   const isIncomingFriendRequest = tipo === 'amistad' && mensaje?.includes('te envió una solicitud') && !isProcessed;
   const isIncomingGroupRequest = tipo === 'solicitud_grupo' && !isProcessed;
 
+  // Determinar si es una notificación de reunión
+  const isMeetingNotification = tipo === 'evento' && notification?.metadata?.eventType;
+  const meetingEventType = notification?.metadata?.eventType;
+
+  // Obtener icono y estilo para notificaciones de reuniones
+  const getMeetingIcon = () => {
+    switch (meetingEventType) {
+      case 'meeting_created':
+        return { Icon: Calendar, color: '#3b82f6' }; // Azul
+      case 'meeting_reminder':
+        return { Icon: AlertCircle, color: '#eab308' }; // Amarillo
+      case 'meeting_starting':
+        return { Icon: Clock, color: '#22c55e' }; // Verde
+      case 'meeting_cancelled':
+        return { Icon: XCircle, color: '#ef4444' }; // Rojo
+      default:
+        return { Icon: Calendar, color: '#6b7280' }; // Gris
+    }
+  };
+
+  const meetingIconData = isMeetingNotification ? getMeetingIcon() : null;
+
   return (
     <div
       ref={cardRef}
@@ -86,14 +109,30 @@ export default function NotificationCard({
       {/* Indicador de no leído */}
       {!leido && <div className={styles.unreadIndicator} />}
 
-      {/* Avatar */}
+      {/* Avatar o Icono de Reunión */}
       <div className={styles.avatarContainer}>
-        <img
-          src={getAvatarUrl(avatar)}
-          alt={`Foto de perfil de ${nombre}`}
-          className={styles.avatar}
-          onError={handleImageError}
-        />
+        {isMeetingNotification && meetingIconData ? (
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: `${meetingIconData.color}20`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <meetingIconData.Icon size={24} color={meetingIconData.color} />
+          </div>
+        ) : (
+          <img
+            src={getAvatarUrl(avatar)}
+            alt={`Foto de perfil de ${nombre}`}
+            className={styles.avatar}
+            onError={handleImageError}
+          />
+        )}
       </div>
 
       {/* Contenido principal */}
