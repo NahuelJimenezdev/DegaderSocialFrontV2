@@ -12,6 +12,8 @@ const GruposPages = () => {
   const [section, setSection] = useState("Mis grupos");
   const [view, setView] = useState("Grid");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermMyGroups, setSearchTermMyGroups] = useState("");
+  const [searchTermJoinGroups, setSearchTermJoinGroups] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
   // Detectar si es mobile o desktop
@@ -114,10 +116,30 @@ const GruposPages = () => {
     return !isMember;
   });
 
-  // Grupos a mostrar según la sección activa
+  // Filtrar "Mis Grupos" por búsqueda
+  const filteredMyGroups = myGroups.filter((group) => {
+    if (!searchTermMyGroups) return true;
+    const search = searchTermMyGroups.toLowerCase();
+    return (
+      group.nombre?.toLowerCase().includes(search) ||
+      group.descripcion?.toLowerCase().includes(search)
+    );
+  });
+
+  // Filtrar "Grupos para Unirse" por búsqueda
+  const filteredJoinGroups = joinableGroups.filter((group) => {
+    if (!searchTermJoinGroups) return true;
+    const search = searchTermJoinGroups.toLowerCase();
+    return (
+      group.nombre?.toLowerCase().includes(search) ||
+      group.descripcion?.toLowerCase().includes(search)
+    );
+  });
+
+  // Grupos a mostrar según la sección activa (DEPRECATED - ahora usamos las dos columnas)
   const groups = section === "Mis grupos" ? myGroups : joinableGroups;
 
-  // Filtrar por búsqueda
+  // Filtrar por búsqueda (DEPRECATED - ahora usamos filtros separados)
   const filteredGroups = groups.filter((group) => {
     if (!searchTerm) return true;
     const search = searchTerm.toLowerCase();
@@ -209,6 +231,108 @@ const GruposPages = () => {
     setShowCreateModal(false);
     // Cambiar a la sección "Mis grupos" automáticamente
     setSection("Mis grupos");
+  };
+
+  // Renderizar tarjeta de grupo
+  const renderGroupCard = (group, canJoin = false) => {
+    const memberCount = group.miembros?.length || group.members?.length || 0;
+    const groupImage = group.imagen || group.imagePerfilGroup;
+    const hasImage = groupImage && !groupImage.includes('default');
+
+    if (view === "Grid") {
+      // Vista Grid
+      return (
+        <div
+          key={group._id}
+          onClick={() => navigate(`/Mis_grupos/${group._id}`)}
+          className="group relative bg-white dark:bg-[#1F2937] rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+        >
+          {/* Imagen o gradiente */}
+          <div className={`h-32 ${hasImage ? '' : `bg-gradient-to-br ${getGroupColor(group._id)}`}`}>
+            {hasImage ? (
+              <img
+                src={getAvatarUrl(groupImage)}
+                alt={group.nombre}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="material-symbols-outlined text-6xl text-white/80">groups</span>
+              </div>
+            )}
+          </div>
+
+          {/* Contenido */}
+          <div className="p-4">
+            <h3 className="font-semibold text-base text-[#1F2937] dark:text-[#F9FAFB] mb-1 line-clamp-1">
+              {group.nombre}
+            </h3>
+            <p className="text-xs text-[#6B7280] dark:text-[#9CA3AF] mb-3 line-clamp-2">
+              {group.descripcion || 'Sin descripción'}
+            </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1 text-xs text-[#6B7280] dark:text-[#9CA3AF]">
+                <span className="material-symbols-outlined text-sm">group</span>
+                <span>{memberCount} miembros</span>
+              </div>
+              {canJoin && (
+                <button
+                  onClick={(e) => handleJoinGroup(e, group._id)}
+                  className="px-3 py-1 bg-primary text-white text-xs rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  Unirse
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      // Vista List
+      return (
+        <div
+          key={group._id}
+          onClick={() => navigate(`/Mis_grupos/${group._id}`)}
+          className="flex items-center gap-3 p-3 bg-white dark:bg-[#1F2937] rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          {/* Avatar */}
+          <div className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 ${hasImage ? '' : `bg-gradient-to-br ${getGroupColor(group._id)}`}`}>
+            {hasImage ? (
+              <img
+                src={getAvatarUrl(groupImage)}
+                alt={group.nombre}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl text-white">groups</span>
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-sm text-[#1F2937] dark:text-[#F9FAFB] truncate">
+              {group.nombre}
+            </h3>
+            <p className="text-xs text-[#6B7280] dark:text-[#9CA3AF] flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">group</span>
+              {memberCount} miembros
+            </p>
+          </div>
+
+          {/* Botón */}
+          {canJoin && (
+            <button
+              onClick={(e) => handleJoinGroup(e, group._id)}
+              className="px-4 py-2 bg-primary text-white text-xs rounded-md hover:bg-primary/90 transition-colors flex-shrink-0"
+            >
+              Unirse
+            </button>
+          )}
+        </div>
+      );
+    }
   };
 
   return (

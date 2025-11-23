@@ -5,6 +5,7 @@ import NotificationsDropdown from '../../features/notificaciones/components/Noti
 import ProfileDropdown from '../ui/ProfileDropdown';
 import { useAuth } from '../../context/AuthContext';
 import { useMessageCounter } from '../../hooks/useMessageCounter';
+import './Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ const Navbar = () => {
               Degader
             </button>
 
-            {/* SearchBar - Siempre visible */}
-            <div className="flex-1 max-w-lg">
+            {/* SearchBar - Hidden on mobile via CSS */}
+            <div className="navbar-search-container">
               <SearchBar />
             </div>
           </div>

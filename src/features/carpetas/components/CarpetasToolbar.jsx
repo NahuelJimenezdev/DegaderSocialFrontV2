@@ -1,5 +1,6 @@
 import { Search, Grid, List, User, Users, Building2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import '../styles/CarpetasToolbar.css';
 
 const CarpetasToolbar = ({
   busqueda,
@@ -21,110 +22,108 @@ const CarpetasToolbar = ({
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="carpetas-toolbar">
       {/* Buscador */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+      <div className="carpetas-toolbar-search relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <input
           type="text"
           placeholder="Buscar carpetas..."
           value={busqueda}
           onChange={(e) => onBusquedaChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+          className="w-full pl-10 pr-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
         />
       </div>
 
       {/* Filtros y Vista */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-3">
-          {/* Filtros */}
-          <div className="flex-1 overflow-x-auto scrollbar-thin pb-2">
-            <div className="flex gap-2 min-w-max">
-              {/* Todas */}
-              <button
-                onClick={() => onTipoFiltroChange(null)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                  tipoFiltro === null
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                <span>Todas</span>
-              </button>
-
-              {/* Personales */}
-              <button
-                onClick={() => onTipoFiltroChange('personal')}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                  tipoFiltro === 'personal'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {isMobile ? (
-                  <User size={16} />
-                ) : (
-                  <span>Personales</span>
-                )}
-              </button>
-
-              {/* Grupales */}
-              <button
-                onClick={() => onTipoFiltroChange('grupal')}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                  tipoFiltro === 'grupal'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {isMobile ? (
-                  <Users size={16} />
-                ) : (
-                  <span>Grupales</span>
-                )}
-              </button>
-
-              {/* Institucionales */}
-              <button
-                onClick={() => onTipoFiltroChange('institucional')}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                  tipoFiltro === 'institucional'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {isMobile ? (
-                  <Building2 size={16} />
-                ) : (
-                  <span>Institucionales</span>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Vista - Siempre a la derecha */}
-          <div className="flex gap-2 flex-shrink-0 ml-auto">
+      <div className="carpetas-toolbar-controls">
+        {/* Filtros */}
+        <div className="carpetas-toolbar-filters">
+          <div className="carpetas-filter-pills">
+            {/* Todas */}
             <button
-              onClick={() => onVistaChange('grid')}
-              className={`p-2 rounded-lg transition-colors ${
-                vistaActual === 'grid'
-                  ? 'bg-indigo-600 text-white'
+              onClick={() => onTipoFiltroChange(null)}
+              className={`carpetas-filter-pill ${
+                tipoFiltro === null
+                  ? 'bg-indigo-600 text-white shadow-md'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
-              <Grid size={20} />
+              <span>Todas</span>
             </button>
+
+            {/* Personales */}
             <button
-              onClick={() => onVistaChange('list')}
-              className={`p-2 rounded-lg transition-colors ${
-                vistaActual === 'list'
-                  ? 'bg-indigo-600 text-white'
+              onClick={() => onTipoFiltroChange('personal')}
+              className={`carpetas-filter-pill ${
+                tipoFiltro === 'personal'
+                  ? 'bg-indigo-600 text-white shadow-md'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
-              <List size={20} />
+              {isMobile ? (
+                <User />
+              ) : (
+                <span>Personales</span>
+              )}
+            </button>
+
+            {/* Grupales */}
+            <button
+              onClick={() => onTipoFiltroChange('grupal')}
+              className={`carpetas-filter-pill ${
+                tipoFiltro === 'grupal'
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              {isMobile ? (
+                <Users />
+              ) : (
+                <span>Grupales</span>
+              )}
+            </button>
+
+            {/* Institucionales */}
+            <button
+              onClick={() => onTipoFiltroChange('institucional')}
+              className={`carpetas-filter-pill ${
+                tipoFiltro === 'institucional'
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              {isMobile ? (
+                <Building2 />
+              ) : (
+                <span>Institucionales</span>
+              )}
             </button>
           </div>
+        </div>
+
+        {/* Vista - Siempre a la derecha */}
+        <div className="carpetas-toolbar-views">
+          <button
+            onClick={() => onVistaChange('grid')}
+            className={`carpetas-view-btn ${
+              vistaActual === 'grid'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            }`}
+          >
+            <Grid />
+          </button>
+          <button
+            onClick={() => onVistaChange('list')}
+            className={`carpetas-view-btn ${
+              vistaActual === 'list'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            }`}
+          >
+            <List />
+          </button>
         </div>
       </div>
     </div>

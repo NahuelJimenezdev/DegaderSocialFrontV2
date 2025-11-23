@@ -1,0 +1,72 @@
+/* BottomNavbar.css - Instagram-style bottom navigation bar */
+
+/* Desktop/Tablet - Hidden by default */
+.bottom-navbar {
+  display: none;
+}
+
+/* Mobile - Show fixed bottom navbar */
+@media (max-width: 768px) {
+  .bottom-navbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    height: 60px;
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Dark mode support */
+  :global(.dark) .bottom-navbar {
+    background-color: #111827;
+    border-top-color: #1f2937;
+  }
+
+  .bottom-navbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    height: 100%;
+    color: #6b7280;
+    transition: color 0.2s, background-color 0.2s;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0;
+  }
+
+  .bottom-navbar-item:hover {
+    color: #4f46e5;
+    background-color: #f9fafb;
+  }
+
+  .bottom-navbar-item.active {
+    color: #4f46e5;
+  }
+
+  :global(.dark) .bottom-navbar-item {
+    color: #9ca3af;
+  }
+
+  :global(.dark) .bottom-navbar-item:hover {
+    color: #818cf8;
+    background-color: #1f2937;
+  }
+
+  :global(.dark) .bottom-navbar-item.active {
+    color: #818cf8;
+  }
+}

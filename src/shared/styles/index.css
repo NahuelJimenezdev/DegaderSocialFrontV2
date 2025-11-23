@@ -333,6 +333,7 @@ body {
   .main-content {
     margin-left: 0;
     padding: 1rem;
+    padding-bottom: 80px; /* Space for bottom navbar */
   }
 
   .quick-search {

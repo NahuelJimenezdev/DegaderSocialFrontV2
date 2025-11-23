@@ -242,6 +242,14 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
     const replyToMsg = replyTo;
 
     // Crear mensaje optimista - MOSTRAR INMEDIATAMENTE
+    // Preparar attachments para el UI mientras se sube
+    const optimisticAttachments = filesToSend.map((f) => ({
+      type: f.type?.startsWith('image/') ? 'image' : f.type?.startsWith('video/') ? 'video' : 'file',
+      url: URL.createObjectURL(f),
+      name: f.name,
+      size: f.size
+    }));
+
     const optimisticMessage = {
       _id: tempId,
       content: messageText,
@@ -255,8 +263,8 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
       reactions: [],
       starredBy: [],
       replyTo: replyToMsg ? { _id: replyToMsg._id, content: replyToMsg.content, author: replyToMsg.author } : null,
-      isOptimistic: true, // Marcar como optimista
-      files: filesToSend.length > 0 ? filesToSend.map(f => ({ name: f.name, type: f.type })) : [],
+      isOptimistic: true,
+      attachments: optimisticAttachments,
     };
 
     // Agregar mensaje optimista al UI INMEDIATAMENTE
@@ -569,7 +577,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
                         {msg.attachments && msg.attachments.length > 0 && (
                           <div className={`${msg.content ? 'mt-3' : ''} space-y-2`}>
                             {msg.attachments.map((att, idx) => (
-                              <div key={idx}>
+                              <div key={`${msg._id}-att-${idx}-${att.name || ''}`}>
                                 {att.type === 'image' && (
                                   <img
                                     src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}

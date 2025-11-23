@@ -1,4 +1,5 @@
 import CarpetaCard from './CarpetaCard';
+import '../styles/CarpetasGrid.css';
 
 const CarpetasGrid = ({
   carpetas,
@@ -11,7 +12,7 @@ const CarpetasGrid = ({
   formatearFecha
 }) => {
   return (
-    <div className="grid grid-cols-3 gap-6">
+    <div className="carpetas-grid">
       {carpetas.map((carpeta) => (
         <CarpetaCard
           key={carpeta._id}

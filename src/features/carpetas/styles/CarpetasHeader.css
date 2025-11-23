@@ -1,0 +1,132 @@
+/* CarpetasHeader.css - Responsive Header */
+/* Mobile-first approach */
+
+.carpetas-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.carpetas-header-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* Icono del header */
+.carpetas-header-icon {
+  display: none; /* Oculto en mobile */
+}
+
+/* Título */
+.carpetas-header-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+/* Subtítulo */
+.carpetas-header-subtitle {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.carpetas-header-subtitle span {
+  display: inline;
+}
+
+/* Botón crear */
+.carpetas-header-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  min-height: 40px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.carpetas-header-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.carpetas-header-btn-text {
+  display: none; /* Oculto en mobile */
+}
+
+/* Tablets pequeñas (480px+) */
+@media (min-width: 480px) {
+  .carpetas-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .carpetas-header-title {
+    font-size: 1.75rem;
+  }
+
+  .carpetas-header-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .carpetas-header-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .carpetas-header-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Tablets (768px+) */
+@media (min-width: 768px) {
+  .carpetas-header {
+    margin-bottom: 1rem;
+  }
+
+  .carpetas-header-icon {
+    display: flex;
+    font-size: 2.5rem;
+  }
+
+  .carpetas-header-title {
+    font-size: 2rem;
+  }
+
+  .carpetas-header-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .carpetas-header-btn-text {
+    display: inline;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .carpetas-header-content {
+    gap: 1rem;
+  }
+
+  .carpetas-header-icon {
+    font-size: 3rem;
+  }
+
+  .carpetas-header-title {
+    font-size: 2.25rem;
+  }
+
+  .carpetas-header-subtitle {
+    font-size: 1rem;
+  }
+
+  .carpetas-header-btn {
+    padding: 0.5rem 1rem;
+  }
+}

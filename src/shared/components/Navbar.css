@@ -1,0 +1,91 @@
+/* Navbar.css - Custom responsive behavior with media queries */
+
+/* Desktop/Tablet (default) - Show everything */
+.navbar-search-container {
+  display: flex;
+  flex: 1;
+  max-width: 32rem; /* 512px */
+}
+
+.bottom-navbar {
+  display: none;
+}
+
+/* Mobile (small screens) - Hide SearchBar, show BottomNavbar */
+@media (max-width: 768px) {
+  .navbar-search-container {
+    display: none;
+  }
+
+  .bottom-navbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    height: 60px;
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark mode support */
+  :global(.dark) .bottom-navbar {
+    background-color: #111827;
+    border-top-color: #1f2937;
+  }
+
+  .bottom-navbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    height: 100%;
+    color: #6b7280;
+    transition: color 0.2s, background-color 0.2s;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .bottom-navbar-item:hover {
+    color: #4f46e5;
+    background-color: #f9fafb;
+  }
+
+  .bottom-navbar-item.active {
+    color: #4f46e5;
+  }
+
+  :global(.dark) .bottom-navbar-item {
+    color: #9ca3af;
+  }
+
+  :global(.dark) .bottom-navbar-item:hover {
+    color: #818cf8;
+    background-color: #1f2937;
+  }
+
+  :global(.dark) .bottom-navbar-item.active {
+    color: #818cf8;
+  }
+
+  /* Add padding to body to prevent content being hidden by bottom navbar */
+  body {
+    padding-bottom: 60px;
+  }
+}
+
+/* Tablet (medium screens) - Keep everything visible */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar-search-container {
+    max-width: 24rem; /* 384px - slightly smaller for tablets */
+  }
+}

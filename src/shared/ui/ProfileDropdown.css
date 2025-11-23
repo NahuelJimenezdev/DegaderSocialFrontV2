@@ -1,0 +1,46 @@
+/* ProfileDropdown.css - Mobile sidebar navigation integration */
+
+/* Desktop - Hide sidebar navigation items in dropdown */
+.mobile-sidebar-nav {
+  display: none;
+}
+
+/* Mobile - Show sidebar navigation items in dropdown */
+@media (max-width: 768px) {
+  .mobile-sidebar-nav {
+    display: block;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 0;
+  }
+
+  :global(.dark) .mobile-sidebar-nav {
+    border-bottom-color: #374151;
+  }
+
+  .mobile-sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #374151;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: left;
+  }
+
+  .mobile-sidebar-nav-item:hover {
+    background-color: #f3f4f6;
+  }
+
+  :global(.dark) .mobile-sidebar-nav-item {
+    color: #d1d5db;
+  }
+
+  :global(.dark) .mobile-sidebar-nav-item:hover {
+    background-color: #374151;
+  }
+}

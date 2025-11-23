@@ -1,0 +1,178 @@
+/* CarpetasList.css - Responsive List View */
+/* Mobile-first approach */
+
+.carpetas-list-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* En mobile, convertir a cards en lugar de tabla */
+.carpetas-list-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.carpetas-list-mobile-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.carpetas-list-mobile-item:hover {
+  background: #f9fafb;
+}
+
+:global(.dark) .carpetas-list-mobile-item {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+:global(.dark) .carpetas-list-mobile-item:hover {
+  background: #374151;
+}
+
+/* Icono en mobile */
+.carpetas-list-mobile-icon {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.carpetas-list-mobile-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Contenido en mobile */
+.carpetas-list-mobile-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.carpetas-list-mobile-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.125rem;
+}
+
+.carpetas-list-mobile-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.carpetas-list-mobile-badge {
+  font-size: 0.6rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.carpetas-list-mobile-info {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* Menú en mobile */
+.carpetas-list-mobile-menu {
+  flex-shrink: 0;
+}
+
+.carpetas-list-mobile-menu button {
+  padding: 0.375rem;
+}
+
+/* Tabla para desktop - oculta en mobile */
+.carpetas-list-table {
+  display: none;
+}
+
+/* Tablets (768px+) - mostrar tabla, ocultar mobile */
+@media (min-width: 768px) {
+  .carpetas-list-mobile {
+    display: none;
+  }
+
+  .carpetas-list-table {
+    display: table;
+    width: 100%;
+    min-width: 700px;
+  }
+
+  .carpetas-list-table th {
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem;
+  }
+
+  .carpetas-list-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .carpetas-list-table-icon {
+    padding: 0.375rem;
+  }
+
+  .carpetas-list-table-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .carpetas-list-table-name {
+    font-size: 0.85rem;
+  }
+
+  .carpetas-list-table-desc {
+    font-size: 0.75rem;
+  }
+
+  .carpetas-list-table-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .carpetas-list-table th {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.75rem;
+  }
+
+  .carpetas-list-table td {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  .carpetas-list-table-icon {
+    padding: 0.5rem;
+  }
+
+  .carpetas-list-table-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .carpetas-list-table-name {
+    font-size: 0.9rem;
+  }
+
+  .carpetas-list-table-desc {
+    font-size: 0.8rem;
+  }
+
+  .carpetas-list-table-badge {
+    font-size: 0.75rem;
+  }
+}

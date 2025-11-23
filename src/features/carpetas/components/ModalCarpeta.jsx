@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Folder, Info } from 'lucide-react';
+import '../styles/ModalCarpeta.css';
 
 const COLORES_CARPETA = [
   { nombre: 'Azul', valor: '#3B82F6' },
@@ -134,36 +135,36 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="modal-carpeta-overlay fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="modal-carpeta-container bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between z-10">
+        <div className="modal-carpeta-header sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between z-10">
           <div className="flex items-center gap-3">
             <div
-              className="p-3 rounded-lg"
+              className="modal-carpeta-header-icon rounded-lg"
               style={{ backgroundColor: formData.color + '20' }}
             >
-              <Folder size={24} style={{ color: formData.color }} />
+              <Folder style={{ color: formData.color }} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="modal-carpeta-header-title font-bold text-gray-900 dark:text-white">
                 {carpeta ? 'Editar Carpeta' : 'Nueva Carpeta'}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="modal-carpeta-header-desc text-gray-500 dark:text-gray-400">
                 {TIPOS_CARPETA.find(t => t.valor === formData.tipo)?.descripcion}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+            className="modal-carpeta-close hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
-            <X size={20} className="text-gray-600 dark:text-gray-400" />
+            <X className="text-gray-600 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="modal-carpeta-body">
           {/* Información básica */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -206,25 +207,25 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
 
             {/* Tipo de carpeta */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="modal-carpeta-label block font-medium text-gray-700 dark:text-gray-300">
                 Tipo de Carpeta *
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="modal-carpeta-tipos">
                 {TIPOS_CARPETA.map((tipo) => (
                   <button
                     key={tipo.valor}
                     type="button"
                     onClick={() => handleChange('tipo', tipo.valor)}
-                    className={`p-3 rounded-lg border-2 transition-all text-left ${
+                    className={`modal-carpeta-tipo-btn rounded-lg border-2 transition-all text-left ${
                       formData.tipo === tipo.valor
                         ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                   >
-                    <div className="font-medium text-gray-900 dark:text-white text-sm">
+                    <div className="modal-carpeta-tipo-nombre font-medium text-gray-900 dark:text-white">
                       {tipo.nombre}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <div className="modal-carpeta-tipo-desc text-gray-500 dark:text-gray-400">
                       {tipo.descripcion}
                     </div>
                   </button>
@@ -234,16 +235,16 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
 
             {/* Color */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="modal-carpeta-label block font-medium text-gray-700 dark:text-gray-300">
                 Color
               </label>
-              <div className="flex gap-2 flex-wrap">
+              <div className="modal-carpeta-colores">
                 {COLORES_CARPETA.map((color) => (
                   <button
                     key={color.valor}
                     type="button"
                     onClick={() => handleChange('color', color.valor)}
-                    className={`w-10 h-10 rounded-lg border-2 transition-all ${
+                    className={`modal-carpeta-color-btn rounded-lg border-2 transition-all ${
                       formData.color === color.valor
                         ? 'border-gray-900 dark:border-white scale-110'
                         : 'border-transparent hover:scale-105'
@@ -446,17 +447,17 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
           )}
 
           {/* Botones de acción */}
-          <div className="flex gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="modal-carpeta-actions border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="modal-carpeta-btn border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+              className="modal-carpeta-btn bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
             >
               {carpeta ? 'Guardar Cambios' : 'Crear Carpeta'}
             </button>

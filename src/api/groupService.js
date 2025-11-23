@@ -284,7 +284,7 @@ const groupService = {
    */
   getMultimedia: async (groupId) => {
     const response = await api.get(`/grupos/${groupId}/multimedia`);
-    return response.data;
+    return response.data?.data || response.data || [];
   },
 
   /**
@@ -294,7 +294,7 @@ const groupService = {
    */
   getArchivos: async (groupId) => {
     const response = await api.get(`/grupos/${groupId}/archivos`);
-    return response.data;
+    return response.data?.data || response.data || [];
   },
 
   /**

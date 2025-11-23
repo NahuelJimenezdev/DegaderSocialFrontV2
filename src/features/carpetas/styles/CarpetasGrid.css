@@ -1,0 +1,40 @@
+/* CarpetasGrid.css - Responsive Grid Layout */
+/* Mobile-first approach */
+
+.carpetas-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr; /* Mobile: 1 columna */
+}
+
+/* Tablets pequeñas (480px+) */
+@media (min-width: 480px) {
+  .carpetas-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+    gap: 1rem;
+  }
+}
+
+/* Tablets (768px+) */
+@media (min-width: 768px) {
+  .carpetas-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* Desktop pequeño (1024px+) */
+@media (min-width: 1024px) {
+  .carpetas-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Desktop grande (1280px+) */
+@media (min-width: 1280px) {
+  .carpetas-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}

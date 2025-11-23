@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, Bell, Lock, HelpCircle, LogOut } from 'lucide-react';
+import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User } from 'lucide-react';
 import { getAvatarUrl, getInitialsAvatar } from '../utils/avatarUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
+import './ProfileDropdown.css';
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +55,18 @@ const ProfileDropdown = () => {
     navigate(path);
     setIsOpen(false);
   };
+
+  // Sidebar navigation items (visible on mobile only)
+  const sidebarItems = [
+    { icon: Home, label: 'Inicio', path: '/' },
+    { icon: Users, label: 'Amigos', path: '/amigos' },
+    { icon: MessageCircle, label: 'Mensajes', path: '/mensajes' },
+    { icon: Video, label: 'Mis Reuniones', path: '/Mis_reuniones' },
+    { icon: Building2, label: 'Grupos', path: '/Mis_grupos' },
+    { icon: Building2, label: 'Iglesia', path: '/Mi_iglesia' },
+    { icon: Folder, label: 'Mis Carpetas', path: '/Mis_carpetas' },
+    { icon: User, label: 'Perfil', path: '/Mi_perfil' }
+  ];
 
   const menuItems = [
     {
@@ -112,6 +125,23 @@ const ProfileDropdown = () => {
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Sidebar Navigation Items (Mobile Only) */}
+          <div className="mobile-sidebar-nav">
+            {sidebarItems.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleMenuClick(item.path)}
+                  className="mobile-sidebar-nav-item"
+                >
+                  <Icon size={18} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Menu Items */}

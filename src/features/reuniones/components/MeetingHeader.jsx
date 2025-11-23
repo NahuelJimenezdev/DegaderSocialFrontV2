@@ -6,8 +6,8 @@ export function MeetingHeader({ onNewMeeting }) {
   return (
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Reuniones</h1>
-        <p className="text-gray-600 mt-1">Gestiona y únete a reuniones virtuales</p>
+        <h1 className="text-2xl font-bold text-white-900">Reuniones</h1>
+        <p className="text-white-600 mt-1">Gestiona y únete a reuniones virtuales</p>
       </div>
       <button
         // Asignar la función onNewMeeting al evento onClick

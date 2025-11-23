@@ -80,7 +80,7 @@ const GroupFiles = ({ groupData }) => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm divide-y divide-gray-200 dark:divide-gray-700">
           {allFiles.map((file, idx) => {
             const senderName = file.sender
-              ? `${file.sender.primernombreUsuario || ''} ${file.sender.primerapellidoUsuario || ''}`.trim()
+              ? `${file.sender.nombre || file.sender.primernombreUsuario || ''} ${file.sender.apellido || file.sender.primerapellidoUsuario || ''}`.trim()
               : 'Usuario';
 
             return (

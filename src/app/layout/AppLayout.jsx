@@ -1,6 +1,7 @@
 // src/app/layout/AppLayout.jsx
 import Sidebar from '../../shared/components/sidebar/Sidebar';
 import QuickSearch from '../../shared/components/QuickSearch';
+import BottomNavbar from '../../shared/components/BottomNavbar';
 import '../../shared/styles/index.css';
 import { Outlet, useLocation } from 'react-router-dom';
 import { hideQuickSearchRoutes, hideSidebarRoutes } from '../../shared/config/hiddenRoutes';
@@ -35,6 +36,9 @@ const AppLayout = () => {
         {/* QuickSearch fijo a la derecha */}
         {!shouldHideQuickSearch && <QuickSearch />}
       </div>
+
+      {/* Bottom navbar - only visible on mobile */}
+      <BottomNavbar />
     </div>
   );
 };

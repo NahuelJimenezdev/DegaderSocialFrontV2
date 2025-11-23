@@ -15,6 +15,7 @@ import ProfilePage from './features/perfilUsuario/page/ProfilePage'
 import MensajesPage from './features/mensajes/pages/MensajesPage'
 import PerfilVisitantePage from './features/perfilVisitante/page/PerfilVisitantePage'
 import { ReunionesPage } from './features/reuniones/pages/ReunionesPage'
+import SearchPage from './pages/SearchPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { path: '/', element: <App /> },
+      { path: '/buscar', element: <SearchPage /> },
       { path: '/amigos', element: <FriendsPage /> },
       { path: '/mensajes', element: <MensajesPage /> },
       { path: '/mensajes/:id', element: <MensajesPage /> },
