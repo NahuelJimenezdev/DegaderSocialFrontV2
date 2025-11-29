@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Camera, Save } from 'lucide-react';
 import { userService } from '../../../api';
 
 const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
   const [formData, setFormData] = useState({
-    nombre: user?.nombre || '',
-    apellido: user?.apellido || '',
-    biografia: user?.biografia || '',
-    telefono: user?.telefono || '',
-    ciudad: user?.ciudad || ''
+    nombre: user?.nombres?.primero || '',
+    apellido: user?.apellidos?.primero || '',
+    biografia: user?.social?.biografia || '',
+    telefono: user?.personal?.celular || '',
+    ciudad: user?.personal?.ubicacion?.ciudad || '',
+    pais: user?.personal?.ubicacion?.pais || '',
+    fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : ''
   });
 
   const [avatarFile, setAvatarFile] = useState(null);
   // Normalizar la URL del avatar para asegurar que se muestre correctamente
   const getUserAvatar = () => {
     if (!user) return '';
-    if (user.avatar) {
+    if (user.social?.fotoPerfil) {
       // Si el avatar ya es una URL completa, usarla
-      if (user.avatar.startsWith('http')) return user.avatar;
+      if (user.social.fotoPerfil.startsWith('http')) return user.social.fotoPerfil;
       // Si es una ruta relativa, agregar el dominio del backend
-      if (user.avatar.startsWith('/')) return `http://localhost:3001${user.avatar}`;
+      if (user.social.fotoPerfil.startsWith('/')) return `http://localhost:3001${user.social.fotoPerfil}`;
       // Si no tiene protocolo ni barra inicial, agregar ambos
-      return `http://localhost:3001/${user.avatar}`;
+      return `http://localhost:3001/${user.social.fotoPerfil}`;
     }
     return '';
   };
@@ -72,19 +74,51 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
     setSuccess('');
 
     try {
+      // Transformar formData al formato del modelo UserV2
+      const updateData = {
+        nombres: {
+          primero: formData.nombre,
+          segundo: user?.nombres?.segundo || ''
+        },
+        apellidos: {
+          primero: formData.apellido,
+          segundo: user?.apellidos?.segundo || ''
+        },
+        social: {
+          biografia: formData.biografia
+        },
+        personal: {
+          celular: formData.telefono,
+          fechaNacimiento: formData.fechaNacimiento || undefined,
+          ubicacion: {
+            ciudad: formData.ciudad,
+            pais: formData.pais
+          }
+        }
+      };
+
       // Actualizar perfil
-      const profileResponse = await userService.updateProfile(formData);
+      const profileResponse = await userService.updateProfile(updateData);
+      let updatedUser = profileResponse.data;
 
       // Si hay un avatar nuevo, subirlo
       if (avatarFile) {
-        await userService.uploadAvatar(avatarFile);
+        const avatarResponse = await userService.uploadAvatar(avatarFile);
+        // Combinar los datos del perfil con el avatar actualizado
+        updatedUser = {
+          ...updatedUser,
+          social: {
+            ...updatedUser.social,
+            fotoPerfil: avatarResponse.data?.avatar || avatarResponse.avatar
+          }
+        };
       }
 
       setSuccess('Perfil actualizado exitosamente');
 
-      // Notificar al padre con los datos actualizados
+      // Notificar al padre con los datos actualizados incluyendo el avatar
       if (onUpdate) {
-        onUpdate(profileResponse.data);
+        onUpdate(updatedUser);
       }
 
       // Cerrar modal después de 1 segundo
@@ -133,7 +167,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
           <div className="flex flex-col items-center">
             <div className="relative">
               <img
-                src={avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.nombreCompleto || user?.nombre)}&background=3b82f6&color=fff&size=128`}
+                src={avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(`${user?.nombres?.primero} ${user?.apellidos?.primero}`)}&background=3b82f6&color=fff&size=128`}
                 alt="Avatar"
                 className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
               />
@@ -220,18 +254,51 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
             />
           </div>
 
-          {/* Ciudad */}
+          {/* Ubicación */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Ciudad */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Ciudad
+              </label>
+              <input
+                type="text"
+                name="ciudad"
+                value={formData.ciudad}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
+                placeholder="Buenos Aires"
+              />
+            </div>
+
+            {/* País */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                País
+              </label>
+              <input
+                type="text"
+                name="pais"
+                value={formData.pais}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
+                placeholder="Argentina"
+              />
+            </div>
+          </div>
+
+          {/* Fecha de Nacimiento */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Ciudad
+              Fecha de Nacimiento
             </label>
             <input
-              type="text"
-              name="ciudad"
-              value={formData.ciudad}
+              type="date"
+              name="fechaNacimiento"
+              value={formData.fechaNacimiento}
               onChange={handleChange}
+              max={new Date().toISOString().split('T')[0]}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition"
-              placeholder="Buenos Aires"
             />
           </div>
 

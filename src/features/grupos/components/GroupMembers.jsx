@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import groupService from '../../../api/groupService';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
 const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -161,10 +162,18 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
           <div className="space-y-3">
             {pendingRequests.map((request) => {
               const requestUser = request.user;
-              const fullName = requestUser
-                ? `${requestUser.nombre || ''} ${requestUser.apellido || ''}`.trim()
-                : 'Usuario';
-              const avatar = requestUser?.avatar;
+              
+              // Helper to get full name from UserV2 structure
+              const getFullName = (user) => {
+                if (!user) return 'Usuario';
+                // UserV2 structure
+                const nombre = user.nombres?.primero || '';
+                const apellido = user.apellidos?.primero || '';
+                return `${nombre} ${apellido}`.trim() || 'Usuario';
+              };
+              
+              const fullName = getFullName(requestUser);
+              const avatar = requestUser?.social?.fotoPerfil;
 
               return (
                 <div
@@ -173,25 +182,19 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800">
-                      {avatar ? (
-                        <img
-                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${avatar}`}
-                          alt={fullName}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-white text-2xl">person</span>
-                        </div>
-                      )}
+                      <img
+                        src={getUserAvatar(requestUser)}
+                        alt={fullName}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = '/avatars/default-avatar.png';
+                        }}
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-900 dark:text-white truncate">{fullName}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        Solicitud enviada el {new Date(request.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        desea ingresar al grupo
                       </p>
                     </div>
                   </div>
@@ -200,10 +203,10 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
                       onClick={() => handleApproveRequest(request._id)}
                       disabled={loading}
                       className="flex items-center gap-1.5 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 text-sm font-medium shadow-sm"
-                      title="Aprobar solicitud"
+                      title="Aceptar solicitud"
                     >
                       <span className="material-symbols-outlined text-lg">check</span>
-                      <span className="hidden sm:inline">Aprobar</span>
+                      <span className="hidden sm:inline">Aceptar</span>
                     </button>
                     <button
                       onClick={() => handleRejectRequest(request._id)}
@@ -237,8 +240,18 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
           filteredMembers.map((member) => {
             const memberUser = member.user;
             const memberId = memberUser?._id || memberUser;
-            const fullName = member.fullName || `${memberUser?.nombre || ''} ${memberUser?.apellido || ''}`.trim() || 'Usuario';
-            const avatar = member.avatar || memberUser?.avatar;
+            
+            // Helper to get full name from UserV2 structure
+            const getFullName = (user) => {
+              if (!user) return 'Usuario';
+              // UserV2 structure
+              const nombre = user.nombres?.primero || '';
+              const apellido = user.apellidos?.primero || '';
+              return `${nombre} ${apellido}`.trim() || 'Usuario';
+            };
+            
+            const fullName = getFullName(memberUser);
+            const avatar = memberUser?.social?.fotoPerfil;
             const role = member.role || 'member';
             const badge = getRoleBadge(role);
             const isCurrentUser = String(memberId) === String(user?._id);
@@ -253,20 +266,14 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
                   <div className="flex items-center gap-4 flex-1">
                     {/* Avatar */}
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
-                      {avatar ? (
-                        <img
-                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${avatar}`}
-                          alt={fullName}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-white text-3xl">person</span>
-                        </div>
-                      )}
+                      <img
+                        src={getUserAvatar(memberUser)}
+                        alt={fullName}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = '/avatars/default-avatar.png';
+                        }}
+                      />
                     </div>
 
                     {/* Info */}

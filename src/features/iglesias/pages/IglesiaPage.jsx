@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Building2, Calendar, Users, FolderOpen, Mail } from 'lucide-react'
+import { useAuth } from '../../../context/AuthContext'
 import styles from '../styles/IglesiaPage.module.css'
 import MailPage from '../../mail/pages/MailPage'
 
@@ -14,15 +15,7 @@ const tabs = [
 
 export default function IglesiaPage() {
   const [activeTab, setActiveTab] = useState('overview')
-
-  // 🧩 MockUp de usuario institucional
-  const user = {
-    rolUsuario: 'Director de Jóvenes',
-    estructuraOrganizacional: {
-      area: 'Ministerio Juvenil',
-      nivel: 'Regional Norte'
-    }
-  }
+  const { user } = useAuth()
 
   // 🔄 Render dinámico según pestaña activa
   const renderTabContent = () => {
@@ -35,19 +28,35 @@ export default function IglesiaPage() {
               Aquí encontrarás toda la información y recursos de tu comunidad de fe.
             </p>
 
-            {user?.estructuraOrganizacional && (
+            {user?.fundacion?.activo && (
               <div className={styles.userInfo}>
                 <h4 className={styles.sectionTitle}>Tu información institucional</h4>
                 <div className={styles.infoGrid}>
                   <div className={styles.infoItem}>
-                    <strong>Área:</strong> {user.estructuraOrganizacional.area}
+                    <strong>Área:</strong> {user.fundacion.area || 'No asignada'}
                   </div>
                   <div className={styles.infoItem}>
-                    <strong>Nivel:</strong> {user.estructuraOrganizacional.nivel}
+                    <strong>Nivel:</strong> {user.fundacion.nivel || 'No asignado'}
                   </div>
                   <div className={styles.infoItem}>
-                    <strong>Rol:</strong> {user.rolUsuario}
+                    <strong>Cargo:</strong> {user.fundacion.cargo || 'No asignado'}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {user?.eclesiastico?.activo && (
+               <div className={styles.userInfo}>
+                <h4 className={styles.sectionTitle}>Tu información eclesiástica</h4>
+                <div className={styles.infoGrid}>
+                  <div className={styles.infoItem}>
+                    <strong>Rol Principal:</strong> {user.eclesiastico.rolPrincipal || 'Miembro'}
+                  </div>
+                  {user.eclesiastico.ministerios?.length > 0 && (
+                    <div className={styles.infoItem}>
+                      <strong>Ministerios:</strong> {user.eclesiastico.ministerios.map(m => m.nombre).join(', ')}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

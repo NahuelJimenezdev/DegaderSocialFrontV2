@@ -238,7 +238,7 @@ const groupService = {
     const response = await api.post(`/grupos/${groupId}/messages/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return response.data;
+    return response.data?.data || response.data;
   },
 
   /**

@@ -22,15 +22,16 @@ const GroupDetail = () => {
   const [activeSection, setActiveSection] = useState('feed')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [targetMessageId, setTargetMessageId] = useState(null)
 
   // Contadores para los badges del sidebar
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
   const [newPostsCount, setNewPostsCount] = useState(0)
 
-  // Detectar si es mobile o desktop
+  // Detectar si es mobile/tablet o desktop
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768) // 768px es el breakpoint md de Tailwind
+      setIsMobile(window.innerWidth < 1024) // 1024px es el breakpoint lg de Tailwind
     }
 
     checkMobile()
@@ -141,13 +142,18 @@ const GroupDetail = () => {
     { id: 'settings', icon: 'settings', label: 'Configuración' }
   ]
 
+  const handleGoToMessage = (messageId) => {
+    setTargetMessageId(messageId);
+    setActiveSection('chat');
+  };
+
   // Renderizar el componente según la sección activa
   const renderSection = () => {
     switch (activeSection) {
       case 'feed':
         return <GroupFeed groupData={groupData} />
       case 'chat':
-        return <GroupChat groupData={groupData} user={user} />
+        return <GroupChat groupData={groupData} user={user} targetMessageId={targetMessageId} />
       case 'detail':
         return <GroupInfo groupData={groupData} />
       case 'members':
@@ -166,7 +172,7 @@ const GroupDetail = () => {
       case 'links':
         return <GroupLinks groupData={groupData} />
       case 'events':
-        return <GroupEvents groupData={groupData} />
+        return <GroupEvents groupData={groupData} onGoToMessage={handleGoToMessage} />
       case 'settings':
         return <GroupSettings groupData={groupData} />
       default:
@@ -184,8 +190,8 @@ const GroupDetail = () => {
   }
 
   return (
-    <div className="flex h-full overflow-hidden bg-gray-50 dark:bg-gray-900 relative">
-      {/* Botón hamburguesa - Solo visible en mobile */}
+    <div className="flex h-full overflow-hidden overflow-x-hidden bg-gray-50 dark:bg-gray-900 relative">
+      {/* Botón hamburguesa - Visible en mobile y tablet */}
       {isMobile && (
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -197,10 +203,10 @@ const GroupDetail = () => {
         </button>
       )}
 
-      {/* Overlay para cerrar sidebar en mobile */}
+      {/* Overlay para cerrar sidebar en mobile/tablet */}
       {sidebarOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -209,15 +215,15 @@ const GroupDetail = () => {
       <div
         className={`
           w-64 flex-shrink-0 bg-white dark:bg-gray-800
-          md:relative md:!translate-x-0 md:h-full md:border-r
+          lg:relative lg:!translate-x-0 lg:h-full lg:border-r
           fixed top-16 z-40 h-[calc(100vh-64px)]
-          transition-transform duration-300 ease-in-out md:transition-none
+          transition-transform duration-300 ease-in-out lg:transition-none
           ${isMobile ? 'right-0 border-l' : 'left-0 border-r'}
           ${isMobile
             ? (sidebarOpen ? 'translate-x-0' : 'translate-x-full')
             : (sidebarOpen ? 'translate-x-0' : '-translate-x-full')
           }
-          md:translate-x-0 border-gray-200 dark:border-gray-700
+          lg:translate-x-0 border-gray-200 dark:border-gray-700
         `}
       >
         <SidebarGroup
@@ -233,8 +239,8 @@ const GroupDetail = () => {
       </div>
 
       {/* Contenido principal - Ocupa el resto del espacio */}
-      <main className="flex-1 h-full overflow-hidden">
-        <div className="w-full h-full">
+      <main className="flex-1 h-full overflow-hidden overflow-x-hidden">
+        <div className="w-full h-full overflow-x-hidden">
           {renderSection()}
         </div>
       </main>

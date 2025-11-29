@@ -1,6 +1,69 @@
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import groupService from '../../../api/groupService';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+
+// URL base para archivos estáticos (sin /api)
+const getBaseUrl = () => {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  return apiUrl.replace('/api', '');
+};
+
+// Obtener URL completa para un attachment (maneja URLs blob y URLs relativas)
+const getAttachmentUrl = (url) => {
+  if (!url) return '';
+  // Si ya es una URL completa (blob, http, https), devolverla tal cual
+  if (url.startsWith('blob:') || url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  // Si es una URL relativa, agregar el base URL
+  return `${getBaseUrl()}${url}`;
+};
+
+// Obtener información del archivo según su extensión para mostrar preview estilo WhatsApp
+const getFileInfo = (fileName) => {
+  if (!fileName) return { icon: 'description', color: 'bg-gray-500', label: 'Archivo' };
+
+  const ext = fileName.split('.').pop()?.toLowerCase();
+
+  const fileTypes = {
+    // PDFs
+    pdf: { icon: 'picture_as_pdf', color: 'bg-red-600', label: 'PDF' },
+    // Word
+    doc: { icon: 'description', color: 'bg-blue-600', label: 'Word' },
+    docx: { icon: 'description', color: 'bg-blue-600', label: 'Word' },
+    // Excel
+    xls: { icon: 'table_chart', color: 'bg-green-600', label: 'Excel' },
+    xlsx: { icon: 'table_chart', color: 'bg-green-600', label: 'Excel' },
+    csv: { icon: 'table_chart', color: 'bg-green-600', label: 'CSV' },
+    // PowerPoint
+    ppt: { icon: 'slideshow', color: 'bg-orange-600', label: 'PowerPoint' },
+    pptx: { icon: 'slideshow', color: 'bg-orange-600', label: 'PowerPoint' },
+    // Texto
+    txt: { icon: 'article', color: 'bg-gray-600', label: 'Texto' },
+    rtf: { icon: 'article', color: 'bg-gray-600', label: 'RTF' },
+    // Código
+    js: { icon: 'code', color: 'bg-yellow-600', label: 'JavaScript' },
+    ts: { icon: 'code', color: 'bg-blue-500', label: 'TypeScript' },
+    html: { icon: 'code', color: 'bg-orange-500', label: 'HTML' },
+    css: { icon: 'code', color: 'bg-purple-500', label: 'CSS' },
+    json: { icon: 'data_object', color: 'bg-gray-700', label: 'JSON' },
+    // Comprimidos
+    zip: { icon: 'folder_zip', color: 'bg-yellow-700', label: 'ZIP' },
+    rar: { icon: 'folder_zip', color: 'bg-purple-700', label: 'RAR' },
+    '7z': { icon: 'folder_zip', color: 'bg-gray-700', label: '7Z' },
+  };
+
+  return fileTypes[ext] || { icon: 'description', color: 'bg-gray-500', label: ext?.toUpperCase() || 'Archivo' };
+};
+
+// Formatear tamaño de archivo
+const formatFileSize = (bytes) => {
+  if (!bytes) return '';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
 
 /**
  * Agrupa las reacciones por emoji y cuenta cuántos usuarios reaccionaron con cada emoji
@@ -40,7 +103,7 @@ const transformMessage = (msg) => {
   };
 };
 
-const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => {
+const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targetMessageId }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -54,6 +117,25 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const socketRef = useRef(null);
+  const prevMessagesLengthRef = useRef(0);
+
+  // Scroll to target message
+  useEffect(() => {
+    if (targetMessageId && messages.length > 0) {
+      // Esperar un poco para asegurar que el renderizado esté completo
+      setTimeout(() => {
+        const element = document.getElementById(`message-${targetMessageId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Highlight effect
+          element.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-2', 'dark:ring-offset-gray-900');
+          setTimeout(() => {
+            element.classList.remove('ring-2', 'ring-yellow-400', 'ring-offset-2', 'dark:ring-offset-gray-900');
+          }, 3000);
+        }
+      }, 100);
+    }
+  }, [targetMessageId, messages]);
 
   // Cargar mensajes
   useEffect(() => {
@@ -61,6 +143,8 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
       try {
         console.log('📥 [LOAD] Cargando mensajes del grupo:', groupData._id);
         setLoading(true);
+        // Si hay un targetMessageId, podríamos necesitar cargar mensajes antiguos alrededor de ese ID
+        // Por ahora asumimos que está en los últimos 50 o implementamos paginación después
         const data = await groupService.getMessages(groupData._id);
         console.log('📥 [LOAD] Mensajes recibidos del servidor:', data?.length || 0);
         // Transformar mensajes para agrupar reacciones
@@ -68,6 +152,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
         console.log('📥 [LOAD] Mensajes transformados:', transformedMessages.length);
         console.log('📥 [LOAD] IDs de mensajes cargados:', transformedMessages.map(m => m._id));
         setMessages(transformedMessages);
+        prevMessagesLengthRef.current = transformedMessages.length;
       } catch (err) {
         console.error('❌ [LOAD] Error loading messages:', err);
         setMessages([]);
@@ -138,26 +223,34 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
           return prev;
         }
 
-        // Si es mi propio mensaje, verificar si ya existe como optimista
+        // Si es mi propio mensaje, verificar si ya existe como optimista o si ya fue procesado
         const isMyMessage = String(transformedNewMessage.author?._id) === String(user._id);
         if (isMyMessage) {
-          // Buscar mensaje optimista con el mismo contenido
-          const hasOptimistic = prev.some(msg =>
-            msg.isOptimistic &&
-            msg.content === transformedNewMessage.content &&
-            String(msg.author?._id) === String(user._id)
+          // Buscar mensaje optimista pendiente O mensaje ya reemplazado con mismo clientTempId
+          const hasOptimisticOrRecent = prev.some(msg =>
+            // Es un mensaje optimista mío
+            (msg.isOptimistic && String(msg.author?._id) === String(user._id)) ||
+            // O es un mensaje reciente mío con attachments (posible duplicado de imagen)
+            (msg.attachments?.length > 0 &&
+             String(msg.author?._id) === String(user._id) &&
+             Math.abs(new Date(msg.createdAt) - new Date(transformedNewMessage.createdAt)) < 5000)
           );
 
-          if (hasOptimistic) {
-            console.log('⚠️ Ignorando mensaje propio - ya existe como optimista');
-            return prev; // La API lo reemplazará cuando responda
+          if (hasOptimisticOrRecent) {
+            console.log('⚠️ Ignorando mensaje propio - ya existe como optimista o reciente');
+            return prev;
           }
         }
 
         console.log('✅ Añadiendo nuevo mensaje a la lista');
-        return [...prev, transformedNewMessage];
+        const newMessages = [...prev, transformedNewMessage];
+        prevMessagesLengthRef.current = newMessages.length;
+        return newMessages;
       });
-      scrollToBottom();
+      // Solo scroll si NO estamos viendo un mensaje específico antiguo
+      if (!targetMessageId) {
+        scrollToBottom();
+      }
     });
 
     // Escuchar mensajes eliminados en tiempo real
@@ -184,6 +277,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
         console.log('🗑️ [SOCKET] Mensajes después de filtrar:', filtered.length);
         console.log('🗑️ [SOCKET] ✅ Mensaje eliminado. Antes:', prev.length, 'Después:', filtered.length);
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        prevMessagesLengthRef.current = filtered.length;
         return filtered;
       });
     });
@@ -192,11 +286,18 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
     socket.on('messageReactionUpdated', ({ groupId, messageId, message: updatedMessage }) => {
       console.log('😀 Evento messageReactionUpdated recibido:', { groupId, messageId });
       if (updatedMessage) {
-        const transformedUpdatedMessage = transformMessage(updatedMessage);
         setMessages((prev) => {
-          const updated = prev.map((msg) =>
-            msg._id === messageId ? transformedUpdatedMessage : msg
-          );
+          const updated = prev.map((msg) => {
+            if (msg._id === messageId) {
+              // Solo actualizar las reacciones, mantener el resto del mensaje original
+              // Esto evita perder la información del autor y mover el mensaje de lado
+              return {
+                ...msg,
+                reactions: groupReactions(updatedMessage.reactions)
+              };
+            }
+            return msg;
+          });
           console.log('😀 Mensaje actualizado con nuevas reacciones');
           return updated;
         });
@@ -229,8 +330,14 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Solo scroll al fondo si:
+    // 1. NO hay un targetMessageId (no estamos navegando a un mensaje específico)
+    // 2. El número de mensajes aumentó (nuevo mensaje, no actualización)
+    if (!targetMessageId && messages.length > prevMessagesLengthRef.current) {
+      scrollToBottom();
+      prevMessagesLengthRef.current = messages.length;
+    }
+  }, [messages, targetMessageId]);
 
   // Enviar mensaje
   const handleSendMessage = async () => {
@@ -255,9 +362,9 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
       content: messageText,
       author: {
         _id: user._id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        avatar: user.avatar,
+        nombre: user.nombres?.primero,
+        apellido: user.apellidos?.primero,
+        avatar: user.social?.fotoPerfil,
       },
       createdAt: new Date().toISOString(),
       reactions: [],
@@ -400,10 +507,13 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
       const response = await groupService.toggleStar(groupData._id, messageId);
       const updatedMessage = response.data || response;
 
-      // Actualizar con la respuesta del servidor
+      // Actualizar SOLO el campo starredBy con la respuesta del servidor
+      // NO reemplazar todo el mensaje para evitar perder attachments y otros datos
       setMessages((prev) =>
         prev.map((msg) =>
-          msg._id === messageId ? { ...updatedMessage, isOptimistic: false } : msg
+          msg._id === messageId 
+            ? { ...msg, starredBy: updatedMessage.starredBy, isOptimistic: false } 
+            : msg
         )
       );
 
@@ -459,18 +569,18 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#1F2937]">
       {/* Header - Estilo Instagram minimalista */}
-      <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+      <div className="flex justify-between items-center px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-3xl text-primary">forum</span>
+          <span className="material-symbols-outlined text-2xl sm:text-3xl text-primary">forum</span>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Chat del Grupo</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Chat del Grupo</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400">{messages.length} mensajes</p>
           </div>
         </div>
       </div>
 
       {/* Área de mensajes - Fondo limpio */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 bg-gray-50 dark:bg-[#0a0e27] scrollbar-thin">
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 bg-gray-50 dark:bg-[#0a0e27] scrollbar-thin">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
@@ -501,26 +611,21 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
               return (
                 <div
                   key={msg._id}
+                  id={`message-${msg._id}`}
                   className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'} group`}
                 >
-                  <div className={`flex gap-3 max-w-[75%] ${isMyMessage ? 'flex-row-reverse' : 'flex-row'}`}>
-                    {/* Avatar - Más grande y prominente tipo Instagram */}
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800 shadow-sm">
-                      {senderAvatar ? (
+                  <div className={`flex gap-2 sm:gap-3 max-w-[95%] sm:max-w-[85%] md:max-w-[75%] ${isMyMessage ? 'flex-row-reverse' : 'flex-row'}`}>
+                      {/* Avatar - Más grande y prominente tipo Instagram */}
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800 shadow-sm">
                         <img
-                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${senderAvatar}`}
+                          src={getUserAvatar(msg.author)}
                           alt={senderName}
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            e.target.style.display = 'none';
+                            e.target.src = '/avatars/default-avatar.png';
                           }}
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-white text-xl">person</span>
-                        </div>
-                      )}
-                    </div>
+                      </div>
 
                     {/* Contenedor del mensaje */}
                     <div className={`flex flex-col gap-1 ${isMyMessage ? 'items-end' : 'items-start'}`}>
@@ -534,19 +639,26 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
                         </span>
                       </div>
 
-                      {/* Reply To - Más elegante */}
+                      {/* Reply To - Más compacto estilo WhatsApp */}
                       {msg.replyTo && (
-                        <div className={`text-xs rounded-xl p-2.5 mb-1 max-w-sm ${
+                        <div className={`text-xs rounded-lg p-2 mb-1.5 max-w-[90%] sm:max-w-sm border-l-[3px] ${
                           isMyMessage
-                            ? 'bg-primary/10 border-l-2 border-primary'
-                            : 'bg-gray-100 dark:bg-gray-800 border-l-2 border-gray-300 dark:border-gray-600'
+                            ? 'bg-primary/10 border-primary'
+                            : 'bg-gray-100 dark:bg-gray-800 border-gray-400 dark:border-gray-600'
                         }`}>
-                          <p className="font-semibold text-gray-700 dark:text-gray-300 mb-0.5">
-                            {msg.replyTo.author
-                              ? `${msg.replyTo.author.nombre || ''} ${msg.replyTo.author.apellido || ''}`.trim()
-                              : 'Usuario'}
-                          </p>
-                          <p className="text-gray-600 dark:text-gray-400 line-clamp-2">{msg.replyTo.content || 'Archivo adjunto'}</p>
+                          <div className="flex items-start gap-1.5">
+                            <span className="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[14px] flex-shrink-0 mt-0.5">reply</span>
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-gray-700 dark:text-gray-300 text-[11px] mb-0.5 truncate">
+                                {msg.replyTo.author
+                                  ? `${msg.replyTo.author.nombre || ''} ${msg.replyTo.author.apellido || ''}`.trim()
+                                  : 'Usuario'}
+                              </p>
+                              <p className="text-gray-600 dark:text-gray-400 text-[11px] truncate leading-tight">
+                                {msg.replyTo.content || '📎 Archivo adjunto'}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
 
@@ -580,39 +692,65 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
                               <div key={`${msg._id}-att-${idx}-${att.name || ''}`}>
                                 {att.type === 'image' && (
                                   <img
-                                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
+                                    src={getAttachmentUrl(att.url)}
                                     alt={att.name || 'Imagen'}
-                                    className="max-w-xs rounded-2xl cursor-pointer hover:opacity-95 transition-opacity shadow-md"
-                                    onClick={() => window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`, '_blank')}
+                                    className="max-w-[240px] sm:max-w-xs rounded-2xl cursor-pointer hover:opacity-95 transition-opacity shadow-md w-full h-auto"
+                                    onClick={() => window.open(getAttachmentUrl(att.url), '_blank')}
                                   />
                                 )}
                                 {att.type === 'video' && (
                                   <video
-                                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
+                                    src={getAttachmentUrl(att.url)}
                                     controls
-                                    className="max-w-xs rounded-2xl shadow-md"
+                                    className="max-w-[240px] sm:max-w-xs rounded-2xl shadow-md w-full"
                                   />
                                 )}
                                 {att.type === 'audio' && (
                                   <audio
-                                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
+                                    src={getAttachmentUrl(att.url)}
                                     controls
                                     className="max-w-xs"
                                   />
                                 )}
-                                {att.type === 'file' && (
-                                  <a
-                                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`flex items-center gap-2 text-sm font-medium ${
-                                      isMyMessage ? 'text-white/90 hover:text-white' : 'text-primary hover:text-primary/80'
-                                    } transition-colors`}
-                                  >
-                                    <span className="material-symbols-outlined text-lg">description</span>
-                                    {att.name || 'Archivo'}
-                                  </a>
-                                )}
+                                {att.type === 'file' && (() => {
+                                  const fileInfo = getFileInfo(att.name);
+                                  return (
+                                    <a
+                                      href={getAttachmentUrl(att.url)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl w-full max-w-[240px] sm:max-w-[280px] transition-all hover:opacity-90 ${
+                                        isMyMessage
+                                          ? 'bg-white/10 hover:bg-white/20'
+                                          : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                      }`}
+                                    >
+                                      {/* Icono del tipo de archivo */}
+                                      <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 ${fileInfo.color} rounded-lg flex items-center justify-center shadow-sm`}>
+                                        <span className="material-symbols-outlined text-white text-xl sm:text-2xl">{fileInfo.icon}</span>
+                                      </div>
+                                      {/* Info del archivo */}
+                                      <div className="flex-1 min-w-0">
+                                        <p className={`text-sm font-medium truncate ${
+                                          isMyMessage ? 'text-white' : 'text-gray-900 dark:text-white'
+                                        }`}>
+                                          {att.name || 'Archivo'}
+                                        </p>
+                                        <p className={`text-xs mt-0.5 ${
+                                          isMyMessage ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
+                                        }`}>
+                                          {formatFileSize(att.size)} {att.size ? '•' : ''} {fileInfo.label}
+                                        </p>
+                                      </div>
+                                      {/* Icono de descarga */}
+                                      <div className={`flex-shrink-0 ${
+                                        isMyMessage ? 'text-white/70' : 'text-gray-400 dark:text-gray-500'
+                                      }`}>
+                                        <span className="material-symbols-outlined text-xl">download</span>
+                                      </div>
+                                    </a>
+                                  );
+                                })()}
                                 {att.type === 'link' && (
                                   <a
                                     href={att.url}
@@ -671,12 +809,15 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
                           </button>
 
                           {showEmojiPicker === msg._id && (
-                            <div className="absolute bottom-full mb-2 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-2 flex gap-1 z-10">
+                            <div className={`absolute bottom-full mb-1 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 px-2 py-1.5 flex gap-0.5 z-10 ${
+                              isMyMessage ? 'right-0' : 'left-0'
+                            }`}>
                               {commonEmojis.map((emoji) => (
                                 <button
                                   key={emoji}
                                   onClick={() => handleReaction(msg._id, emoji)}
-                                  className="text-xl hover:scale-125 transition-transform p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                                  className="text-base hover:scale-110 active:scale-95 transition-transform p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                                  title={emoji}
                                 >
                                   {emoji}
                                 </button>
@@ -728,27 +869,26 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
         )}
       </div>
 
-      {/* Reply Banner - Estilo Instagram */}
+      {/* Reply Banner - Más compacto estilo WhatsApp */}
       {replyTo && (
-        <div className="flex items-center justify-between px-4 py-3 bg-primary/5 dark:bg-primary/10 border-t border-primary/20 dark:border-primary/30">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="p-1.5 rounded-full bg-primary/10">
-              <span className="material-symbols-outlined text-primary text-xl">reply</span>
-            </div>
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-primary/5 dark:bg-primary/10 border-t border-primary/30 dark:border-primary/40">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="w-1 h-10 bg-primary rounded-full flex-shrink-0"></div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-[11px] font-semibold text-primary dark:text-primary-light mb-0.5">
                 Respondiendo a {replyTo.author ? `${replyTo.author.nombre} ${replyTo.author.apellido}` : 'Usuario'}
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                {replyTo.content || 'Archivo adjunto'}
+                {replyTo.content || '📎 Archivo adjunto'}
               </p>
             </div>
           </div>
           <button
             onClick={() => setReplyTo(null)}
             className="p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex-shrink-0"
+            title="Cancelar respuesta"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
       )}
@@ -765,7 +905,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
                 <span className="material-symbols-outlined text-lg text-primary">
                   {file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'videocam' : 'description'}
                 </span>
-                <span className="text-gray-700 dark:text-gray-300 font-medium truncate max-w-[150px]">{file.name}</span>
+                <span className="text-gray-700 dark:text-gray-300 font-medium truncate max-w-[100px] sm:max-w-[150px]">{file.name}</span>
                 <button
                   onClick={() => setSelectedFiles(selectedFiles.filter((_, i) => i !== idx))}
                   className="p-0.5 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -779,7 +919,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
       )}
 
       {/* Input de mensaje - Estilo Instagram minimalista */}
-      <div className="flex items-end gap-3 px-4 py-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1F2937] flex-shrink-0">
+      <div className="flex items-end gap-2 sm:gap-3 px-2 sm:px-4 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1F2937] flex-shrink-0">
         <input
           type="file"
           ref={fileInputRef}
@@ -789,7 +929,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="p-2.5 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+          className="p-2 sm:p-2.5 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
           title="Adjuntar archivo"
         >
           <span className="material-symbols-outlined text-[22px]">attach_file</span>
@@ -802,14 +942,14 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => 
             onKeyPress={handleKeyPress}
             placeholder="Escribe un mensaje..."
             rows={1}
-            className="w-full resize-none bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl py-3 px-5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white max-h-32 overflow-y-auto scrollbar-thin transition-all"
+            className="w-full resize-none bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl py-2 sm:py-3 px-3 sm:px-5 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white max-h-32 overflow-y-auto scrollbar-thin transition-all"
           />
         </div>
 
         <button
           onClick={handleSendMessage}
           disabled={!message.trim() && selectedFiles.length === 0}
-          className="p-2.5 bg-primary text-white rounded-full hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+          className="p-2 sm:p-2.5 bg-primary text-white rounded-full hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
           title="Enviar mensaje"
         >
           <span className="material-symbols-outlined text-[22px]">send</span>

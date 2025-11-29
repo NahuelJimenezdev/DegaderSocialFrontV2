@@ -1,6 +1,9 @@
 import styles from '../styles/Birthday.module.css'
+import { getUserAvatar } from '../../../shared/utils/avatarUtils'
 
 const BirthdayCard = ({ user, formatDate, calcAge, onProfileClick, onMessageClick }) => {
+  const avatarUrl = getUserAvatar(user)
+
   return (
     <article
       key={user.id}
@@ -10,7 +13,7 @@ const BirthdayCard = ({ user, formatDate, calcAge, onProfileClick, onMessageClic
       tabIndex={0}
     >
       <img
-        src={user.avatar}
+        src={avatarUrl}
         alt={user.displayName}
         className={styles.avatar}
         onError={e => { e.currentTarget.src = '/avatars/default-avatar.png' }}

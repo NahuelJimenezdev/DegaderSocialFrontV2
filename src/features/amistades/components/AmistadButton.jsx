@@ -12,11 +12,26 @@ const estados = {
 const AmistadButton = ({ estado = 'default', onAccion }) => {
   const [dropdown, setDropdown] = useState(false);
 
+  // Si el estado es 'self' (mismo usuario), no mostrar el botón
+  if (estado === 'self') {
+    return null;
+  }
+
+  // Validar que el estado exista en el objeto estados, si no usar 'default'
+  const estadoValido = estados[estado] ? estado : 'default';
+  const estadoActual = estados[estadoValido];
+
+  // Verificación adicional de seguridad
+  if (!estadoActual) {
+    console.error('Estado inválido:', estado);
+    return null;
+  }
+
   return (
     <div style={{ position: 'relative' }}>
       <button
         style={{
-          background: estados[estado].color,
+          background: estadoActual.color,
           color: '#fff',
           borderRadius: 20,
           padding: '8px 16px',
@@ -30,7 +45,7 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
         onClick={() => setDropdown((v) => !v)}
       >
         <User size={18} />
-        {estados[estado].texto}
+        {estadoActual.texto}
       </button>
 
       {dropdown && (
@@ -47,7 +62,7 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
             minWidth: 180
           }}
         >
-          {estado === 'default' && (
+          {estadoValido === 'default' && (
             <button
               style={{ width: '100%', padding: '12px', background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', textAlign: 'left', fontWeight: 500 }}
               onClick={() => { onAccion('agregar'); setDropdown(false); }}
@@ -56,7 +71,7 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
             </button>
           )}
 
-          {estado === 'enviada' && (
+          {estadoValido === 'enviada' && (
             <button
               style={{ width: '100%', padding: '12px', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', textAlign: 'left', fontWeight: 500 }}
               onClick={() => { onAccion('cancelar'); setDropdown(false); }}
@@ -65,7 +80,7 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
             </button>
           )}
 
-          {estado === 'recibida' && (
+          {estadoValido === 'recibida' && (
             <>
               <button
                 style={{ width: '100%', padding: '12px', background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', textAlign: 'left', fontWeight: 500 }}
@@ -82,7 +97,7 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
             </>
           )}
 
-          {estado === 'aceptado' && (
+          {estadoValido === 'aceptado' && (
             <button
               style={{ width: '100%', padding: '12px', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', textAlign: 'left', fontWeight: 500 }}
               onClick={() => { onAccion('eliminar'); setDropdown(false); }}

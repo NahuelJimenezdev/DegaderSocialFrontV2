@@ -21,7 +21,7 @@ const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
             <div className="relative">
               <img
                 src={avatarUrl}
-                alt={user.nombreCompleto || user.nombre}
+                alt={`${user?.nombres?.primero} ${user?.apellidos?.primero}`}
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-50 dark:border-gray-900 object-cover"
               />
               <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
@@ -33,7 +33,7 @@ const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
               <div className="flex items-start justify-between">
                 <div>
                   <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                    {user.nombreCompleto || `${user.nombre} ${user.apellido}`}
+                    {`${user.nombres?.primero} ${user.apellidos?.primero}`}
                   </h1>
                   <p className="text-gray-500 text-sm">@{user.email.split('@')[0]}</p>
                 </div>

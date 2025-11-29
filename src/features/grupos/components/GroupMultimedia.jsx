@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import groupService from '../../../api/groupService';
+
+// URL base para archivos estáticos (sin /api)
+const getBaseUrl = () => {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  return apiUrl.replace('/api', '');
+};
 
 const GroupMultimedia = ({ groupData }) => {
   const [multimedia, setMultimedia] = useState([]);
@@ -38,8 +45,8 @@ const GroupMultimedia = ({ groupData }) => {
   );
 
   return (
-    <div className="h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="h-full overflow-y-auto overflow-x-hidden p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
+      <div className="max-w-6xl mx-auto space-y-6 overflow-hidden">
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Multimedia</h2>
@@ -67,7 +74,7 @@ const GroupMultimedia = ({ groupData }) => {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {images.map((img, idx) => {
               const senderName = img.sender
-                ? `${img.sender.primernombreUsuario || ''} ${img.sender.primerapellidoUsuario || ''}`.trim()
+                ? `${img.sender.nombre || img.sender.primernombreUsuario || ''} ${img.sender.apellido || img.sender.primerapellidoUsuario || ''}`.trim()
                 : 'Usuario';
 
               return (
@@ -77,7 +84,7 @@ const GroupMultimedia = ({ groupData }) => {
                   className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity group relative"
                 >
                   <img
-                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${img.url}`}
+                    src={`${getBaseUrl()}${img.url}`}
                     alt={img.name || 'Imagen'}
                     className="w-full h-full object-cover"
                     loading="lazy"
@@ -94,61 +101,62 @@ const GroupMultimedia = ({ groupData }) => {
               })}
             </div>
 
-            {/* Modal lightbox */}
-            {selectedImage && (
-            <div
-              className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-              onClick={() => setSelectedImage(null)}
-            >
-              <button
+            {/* Modal lightbox - usando Portal para renderizar fuera del contenedor con overflow-hidden */}
+            {selectedImage && createPortal(
+              <div
+                className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
                 onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
               >
-                <span className="material-symbols-outlined text-4xl">close</span>
-              </button>
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+                >
+                  <span className="material-symbols-outlined text-4xl">close</span>
+                </button>
 
-              <div className="max-w-6xl max-h-[90vh] relative" onClick={(e) => e.stopPropagation()}>
-                <img
-                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${selectedImage.url}`}
-                  alt={selectedImage.name || 'Imagen'}
-                  className="max-w-full max-h-[85vh] object-contain mx-auto rounded-lg"
-                />
+                <div className="max-w-6xl max-h-[90vh] relative" onClick={(e) => e.stopPropagation()}>
+                  <img
+                    src={`${getBaseUrl()}${selectedImage.url}`}
+                    alt={selectedImage.name || 'Imagen'}
+                    className="max-w-full max-h-[85vh] object-contain mx-auto rounded-lg"
+                  />
 
-                {/* Info del mensaje */}
-                <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
-                      {selectedImage.sender?.perfil?.perfilUsuario ? (
-                        <img
-                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${selectedImage.sender.perfil.perfilUsuario}`}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-white text-xl">person</span>
-                        </div>
-                      )}
+                  {/* Info del mensaje */}
+                  <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
+                        {selectedImage.sender?.avatar || selectedImage.sender?.perfil?.perfilUsuario ? (
+                          <img
+                            src={`${getBaseUrl()}${selectedImage.sender.avatar || selectedImage.sender.perfil.perfilUsuario}`}
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="material-symbols-outlined text-white text-xl">person</span>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          {selectedImage.sender
+                            ? `${selectedImage.sender.nombre || selectedImage.sender.primernombreUsuario || ''} ${selectedImage.sender.apellido || selectedImage.sender.primerapellidoUsuario || ''}`.trim()
+                            : 'Usuario'}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {new Date(selectedImage.createdAt).toLocaleString()}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {selectedImage.sender
-                          ? `${selectedImage.sender.primernombreUsuario || ''} ${selectedImage.sender.primerapellidoUsuario || ''}`.trim()
-                          : 'Usuario'}
+                    {selectedImage.message?.content && (
+                      <p className="mt-3 text-gray-700 dark:text-gray-300">
+                        {selectedImage.message.content}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {new Date(selectedImage.createdAt).toLocaleString()}
-                      </p>
-                    </div>
+                    )}
                   </div>
-                  {selectedImage.message?.content && (
-                    <p className="mt-3 text-gray-700 dark:text-gray-300">
-                      {selectedImage.message.content}
-                    </p>
-                  )}
                 </div>
-                </div>
-              </div>
+              </div>,
+              document.body
             )}
           </>
         )}

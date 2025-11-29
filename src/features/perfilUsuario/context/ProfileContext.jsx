@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useProfileData } from '../hooks/useProfileData';
 import { usePostActions } from '../hooks/usePostActions';
 import { usePostComposer } from '../hooks/usePostComposer';
-import { getUserAvatarUrl } from '../utils/dateFormatter';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
 const ProfileContext = createContext(null);
 
@@ -64,7 +64,7 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
   }, [updateUser, refetchAll]);
 
   // Memoizar URLs calculadas
-  const avatarUrl = useMemo(() => getUserAvatarUrl(user), [user]);
+  const avatarUrl = useMemo(() => getUserAvatar(user), [user]);
   const coverUrl = useMemo(() => 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=300&fit=crop', []);
 
   // Memoizar el valor del contexto completo

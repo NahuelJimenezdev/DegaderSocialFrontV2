@@ -1,3 +1,4 @@
+// Updated friendshipService with compatibility routes
 import api from './config';
 
 const friendshipService = {
@@ -7,9 +8,7 @@ const friendshipService = {
    * @returns {Promise<Object>} Response data
    */
   sendFriendRequest: async (userId) => {
-    const response = await api.post('/amistades/solicitar', {
-      usuarioId: userId,
-    });
+    const response = await api.post('/amistades/solicitar', { usuarioId: userId });
     return response.data;
   },
 
@@ -19,9 +18,7 @@ const friendshipService = {
    * @returns {Promise<Object>} Response data
    */
   acceptFriendRequest: async (userId) => {
-    const response = await api.post('/amistades/aceptar', {
-      usuarioId: userId,
-    });
+    const response = await api.post('/amistades/aceptar', { usuarioId: userId });
     return response.data;
   },
 
@@ -31,9 +28,7 @@ const friendshipService = {
    * @returns {Promise<Object>} Response data
    */
   rejectFriendRequest: async (userId) => {
-    const response = await api.post('/amistades/rechazar', {
-      usuarioId: userId,
-    });
+    const response = await api.post('/amistades/rechazar', { usuarioId: userId });
     return response.data;
   },
 
@@ -43,9 +38,7 @@ const friendshipService = {
    * @returns {Promise<Object>} Response data
    */
   cancelFriendRequest: async (userId) => {
-    const response = await api.post('/amistades/cancelar', {
-      usuarioId: userId,
-    });
+    const response = await api.post('/amistades/cancelar', { usuarioId: userId });
     return response.data;
   },
 
@@ -83,11 +76,9 @@ const friendshipService = {
    * @returns {Promise<Object>} Response data
    */
   removeFriend: async (friendId) => {
-    const response = await api.post('/amistades/cancelar', {
-      usuarioId: friendId,
-    });
+    const response = await api.delete(`/amistades/${friendId}`);
     return response.data;
-  },
+  }
 };
 
 export default friendshipService;

@@ -1,4 +1,6 @@
 import React from "react";
+import { useAuth } from "../../../context/AuthContext";
+import { getAvatarUrl } from "../../../shared/utils/avatarUtils";
 import styles from "../styles/MailSidebar.module.css";
 
 const menuItems = [
@@ -10,6 +12,9 @@ const menuItems = [
 ];
 
 export default function MailSidebar({ activeSection, onSelectSection, onCompose }) {
+  const { user } = useAuth();
+  const avatarUrl = getAvatarUrl(user?.social?.fotoPerfil);
+
   return (
     <aside className={styles.sidebar}>
       {/* Header */}
@@ -17,8 +22,7 @@ export default function MailSidebar({ activeSection, onSelectSection, onCompose 
         <div
           className={styles.avatar}
           style={{
-            backgroundImage:
-              "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBiGl6fRMEQ2GdFv4l7R_jwNjUQdDqDH-c7yC7IYQGStAHYr2-kaIcrfibpBrAIrX6fGKz6KShlarYmZjuA56aI_7u41umUYlMC3lqzkeQEscL3T7cct68cDrlaKmsLpOKcR1PT1e5pv9mKQdu8K9AvMLcF14vurAiTqh4QDlGC-VF4ARWYkMIL1wh0y3mOrb-k9Q7r1XCkKddbdUln2tLrMd4Rv3AqgWUoVCF8bB5eAJAuwphWtRWz43PAXf-gnQfhpi3mX9L3JK11')",
+            backgroundImage: `url('${avatarUrl}')`,
           }}
         />
         <div>

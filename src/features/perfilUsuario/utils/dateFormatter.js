@@ -47,10 +47,15 @@ export const getDefaultAvatar = (name) => {
 export const getUserAvatarUrl = (user) => {
   if (!user) return '';
 
-  if (user.avatar) {
-    return normalizeAvatarUrl(user.avatar);
+  // Usar social.fotoPerfil en lugar de avatar
+  if (user.social?.fotoPerfil) {
+    return normalizeAvatarUrl(user.social.fotoPerfil);
   }
 
-  const name = user.nombreCompleto || user.nombre || 'Usuario';
+  // Construir nombre completo desde la nueva estructura
+  const name = user.nombreCompleto ||
+    (user.nombres?.primero && user.apellidos?.primero
+      ? `${user.nombres.primero} ${user.apellidos.primero}`
+      : 'Usuario');
   return getDefaultAvatar(name);
 };

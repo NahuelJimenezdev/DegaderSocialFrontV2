@@ -1,10 +1,10 @@
 import { MessageSquare } from 'lucide-react';
 import AmistadButton from '../../amistades/components/AmistadButton';
-import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
 const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
-  const fotoPerfil = getAvatarUrl(usuario?.avatar);
-  const bannerUrl = usuario?.banner || '/avatars/default-banner.svg';
+  const fotoPerfil = getUserAvatar(usuario);
+  const bannerUrl = usuario?.social?.fotoBanner || '/avatars/default-banner.svg';
 
   return (
     <div className="relative">
@@ -20,15 +20,15 @@ const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
           <div className="flex items-end gap-4">
             <img
               src={fotoPerfil}
-              alt={`${usuario?.nombre} ${usuario?.apellido}`}
+              alt={`${usuario?.nombres?.primero} ${usuario?.apellidos?.primero}`}
               className="w-32 h-32 rounded-full border-4 border-white object-cover"
             />
             <div className="pb-2">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {usuario?.nombre} {usuario?.apellido}
+                {usuario?.nombres?.primero} {usuario?.apellidos?.primero}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                {usuario?.rol} · {usuario?.ciudad || 'Sin ubicación'}
+                {usuario?.seguridad?.rolSistema || 'usuario'} · {usuario?.personal?.ubicacion?.ciudad || 'Sin ubicación'}
               </p>
             </div>
           </div>

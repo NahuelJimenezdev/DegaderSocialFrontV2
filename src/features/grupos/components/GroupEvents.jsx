@@ -1,7 +1,25 @@
 import { useState, useEffect } from 'react';
 import groupService from '../../../api/groupService';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
-const GroupEvents = ({ groupData }) => {
+// URL base para archivos estáticos (sin /api)
+const getBaseUrl = () => {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  return apiUrl.replace('/api', '');
+};
+
+// Obtener URL completa para un attachment
+const getAttachmentUrl = (url) => {
+  if (!url) return '';
+  // Si ya es una URL completa (blob, http, https), devolverla tal cual
+  if (url.startsWith('blob:') || url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  // Si es una URL relativa, agregar el base URL
+  return `${getBaseUrl()}${url}`;
+};
+
+const GroupEvents = ({ groupData, onGoToMessage }) => {
   const [destacados, setDestacados] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -96,27 +114,22 @@ const GroupEvents = ({ groupData }) => {
               return (
                 <div
                   key={msg._id}
-                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border-l-4 border-yellow-400 hover:shadow-md transition-shadow"
+                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border-l-4 border-yellow-400 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => onGoToMessage && onGoToMessage(msg._id)}
                 >
                   <div className="p-5">
                     {/* Header del mensaje */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3 flex-1">
                         <div className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800">
-                          {msg.author?.avatar ? (
-                            <img
-                              src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${msg.author.avatar}`}
-                              alt={senderName}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <span className="material-symbols-outlined text-white text-xl">person</span>
-                            </div>
-                          )}
+                          <img
+                            src={getUserAvatar(msg.author)}
+                            alt={senderName}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.src = '/avatars/default-avatar.png';
+                            }}
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-900 dark:text-white">{senderName}</p>
@@ -160,10 +173,10 @@ const GroupEvents = ({ groupData }) => {
                             return (
                               <div key={idx} className="rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700">
                                 <img
-                                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
+                                  src={getAttachmentUrl(att.url)}
                                   alt={att.name || 'Imagen'}
                                   className="max-w-full h-auto max-h-96 object-contain cursor-pointer hover:opacity-95 transition-opacity"
-                                  onClick={() => window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`, '_blank')}
+                                  onClick={() => window.open(getAttachmentUrl(att.url), '_blank')}
                                 />
                               </div>
                             );
@@ -173,7 +186,7 @@ const GroupEvents = ({ groupData }) => {
                                 <video
                                   controls
                                   className="max-w-full h-auto max-h-96 rounded-xl"
-                                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
+                                  src={getAttachmentUrl(att.url)}
                                 >
                                   Tu navegador no soporta video
                                 </video>
@@ -209,7 +222,7 @@ const GroupEvents = ({ groupData }) => {
                             return (
                               <a
                                 key={idx}
-                                href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${att.url}`}
+                                href={getAttachmentUrl(att.url)}
                                 download={att.name}
                                 className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                               >

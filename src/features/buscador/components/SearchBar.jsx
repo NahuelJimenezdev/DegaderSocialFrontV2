@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, User, Loader } from 'lucide-react';
-import { getAvatarUrl, handleImageError } from '../../../shared/utils/avatarUtils';
+import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 import styles from '../styles/SearchBar.module.css';
 
 const SearchBar = () => {
@@ -155,17 +155,17 @@ const SearchBar = () => {
                   onClick={() => navegarAPerfil(usuario._id)}
                 >
                   <img
-                    src={getAvatarUrl(usuario.avatar || usuario.perfil?.perfilUsuario)}
-                    alt={`${usuario.nombre || usuario.primernombreUsuario} avatar`}
+                    src={getUserAvatar(usuario)}
+                    alt={`${usuario?.nombres?.primero || 'Usuario'} avatar`}
                     className={styles.avatar}
                     onError={(e) => handleImageError(e)}
                   />
                   <div className={styles.resultInfo}>
                     <div className={styles.resultName}>
-                      {usuario.nombre || usuario.primernombreUsuario} {usuario.apellido || usuario.primerapellidoUsuario}
+                      {usuario?.nombres?.primero} {usuario?.apellidos?.primero}
                     </div>
                     <div className={styles.resultSub}>
-                      {usuario.rol || usuario.rolUsuario} · {usuario.ciudad || usuario.ciudadUsuario || 'Sin ubicación'}
+                      {usuario?.seguridad?.rolSistema || 'usuario'} · {usuario?.personal?.ubicacion?.ciudad || 'Sin ubicación'}
                     </div>
                   </div>
                   <User size={16} className={styles.resultIcon} />

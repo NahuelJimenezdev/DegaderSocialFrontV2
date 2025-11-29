@@ -34,12 +34,12 @@ const PostCard = ({ post }) => {
         <div className="flex gap-3">
           <img
             src={avatarUrl}
-            alt={user.nombreCompleto}
+            alt={`${user?.nombres?.primero} ${user?.apellidos?.primero}`}
             className="w-10 h-10 rounded-full flex-shrink-0 object-cover"
           />
           <div>
             <p className="font-semibold text-sm md:text-base text-gray-900 dark:text-white">
-              {user.nombreCompleto || `${user.nombre} ${user.apellido}`}
+              {`${user?.nombres?.primero} ${user?.apellidos?.primero}`}
             </p>
             <p className="text-xs text-gray-500">{formatDate(post.createdAt)}</p>
           </div>

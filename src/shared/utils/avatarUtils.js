@@ -120,3 +120,38 @@ export const getInitialsAvatar = (name) => {
 
   return `data:image/svg+xml;base64,${btoa(svg)}`;
 };
+
+/**
+ * Obtiene la URL del avatar del usuario, generando uno con iniciales si no tiene foto
+ * @param {Object} user - Objeto del usuario con la nueva estructura
+ * @returns {string} URL del avatar
+ */
+export const getUserAvatar = (user) => {
+  // Si tiene fotoPerfil, usarla
+  if (user?.social?.fotoPerfil) {
+    return getAvatarUrl(user.social.fotoPerfil);
+  }
+
+  // Si no tiene foto, intentar obtener nombre para iniciales
+  let fullName = '';
+
+  // 1. Intentar con nombreCompleto (prioridad alta)
+  if (user?.nombreCompleto) {
+    fullName = user.nombreCompleto;
+  }
+  // 2. Intentar con nombres y apellidos estructurados
+  else if (user?.nombres?.primero || user?.apellidos?.primero) {
+    const firstName = user?.nombres?.primero || '';
+    const lastName = user?.apellidos?.primero || '';
+    fullName = `${firstName} ${lastName}`.trim();
+  }
+
+  // Si tenemos un nombre, generar avatar con iniciales
+  if (fullName) {
+    // Usar ui-avatars.com para generar avatar con iniciales
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`;
+  }
+
+  // Fallback a avatar por defecto
+  return '/avatars/default-avatar.png';
+};

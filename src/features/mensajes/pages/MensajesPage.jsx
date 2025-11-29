@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { MessageCircle, Search, Send, X, User, Loader, MoreVertical, Trash2, Archive, Eraser, Star, Filter, Paperclip, Smile, Image as ImageIcon, Video } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { getSocket } from '../../../shared/lib/socket';
 import conversationService from '../../../api/conversationService';
-import { getAvatarUrl, handleImageError } from '../../../shared/utils/avatarUtils';
+import { getAvatarUrl, handleImageError, getUserAvatar } from '../../../shared/utils/avatarUtils';
 import api from '../../../api/config';
 import EmojiPicker from '../../../shared/components/EmojiPicker/EmojiPicker';
+import ConversationSkeleton from '../components/skeleton/ConversationSkeleton';
 
 const MensajesPage = () => {
   const { id: paramConvId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const userId = user?._id || user?.id;
@@ -21,6 +23,7 @@ const MensajesPage = () => {
   const [busqueda, setBusqueda] = useState('');
   const [mostrarBuscador, setMostrarBuscador] = useState(false);
   const [cargando, setCargando] = useState(false);
+  const [cargandoConversaciones, setCargandoConversaciones] = useState(false);
   const [busquedaGlobal, setBusquedaGlobal] = useState('');
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
   const [cargandoBusqueda, setCargandoBusqueda] = useState(false);
@@ -62,20 +65,57 @@ const MensajesPage = () => {
 
     const fetchConversaciones = async () => {
       try {
+        setCargandoConversaciones(true);
         const response = await conversationService.getAllConversations(tabActiva);
         const convs = response.data?.conversations || response.conversations || response.data || [];
         setConversaciones(Array.isArray(convs) ? convs : []);
       } catch (error) {
         console.error('Error al cargar conversaciones:', error);
         setConversaciones([]);
+      } finally {
+        setCargandoConversaciones(false);
       }
     };
 
     fetchConversaciones();
   }, [userId, tabActiva]);
 
-  // Cargar conversación específica desde parámetro de URL
+  // Cargar conversación específica desde parámetro de URL o query
   useEffect(() => {
+    const targetUserId = searchParams.get('userId');
+
+    // Si viene userId por query param, crear/obtener conversación
+    if (targetUserId && userId && !paramConvId) {
+      const loadConversation = async () => {
+        try {
+          setCargando(true);
+          const response = await conversationService.getOrCreateConversation(targetUserId);
+          const conv = response.data?.conversation || response.conversation || response.data;
+
+          if (conv) {
+            setConversacionActual(conv);
+            loadMessages(conv._id);
+
+            // Actualizar URL a conversación real
+            navigate(`/mensajes/${conv._id}`, { replace: true });
+
+            // Recargar conversaciones para mostrar la nueva
+            const convResponse = await conversationService.getAllConversations(tabActiva);
+            const convs = convResponse.data?.conversations || convResponse.conversations || convResponse.data || [];
+            setConversaciones(Array.isArray(convs) ? convs : []);
+          }
+        } catch (error) {
+          console.error('Error al cargar conversación:', error);
+        } finally {
+          setCargando(false);
+        }
+      };
+
+      loadConversation();
+      return;
+    }
+
+    // Cargar conversación desde parámetro de ruta
     if (!paramConvId || !userId) return;
 
     const loadConversation = async () => {
@@ -96,8 +136,8 @@ const MensajesPage = () => {
             navigate(`/mensajes/${conv._id}`, { replace: true });
 
             // Recargar conversaciones para mostrar la nueva
-            const response = await conversationService.getAllConversations(tabActiva);
-            const convs = response.data?.conversations || response.conversations || response.data || [];
+            const convResponse = await conversationService.getAllConversations(tabActiva);
+            const convs = convResponse.data?.conversations || convResponse.conversations || convResponse.data || [];
             setConversaciones(Array.isArray(convs) ? convs : []);
           }
         } else {
@@ -118,7 +158,7 @@ const MensajesPage = () => {
     };
 
     loadConversation();
-  }, [paramConvId, userId, navigate]);
+  }, [paramConvId, userId, navigate, searchParams, tabActiva]);
 
   // Cargar mensajes de conversación
   const loadMessages = async (conversationId) => {
@@ -139,21 +179,35 @@ const MensajesPage = () => {
     }
   };
 
-  // Socket.IO - Escuchar nuevos mensajes
+  // Socket.IO - Escuchar nuevos mensajes globalmente
   useEffect(() => {
-    if (!conversacionActual) return;
+    if (!userId) return;
 
     const socket = getSocket();
     if (!socket) return;
 
-    // Suscribirse a la conversación
-    socket.emit('subscribeConversation', { conversationId: conversacionActual._id });
-
     const handleNewMessage = (message) => {
       console.log('💬 Nuevo mensaje recibido:', message);
 
-      // Solo agregar si es de la conversación actual
-      if (message.conversationId === conversacionActual._id) {
+      // Actualizar lista de conversaciones solo si no está en la pestaña actual
+      // Esto asegura que conversaciones eliminadas no reaparezcan
+      const fetchConvsIfNeeded = async () => {
+        try {
+          const response = await conversationService.getAllConversations(tabActiva);
+          const convs = response.data?.conversations || response.conversations || response.data || [];
+          setConversaciones(Array.isArray(convs) ? convs : []);
+        } catch (error) {
+          console.error('Error al actualizar conversaciones:', error);
+        }
+      };
+
+      // Solo actualizar si el mensaje no es de una conversación eliminada por el usuario
+      if (message.conversationId !== conversacionActual?._id) {
+        fetchConvsIfNeeded();
+      }
+
+      // Si es de la conversación actual, agregar a mensajes
+      if (conversacionActual && message.conversationId === conversacionActual._id) {
         setMensajes(prev => [...prev, message]);
         scrollToBottom();
 
@@ -169,7 +223,7 @@ const MensajesPage = () => {
     return () => {
       socket.off('newMessage', handleNewMessage);
     };
-  }, [conversacionActual, userId]);
+  }, [conversacionActual, userId, tabActiva]);
 
   // Cerrar menú al hacer click fuera
   useEffect(() => {
@@ -518,7 +572,7 @@ const MensajesPage = () => {
     // Filtro de búsqueda local
     if (busqueda) {
       const otro = getOtroParticipante(conv);
-      const nombreCompleto = `${otro?.nombre} ${otro?.apellido}`.toLowerCase();
+      const nombreCompleto = `${otro?.nombres?.primero} ${otro?.apellidos?.primero}`.toLowerCase();
       if (!nombreCompleto.includes(busqueda.toLowerCase())) {
         return false;
       }
@@ -538,11 +592,11 @@ const MensajesPage = () => {
   });
 
   return (
-    <div className="h-screen bg-white dark:bg-gray-900">
+    <div className="h-screen bg-white dark:bg-gray-900 overflow-hidden">
       <div className="container mx-auto h-full max-w-7xl">
-        <div className="grid grid-cols-12 h-full border-l border-r border-gray-200 dark:border-gray-700">
+        <div className="flex h-full border-l border-r border-gray-200 dark:border-gray-700">
           {/* Sidebar de conversaciones */}
-          <div className="col-span-4 border-r border-gray-200 dark:border-gray-700 h-full flex flex-col bg-white dark:bg-gray-900">
+          <div className="w-1/3 border-r border-gray-200 dark:border-gray-700 flex flex-col bg-white dark:bg-gray-900 overflow-hidden">
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
@@ -671,17 +725,17 @@ const MensajesPage = () => {
                             className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
                           >
                             <img
-                              src={getAvatarUrl(usuario.avatar)}
-                              alt={`${usuario.nombre} ${usuario.apellido}`}
+                              src={getUserAvatar(usuario)}
+                              alt={`${usuario?.nombres?.primero} ${usuario?.apellidos?.primero}`}
                               className="w-10 h-10 rounded-full object-cover"
                               onError={handleImageError}
                             />
                             <div className="flex-1">
                               <div className="font-semibold text-gray-900 dark:text-white text-sm">
-                                {usuario.nombre} {usuario.apellido}
+                                {usuario?.nombres?.primero} {usuario?.apellidos?.primero}
                               </div>
                               <div className="text-xs text-gray-500 dark:text-gray-400">
-                                {usuario.rol || 'Usuario'} · {usuario.ciudad || 'Sin ubicación'}
+                                {usuario?.seguridad?.rolSistema || 'Usuario'} · {usuario?.personal?.ubicacion?.ciudad || 'Sin ubicación'}
                               </div>
                             </div>
                             <User size={16} className="text-gray-400" />
@@ -695,8 +749,10 @@ const MensajesPage = () => {
             </div>
 
             {/* Lista de conversaciones */}
-            <div className="flex-1 overflow-y-auto">
-              {conversacionesFiltradas.length === 0 ? (
+            <div className="flex-1 overflow-y-auto min-h-0">
+              {cargandoConversaciones ? (
+                <ConversationSkeleton />
+              ) : conversacionesFiltradas.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-8">
                   <MessageCircle size={64} className="text-gray-300 dark:text-gray-600 mb-4" />
                   <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -725,15 +781,16 @@ const MensajesPage = () => {
                         onClick={() => handleSeleccionarConversacion(conv)}
                       >
                         <img
-                          src={getAvatarUrl(otro.avatar)}
-                          alt={`${otro.nombre} ${otro.apellido}`}
+                          src={getUserAvatar(otro)}
+                          alt={`${otro.nombres?.primero} ${otro.apellidos?.primero}`}
                           className="w-12 h-12 rounded-full object-cover"
+                          onError={handleImageError}
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1">
                               <h4 className="font-semibold text-gray-900 dark:text-white truncate">
-                                {otro.nombre} {otro.apellido}
+                                {otro.nombres?.primero} {otro.apellidos?.primero}
                               </h4>
                               {conv.starredBy?.some(id => id === userId) && (
                                 <Star size={14} className="text-yellow-500 fill-yellow-500 flex-shrink-0" />
@@ -843,7 +900,7 @@ const MensajesPage = () => {
           </div>
 
           {/* Panel de chat */}
-          <div className="col-span-8 flex flex-col h-full bg-white dark:bg-gray-900">
+          <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 overflow-hidden">
             {!conversacionActual || cargando ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
@@ -863,17 +920,18 @@ const MensajesPage = () => {
                   {otroUsuario && (
                     <>
                       <img
-                        src={getAvatarUrl(otroUsuario.avatar)}
-                        alt={`${otroUsuario.nombre} ${otroUsuario.apellido}`}
+                        src={getUserAvatar(otroUsuario)}
+                        alt={`${otroUsuario.nombres?.primero} ${otroUsuario.apellidos?.primero}`}
                         className="w-10 h-10 rounded-full object-cover cursor-pointer"
                         onClick={() => navigate(`/perfil/${otroUsuario._id}`)}
+                        onError={handleImageError}
                       />
                       <div>
                         <h3
                           className="font-semibold text-gray-900 dark:text-white cursor-pointer hover:text-indigo-600"
                           onClick={() => navigate(`/perfil/${otroUsuario._id}`)}
                         >
-                          {otroUsuario.nombre} {otroUsuario.apellido}
+                          {otroUsuario.nombres?.primero} {otroUsuario.apellidos?.primero}
                         </h3>
                         <p className="text-xs text-gray-500 dark:text-gray-400">Click para ver perfil</p>
                       </div>
@@ -882,7 +940,7 @@ const MensajesPage = () => {
                 </div>
 
                 {/* Mensajes */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900 min-h-0">
                   {mensajes.length === 0 ? (
                     <div className="text-center text-gray-500 dark:text-gray-400 py-8">
                       <p>No hay mensajes aún. ¡Envía el primero!</p>

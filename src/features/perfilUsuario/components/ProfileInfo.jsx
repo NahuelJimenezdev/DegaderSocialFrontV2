@@ -16,19 +16,19 @@ const ProfileInfo = memo(({ user, stats }) => {
     <div className="max-w-3xl mx-auto px-4">
       <div className="mt-4 space-y-2">
         <p className="text-sm md:text-base text-gray-900 dark:text-white">
-          {user.biografia || '¡Hola! Soy parte de la comunidad Degader 🙏'}
+          {user.social?.biografia || '¡Hola! Soy parte de la comunidad Degader 🙏'}
         </p>
 
         <div className="flex flex-wrap gap-3 md:gap-4 text-xs md:text-sm text-gray-500">
-          {user.ciudad && (
+          {user.personal?.ubicacion?.ciudad && (
             <span className="flex items-center gap-1">
               <MapPin size={14} />
-              {user.ciudad}
+              {user.personal.ubicacion.ciudad}
             </span>
           )}
-          {user.cargo && user.area && (
+          {user.fundacion?.cargo && user.fundacion?.area && (
             <span className="flex items-center gap-1">
-              {user.cargo} - {user.area}
+              {user.fundacion.cargo} - {user.fundacion.area}
             </span>
           )}
           <span className="flex items-center gap-1">

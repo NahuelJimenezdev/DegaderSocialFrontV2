@@ -46,7 +46,7 @@ const PerfilVisitantePage = () => {
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold mb-2">Biografía</h3>
           <p className="text-gray-600 dark:text-gray-400">
-            {usuario.biografia || 'Este usuario aún no tiene biografía.'}
+            {usuario.social?.biografia || 'Este usuario aún no tiene biografía.'}
           </p>
         </div>
 

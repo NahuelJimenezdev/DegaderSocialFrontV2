@@ -53,17 +53,17 @@ const CommentSection = ({
           <div className="flex gap-2 md:gap-3">
             <img
               src={
-                comment.usuario?.avatar
-                  ? `http://localhost:3001${comment.usuario.avatar}`
-                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.usuario?.nombre || 'Usuario')}&background=3b82f6&color=fff`
+                comment.usuario?.social?.fotoPerfil
+                  ? `http://localhost:3001${comment.usuario.social.fotoPerfil}`
+                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(`${comment.usuario?.nombres?.primero} ${comment.usuario?.apellidos?.primero}` || 'Usuario')}&background=3b82f6&color=fff`
               }
-              alt={comment.usuario?.nombre}
+              alt={`${comment.usuario?.nombres?.primero} ${comment.usuario?.apellidos?.primero}`}
               className="w-8 h-8 md:w-10 md:h-10 rounded-full flex-shrink-0 object-cover"
             />
             <div className="flex-1 min-w-0">
               <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-3 py-2">
                 <p className="font-semibold text-sm">
-                  {comment.usuario?.nombreCompleto || `${comment.usuario?.nombre} ${comment.usuario?.apellido}`}
+                  {`${comment.usuario?.nombres?.primero} ${comment.usuario?.apellidos?.primero}`}
                 </p>
                 <p className="text-sm mt-1 break-words">{comment.contenido}</p>
               </div>

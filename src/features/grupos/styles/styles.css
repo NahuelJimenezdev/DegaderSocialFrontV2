@@ -1,10 +1,16 @@
+/* Prevenir scroll horizontal en todo el módulo de grupos */
+.grupos-container,
+.grupos-container * {
+    max-width: 100%;
+}
+
 .tamano_chat {
     /* Ajusta este valor según el espacio ocupado por otros elementos */
-    height: calc(100vh - 128px)!important; 
+    height: calc(100vh - 128px)!important;
     /* Altura máxima para pantallas grandes */
-    max-height: 810px!important; 
+    max-height: 810px!important;
     /* Altura mínima para pantallas pequeñas */
-    min-height: 400px!important; 
+    min-height: 400px!important;
 }
 
 

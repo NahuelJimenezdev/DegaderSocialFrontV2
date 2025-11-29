@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User } from 'lucide-react';
-import { getAvatarUrl, getInitialsAvatar } from '../utils/avatarUtils';
+import { getUserAvatar } from '../utils/avatarUtils';
+import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import './ProfileDropdown.css';
 
@@ -13,20 +14,10 @@ const ProfileDropdown = () => {
   const dropdownRef = useRef(null);
 
   // Obtener nombre completo del usuario
-  const fullName = useMemo(() => {
-    if (!user) return 'Usuario';
-    return `${user.nombre || ''} ${user.apellido || ''}`.trim() || 'Usuario';
-  }, [user]);
+  const fullName = useMemo(() => getNombreCompleto(user), [user]);
 
-  // Memoizar avatar URL - si no tiene avatar, usar iniciales
-  const avatarUrl = useMemo(() => {
-    const avatar = user?.avatar;
-    // Si no hay avatar o es una ruta default, generar iniciales
-    if (!avatar || avatar.includes('default-avatar')) {
-      return getInitialsAvatar(fullName);
-    }
-    return getAvatarUrl(avatar);
-  }, [user?.avatar, fullName]);
+  // Memoizar avatar URL usando la función centralizada
+  const avatarUrl = useMemo(() => getUserAvatar(user), [user]);
 
   // Click outside handler
   useEffect(() => {

@@ -8,6 +8,8 @@ import friendshipService from '../../../api/friendshipService';
 import groupService from '../../../api/groupService';
 import NotificationCard from './NotificationCard';
 import styles from '../styles/NotificationsDropdown.module.css';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import { getNombreCompleto } from '../../../shared/utils/userUtils';
 
 export default function NotificationsDropdown() {
   const { user } = useAuth();
@@ -86,9 +88,9 @@ export default function NotificationsDropdown() {
           setNotifications(prev => {
             // Filtrar notificaciones de solicitud de amistad del usuario correspondiente
             return prev.filter(n => {
-              const fromUserId = n.remitenteId?._id || n.datos?.fromUserId;
+              const fromUserId = n.remitenteId?._id || n.emisor?._id || n.datos?.fromUserId;
               const isFromThisUser = String(fromUserId) === String(noti.usuarioId);
-              const isFriendRequest = n.tipo === 'amistad' && n.mensaje?.includes('te envió una solicitud');
+              const isFriendRequest = n.tipo === 'solicitud_amistad' || n.tipo === 'amistad';
 
               // Eliminar si es una solicitud de amistad de este usuario
               if (isFromThisUser && isFriendRequest) {
@@ -99,6 +101,49 @@ export default function NotificationsDropdown() {
             });
           });
         }
+
+        // No mostrar en dropdown
+        return;
+      }
+
+      // Manejar cuando se cancela una solicitud enviada
+      if (noti.tipo === 'solicitud_cancelada') {
+        console.log('🚫 Solicitud cancelada por el usuario:', noti.usuarioId);
+        setNotifications(prev => {
+          return prev.filter(n => {
+            const fromUserId = n.emisor?._id || n.remitenteId?._id || n.datos?.fromUserId;
+            const isFromThisUser = String(fromUserId) === String(noti.usuarioId);
+            const isFriendRequest = n.tipo === 'solicitud_amistad' || n.tipo === 'amistad';
+
+            if (isFromThisUser && isFriendRequest) {
+              console.log('🗑️ Eliminando notificación de solicitud cancelada:', n._id);
+              return false;
+            }
+            return true;
+          });
+        });
+        // No mostrar en dropdown
+        return;
+      }
+
+      // Manejar cuando se rechaza una solicitud que envié
+      if (noti.tipo === 'solicitud_rechazada') {
+        console.log('❌ Mi solicitud fue rechazada por el usuario:', noti.usuarioId);
+
+        // Filtrar la notificación de solicitud que envié
+        setNotifications(prev => {
+          return prev.filter(n => {
+            const toUserId = n.receptor?._id || n.receptor;
+            const isToThisUser = String(toUserId) === String(noti.usuarioId);
+            const isFriendRequest = n.tipo === 'solicitud_amistad' || n.tipo === 'amistad';
+
+            if (isToThisUser && isFriendRequest) {
+              console.log('🗑️ Eliminando notificación de solicitud rechazada:', n._id);
+              return false;
+            }
+            return true;
+          });
+        });
 
         // No mostrar en dropdown
         return;
@@ -154,47 +199,70 @@ export default function NotificationsDropdown() {
     };
   }, []);
 
+  // Filtrar solo notificaciones no leídas para el dropdown
+  const unreadNotifications = Array.isArray(notifications)
+    ? notifications.filter(n => !n.leido)
+    : [];
+
   // Contador de no leídas
-  const unreadCount = Array.isArray(notifications)
-    ? notifications.filter(n => !n.leido).length
-    : 0;
+  const unreadCount = unreadNotifications.length;
 
-  // Marcar como leídas al abrir
-  useEffect(() => {
-    if (open && unreadCount > 0) {
-      // Marcar todas como leídas (optimistic update)
-      setNotifications(prev => prev.map(n => ({ ...n, leido: true })));
+  // Marcar notificación como leída
+  const markAsRead = async (notificacionId) => {
+    try {
+      // Marcar en el backend
+      await notificationService.markAsRead(notificacionId);
 
-      // Llamar al backend
-      notificationService.markAllAsRead().catch(err => {
-        console.error('❌ Error al marcar notificaciones como leídas:', err);
-      });
+      // Actualizar en el estado local - remover de la lista de no leídas
+      setNotifications(prev =>
+        prev.map(n => n._id === notificacionId ? { ...n, leido: true } : n)
+      );
+    } catch (error) {
+      console.error('❌ Error al marcar notificación como leída:', error);
     }
-  }, [open, unreadCount]);
+  };
 
   // Manejar aceptar solicitud de amistad
   const handleAccept = async (notificacion) => {
+    // Prevenir procesamiento duplicado
+    if (processedNotifications.has(notificacion._id)) {
+      console.warn('⚠️ Notificación ya está siendo procesada');
+      return;
+    }
+
     try {
       console.log('✅ Aceptando solicitud de amistad:', notificacion);
 
       // Marcar como procesada inmediatamente para UI
       setProcessedNotifications(prev => new Set([...prev, notificacion._id]));
 
+      // Marcar como leída
+      if (!notificacion.leido) {
+        markAsRead(notificacion._id);
+      }
+
       // Validar que sea una solicitud de amistad procesable
-      if (notificacion.tipo !== 'amistad') {
-        console.warn('⚠️ Notificación no es de tipo amistad');
+      if (notificacion.tipo !== 'amistad' && notificacion.tipo !== 'solicitud_amistad') {
+        console.warn('⚠️ Notificación no es de tipo amistad o solicitud_amistad');
+        setProcessedNotifications(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(notificacion._id);
+          return newSet;
+        });
         return;
       }
 
       // Solo procesar notificaciones de solicitudes entrantes
-      if (!notificacion.mensaje.includes('te envió una solicitud')) {
-        console.warn('⚠️ Esta notificación no es una solicitud entrante:', notificacion.mensaje);
+      if (!notificacion.mensaje?.includes('te envió una solicitud') && !notificacion.contenido?.includes('te envió una solicitud')) {
+        console.warn('⚠️ Esta notificación no es una solicitud entrante:', notificacion.mensaje || notificacion.contenido);
         alert('Esta notificación no se puede procesar como solicitud entrante.');
         return;
       }
 
       // Obtener ID del remitente
-      const fromUserId = notificacion.remitenteId?._id ||
+      const fromUserId = notificacion.emisor?._id ||
+        notificacion.emisor ||
+        notificacion.remitenteId?._id ||
         notificacion.remitenteId ||
         notificacion.datos?.fromUserId;
 
@@ -220,21 +288,35 @@ export default function NotificationsDropdown() {
       // Remover notificación de la lista
       setNotifications(prev => prev.filter(n => n._id !== notificacion._id));
     } catch (error) {
-      console.error('❌ Error inesperado al aceptar solicitud:', error);
-      alert('Error inesperado al aceptar la solicitud');
-      setProcessedNotifications(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(notificacion._id);
-        return newSet;
-      });
+      console.error('❌ Error al aceptar solicitud:', error);
+
+      // Si el error es 400 "La solicitud ya fue procesada", solo eliminar la notificación sin mostrar error
+      if (error.response?.status === 400 && error.response?.data?.message?.includes('ya fue procesada')) {
+        console.log('⚠️ La solicitud ya fue procesada, eliminando notificación');
+        await notificationService.deleteNotification(notificacion._id);
+        setNotifications(prev => prev.filter(n => n._id !== notificacion._id));
+      } else {
+        alert('Error al aceptar la solicitud');
+        setProcessedNotifications(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(notificacion._id);
+          return newSet;
+        });
+      }
     }
   };
 
   // Manejar rechazar solicitud de amistad
   const handleReject = async (notificacion) => {
+    // Prevenir procesamiento duplicado
+    if (processedNotifications.has(notificacion._id)) {
+      console.warn('⚠️ Notificación ya está siendo procesada');
+      return;
+    }
+
     try {
       // Validar que sea una solicitud de amistad entrante procesable
-      if (!notificacion.mensaje?.includes('te envió una solicitud')) {
+      if (!notificacion.mensaje?.includes('te envió una solicitud') && !notificacion.contenido?.includes('te envió una solicitud')) {
         console.warn('⚠️ Esta notificación no es una solicitud entrante procesable');
         return;
       }
@@ -244,8 +326,15 @@ export default function NotificationsDropdown() {
       // Marcar como procesada inmediatamente para UI
       setProcessedNotifications(prev => new Set([...prev, notificacion._id]));
 
+      // Marcar como leída
+      if (!notificacion.leido) {
+        markAsRead(notificacion._id);
+      }
+
       // Obtener ID del remitente
-      const fromUserId = notificacion.remitenteId?._id ||
+      const fromUserId = notificacion.emisor?._id ||
+        notificacion.emisor ||
+        notificacion.remitenteId?._id ||
         notificacion.remitenteId ||
         notificacion.datos?.fromUserId;
 
@@ -288,6 +377,11 @@ export default function NotificationsDropdown() {
 
       // Marcar como procesada inmediatamente para UI
       setProcessedNotifications(prev => new Set([...prev, notificacion._id]));
+
+      // Marcar como leída
+      if (!notificacion.leido) {
+        markAsRead(notificacion._id);
+      }
 
       // Validar que sea una solicitud de grupo procesable
       if (notificacion.tipo !== 'solicitud_grupo') {
@@ -338,6 +432,11 @@ export default function NotificationsDropdown() {
       // Marcar como procesada inmediatamente para UI
       setProcessedNotifications(prev => new Set([...prev, notificacion._id]));
 
+      // Marcar como leída
+      if (!notificacion.leido) {
+        markAsRead(notificacion._id);
+      }
+
       // Validar que sea una solicitud de grupo procesable
       if (notificacion.tipo !== 'solicitud_grupo') {
         console.warn('⚠️ Notificación no es de tipo solicitud_grupo');
@@ -381,6 +480,11 @@ export default function NotificationsDropdown() {
 
   // Manejar navegación al perfil del usuario o a reuniones
   const handleProfileClick = (notificacion) => {
+    // Marcar como leída al hacer clic
+    if (!notificacion.leido) {
+      markAsRead(notificacion._id);
+    }
+
     // Si es una notificación de reunión, navegar a reuniones con el meetingId
     if (notificacion.tipo === 'evento' && notificacion.metadata?.meetingId) {
       console.log('📅 Navegando a reunión específica:', notificacion.metadata.meetingId);
@@ -416,25 +520,51 @@ export default function NotificationsDropdown() {
       {open && (
         <div className={`${styles.dropdownMenu} ${styles.dropdownAnim}`}>
           <h4 className={styles.title}>Notificaciones</h4>
-          {notifications.length === 0 ? (
+          {unreadNotifications.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>🔔</div>
-              <div className={styles.emptyText}>No tienes notificaciones</div>
+              <div className={styles.emptyText}>No tienes notificaciones nuevas</div>
               <div className={styles.emptySubtext}>Cuando tengas nuevas notificaciones, aparecerán aquí</div>
             </div>
           ) : (
-            <div className={styles.notificationsContainer}>
-              {notifications.map(n => {
+            <>
+              <div className={styles.notificationsContainer}>
+                {unreadNotifications.map(n => {
                 // Determinar el nombre y avatar según el tipo de notificación
-                let displayName = n.remitenteId?.nombre || n.datos?.nombre;
-                let displayAvatar = n.remitenteId?.avatar || n.datos?.avatar;
+                let displayName = 'Usuario';
+                let displayAvatar = null;
                 let displayMessage = n.mensaje || n.contenido;
 
-                // Para notificaciones de grupo, usar el emisor
+                // Helper para obtener nombre completo - maneja UserV2 estructura
+                const getFullName = (user) => {
+                  if (!user) return null;
+                  // Use the shared utility function that handles UserV2
+                  const nombre = getNombreCompleto(user);
+                  return nombre !== 'Usuario' ? nombre : null;
+                };
+
+                // Helper para obtener avatar - maneja UserV2 estructura
+                const getAvatar = (user) => {
+                  if (!user) return null;
+                  // Use the shared utility function that handles UserV2
+                  return getUserAvatar(user);
+                };
+
+                const remitente = n.remitenteId || n.emisor || n.datos;
+                
+                if (remitente) {
+                  displayName = getFullName(remitente) || displayName;
+                  displayAvatar = getAvatar(remitente);
+                }
+
+                // Para notificaciones de grupo, usar el emisor explícitamente si existe
                 if (n.tipo === 'solicitud_grupo' || n.tipo === 'solicitud_grupo_aprobada' || n.tipo === 'solicitud_grupo_rechazada') {
-                  displayName = `${n.emisor?.nombre || ''} ${n.emisor?.apellido || ''}`.trim() || 'Usuario';
-                  displayAvatar = n.emisor?.avatar;
-                  displayMessage = n.contenido;
+                  if (n.emisor) {
+                    displayName = getFullName(n.emisor) || displayName;
+                    displayAvatar = getAvatar(n.emisor);
+                  }
+                  // NO sobrescribir displayMessage - el backend ya construyó el mensaje completo con nombre de usuario
+                  // displayMessage ya contiene: "Nombre Apellido solicitó unirse al grupo 'NombreGrupo'"
                 }
 
                 // Para notificaciones de reuniones (tipo === 'evento')
@@ -448,7 +578,7 @@ export default function NotificationsDropdown() {
                   };
                   displayName = titles[eventType] || 'Notificación de Reunión';
                   displayMessage = n.contenido;
-                  displayAvatar = null; // Sin avatar, se mostrará icono
+                  // displayAvatar se mantiene con el valor del emisor si existe
                 }
 
                 return (
@@ -470,6 +600,16 @@ export default function NotificationsDropdown() {
                 );
               })}
             </div>
+            <div
+              className={styles.viewAllLink}
+              onClick={() => {
+                navigate('/notificaciones');
+                setOpen(false);
+              }}
+            >
+              Ver todas las notificaciones
+            </div>
+          </>
           )}
         </div>
       )}
