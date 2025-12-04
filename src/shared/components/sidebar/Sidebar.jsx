@@ -24,7 +24,7 @@ const Sidebar = () => {
             <NavItem to="/Mis_grupos" icon={() => <span className="material-symbols-outlined">groups</span>} label="Grupos" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/Mi_iglesia" icon={Building2} label="Iglesia" />
+            <NavItem to="/Mi_iglesia" icon={Building2} label="Institución" />
           </div>
           <div className="sidebar-items">
             <NavItem to="/Mis_carpetas" icon={Folder} label="Mis Carpetas" />

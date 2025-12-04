@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import groupService from '../../../api/groupService';
+import { getSocket } from '../../../shared/lib/socket';
 
 export const useGroupData = (id) => {
   const navigate = useNavigate();
@@ -34,6 +35,26 @@ export const useGroupData = (id) => {
     if (id) {
       loadGroupData();
     }
+  }, [id]);
+
+  // Escuchar actualizaciones del grupo en tiempo real
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket || !id) return;
+
+    const handleGroupUpdated = (updatedGroup) => {
+      // Verificar si la actualización es para este grupo
+      if (String(updatedGroup._id) === String(id)) {
+        console.log('🔄 [SOCKET] Grupo actualizado:', updatedGroup);
+        setGroupData(prev => ({ ...prev, ...updatedGroup }));
+      }
+    };
+
+    socket.on('groupUpdated', handleGroupUpdated);
+
+    return () => {
+      socket.off('groupUpdated', handleGroupUpdated);
+    };
   }, [id]);
 
   return { groupData, loading, error, refetch: loadGroupData };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import groupService from '../../../api/groupService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import AudioPlayer from '../../../shared/components/AudioPlayer/AudioPlayer';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
@@ -17,6 +18,49 @@ const getAttachmentUrl = (url) => {
   }
   // Si es una URL relativa, agregar el base URL
   return `${getBaseUrl()}${url}`;
+};
+
+// Obtener información del archivo según su extensión para mostrar preview estilo WhatsApp
+const getFileInfo = (fileName) => {
+  if (!fileName) return { icon: 'description', color: 'bg-gray-500', label: 'Archivo' };
+
+  const ext = fileName.split('.').pop()?.toLowerCase();
+
+  const fileTypes = {
+    // PDFs
+    pdf: { icon: 'picture_as_pdf', color: 'bg-red-600', label: 'PDF' },
+    // Word
+    doc: { icon: 'description', color: 'bg-blue-600', label: 'Word' },
+    docx: { icon: 'description', color: 'bg-blue-600', label: 'Word' },
+    // Excel
+    xls: { icon: 'table_chart', color: 'bg-green-600', label: 'Excel' },
+    xlsx: { icon: 'table_chart', color: 'bg-green-600', label: 'Excel' },
+    // PowerPoint
+    ppt: { icon: 'slideshow', color: 'bg-orange-600', label: 'PowerPoint' },
+    pptx: { icon: 'slideshow', color: 'bg-orange-600', label: 'PowerPoint' },
+    // Texto
+    txt: { icon: 'article', color: 'bg-gray-600', label: 'Texto' },
+    // Código
+    js: { icon: 'code', color: 'bg-yellow-500', label: 'JavaScript' },
+    py: { icon: 'code', color: 'bg-blue-500', label: 'Python' },
+    html: { icon: 'code', color: 'bg-orange-500', label: 'HTML' },
+    css: { icon: 'code', color: 'bg-purple-500', label: 'CSS' },
+    json: { icon: 'data_object', color: 'bg-gray-700', label: 'JSON' },
+    // Comprimidos
+    zip: { icon: 'folder_zip', color: 'bg-yellow-700', label: 'ZIP' },
+    rar: { icon: 'folder_zip', color: 'bg-purple-700', label: 'RAR' },
+    '7z': { icon: 'folder_zip', color: 'bg-gray-700', label: '7Z' },
+  };
+
+  return fileTypes[ext] || { icon: 'description', color: 'bg-gray-500', label: ext?.toUpperCase() || 'Archivo' };
+};
+
+// Formatear tamaño de archivo
+const formatFileSize = (bytes) => {
+  if (!bytes) return '';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
 const GroupEvents = ({ groupData, onGoToMessage }) => {
@@ -67,208 +111,143 @@ const GroupEvents = ({ groupData, onGoToMessage }) => {
     <div className="h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
-              <span className="material-symbols-outlined text-yellow-500 text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                star
-              </span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Mensajes Destacados</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {destacados.length} {destacados.length === 1 ? 'mensaje' : 'mensajes'} guardado{destacados.length !== 1 ? 's' : ''} para ti
-              </p>
-            </div>
-          </div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Mensajes Destacados</h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            {destacados.length} {destacados.length === 1 ? 'mensaje' : 'mensajes'} guardado{destacados.length !== 1 ? 's' : ''} para ti
+          </p>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-              <p className="text-gray-500 dark:text-gray-400 mt-4">Cargando mensajes destacados...</p>
-            </div>
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
           </div>
         ) : destacados.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-16 text-center border border-gray-100 dark:border-gray-700">
-            <div className="w-24 h-24 bg-yellow-50 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="material-symbols-outlined text-yellow-400 dark:text-yellow-500" style={{ fontSize: '48px' }}>
-                star_outline
-              </span>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No hay mensajes destacados
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              Destaca mensajes importantes desde el chat para encontrarlos fácilmente aquí
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
+            <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">
+              star_outline
+            </span>
+            <p className="text-gray-600 dark:text-gray-400 mt-4">
+              No hay mensajes destacados aún
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {destacados.map((msg) => {
               const senderName = msg.author
-                ? `${msg.author.nombre || ''} ${msg.author.apellido || ''}`.trim()
+                ? `${msg.author.nombres?.primero || ''} ${msg.author.apellidos?.primero || ''}`.trim()
                 : 'Usuario';
 
               return (
                 <div
                   key={msg._id}
-                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border-l-4 border-yellow-400 hover:shadow-md transition-shadow cursor-pointer"
+                  className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition-colors cursor-pointer p-4"
                   onClick={() => onGoToMessage && onGoToMessage(msg._id)}
                 >
-                  <div className="p-5">
-                    {/* Header del mensaje */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800">
-                          <img
-                            src={getUserAvatar(msg.author)}
-                            alt={senderName}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.src = '/avatars/default-avatar.png';
-                            }}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-900 dark:text-white">{senderName}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {formatDate(msg.createdAt)}
-                          </p>
-                        </div>
+                  {/* Header del mensaje */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
+                        <img
+                          src={getUserAvatar(msg.author)}
+                          alt={senderName}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = '/avatars/default-avatar.png';
+                          }}
+                        />
                       </div>
-                      <span
-                        className="material-symbols-outlined text-yellow-500 flex-shrink-0"
-                        style={{ fontVariationSettings: "'FILL' 1", fontSize: '24px' }}
-                      >
-                        star
-                      </span>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white text-sm">{senderName}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {formatDate(msg.createdAt)}
+                        </p>
+                      </div>
                     </div>
-
-                    {/* Reply To */}
-                    {msg.replyTo && (
-                      <div className="bg-gray-50 dark:bg-gray-700/50 border-l-2 border-primary rounded-r-lg p-3 mb-3">
-                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                          Respuesta a: {msg.replyTo.author ? `${msg.replyTo.author.nombre} ${msg.replyTo.author.apellido}` : 'Usuario'}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                          {msg.replyTo.content || 'Archivo adjunto'}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Contenido del mensaje */}
-                    {msg.content && (
-                      <p className="text-[15px] text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
-                        {msg.content}
-                      </p>
-                    )}
-
-                    {/* Archivos adjuntos */}
-                    {msg.attachments && msg.attachments.length > 0 && (
-                      <div className={`${msg.content ? 'mt-4' : ''} space-y-3`}>
-                        {msg.attachments.map((att, idx) => {
-                          if (att.type === 'image') {
-                            return (
-                              <div key={idx} className="rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700">
-                                <img
-                                  src={getAttachmentUrl(att.url)}
-                                  alt={att.name || 'Imagen'}
-                                  className="max-w-full h-auto max-h-96 object-contain cursor-pointer hover:opacity-95 transition-opacity"
-                                  onClick={() => window.open(getAttachmentUrl(att.url), '_blank')}
-                                />
-                              </div>
-                            );
-                          } else if (att.type === 'video') {
-                            return (
-                              <div key={idx} className="rounded-xl overflow-hidden">
-                                <video
-                                  controls
-                                  className="max-w-full h-auto max-h-96 rounded-xl"
-                                  src={getAttachmentUrl(att.url)}
-                                >
-                                  Tu navegador no soporta video
-                                </video>
-                              </div>
-                            );
-                          } else if (att.type === 'link') {
-                            return (
-                              <a
-                                key={idx}
-                                href={att.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-3 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors group"
-                              >
-                                <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">link</span>
-                                <div className="flex-1 min-w-0">
-                                  <p className="font-medium text-blue-600 dark:text-blue-400 truncate group-hover:underline">
-                                    {att.preview?.title || att.url}
-                                  </p>
-                                  {att.preview?.description && (
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-1 mt-0.5">
-                                      {att.preview.description}
-                                    </p>
-                                  )}
-                                </div>
-                                <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-lg">
-                                  open_in_new
-                                </span>
-                              </a>
-                            );
-                          } else {
-                            // Archivo genérico
-                            return (
-                              <a
-                                key={idx}
-                                href={getAttachmentUrl(att.url)}
-                                download={att.name}
-                                className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                              >
-                                <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-xl">
-                                  insert_drive_file
-                                </span>
-                                <div className="flex-1 min-w-0">
-                                  <p className="font-medium text-gray-900 dark:text-white truncate">
-                                    {att.name}
-                                  </p>
-                                  {att.size && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                      {(att.size / 1024 / 1024).toFixed(2)} MB
-                                    </p>
-                                  )}
-                                </div>
-                                <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-lg">
-                                  download
-                                </span>
-                              </a>
-                            );
-                          }
-                        })}
-                      </div>
-                    )}
-
-                    {/* Reacciones */}
-                    {msg.reactions && msg.reactions.length > 0 && (
-                      <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                        {Object.entries(
-                          msg.reactions.reduce((acc, r) => {
-                            acc[r.emoji] = (acc[r.emoji] || 0) + 1;
-                            return acc;
-                          }, {})
-                        ).map(([emoji, count]) => (
-                          <div
-                            key={emoji}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-full text-sm"
-                          >
-                            <span className="text-base">{emoji}</span>
-                            <span className="text-gray-700 dark:text-gray-300 font-medium">{count}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <span className="material-symbols-outlined text-yellow-400 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      star
+                    </span>
                   </div>
+
+                  {/* Reply To */}
+                  {msg.replyTo && (
+                    <div className="bg-gray-50 dark:bg-gray-700/50 border-l-2 border-primary rounded-r p-2 mb-3 text-xs">
+                      <p className="font-medium text-gray-700 dark:text-gray-300 mb-0.5">
+                        Respuesta a: {msg.replyTo.author ? `${msg.replyTo.author.nombres?.primero || ''} ${msg.replyTo.author.apellidos?.primero || ''}` : 'Usuario'}
+                      </p>
+                      <p className="text-gray-500 dark:text-gray-400 line-clamp-1">
+                        {msg.replyTo.content || 'Archivo adjunto'}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Contenido del mensaje */}
+                  {msg.content && (
+                    <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap leading-relaxed">
+                      {msg.content}
+                    </p>
+                  )}
+
+                  {/* Archivos adjuntos - Versión simplificada */}
+                  {msg.attachments && msg.attachments.length > 0 && (
+                    <div className={`${msg.content ? 'mt-3' : ''} space-y-2`}>
+                      {msg.attachments.map((att, idx) => {
+                        if (att.type === 'image') {
+                          return (
+                            <div key={idx} className="rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 max-w-sm">
+                              <img
+                                src={getAttachmentUrl(att.url)}
+                                alt={att.name || 'Imagen'}
+                                className="max-h-60 object-contain"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.open(getAttachmentUrl(att.url), '_blank');
+                                }}
+                              />
+                            </div>
+                          );
+                        } else if (att.type === 'audio') {
+                          return (
+                            <div key={idx} className="max-w-md">
+                              <AudioPlayer
+                                audioUrl={getAttachmentUrl(att.url)}
+                                isMyMessage={false}
+                              />
+                            </div>
+                          );
+                        } else {
+                          // Archivos genéricos y links simplificados
+                          const isLink = att.type === 'link';
+                          const icon = isLink ? 'link' : getFileInfo(att.name).icon;
+                          
+                          return (
+                            <a
+                              key={idx}
+                              href={isLink ? att.url : getAttachmentUrl(att.url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-700"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className={`w-8 h-8 rounded flex items-center justify-center ${isLink ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-600'}`}>
+                                <span className="material-symbols-outlined text-lg">{icon}</span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                  {isLink ? (att.preview?.title || att.url) : att.name}
+                                </p>
+                                {!isLink && att.size && (
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {formatFileSize(att.size)}
+                                  </p>
+                                )}
+                              </div>
+                            </a>
+                          );
+                        }
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}

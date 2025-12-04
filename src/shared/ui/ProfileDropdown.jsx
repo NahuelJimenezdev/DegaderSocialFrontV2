@@ -54,7 +54,7 @@ const ProfileDropdown = () => {
     { icon: MessageCircle, label: 'Mensajes', path: '/mensajes' },
     { icon: Video, label: 'Mis Reuniones', path: '/Mis_reuniones' },
     { icon: Building2, label: 'Grupos', path: '/Mis_grupos' },
-    { icon: Building2, label: 'Iglesia', path: '/Mi_iglesia' },
+    { icon: Building2, label: 'Institución', path: '/Mi_iglesia' },
     { icon: Folder, label: 'Mis Carpetas', path: '/Mis_carpetas' },
     { icon: User, label: 'Perfil', path: '/Mi_perfil' }
   ];

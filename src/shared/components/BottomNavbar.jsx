@@ -24,7 +24,7 @@ const BottomNavbar = () => {
     },
     {
       icon: Building2,
-      label: 'Iglesia',
+      label: 'Institución',
       path: '/Mi_iglesia'
     },
     {

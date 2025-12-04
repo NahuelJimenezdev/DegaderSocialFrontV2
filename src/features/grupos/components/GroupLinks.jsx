@@ -107,10 +107,10 @@ const GroupLinks = ({ groupData }) => {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="space-y-3">
             {enlaces.map((enlace, idx) => {
               const senderName = enlace.author
-                ? `${enlace.author.nombre || ''} ${enlace.author.apellido || ''}`.trim()
+                ? `${enlace.author.nombres?.primero || ''} ${enlace.author.apellidos?.primero || ''}`.trim()
                 : 'Usuario';
 
               const domain = getDomain(enlace.url);
@@ -119,103 +119,58 @@ const GroupLinks = ({ groupData }) => {
               return (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all group"
+                  className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition-colors"
                 >
                   <a
                     href={enlace.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block p-5"
+                    className="block p-4"
                   >
-                    {/* Contenido del enlace */}
-                    <div className="flex gap-4">
-                      {/* Favicon y título */}
+                    <div className="flex items-start gap-3">
+                      {/* Favicon */}
+                      {favicon && (
+                        <img
+                          src={favicon}
+                          alt="favicon"
+                          className="w-5 h-5 mt-0.5 flex-shrink-0 rounded"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      )}
+                      
+                      {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start gap-3 mb-3">
-                          {favicon && (
-                            <img
-                              src={favicon}
-                              alt="favicon"
-                              className="w-6 h-6 mt-0.5 flex-shrink-0 rounded"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                              }}
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-primary transition-colors text-lg leading-snug">
-                              {enlace.title || enlace.url}
-                            </h3>
-                            {enlace.description && (
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
-                                {enlace.description}
-                              </p>
-                            )}
-                            <div className="flex items-center gap-2 mt-3">
-                              <span className="text-xs font-medium text-gray-500 dark:text-gray-500 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-                                {domain}
-                              </span>
-                              <span className="material-symbols-outlined text-gray-400 text-sm group-hover:text-primary transition-colors">
-                                open_in_new
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Preview image si existe */}
-                        {enlace.preview?.image && (
-                          <div className="mt-4 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700">
-                            <img
-                              src={enlace.preview.image}
-                              alt={enlace.title || 'Preview'}
-                              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                              }}
-                            />
-                          </div>
+                        <h3 className="font-medium text-gray-900 dark:text-white line-clamp-1 text-sm">
+                          {enlace.title || enlace.url}
+                        </h3>
+                        {enlace.description && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
+                            {enlace.description}
+                          </p>
                         )}
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xs text-gray-400 dark:text-gray-500">
+                            {domain}
+                          </span>
+                          <span className="text-gray-300 dark:text-gray-600">•</span>
+                          <span className="text-xs text-gray-400 dark:text-gray-500">
+                            {senderName}
+                          </span>
+                          <span className="text-gray-300 dark:text-gray-600">•</span>
+                          <span className="text-xs text-gray-400 dark:text-gray-500">
+                            {formatDate(enlace.createdAt)}
+                          </span>
+                        </div>
                       </div>
+
+                      {/* External link icon */}
+                      <span className="material-symbols-outlined text-gray-400 text-lg flex-shrink-0">
+                        open_in_new
+                      </span>
                     </div>
                   </a>
-
-                  {/* Mensaje asociado si existe */}
-                  {enlace.content && (
-                    <div className="px-5 pb-4">
-                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 border-l-2 border-blue-500">
-                        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
-                          {enlace.content}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Info del usuario */}
-                  <div className="px-5 pb-4 pt-2 border-t border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
-                        {enlace.author?.avatar ? (
-                          <img
-                            src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${enlace.author.avatar}`}
-                            alt={senderName}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <span className="material-symbols-outlined text-white text-sm">person</span>
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        <span className="font-medium text-gray-700 dark:text-gray-300">{senderName}</span>
-                        {' · '}
-                        {formatDate(enlace.createdAt)}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               );
             })}

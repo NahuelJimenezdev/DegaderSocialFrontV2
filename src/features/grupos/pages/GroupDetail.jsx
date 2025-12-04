@@ -153,7 +153,12 @@ const GroupDetail = () => {
       case 'feed':
         return <GroupFeed groupData={groupData} />
       case 'chat':
-        return <GroupChat groupData={groupData} user={user} targetMessageId={targetMessageId} />
+        return <GroupChat 
+          groupData={groupData} 
+          user={user} 
+          targetMessageId={targetMessageId} 
+          onClearTargetMessage={() => setTargetMessageId(null)}
+        />
       case 'detail':
         return <GroupInfo groupData={groupData} />
       case 'members':
@@ -174,7 +179,14 @@ const GroupDetail = () => {
       case 'events':
         return <GroupEvents groupData={groupData} onGoToMessage={handleGoToMessage} />
       case 'settings':
-        return <GroupSettings groupData={groupData} />
+        return <GroupSettings 
+          groupData={groupData} 
+          refetch={refetch}
+          user={user}
+          userRole={userRole}
+          isAdmin={isAdmin}
+          isOwner={isOwner}
+        />
       default:
         return <GroupFeed groupData={groupData} />
     }

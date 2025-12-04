@@ -6,6 +6,7 @@ const CarpetaCard = ({
   onAbrir,
   onEditar,
   onEliminar,
+  onCompartir,
   menuAbierto,
   onMenuToggle,
   formatearTamaño,
@@ -51,7 +52,7 @@ const CarpetaCard = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // TODO: Implementar compartir
+                    onCompartir(carpeta);
                     onMenuToggle(null);
                   }}
                   className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
@@ -92,6 +93,12 @@ const CarpetaCard = ({
           }`}>
             {carpeta.tipo === 'personal' ? 'Personal' : carpeta.tipo === 'grupal' ? 'Grupal' : 'Institucional'}
           </span>
+          
+          {carpeta.visibilidadPorArea?.habilitado && (
+            <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full truncate max-w-[100px]">
+              {carpeta.visibilidadPorArea.areas[0]}
+            </span>
+          )}
           <div className="carpeta-card-info flex items-center text-gray-500 dark:text-gray-400">
             <span>{carpeta.cantidadArchivos || 0} archivos</span>
             <span>{formatearTamaño(carpeta.tamaño)}</span>

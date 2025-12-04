@@ -70,11 +70,11 @@ const GroupMultimedia = ({ groupData }) => {
           </div>
         ) : (
           <>
-            {/* Grid de imágenes */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {/* Grid de imágenes - 3 por fila en todos los dispositivos */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
             {images.map((img, idx) => {
               const senderName = img.sender
-                ? `${img.sender.nombre || img.sender.primernombreUsuario || ''} ${img.sender.apellido || img.sender.primerapellidoUsuario || ''}`.trim()
+                ? `${img.sender.nombres?.primero || ''} ${img.sender.apellidos?.primero || ''}`.trim()
                 : 'Usuario';
 
               return (
@@ -140,7 +140,7 @@ const GroupMultimedia = ({ groupData }) => {
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">
                           {selectedImage.sender
-                            ? `${selectedImage.sender.nombre || selectedImage.sender.primernombreUsuario || ''} ${selectedImage.sender.apellido || selectedImage.sender.primerapellidoUsuario || ''}`.trim()
+                            ? `${selectedImage.sender.nombres?.primero || ''} ${selectedImage.sender.apellidos?.primero || ''}`.trim()
                             : 'Usuario'}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">

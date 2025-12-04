@@ -7,6 +7,7 @@ import notificationService from '../../../api/notificationService';
 import friendshipService from '../../../api/friendshipService';
 import groupService from '../../../api/groupService';
 import NotificationCard from './NotificationCard';
+import IglesiaNotificationCard from './IglesiaNotificationCard';
 import styles from '../styles/NotificationsDropdown.module.css';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { getNombreCompleto } from '../../../shared/utils/userUtils';
@@ -146,6 +147,30 @@ export default function NotificationsDropdown() {
         });
 
         // No mostrar en dropdown
+        return;
+      }
+
+      // Manejar cuando una solicitud de iglesia es procesada (aceptada/rechazada) desde otro lugar
+      if (noti.tipo === 'solicitudIglesiaProcesada') {
+        console.log('⛪ Solicitud de iglesia procesada:', noti);
+        setNotifications(prev => {
+          return prev.filter(n => {
+            // Verificar si es una notificación de solicitud de iglesia
+            const isChurchRequest = n.tipo === 'solicitud_iglesia';
+            if (!isChurchRequest) return true;
+
+            // Verificar si coincide la iglesia
+            const iglesiaId = n.referencia?.id || n.referencia?._id;
+            if (String(iglesiaId) !== String(noti.iglesiaId)) return true;
+
+            // Verificar si coincide el solicitante (applicantId)
+            const solicitanteId = n.metadata?.solicitanteId || n.emisor?._id || n.emisor;
+            if (noti.applicantId && String(solicitanteId) !== String(noti.applicantId)) return true;
+
+            console.log('🗑️ Eliminando notificación de solicitud de iglesia procesada:', n._id);
+            return false;
+          });
+        });
         return;
       }
 
@@ -565,6 +590,19 @@ export default function NotificationsDropdown() {
                   }
                   // NO sobrescribir displayMessage - el backend ya construyó el mensaje completo con nombre de usuario
                   // displayMessage ya contiene: "Nombre Apellido solicitó unirse al grupo 'NombreGrupo'"
+                }
+
+                // Para notificaciones de iglesia, usar componente especializado
+                if (n.tipo === 'solicitud_iglesia' || n.tipo === 'solicitud_iglesia_aprobada' || n.tipo === 'solicitud_iglesia_rechazada') {
+                  return (
+                    <IglesiaNotificationCard
+                      key={n._id}
+                      notification={n}
+                      onAction={(notifId) => {
+                        setNotifications(prev => prev.filter(notif => notif._id !== notifId));
+                      }}
+                    />
+                  );
                 }
 
                 // Para notificaciones de reuniones (tipo === 'evento')

@@ -8,6 +8,7 @@ const CarpetasGrid = ({
   onEliminarCarpeta,
   menuAbierto,
   setMenuAbierto,
+  onCompartirCarpeta,
   formatearTamaño,
   formatearFecha
 }) => {
@@ -22,6 +23,7 @@ const CarpetasGrid = ({
           onEliminar={onEliminarCarpeta}
           menuAbierto={menuAbierto}
           onMenuToggle={setMenuAbierto}
+          onCompartir={onCompartirCarpeta}
           formatearTamaño={formatearTamaño}
           formatearFecha={formatearFecha}
         />

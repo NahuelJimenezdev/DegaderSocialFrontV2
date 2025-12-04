@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import groupService from '../../../api/groupService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import AudioPlayer from '../../../shared/components/AudioPlayer/AudioPlayer';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
@@ -103,7 +104,7 @@ const transformMessage = (msg) => {
   };
 };
 
-const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targetMessageId }) => {
+const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targetMessageId, onClearTargetMessage }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -131,11 +132,12 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
           element.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-2', 'dark:ring-offset-gray-900');
           setTimeout(() => {
             element.classList.remove('ring-2', 'ring-yellow-400', 'ring-offset-2', 'dark:ring-offset-gray-900');
+            if (onClearTargetMessage) onClearTargetMessage();
           }, 3000);
         }
       }, 100);
     }
-  }, [targetMessageId, messages]);
+  }, [targetMessageId, messages, onClearTargetMessage]);
 
   // Cargar mensajes
   useEffect(() => {
@@ -232,8 +234,8 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
             (msg.isOptimistic && String(msg.author?._id) === String(user._id)) ||
             // O es un mensaje reciente mío con attachments (posible duplicado de imagen)
             (msg.attachments?.length > 0 &&
-             String(msg.author?._id) === String(user._id) &&
-             Math.abs(new Date(msg.createdAt) - new Date(transformedNewMessage.createdAt)) < 5000)
+              String(msg.author?._id) === String(user._id) &&
+              Math.abs(new Date(msg.createdAt) - new Date(transformedNewMessage.createdAt)) < 5000)
           );
 
           if (hasOptimisticOrRecent) {
@@ -511,8 +513,8 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
       // NO reemplazar todo el mensaje para evitar perder attachments y otros datos
       setMessages((prev) =>
         prev.map((msg) =>
-          msg._id === messageId 
-            ? { ...msg, starredBy: updatedMessage.starredBy, isOptimistic: false } 
+          msg._id === messageId
+            ? { ...msg, starredBy: updatedMessage.starredBy, isOptimistic: false }
             : msg
         )
       );
@@ -604,7 +606,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
             {messages.map((msg) => {
               const isMyMessage = String(msg.author?._id) === String(user?._id);
               const senderName = msg.author
-                ? `${msg.author.nombre || ''} ${msg.author.apellido || ''}`.trim()
+                ? `${msg.author.nombres?.primero || ''} ${msg.author.apellidos?.primero || ''}`.trim()
                 : 'Usuario';
               const senderAvatar = msg.author?.avatar;
 
@@ -615,17 +617,17 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                   className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'} group`}
                 >
                   <div className={`flex gap-2 sm:gap-3 max-w-[95%] sm:max-w-[85%] md:max-w-[75%] ${isMyMessage ? 'flex-row-reverse' : 'flex-row'}`}>
-                      {/* Avatar - Más grande y prominente tipo Instagram */}
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800 shadow-sm">
-                        <img
-                          src={getUserAvatar(msg.author)}
-                          alt={senderName}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = '/avatars/default-avatar.png';
-                          }}
-                        />
-                      </div>
+                    {/* Avatar - Más grande y prominente tipo Instagram */}
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800 shadow-sm">
+                      <img
+                        src={getUserAvatar(msg.author)}
+                        alt={senderName}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = '/avatars/default-avatar.png';
+                        }}
+                      />
+                    </div>
 
                     {/* Contenedor del mensaje */}
                     <div className={`flex flex-col gap-1 ${isMyMessage ? 'items-end' : 'items-start'}`}>
@@ -641,17 +643,16 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
 
                       {/* Reply To - Más compacto estilo WhatsApp */}
                       {msg.replyTo && (
-                        <div className={`text-xs rounded-lg p-2 mb-1.5 max-w-[90%] sm:max-w-sm border-l-[3px] ${
-                          isMyMessage
+                        <div className={`text-xs rounded-lg p-2 mb-1.5 max-w-[90%] sm:max-w-sm border-l-[3px] ${isMyMessage
                             ? 'bg-primary/10 border-primary'
                             : 'bg-gray-100 dark:bg-gray-800 border-gray-400 dark:border-gray-600'
-                        }`}>
+                          }`}>
                           <div className="flex items-start gap-1.5">
                             <span className="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[14px] flex-shrink-0 mt-0.5">reply</span>
                             <div className="min-w-0 flex-1">
                               <p className="font-semibold text-gray-700 dark:text-gray-300 text-[11px] mb-0.5 truncate">
                                 {msg.replyTo.author
-                                  ? `${msg.replyTo.author.nombre || ''} ${msg.replyTo.author.apellido || ''}`.trim()
+                                  ? `${msg.replyTo.author.nombres?.primero || ''} ${msg.replyTo.author.apellidos?.primero || ''}`.trim()
                                   : 'Usuario'}
                               </p>
                               <p className="text-gray-600 dark:text-gray-400 text-[11px] truncate leading-tight">
@@ -664,11 +665,10 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
 
                       {/* Contenido del mensaje - Bordes más redondeados estilo Instagram */}
                       <div
-                        className={`rounded-3xl px-4 py-2.5 shadow-sm ${
-                          isMyMessage
+                        className={`rounded-3xl px-4 py-2.5 shadow-sm ${isMyMessage
                             ? 'bg-primary text-white'
                             : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
-                        } ${msg.error ? 'border-2 border-red-500' : ''}`}
+                          } ${msg.error ? 'border-2 border-red-500' : ''}`}
                         style={{
                           opacity: msg.isOptimistic ? 0.6 : 1,
                           transition: 'opacity 0.3s ease'
@@ -706,10 +706,9 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                                   />
                                 )}
                                 {att.type === 'audio' && (
-                                  <audio
-                                    src={getAttachmentUrl(att.url)}
-                                    controls
-                                    className="max-w-xs"
+                                  <AudioPlayer
+                                    audioUrl={getAttachmentUrl(att.url)}
+                                    isMyMessage={isMyMessage}
                                   />
                                 )}
                                 {att.type === 'file' && (() => {
@@ -719,11 +718,10 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                                       href={getAttachmentUrl(att.url)}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl w-full max-w-[240px] sm:max-w-[280px] transition-all hover:opacity-90 ${
-                                        isMyMessage
+                                      className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl w-full max-w-[240px] sm:max-w-[280px] transition-all hover:opacity-90 ${isMyMessage
                                           ? 'bg-white/10 hover:bg-white/20'
                                           : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                      }`}
+                                        }`}
                                     >
                                       {/* Icono del tipo de archivo */}
                                       <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 ${fileInfo.color} rounded-lg flex items-center justify-center shadow-sm`}>
@@ -731,21 +729,18 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                                       </div>
                                       {/* Info del archivo */}
                                       <div className="flex-1 min-w-0">
-                                        <p className={`text-sm font-medium truncate ${
-                                          isMyMessage ? 'text-white' : 'text-gray-900 dark:text-white'
-                                        }`}>
+                                        <p className={`text-sm font-medium truncate ${isMyMessage ? 'text-white' : 'text-gray-900 dark:text-white'
+                                          }`}>
                                           {att.name || 'Archivo'}
                                         </p>
-                                        <p className={`text-xs mt-0.5 ${
-                                          isMyMessage ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
-                                        }`}>
+                                        <p className={`text-xs mt-0.5 ${isMyMessage ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
+                                          }`}>
                                           {formatFileSize(att.size)} {att.size ? '•' : ''} {fileInfo.label}
                                         </p>
                                       </div>
                                       {/* Icono de descarga */}
-                                      <div className={`flex-shrink-0 ${
-                                        isMyMessage ? 'text-white/70' : 'text-gray-400 dark:text-gray-500'
-                                      }`}>
+                                      <div className={`flex-shrink-0 ${isMyMessage ? 'text-white/70' : 'text-gray-400 dark:text-gray-500'
+                                        }`}>
                                         <span className="material-symbols-outlined text-xl">download</span>
                                       </div>
                                     </a>
@@ -756,9 +751,8 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                                     href={att.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`flex items-center gap-2 text-sm font-medium ${
-                                      isMyMessage ? 'text-white/90 hover:text-white' : 'text-primary hover:text-primary/80'
-                                    } transition-colors`}
+                                    className={`flex items-center gap-2 text-sm font-medium ${isMyMessage ? 'text-white/90 hover:text-white' : 'text-primary hover:text-primary/80'
+                                      } transition-colors`}
                                   >
                                     <span className="material-symbols-outlined text-lg">link</span>
                                     {att.title || att.url}
@@ -809,9 +803,8 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                           </button>
 
                           {showEmojiPicker === msg._id && (
-                            <div className={`absolute bottom-full mb-1 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 px-2 py-1.5 flex gap-0.5 z-10 ${
-                              isMyMessage ? 'right-0' : 'left-0'
-                            }`}>
+                            <div className={`absolute bottom-full mb-1 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 px-2 py-1.5 flex gap-0.5 z-10 ${isMyMessage ? 'right-0' : 'left-0'
+                              }`}>
                               {commonEmojis.map((emoji) => (
                                 <button
                                   key={emoji}
@@ -829,11 +822,10 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
                         {/* Star - Solo visible para el usuario que destaca */}
                         <button
                           onClick={() => handleToggleStar(msg._id)}
-                          className={`p-1.5 rounded-full transition-all ${
-                            msg.starredBy?.includes(user._id)
+                          className={`p-1.5 rounded-full transition-all ${msg.starredBy?.includes(user._id)
                               ? 'text-yellow-500 hover:text-yellow-600'
                               : 'text-gray-500 dark:text-gray-400 hover:text-yellow-500'
-                          } hover:bg-gray-100 dark:hover:bg-gray-800`}
+                            } hover:bg-gray-100 dark:hover:bg-gray-800`}
                           title={msg.starredBy?.includes(user._id) ? 'Quitar destacado' : 'Destacar'}
                         >
                           <span

@@ -14,7 +14,7 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
   const filteredMembers = members.filter((member) => {
     if (!searchTerm) return true;
     const search = searchTerm.toLowerCase();
-    const fullName = member.fullName || `${member.user?.nombre || ''} ${member.user?.apellido || ''}`.trim();
+    const fullName = member.fullName || `${member.user?.nombres?.primero || ''} ${member.user?.apellidos?.primero || ''}`.trim();
     return fullName.toLowerCase().includes(search);
   });
 

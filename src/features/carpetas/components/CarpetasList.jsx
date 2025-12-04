@@ -8,6 +8,7 @@ const CarpetasList = ({
   onEliminarCarpeta,
   menuAbierto,
   setMenuAbierto,
+  onCompartirCarpeta,
   formatearTamaño,
   formatearFecha
 }) => {
@@ -29,6 +30,7 @@ const CarpetasList = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            onCompartirCarpeta(carpeta);
             setMenuAbierto(null);
           }}
           className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"

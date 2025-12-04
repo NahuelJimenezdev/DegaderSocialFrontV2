@@ -70,6 +70,12 @@ export const initSocket = (token) => {
     window.dispatchEvent(new CustomEvent('socket:post:liked', { detail: { postId, userId, isLike } }));
   });
 
+  // Evento de actualización de post (unificado)
+  socket.on('post_updated', (post) => {
+    console.log('📢 Post actualizado recibido:', post._id);
+    window.dispatchEvent(new CustomEvent('socket:post:updated', { detail: post }));
+  });
+
   // Eventos de comentarios
   socket.on('comment:added', ({ postId, comment }) => {
     window.dispatchEvent(new CustomEvent('socket:comment:added', { detail: { postId, comment } }));

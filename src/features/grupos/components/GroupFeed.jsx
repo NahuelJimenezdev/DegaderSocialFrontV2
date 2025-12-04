@@ -1,60 +1,135 @@
-// src/features/grupos/components/GroupFeed.jsx
-import React, { useState } from 'react';
-import FeedPostCard from './FeedPostCard';
+import React, { useState, useEffect } from 'react';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import PostCard from '../../feed/components/PostCard';
+import CreatePostCard from '../../feed/components/CreatePostCard';
+import ShareModal from '../../feed/components/ShareModal';
+import postService from '../../feed/services/postService';
+import { useAuth } from '../../../context/AuthContext';
 
 const GroupFeed = ({ groupData }) => {
-  // Datos de ejemplo de publicaciones
-  const [posts] = useState([
-    {
-      id: 1,
-      userName: 'Jane Doe',
-      userAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCKi4vYLPeWlFhKz-xu2vUxec0O4srhER-tUMZTnfFuci4bvVxJ0qq0mhvMehdyaR9mlHYzCD8nOG9ghQEWvG7SF3LfPZo7Mo7VBRyVFs4nAZvRLLP1HZ8_xMibGqlZPxUg7yUhg4kumKZn5tb7FcXTPu7kMPCNKdYVvqfNi0Dnfpg5IPBdbpAjAWxCsXBmBjCNMh7YlJTrUcK1xh3SPLkTpOLDeuSRWcwa-JbRUPdMf10IBjczJQM6uOe8rauvDkPiVln6rneeY-8-',
-      timeAgo: '1 day ago',
-      content: 'Had an amazing time at the youth group retreat this weekend! So blessed to be part of this community.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAIcIfh197SK9cUNpSd2OIRAcM-KjFZA1aAsSrvffHbDaxX9SBKMT82jjLukXojexSTZSBArm_R3V8ba4hqPa8VVmsdoHkvmysqO7pIMUV8VmDGyPOnTRP_Dy0EYH-EslnHyL9koLySln6J47ZEES7pR1hD7hbH04cSX4VKyNaGiVBF8YkhU39U9HKcGxZwrdAEt74ZOl6IHclhqBLTuWRnvlEVG2c79Ii0m3K712zAUD5LLj_xf2h_Y71SBBJFL-buEgzUA5YIGIE_',
-      imageAlt: 'Youth group members sitting around a campfire',
-      likes: 12,
-      comments: 3,
-      isLiked: false
-    },
-    {
-      id: 2,
-      userName: 'John Smith',
-      userAvatar: 'https://i.pravatar.cc/150?img=12',
-      timeAgo: '2 days ago',
-      content: '¡Gracias a todos por sus oraciones! Dios es fiel y está obrando en mi vida de maneras increíbles.',
-      likes: 24,
-      comments: 8,
-      isLiked: false
-    },
-    {
-      id: 3,
-      userName: 'María González',
-      userAvatar: 'https://i.pravatar.cc/150?img=5',
-      timeAgo: '3 days ago',
-      content: 'Recordatorio: El próximo estudio bíblico será el viernes a las 7 PM. ¡Nos vemos ahí! 📖✨',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=450&fit=crop',
-      imageAlt: 'Bible study materials',
-      likes: 18,
-      comments: 5,
-      isLiked: true
-    }
-  ]);
+  const { user } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
-  const [newPost, setNewPost] = useState('');
-
-  const handleSubmitPost = (e) => {
-    e.preventDefault();
-    if (newPost.trim()) {
-      console.log('Nueva publicación:', newPost);
-      // Aquí agregarías la lógica para publicar
-      setNewPost('');
+  // Fetch group posts
+  const fetchGroupPosts = async () => {
+    try {
+      setLoading(true);
+      // Use the dedicated endpoint for group posts
+      const response = await postService.getGroupPosts(groupData._id, 1, 50);
+      setPosts(response.data.posts);
+    } catch (err) {
+      console.error('Error fetching group posts:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (groupData?._id) {
+      fetchGroupPosts();
+    }
+  }, [groupData?._id]);
+
+  // Escuchar actualizaciones en tiempo real
+  useEffect(() => {
+    const handlePostUpdate = (event) => {
+      const updatedPost = event.detail;
+      // Verificar si el post pertenece a este grupo
+      // Handle both object and ID for updatedPost.grupo
+      const updatedPostGroupId = updatedPost.grupo?._id || updatedPost.grupo;
+      
+      if (updatedPostGroupId === groupData?._id) {
+        setPosts(prevPosts => {
+          const exists = prevPosts.some(p => p._id === updatedPost._id);
+          if (exists) {
+            return prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p);
+          }
+          // Si es nuevo, agregarlo al principio
+          return [updatedPost, ...prevPosts];
+        });
+      }
+    };
+
+    window.addEventListener('socket:post:updated', handlePostUpdate);
+    return () => {
+      window.removeEventListener('socket:post:updated', handlePostUpdate);
+    };
+  }, [groupData?._id]);
+
+  const handleCreatePost = async (postData) => {
+    try {
+      const response = await postService.createPost({
+        ...postData,
+        grupo: groupData._id
+      });
+      
+      if (response.success) {
+        // No necesitamos recargar todo si el socket funciona
+      }
+      return response;
+    } catch (err) {
+      console.error('Error creating group post:', err);
+      throw err;
+    }
+  };
+
+  const handleLike = async (postId) => {
+    try {
+      if (!user) return;
+
+      // Optimistic update
+      setPosts(prevPosts => prevPosts.map(post => {
+        if (post._id === postId) {
+          const isLiked = post.likes.includes(user._id);
+          return {
+            ...post,
+            likes: isLiked 
+              ? post.likes.filter(id => id !== user._id)
+              : [...post.likes, user._id]
+          };
+        }
+        return post;
+      }));
+
+      const response = await postService.toggleLike(postId);
+      
+      if (!response.success) {
+        await fetchGroupPosts();
+      }
+    } catch (err) {
+      console.error('Error liking post:', err);
+      await fetchGroupPosts();
+    }
+  };
+
+  const handleAddComment = async (postId, content, parentCommentId, image) => {
+    try {
+      const response = await postService.addComment(postId, content, parentCommentId, image);
+      if (response.success) {
+        const updatedPostData = await postService.getPostById(postId);
+        if (updatedPostData.success) {
+          setPosts(prevPosts => prevPosts.map(p => 
+            p._id === postId ? updatedPostData.data : p
+          ));
+        }
+      }
+    } catch (err) {
+      console.error('Error adding comment:', err);
+    }
+  };
+
+  const handleShare = (post) => {
+    setSelectedPost(post);
+    setShareModalOpen(true);
   };
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
       <header className="p-6 border-b border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] flex-shrink-0">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
           Feed del Grupo
@@ -64,51 +139,48 @@ const GroupFeed = ({ groupData }) => {
         </p>
       </header>
 
-      {/* Contenido scrolleable */}
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-[#0a0e27] scrollbar-thin">
         <div className="max-w-2xl mx-auto space-y-6">
-          {/* Crear nueva publicación */}
-          <div className="bg-white dark:bg-[#1C2431] rounded-xl p-4 border border-slate-200 dark:border-slate-800">
-            <form onSubmit={handleSubmitPost}>
-              <div className="flex gap-3">
-                <div
-                  className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 shrink-0"
-                  style={{ backgroundImage: 'url(https://i.pravatar.cc/150?img=20)' }}
-                  aria-label="Your profile picture"
-                />
-                <textarea
-                  value={newPost}
-                  onChange={(e) => setNewPost(e.target.value)}
-                  placeholder="¿Qué quieres compartir con el grupo?"
-                  className="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-lg p-3 resize-none focus:ring-2 focus:ring-primary text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
-                  rows="3"
-                />
-              </div>
-              <div className="flex justify-end mt-3 gap-2">
-                <button
-                  type="button"
-                  className="flex items-center gap-2 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-                >
-                  <span className="material-symbols-outlined text-xl">image</span>
-                  <span className="text-sm">Imagen</span>
-                </button>
-                <button
-                  type="submit"
-                  disabled={!newPost.trim()}
-                  className="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Publicar
-                </button>
-              </div>
-            </form>
-          </div>
+          <CreatePostCard currentUser={user} onPostCreated={handleCreatePost} />
 
-          {/* Lista de publicaciones */}
-          {posts.map((post) => (
-            <FeedPostCard key={post.id} post={post} />
+          {loading && (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            </div>
+          )}
+
+          {error && (
+            <div className="text-center py-4 text-red-500">
+              Error al cargar publicaciones: {error}
+            </div>
+          )}
+
+          {!loading && posts.length === 0 && (
+            <div className="text-center py-10 text-gray-500 dark:text-gray-400">
+              <span className="material-symbols-outlined text-6xl mb-4 opacity-50">post_add</span>
+              <p className="text-lg font-medium">No hay publicaciones aún</p>
+              <p className="text-sm mt-2">¡Sé el primero en compartir algo con el grupo!</p>
+            </div>
+          )}
+
+          {!loading && posts.map((post) => (
+            <PostCard
+              key={post._id}
+              post={post}
+              currentUser={user}
+              onLike={handleLike}
+              onComment={handleAddComment}
+              onShare={() => handleShare(post)}
+            />
           ))}
         </div>
       </div>
+
+      <ShareModal 
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        post={selectedPost}
+      />
     </div>
   );
 };

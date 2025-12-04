@@ -149,8 +149,83 @@ export function ReunionesPage() {
   if (error) {
     return <div className="max-w-4xl mx-auto p-8 text-center text-red-600">Error: {error}</div>;
   }
-  // ------------------------------
 
+  // 🖼️ Renderizado de contenido principal
+  const renderContent = () => {
+    // 1. Vista Calendario (Siempre visible)
+    if (view === 'calendar') {
+      return (
+        <CalendarView
+          meetings={meetings}
+          currentMonth={currentMonth}
+          onSelectMeeting={handleSelectMeeting}
+        />
+      );
+    }
+
+    // 2. Estado Vacío (Solo si no hay reuniones y no es calendario)
+    if (meetings.length === 0) {
+      return <MeetingEmptyState onCreateClick={() => setIsModalOpen(true)} />;
+    }
+
+    // 3. Vista Lista
+    if (view === 'list') {
+      if (filteredMeetings.length === 0) {
+        return (
+          <div className="text-center py-12 text-gray-500">
+            No tienes reuniones próximas o en curso
+          </div>
+        );
+      }
+      return (
+        <div className="space-y-4">
+          {filteredMeetings.map((meeting) => (
+            <div
+              key={meeting._id}
+              ref={(el) => (meetingRefs.current[meeting._id] = el)}
+              className="transition-all duration-300"
+            >
+              <MeetingCard
+                meeting={meeting}
+                onCancel={cancelMeeting}
+                currentUserId={currentUserId}
+              />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // 4. Vista Historial
+    if (view === 'history') {
+      if (filteredMeetings.length === 0) {
+        return (
+          <div className="text-center py-12 text-gray-500">
+            No hay reuniones en el historial
+          </div>
+        );
+      }
+      return (
+        <div className="space-y-4">
+          {filteredMeetings.map((meeting) => (
+            <div
+              key={meeting._id}
+              ref={(el) => (meetingRefs.current[meeting._id] = el)}
+              className="transition-all duration-300"
+            >
+              <MeetingCard
+                meeting={meeting}
+                onCancel={cancelMeeting}
+                currentUserId={currentUserId}
+              />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6 lg:p-8">
@@ -168,76 +243,8 @@ export function ReunionesPage() {
         onMonthChange={setCurrentMonth}
       />
 
-      {/* 3. Vista de Lista, Calendario o Historial */}
-      {meetings.length > 0 ? (
-        <>
-          {/* Vista de Lista */}
-          {view === 'list' && (
-            <>
-              {filteredMeetings.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredMeetings.map((meeting) => (
-                    <div
-                      key={meeting._id}
-                      ref={(el) => (meetingRefs.current[meeting._id] = el)}
-                      className="transition-all duration-300"
-                    >
-                      <MeetingCard
-                        meeting={meeting}
-                        onCancel={cancelMeeting}
-                        currentUserId={currentUserId}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12 text-gray-500">
-                  No tienes reuniones próximas o en curso
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Vista de Calendario */}
-          {view === 'calendar' && (
-            <CalendarView
-              meetings={meetings}
-              currentMonth={currentMonth}
-              onSelectMeeting={handleSelectMeeting}
-            />
-          )}
-
-          {/* Vista de Historial */}
-          {view === 'history' && (
-            <>
-              {filteredMeetings.length > 0 ? (
-                <div className="space-y-4">
-                  {filteredMeetings.map((meeting) => (
-                    <div
-                      key={meeting._id}
-                      ref={(el) => (meetingRefs.current[meeting._id] = el)}
-                      className="transition-all duration-300"
-                    >
-                      <MeetingCard
-                        meeting={meeting}
-                        onCancel={cancelMeeting}
-                        currentUserId={currentUserId}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12 text-gray-500">
-                  No hay reuniones en el historial
-                </div>
-              )}
-            </>
-          )}
-        </>
-      ) : (
-        // El estado vacío es la opción por defecto si no hay reuniones
-        <MeetingEmptyState onCreateClick={() => setIsModalOpen(true)} />
-      )}
+      {/* 3. Contenido Principal */}
+      {renderContent()}
 
       {/* Modal: Controlado por el estado isModalOpen */}
       <CreateMeetingModal
