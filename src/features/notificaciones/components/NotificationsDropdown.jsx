@@ -520,6 +520,26 @@ export default function NotificationsDropdown() {
       return;
     }
 
+    // Si es una notificación de grupo, navegar al grupo
+    if (notificacion.tipo === 'solicitud_grupo' || 
+        notificacion.tipo === 'solicitud_grupo_aprobada' || 
+        notificacion.tipo === 'solicitud_grupo_rechazada' ||
+        notificacion.tipo === 'promocion_admin_grupo' ||
+        notificacion.tipo === 'nuevo_miembro_grupo') {
+      
+      const groupId = notificacion.referencia?.id?._id || notificacion.referencia?.id;
+      
+      if (groupId) {
+        console.log('👥 Navegando a grupo:', groupId);
+        // Navegar a la página del grupo, que mostrará la sección de miembros
+        navigate(`/Mis_grupos/${groupId}`, {
+          state: { openMembersTab: true } // Indicar que debe abrir la pestaña de miembros
+        });
+        setOpen(false);
+        return;
+      }
+    }
+
     // Si no, navegar al perfil
     const profileUserId = notificacion.remitenteId?._id ||
       notificacion.remitenteId ||
@@ -583,12 +603,17 @@ export default function NotificationsDropdown() {
                 }
 
                 // Para notificaciones de grupo, usar el emisor explícitamente si existe
-                if (n.tipo === 'solicitud_grupo' || n.tipo === 'solicitud_grupo_aprobada' || n.tipo === 'solicitud_grupo_rechazada') {
+                if (n.tipo === 'solicitud_grupo' || n.tipo === 'solicitud_grupo_aprobada' || n.tipo === 'solicitud_grupo_rechazada' || n.tipo === 'promocion_admin_grupo') {
                   if (n.emisor) {
                     displayName = getFullName(n.emisor) || displayName;
                     displayAvatar = getAvatar(n.emisor);
                   }
-                  // NO sobrescribir displayMessage - el backend ya construyó el mensaje completo con nombre de usuario
+                  
+                  // Para promoción a admin, construir mensaje con nombre del grupo
+                  if (n.tipo === 'promocion_admin_grupo' && n.referencia?.id?.nombre) {
+                    displayMessage = `${displayName} ${n.contenido} "${n.referencia.id.nombre}"`;
+                  }
+                  // Para otras notificaciones de grupo, el backend ya construyó el mensaje completo
                   // displayMessage ya contiene: "Nombre Apellido solicitó unirse al grupo 'NombreGrupo'"
                 }
 

@@ -12,11 +12,11 @@ import api from '../../../api/config';
 const meetingService = {
 
   /**
-   * Llama al POST /api/v2/meetings para crear una nueva reunión
+   * Llama al POST /api/reuniones para crear una nueva reunión
    */
   createMeeting: async (meetingData) => {
     try {
-      const response = await api.post('/meetings', meetingData);
+      const response = await api.post('/reuniones', meetingData);
       return response.data.data;
     } catch (error) {
       console.error('Error al crear la reunión:', error);
@@ -25,11 +25,11 @@ const meetingService = {
   },
 
   /**
-   * Llama al GET /api/v2/meetings/me para obtener todas las reuniones del usuario
+   * Llama al GET /api/reuniones/me para obtener todas las reuniones del usuario
    */
   getMyMeetings: async () => {
     try {
-      const response = await api.get('/meetings/me');
+      const response = await api.get('/reuniones/me');
       return response.data.data;
     } catch (error) {
       console.error('Error al obtener las reuniones:', error);
@@ -38,11 +38,11 @@ const meetingService = {
   },
 
   /**
-   * Llama al PUT /api/v2/meetings/:id/cancel para cancelar una reunión
+   * Llama al PUT /api/reuniones/:id/cancel para cancelar una reunión
    */
   cancelMeeting: async (meetingId) => {
     try {
-      const response = await api.put(`/meetings/${meetingId}/cancel`);
+      const response = await api.put(`/reuniones/${meetingId}/cancel`);
       return response.data.data;
     } catch (error) {
       console.error('Error al cancelar la reunión:', error);

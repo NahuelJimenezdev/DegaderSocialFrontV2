@@ -25,9 +25,10 @@ export function useUserSearch() {
 
       const formatted = users.map((u) => ({
         id: u._id,
-        name: `${u.nombre} ${u.apellido}`,
+        name: `${u.nombres?.primero || ''} ${u.apellidos?.primero || ''}`.trim() || u.email || 'Usuario',
         email: u.email,
-        legajo: u.legajo,
+        avatar: u.social?.fotoPerfil,
+        username: u.social?.username
       }));
 
       setSearchResults(formatted);

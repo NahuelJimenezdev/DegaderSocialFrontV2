@@ -63,6 +63,30 @@ export const useProfileData = (user) => {
     }
   }, [user]);
 
+  // Escuchar actualizaciones en tiempo real
+  useEffect(() => {
+    const handlePostUpdate = (event) => {
+      const updatedPost = event.detail;
+      setPosts(prevPosts => {
+        // Si el post ya existe, actualizarlo
+        const exists = prevPosts.some(p => p._id === updatedPost._id);
+        if (exists) {
+          return prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p);
+        }
+        // Si es un post nuevo del usuario actual, agregarlo al principio
+        if (updatedPost.usuario._id === user?._id) {
+          return [updatedPost, ...prevPosts];
+        }
+        return prevPosts;
+      });
+    };
+
+    window.addEventListener('socket:post:updated', handlePostUpdate);
+    return () => {
+      window.removeEventListener('socket:post:updated', handlePostUpdate);
+    };
+  }, [user]);
+
   // Función para refrescar todos los datos
   const refetchAll = () => {
     loadUserPosts();
@@ -82,3 +106,4 @@ export const useProfileData = (user) => {
     loadSavedPosts
   };
 };
+
