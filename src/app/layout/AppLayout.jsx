@@ -1,17 +1,17 @@
 // src/app/layout/AppLayout.jsx
 import Sidebar from '../../shared/components/sidebar/Sidebar';
-import QuickSearch from '../../shared/components/QuickSearch';
+import AdsSidebar from '../../shared/components/AdsSidebar';
 import BottomNavbar from '../../shared/components/BottomNavbar';
 import '../../shared/styles/index.css';
 import { Outlet, useLocation } from 'react-router-dom';
-import { hideQuickSearchRoutes, hideSidebarRoutes } from '../../shared/config/hiddenRoutes';
+import { hideAdsSidebarRoutes, hideSidebarRoutes } from '../../shared/config/hiddenRoutes';
 import Navbar from '../../shared/components/Navbar';
 
 const AppLayout = () => {
   const location = useLocation();
 
   // Verifica si la ruta actual coincide con alguna de las rutas donde ocultar
-  const shouldHideQuickSearch = hideQuickSearchRoutes.some(pattern =>
+  const shouldHideAdsSidebar = hideAdsSidebarRoutes.some(pattern =>
     pattern.test(location.pathname)
   );
 
@@ -29,12 +29,12 @@ const AppLayout = () => {
         {!shouldHideSidebar && <Sidebar />}
 
         {/* Contenido principal con scroll */}
-        <main className={`main-content ${shouldHideQuickSearch ? 'full-width' : ''} ${shouldHideSidebar ? 'no-sidebar' : ''}`}>
+        <main className={`main-content ${shouldHideAdsSidebar ? 'full-width' : ''} ${shouldHideSidebar ? 'no-sidebar' : ''}`}>
           <Outlet />
         </main>
 
-        {/* QuickSearch fijo a la derecha */}
-        {!shouldHideQuickSearch && <QuickSearch />}
+        {/* AdsSidebar fijo a la derecha */}
+        {!shouldHideAdsSidebar && <AdsSidebar />}
       </div>
 
       {/* Bottom navbar - only visible on mobile */}

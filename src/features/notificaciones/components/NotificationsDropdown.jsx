@@ -52,6 +52,35 @@ export default function NotificationsDropdown() {
     fetchNotifications();
   }, [userId]);
 
+  // Polling automático como respaldo (cada 30 segundos)
+  useEffect(() => {
+    if (!userId) return;
+
+    const pollingInterval = setInterval(async () => {
+      try {
+        const data = await notificationService.getAllNotifications();
+        console.log('🔄 Polling: Actualizando notificaciones');
+        
+        let notificacionesArray = [];
+        if (Array.isArray(data)) {
+          notificacionesArray = data;
+        } else if (Array.isArray(data?.data)) {
+          notificacionesArray = data.data;
+        } else if (Array.isArray(data?.notificaciones)) {
+          notificacionesArray = data.notificaciones;
+        } else if (data?.data && typeof data.data === 'object' && Array.isArray(data.data.notifications)) {
+          notificacionesArray = data.data.notifications;
+        }
+
+        setNotifications(notificacionesArray);
+      } catch (e) {
+        console.error('❌ Error en polling de notificaciones:', e);
+      }
+    }, 30000); // 30 segundos
+
+    return () => clearInterval(pollingInterval);
+  }, [userId]);
+
   // Socket.io en tiempo real
   useEffect(() => {
     if (!user || !userId) {
@@ -204,9 +233,16 @@ export default function NotificationsDropdown() {
     // Escuchar notificaciones (evento correcto: newNotification)
     socket.on('newNotification', handleNotification);
 
+    // Escuchar eventos de proceso de iglesia (para borrar notificaciones pendientes)
+    socket.on('solicitudIglesiaProcesada', (data) => {
+      console.log('⚡ Evento socket recibido: solicitudIglesiaProcesada', data);
+      handleNotification({ ...data, tipo: 'solicitudIglesiaProcesada' });
+    });
+
     return () => {
       console.log('🧹 Limpiando listeners de notificaciones');
       socket.off('newNotification', handleNotification);
+      socket.off('solicitudIglesiaProcesada'); // Limpiar nuevo listener
       socket.off('connect', handleConnect);
     };
   }, [user, userId]);
@@ -504,10 +540,30 @@ export default function NotificationsDropdown() {
   };
 
   // Manejar navegación al perfil del usuario o a reuniones
-  const handleProfileClick = (notificacion) => {
-    // Marcar como leída al hacer clic
-    if (!notificacion.leido) {
-      markAsRead(notificacion._id);
+  const handleProfileClick = async (notificacion) => {
+    // Tipos de notificación que se deben ELIMINAR al hacer click (informativas finales)
+    const typesToDelete = [
+      'solicitud_iglesia_aprobada', 
+      'solicitud_iglesia_rechazada', 
+      'solicitud_grupo_aprobada',
+      'solicitud_grupo_rechazada',
+      'solicitud_rechazada',
+      'solicitud_cancelada'
+    ];
+
+    if (typesToDelete.includes(notificacion.tipo)) {
+      console.log('🗑️ Eliminando notificación informativa al hacer click:', notificacion._id);
+      try {
+        await notificationService.deleteNotification(notificacion._id);
+        setNotifications(prev => prev.filter(n => n._id !== notificacion._id));
+      } catch (error) {
+        console.error('Error eliminando notificación:', error);
+      }
+    } else {
+      // Para otros tipos, solo marcar como leída
+      if (!notificacion.leido) {
+        markAsRead(notificacion._id);
+      }
     }
 
     // Si es una notificación de reunión, navegar a reuniones con el meetingId
@@ -538,6 +594,30 @@ export default function NotificationsDropdown() {
         setOpen(false);
         return;
       }
+    }
+
+    // Navegación para notificaciones de IGLESIA (NUEVO)
+    if (notificacion.tipo === 'solicitud_iglesia' ||
+        notificacion.tipo === 'solicitud_iglesia_aprobada' ||
+        notificacion.tipo === 'solicitud_iglesia_rechazada') {
+        
+        const iglesiaId = notificacion.referencia?.id?._id || notificacion.referencia?.id;
+
+        if (iglesiaId) {
+          console.log('⛪ Navegando a iglesia:', iglesiaId);
+          // Navegar a la página de la iglesia
+          navigate(`/Mis_Iglesias/${iglesiaId}`);
+          setOpen(false);
+          return;
+        }
+    }
+
+    // Navegación para nuevo_anuncio (PUBLICIDAD)
+    if (notificacion.tipo === 'nuevo_anuncio') {
+        console.log('📢 Navegando a admin panel de publicidad');
+        navigate('/admin/publicidad');
+        setOpen(false);
+        return;
     }
 
     // Si no, navegar al perfil
@@ -642,6 +722,13 @@ export default function NotificationsDropdown() {
                   displayName = titles[eventType] || 'Notificación de Reunión';
                   displayMessage = n.contenido;
                   // displayAvatar se mantiene con el valor del emisor si existe
+                }
+
+                // Para notificaciones de nuevo anuncio (tipo === 'nuevo_anuncio')
+                if (n.tipo === 'nuevo_anuncio') {
+                  displayName = 'Nuevo Anuncio';
+                  displayAvatar = null; // Sin avatar, se mostrará el ícono por defecto
+                  // El mensaje ya viene formateado del backend
                 }
 
                 return (

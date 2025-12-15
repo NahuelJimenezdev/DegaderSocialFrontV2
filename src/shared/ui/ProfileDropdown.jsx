@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User } from 'lucide-react';
+import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone } from 'lucide-react';
 import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
@@ -60,6 +60,21 @@ const ProfileDropdown = () => {
   ];
 
   const menuItems = [
+    {
+      icon: Megaphone,
+      label: '🎯 Publicidad',
+      onClick: () => {
+        // Redirigir según el rol del usuario (Check robusto V2)
+        const isFounder = 
+          user?.role === 'Founder' || 
+          user?.rol === 'Founder' || 
+          user?.seguridad?.rolSistema === 'Founder' ||
+          user?.seguridad?.rol === 'Founder';
+          
+        handleMenuClick(isFounder ? '/admin/publicidad' : '/publicidad');
+      },
+      highlight: true // Para destacarlo visualmente
+    },
     {
       icon: Settings,
       label: 'Configuración',
@@ -143,7 +158,11 @@ const ProfileDropdown = () => {
                 <button
                   key={index}
                   onClick={item.onClick}
-                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className={`flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors ${
+                    item.highlight
+                      ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-600 dark:text-indigo-400 hover:from-indigo-500/20 hover:to-purple-500/20 font-semibold'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
                 >
                   <Icon size={16} />
                   <span>{item.label}</span>

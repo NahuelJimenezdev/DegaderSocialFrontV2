@@ -18,6 +18,9 @@ import MensajesPage from './features/mensajes/pages/MensajesPage'
 import PerfilVisitantePage from './features/perfilVisitante/page/PerfilVisitantePage'
 import { ReunionesPage } from './features/reuniones/pages/ReunionesPage'
 import SearchPage from './pages/SearchPage'
+import ClientAdsDashboard from './features/ads/ClientAdsDashboard'
+import FounderAdsDashboard from './features/ads/FounderAdsDashboard'
+import CampaignAnalyticsPage from './features/ads/CampaignAnalyticsPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -51,7 +54,11 @@ export const router = createBrowserRouter([
       { path: '/Mis_carpetas', element: <MisCarpetasPage /> },
       { path: '/Mis_carpetas/:id', element: <FolderDetailAdvanced /> },
       { path: '/Mi_perfil', element: <ProfilePage /> },
-      { path: '/perfil/:id', element: <PerfilVisitantePage /> }
+      { path: '/perfil/:id', element: <PerfilVisitantePage /> },
+      // Advertising routes
+      { path: '/publicidad', element: <ClientAdsDashboard /> },
+      { path: '/admin/publicidad', element: <FounderAdsDashboard /> },
+      { path: '/publicidad/analytics/:campaignId', element: <CampaignAnalyticsPage /> }
     ],
   },
 

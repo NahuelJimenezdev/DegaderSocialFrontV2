@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronRight, LayoutGrid, List } from 'lucide-react';
 import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { churchColors } from '../utils/colors';
 import MemberCard from './MemberCard';
+import { getSocket } from '../../../shared/lib/socket';
 
 const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
-
+  
   const miembros = iglesiaData?.miembros || [];
   const solicitudes = iglesiaData?.solicitudes || [];
   const pastorId = iglesiaData?.pastorPrincipal?._id || iglesiaData?.pastorPrincipal;
@@ -22,6 +23,34 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
     const fullName = `${miembro.nombres?.primero || ''} ${miembro.apellidos?.primero || ''}`.trim();
     return fullName.toLowerCase().includes(search);
   });
+
+  // Socket.IO listeners para actualizaciones en tiempo real
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+
+    const handleNuevaSolicitud = (data) => {
+      if (String(data.iglesiaId) === String(iglesiaData._id)) {
+        console.log('🔔 Nueva solicitud de iglesia recibida', data);
+        refetch();
+      }
+    };
+
+    const handleSolicitudProcesada = (data) => {
+      if (String(data.iglesiaId) === String(iglesiaData._id)) {
+        console.log('✅ Solicitud de iglesia procesada externamente', data);
+        refetch();
+      }
+    };
+
+    socket.on('nuevaSolicitudIglesia', handleNuevaSolicitud);
+    socket.on('solicitudIglesiaProcesada', handleSolicitudProcesada);
+
+    return () => {
+      socket.off('nuevaSolicitudIglesia', handleNuevaSolicitud);
+      socket.off('solicitudIglesiaProcesada', handleSolicitudProcesada);
+    };
+  }, [iglesiaData._id, refetch]);
 
   // Aprobar solicitud
   const handleApproveRequest = async (userId) => {

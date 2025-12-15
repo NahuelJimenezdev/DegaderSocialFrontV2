@@ -9,11 +9,9 @@ const Register = () => {
     nombre: '',
     apellido: '',
     email: '',
+    fechaNacimiento: '',
     password: '',
     confirmPassword: '',
-    legajo: '',
-    area: '',
-    cargo: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +30,7 @@ const Register = () => {
     setError('');
 
     // Validations
-    if (!formData.nombre || !formData.apellido || !formData.email || !formData.password) {
+    if (!formData.nombre || !formData.apellido || !formData.email || !formData.fechaNacimiento || !formData.password) {
       setError('Por favor completa todos los campos obligatorios');
       return;
     }
@@ -53,13 +51,9 @@ const Register = () => {
         nombre: formData.nombre,
         apellido: formData.apellido,
         email: formData.email,
+        fechaNacimiento: formData.fechaNacimiento,
         password: formData.password,
       };
-
-      // Add optional fields if provided
-      if (formData.legajo) userData.legajo = formData.legajo;
-      if (formData.area) userData.area = formData.area;
-      if (formData.cargo) userData.cargo = formData.cargo;
 
       await register(userData);
       navigate('/');
@@ -135,6 +129,21 @@ const Register = () => {
             />
           </div>
 
+          <div>
+            <label htmlFor="fechaNacimiento" className="block text-sm font-medium text-gray-700 mb-2">
+              Fecha de Nacimiento <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              id="fechaNacimiento"
+              name="fechaNacimiento"
+              value={formData.fechaNacimiento}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              disabled={loading}
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -169,60 +178,6 @@ const Register = () => {
                 placeholder="••••••••"
                 disabled={loading}
               />
-            </div>
-          </div>
-
-          <div className="border-t pt-4 mt-4">
-            <p className="text-sm text-gray-600 mb-4">Información institucional (opcional)</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label htmlFor="legajo" className="block text-sm font-medium text-gray-700 mb-2">
-                  Legajo
-                </label>
-                <input
-                  type="text"
-                  id="legajo"
-                  name="legajo"
-                  value={formData.legajo}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="12345"
-                  disabled={loading}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-2">
-                  Área
-                </label>
-                <input
-                  type="text"
-                  id="area"
-                  name="area"
-                  value={formData.area}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Sistemas"
-                  disabled={loading}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="cargo" className="block text-sm font-medium text-gray-700 mb-2">
-                  Cargo
-                </label>
-                <input
-                  type="text"
-                  id="cargo"
-                  name="cargo"
-                  value={formData.cargo}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="Desarrollador"
-                  disabled={loading}
-                />
-              </div>
             </div>
           </div>
 
