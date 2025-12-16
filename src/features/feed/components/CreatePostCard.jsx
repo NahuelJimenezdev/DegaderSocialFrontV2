@@ -41,7 +41,7 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
             reader.readAsDataURL(file);
           });
         });
-        
+
         const base64Images = await Promise.all(imagePromises);
         postData.images = base64Images;
         console.log('📦 Post data with images:', {
@@ -51,7 +51,7 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
           firstImagePreview: base64Images[0]?.substring(0, 50) + '...'
         });
       }
-      
+
       console.log('🚀 Sending post data:', postData);
       await onPostCreated(postData);
       setContent('');
@@ -74,10 +74,10 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
   const handleImageSelect = (e) => {
     const files = Array.from(e.target.files);
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    
+
     if (imageFiles.length > 0) {
       setSelectedImages(prev => [...prev, ...imageFiles]);
-      
+
       imageFiles.forEach(file => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -107,12 +107,17 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">
       <div className="flex gap-3">
-        <img 
-          src={userAvatar} 
-          alt="Tu perfil" 
+        <img
+          src={userAvatar}
+          alt="Tu perfil"
           className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+          onError={(e) => {
+            e.target.onerror = null;
+            const name = currentUser?.nombreCompleto || currentUser?.email?.split('@')[0] || 'Usuario';
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
+          }}
         />
-        
+
         {!isExpanded ? (
           <button
             onClick={() => setIsExpanded(true)}
@@ -130,37 +135,34 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
               rows={3}
               autoFocus
             />
-            
+
             {/* Image Previews - Max 4 with Counter */}
             {imagePreviews.length > 0 && (
-              <div className={`mt-3 gap-2 ${
-                imagePreviews.length === 1 ? 'grid grid-cols-1' :
-                'grid grid-cols-2'
-              }`}>
+              <div className={`mt-3 gap-2 ${imagePreviews.length === 1 ? 'grid grid-cols-1' :
+                  'grid grid-cols-2'
+                }`}>
                 {imagePreviews.slice(0, 4).map((preview, index) => (
-                  <div 
-                    key={index} 
-                    className={`relative group ${
-                      imagePreviews.length === 3 && index === 0 ? 'col-span-2' : ''
-                    }`}
-                  >
-                    <img 
-                      src={preview} 
-                      alt={`Preview ${index + 1}`} 
-                      className={`w-full object-cover rounded-lg border border-gray-200 dark:border-gray-700 ${
-                        imagePreviews.length === 1 ? 'h-64' :
-                        imagePreviews.length === 3 && index === 0 ? 'h-48' :
-                        'h-40'
+                  <div
+                    key={index}
+                    className={`relative group ${imagePreviews.length === 3 && index === 0 ? 'col-span-2' : ''
                       }`}
+                  >
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className={`w-full object-cover rounded-lg border border-gray-200 dark:border-gray-700 ${imagePreviews.length === 1 ? 'h-64' :
+                          imagePreviews.length === 3 && index === 0 ? 'h-48' :
+                            'h-40'
+                        }`}
                     />
-                    
+
                     {/* Counter overlay for 4th image if more than 4 */}
                     {index === 3 && imagePreviews.length > 4 && (
                       <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
                         <span className="text-white text-4xl font-bold">+{imagePreviews.length - 4}</span>
                       </div>
                     )}
-                    
+
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
@@ -172,7 +174,7 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
                 ))}
               </div>
             )}
-            
+
             <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
               <div className="flex gap-2 relative">
                 <button
@@ -195,14 +197,14 @@ const CreatePostCard = ({ currentUser, onPostCreated }) => {
                 {/* Emoji Picker */}
                 {showEmojiPicker && (
                   <div className="absolute bottom-full left-0 mb-2 z-50">
-                    <EmojiPicker 
+                    <EmojiPicker
                       onEmojiSelect={handleEmojiSelect}
                       onClose={() => setShowEmojiPicker(false)}
                     />
                   </div>
                 )}
               </div>
-              
+
               <div className="flex gap-2">
                 <button
                   type="button"

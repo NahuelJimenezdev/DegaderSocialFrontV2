@@ -12,7 +12,7 @@ const PostCard = ({ post, currentUser, onLike, onComment, onShare }) => {
   const user = post.usuario;
   const avatar = getUserAvatar(user);
   const fullName = `${user.nombres?.primero || ''} ${user.apellidos?.primero || ''}`.trim() || 'Usuario';
-  
+
   const isLiked = post.likes.includes(currentUser?._id);
 
   const handleCommentClick = () => {
@@ -25,17 +25,22 @@ const PostCard = ({ post, currentUser, onLike, onComment, onShare }) => {
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative group cursor-pointer">
-            <img 
-              src={avatar} 
-              alt={fullName} 
+            <img
+              src={avatar}
+              alt={fullName}
               className="w-10 h-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
+              onError={(e) => {
+                e.target.onerror = null;
+                const name = fullName || user?.email?.split('@')[0] || 'Usuario';
+                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
+              }}
             />
           </div>
           <div>
             <h3 className="font-bold text-gray-900 dark:text-white text-sm hover:underline cursor-pointer">
               {fullName}
             </h3>
-            
+
             {/* Group Indicator */}
             {post.grupo && (
               <div className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-medium mt-0.5">
@@ -56,7 +61,7 @@ const PostCard = ({ post, currentUser, onLike, onComment, onShare }) => {
             </div>
           </div>
         </div>
-        
+
         <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
           <span className="material-symbols-outlined">more_horiz</span>
         </button>
@@ -81,9 +86,9 @@ const PostCard = ({ post, currentUser, onLike, onComment, onShare }) => {
         <div className="px-4 pb-3 space-y-2">
           {post.videos.map((video, idx) => (
             <div key={idx} className="rounded-xl overflow-hidden bg-black">
-              <video 
-                src={video.url} 
-                controls 
+              <video
+                src={video.url}
+                controls
                 className="w-full max-h-[500px]"
                 poster={video.thumbnail}
               />
@@ -93,9 +98,9 @@ const PostCard = ({ post, currentUser, onLike, onComment, onShare }) => {
       )}
 
       {/* Stats (if needed separately, but PostActions handles it) */}
-      
+
       {/* Actions */}
-      <PostActions 
+      <PostActions
         likes={post.likes.length}
         comments={post.comentarios.length}
         shares={post.compartidos?.length || 0}
@@ -107,7 +112,7 @@ const PostCard = ({ post, currentUser, onLike, onComment, onShare }) => {
 
       {/* Comments */}
       {showComments && (
-        <CommentSection 
+        <CommentSection
           comments={post.comentarios}
           postId={post._id}
           onAddComment={onComment}

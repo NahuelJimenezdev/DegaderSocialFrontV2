@@ -36,6 +36,11 @@ const PostCard = ({ post }) => {
             src={avatarUrl}
             alt={`${user?.nombres?.primero} ${user?.apellidos?.primero}`}
             className="w-10 h-10 rounded-full flex-shrink-0 object-cover"
+            onError={(e) => {
+              e.target.onerror = null;
+              const name = `${user?.nombres?.primero || ''} ${user?.apellidos?.primero || ''}`.trim() || user?.email?.split('@')[0] || 'Usuario';
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
+            }}
           />
           <div>
             <p className="font-semibold text-sm md:text-base text-gray-900 dark:text-white">

@@ -21,8 +21,13 @@ const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
             <div className="relative">
               <img
                 src={avatarUrl}
-                alt={`${user?.nombres?.primero} ${user?.apellidos?.primero}`}
+                alt={`${user?.nombres?.primero || ''} ${user?.apellidos?.primero || ''}`.trim() || user?.email}
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-50 dark:border-gray-900 object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  const name = `${user?.nombres?.primero || ''} ${user?.apellidos?.primero || ''}`.trim() || user?.email?.split('@')[0] || 'Usuario';
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
+                }}
               />
               <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
                 <Camera size={16} />
@@ -33,7 +38,7 @@ const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
               <div className="flex items-start justify-between">
                 <div>
                   <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                    {`${user.nombres?.primero} ${user.apellidos?.primero}`}
+                    {`${user.nombres?.primero || ''} ${user.apellidos?.primero || ''}`.trim() || user.email?.split('@')[0] || 'Usuario'}
                   </h1>
                   <p className="text-gray-500 text-sm">@{user.email.split('@')[0]}</p>
                 </div>

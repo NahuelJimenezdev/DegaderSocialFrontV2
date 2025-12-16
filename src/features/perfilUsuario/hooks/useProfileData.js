@@ -68,15 +68,24 @@ export const useProfileData = (user) => {
     const handlePostUpdate = (event) => {
       const updatedPost = event.detail;
       setPosts(prevPosts => {
-        // Si el post ya existe, actualizarlo
-        const exists = prevPosts.some(p => p._id === updatedPost._id);
-        if (exists) {
-          return prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p);
+        // Verificar si el post ya existe
+        const existingIndex = prevPosts.findIndex(p => p._id === updatedPost._id);
+
+        if (existingIndex !== -1) {
+          // Si existe, actualizarlo
+          const newPosts = [...prevPosts];
+          newPosts[existingIndex] = updatedPost;
+          return newPosts;
         }
-        // Si es un post nuevo del usuario actual, agregarlo al principio
-        if (updatedPost.usuario._id === user?._id) {
+
+        // SOLO agregar si es un post nuevo Y NO es del usuario actual
+        // (los posts del usuario actual ya se agregan via onPostCreated)
+        if (updatedPost.usuario._id !== user?._id) {
           return [updatedPost, ...prevPosts];
         }
+
+        // Si es del usuario actual y no existe, no hacer nada
+        // (ya fue agregado por onPostCreated)
         return prevPosts;
       });
     };

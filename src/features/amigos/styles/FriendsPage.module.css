@@ -164,6 +164,7 @@
 .list {
   max-height: 420px;
   overflow: auto;
+  /* Cambiar de auto a visible para que el dropdown no se corte */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -181,6 +182,10 @@
   background: var(--bg);
   border: 1px solid var(--border);
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  position: relative;
+  /* Para que el dropdown se posicione correctamente */
+  overflow: visible;
+  /* Permitir que el dropdown se muestre fuera */
 }
 
 .item+.item {
@@ -191,11 +196,21 @@
   background: rgba(0, 0, 0, 0.03);
 }
 
+.itemMenuOpen {
+  z-index: 10000 !important;
+  /* Asegurar que esté por encima cuando el menú está abierto */
+}
+
 .avatar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.avatarBlocked {
+  opacity: 0.6;
+  filter: grayscale(100%);
 }
 
 .avatarWrap {
@@ -207,13 +222,47 @@
 
 .onlineBadge {
   position: absolute;
-  bottom: 2px;
-  left: 2px;
-  width: 10px;
-  height: 10px;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--success);
+  background: #10b981;
   border: 2px solid var(--surface);
+  z-index: 2;
+}
+
+.offlineBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #6b7280;
+  border: 2px solid var(--surface);
+  z-index: 2;
+}
+
+.blockedBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 2px solid var(--surface);
+  z-index: 3;
 }
 
 .info {
@@ -276,22 +325,9 @@
 .actions {
   display: flex;
   align-items: center;
-}
-
-/* .msgBtn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-  cursor: pointer;
-} */
-
-.actions {
-  display: flex;
   gap: 6px;
-  align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .iconBtn {
@@ -324,8 +360,6 @@
   z-index: 20;
   min-width: 160px;
 }
-
-
 
 .menuItem {
   display: block;
@@ -429,14 +463,83 @@
     padding: 12px;
   }
 
-  .name {
-    font-size: 14px;
-  }
-
   .avatar {
     width: 40px;
     height: 40px;
   }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 220px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 4px;
+  z-index: 9999;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: left;
+}
+
+.dropdownItem:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdownItem svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.dropdownItem.destructive {
+  color: #dc2626;
+}
+
+.dropdownItem.destructive svg {
+  color: #dc2626;
+}
+
+.dropdownItem.destructive:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.item:hover {
+  cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -446,4 +549,47 @@
     /* background: var(--primary); */
     box-shadow: 0 8px 24px rgba(16, 34, 114, 0.092);
   }
+}
+
+.danger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: left;
+
+  color: #dc2626;
+}
+
+.danger:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.dangerConfirm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-align: left;
+
+  background: #dc2626;
+  color: white;
+  font-weight: 600;
+}
+
+.dangerConfirm:hover {
+  background: #b91c1c;
 }

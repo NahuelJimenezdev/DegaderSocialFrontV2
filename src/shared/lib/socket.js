@@ -112,6 +112,18 @@ export const initSocket = (token) => {
     window.dispatchEvent(new CustomEvent('socket:user:offline', { detail: data }));
   });
 
+  // Evento de cambio de estado de amigos (online/offline)
+  socket.on('friend_status_changed', (data) => {
+    console.log('👥 [SOCKET] Estado de amigo cambiado:', data);
+    console.log('👥 [SOCKET] Detalles:', {
+      userId: data.userId,
+      isOnline: data.isOnline,
+      timestamp: data.timestamp,
+      type: data.isOnline ? 'CONNECT' : 'DISCONNECT'
+    });
+    window.dispatchEvent(new CustomEvent('socket:friend:status_changed', { detail: data }));
+  });
+
   // Eventos de notificaciones en tiempo real
   socket.on('newNotification', (notification) => {
     console.log('📨 Nueva notificación recibida:', notification);

@@ -65,12 +65,12 @@ const ProfileDropdown = () => {
       label: '🎯 Publicidad',
       onClick: () => {
         // Redirigir según el rol del usuario (Check robusto V2)
-        const isFounder = 
-          user?.role === 'Founder' || 
-          user?.rol === 'Founder' || 
+        const isFounder =
+          user?.role === 'Founder' ||
+          user?.rol === 'Founder' ||
           user?.seguridad?.rolSistema === 'Founder' ||
           user?.seguridad?.rol === 'Founder';
-          
+
         handleMenuClick(isFounder ? '/admin/publicidad' : '/publicidad');
       },
       highlight: true // Para destacarlo visualmente
@@ -108,6 +108,12 @@ const ProfileDropdown = () => {
           src={avatarUrl}
           alt={fullName}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            // Si la imagen falla, usar un avatar con iniciales
+            e.target.onerror = null; // Prevenir loop infinito
+            const initials = fullName?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'Usuario')}&background=3b82f6&color=fff&size=128`;
+          }}
         />
       </button>
 
@@ -121,6 +127,10 @@ const ProfileDropdown = () => {
                 src={avatarUrl}
                 alt={fullName}
                 className="w-12 h-12 rounded-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'Usuario')}&background=3b82f6&color=fff&size=128`;
+                }}
               />
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900 dark:text-white truncate">
@@ -158,11 +168,10 @@ const ProfileDropdown = () => {
                 <button
                   key={index}
                   onClick={item.onClick}
-                  className={`flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors ${
-                    item.highlight
-                      ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-600 dark:text-indigo-400 hover:from-indigo-500/20 hover:to-purple-500/20 font-semibold'
-                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+                  className={`flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors ${item.highlight
+                    ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-600 dark:text-indigo-400 hover:from-indigo-500/20 hover:to-purple-500/20 font-semibold'
+                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
                 >
                   <Icon size={16} />
                   <span>{item.label}</span>

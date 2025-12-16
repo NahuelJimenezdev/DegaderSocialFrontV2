@@ -148,29 +148,45 @@ const SearchBar = () => {
           )}
           {!cargando && !error && resultados && resultados.resultados?.usuarios?.length > 0 && (
             <div>
-              {resultados.resultados.usuarios.map(usuario => (
-                <div
-                  key={usuario._id}
-                  className={styles.resultItem}
-                  onClick={() => navegarAPerfil(usuario._id)}
-                >
-                  <img
-                    src={getUserAvatar(usuario)}
-                    alt={`${usuario?.nombres?.primero || 'Usuario'} avatar`}
-                    className={styles.avatar}
-                    onError={(e) => handleImageError(e)}
-                  />
-                  <div className={styles.resultInfo}>
-                    <div className={styles.resultName}>
-                      {usuario?.nombres?.primero} {usuario?.apellidos?.primero}
+              {resultados.resultados.usuarios.map(usuario => {
+                const avatarUrl = getUserAvatar(usuario);
+                const fullName = `${usuario?.nombres?.primero || ''} ${usuario?.apellidos?.primero || ''}`.trim() || 'Usuario';
+                console.log('🔍 Search Result User:', {
+                  nombre: fullName,
+                  fotoPerfil: usuario?.social?.fotoPerfil,
+                  avatarUrl: avatarUrl,
+                  usuario: usuario
+                });
+                return (
+                  <div
+                    key={usuario._id}
+                    className={styles.resultItem}
+                    onClick={() => navegarAPerfil(usuario._id)}
+                  >
+                    <img
+                      src={avatarUrl}
+                      alt={`${fullName} avatar`}
+                      className={styles.avatar}
+                      onError={(e) => {
+                        console.error('❌ Avatar load error for:', fullName, 'URL:', e.target.src);
+                        // Generar un SVG de fallback local
+                        const fallbackSvg = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="128" height="128" fill="#6b7280"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui" font-size="48" fill="white" font-weight="600">?</text></svg>`)))}`;
+                        e.target.src = fallbackSvg;
+                        e.target.onerror = null;
+                      }}
+                    />
+                    <div className={styles.resultInfo}>
+                      <div className={styles.resultName}>
+                        {usuario?.nombres?.primero} {usuario?.apellidos?.primero}
+                      </div>
+                      <div className={styles.resultSub}>
+                        {usuario?.seguridad?.rolSistema || 'usuario'} · {usuario?.personal?.ubicacion?.ciudad || 'Sin ubicación'}
+                      </div>
                     </div>
-                    <div className={styles.resultSub}>
-                      {usuario?.seguridad?.rolSistema || 'usuario'} · {usuario?.personal?.ubicacion?.ciudad || 'Sin ubicación'}
-                    </div>
+                    <User size={16} className={styles.resultIcon} />
                   </div>
-                  <User size={16} className={styles.resultIcon} />
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
           {!cargando && !error && resultados && resultados.resultados?.usuarios?.length === 0 && (

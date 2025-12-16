@@ -126,13 +126,47 @@ export const getInitialsAvatar = (name) => {
  * @param {Object} user - Objeto del usuario con la nueva estructura
  * @returns {string} URL del avatar
  */
+/**
+ * Genera un avatar SVG con las iniciales del nombre
+ * @param {string} name - Nombre completo del usuario
+ * @param {string} bgColor - Color de fondo en hex (sin #)
+ * @returns {string} Data URL del SVG
+ */
+const generateInitialsAvatar = (name, bgColor = '3b82f6') => {
+  if (!name || name.trim() === '') {
+    name = '?';
+  }
+
+  const initials = name
+    .split(' ')
+    .filter(n => n.length > 0)
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+    <rect width="128" height="128" fill="#${bgColor}"/>
+    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="48" fill="white" font-weight="600">
+      ${initials}
+    </text>
+  </svg>`;
+
+  return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+};
+
+/**
+ * Obtiene la URL del avatar del usuario, generando uno con iniciales si no tiene foto
+ * @param {Object} user - Objeto del usuario con la nueva estructura
+ * @returns {string} URL del avatar
+ */
 export const getUserAvatar = (user) => {
   // Si tiene fotoPerfil, usarla
   if (user?.social?.fotoPerfil) {
     return getAvatarUrl(user.social.fotoPerfil);
   }
 
-  // Si no tiene foto, intentar obtener nombre para iniciales
+  // Si no tiene foto, generar avatar con iniciales localmente
   let fullName = '';
 
   // 1. Intentar con nombreCompleto (prioridad alta)
@@ -145,13 +179,11 @@ export const getUserAvatar = (user) => {
     const lastName = user?.apellidos?.primero || '';
     fullName = `${firstName} ${lastName}`.trim();
   }
-
-  // Si tenemos un nombre, generar avatar con iniciales
-  if (fullName) {
-    // Usar ui-avatars.com para generar avatar con iniciales
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`;
+  // 3. Intentar con email (tomar la parte antes del @)
+  else if (user?.email) {
+    fullName = user.email.split('@')[0].replace(/[._-]/g, ' ');
   }
 
-  // Fallback a avatar por defecto
-  return '/avatars/default-avatar.png';
+  // Generar avatar con iniciales usando SVG local
+  return generateInitialsAvatar(fullName || '?', '3b82f6');
 };

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -13,13 +13,18 @@ const api = axios.create({
 // Request interceptor to add auth token to requests
 api.interceptors.request.use(
   (config) => {
+    console.log(`🚀 [AXIOS] Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('🔑 [AXIOS] Token agregado al header');
+    } else {
+      console.log('⚠️ [AXIOS] No hay token en localStorage');
     }
     return config;
   },
   (error) => {
+    console.error('💥 [AXIOS] Error en request interceptor:', error);
     return Promise.reject(error);
   }
 );
