@@ -1,24 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, Upload, File, FileText, Image as ImageIcon, 
+import {
+  ArrowLeft, Upload, File, FileText, Image as ImageIcon,
   Video, Music, MoreVertical, Trash2, Download, Eye,
   Share2, Shield, Users, Building, Globe
 } from 'lucide-react';
 import folderService from '../../../api/folderService';
 import { useAuth } from '../../../hooks/useAuth';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
 
 const CarpetaDetalle = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
   const [carpeta, setCarpeta] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
-  
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null, variant: 'warning' });
+
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -33,7 +38,7 @@ const CarpetaDetalle = () => {
         setCarpeta(response.data);
       }
     } catch (err) {
-      console.error('Error al cargar carpeta:', err);
+      logger.error('Error al cargar carpeta:', err);
       setError('No se pudo cargar la carpeta o no tienes permisos.');
     } finally {
       setLoading(false);
@@ -46,7 +51,7 @@ const CarpetaDetalle = () => {
 
     // Validar tamaño (50MB)
     if (file.size > 50 * 1024 * 1024) {
-      alert('El archivo es demasiado grande (Máx 50MB)');
+      setAlertConfig({ isOpen: true, variant: 'warning', message: 'El archivo es demasiado grande (Máx 50MB)' });
       return;
     }
 
@@ -55,8 +60,8 @@ const CarpetaDetalle = () => {
       await folderService.uploadFile(id, file);
       await cargarCarpeta(); // Recargar para ver el nuevo archivo
     } catch (err) {
-      console.error('Error al subir archivo:', err);
-      alert('Error al subir el archivo');
+      logger.error('Error al subir archivo:', err);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al subir el archivo' });
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -64,18 +69,26 @@ const CarpetaDetalle = () => {
   };
 
   const handleFileDelete = async (fileId) => {
-    if (!window.confirm('¿Estás seguro de eliminar este archivo?')) return;
-
-    try {
-      await folderService.deleteFile(id, fileId);
-      setCarpeta(prev => ({
-        ...prev,
-        archivos: prev.archivos.filter(f => f._id !== fileId)
-      }));
-    } catch (err) {
-      console.error('Error al eliminar archivo:', err);
-      alert('Error al eliminar el archivo');
-    }
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Eliminar Archivo',
+      message: '¿Estás seguro de eliminar este archivo?',
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          await folderService.deleteFile(id, fileId);
+          setCarpeta(prev => ({
+            ...prev,
+            archivos: prev.archivos.filter(f => f._id !== fileId)
+          }));
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        } catch (err) {
+          logger.error('Error al eliminar archivo:', err);
+          setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el archivo' });
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
   };
 
   const getFileIcon = (type) => {
@@ -117,7 +130,7 @@ const CarpetaDetalle = () => {
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumbs & Header */}
         <div className="mb-6">
-          <button 
+          <button
             onClick={() => navigate('/carpetas')}
             className="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mb-4 transition-colors"
           >
@@ -133,20 +146,19 @@ const CarpetaDetalle = () => {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{carpeta.nombre}</h1>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{carpeta.descripcion}</p>
-                
+
                 {/* Visibility Badges */}
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    carpeta.tipo === 'personal' ? 'bg-blue-100 text-blue-800' :
-                    carpeta.tipo === 'grupal' ? 'bg-purple-100 text-purple-800' :
-                    'bg-orange-100 text-orange-800'
-                  }`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${carpeta.tipo === 'personal' ? 'bg-blue-100 text-blue-800' :
+                      carpeta.tipo === 'grupal' ? 'bg-purple-100 text-purple-800' :
+                        'bg-orange-100 text-orange-800'
+                    }`}>
                     {carpeta.tipo === 'personal' && <Shield size={12} className="mr-1" />}
                     {carpeta.tipo === 'grupal' && <Users size={12} className="mr-1" />}
                     {carpeta.tipo === 'institucional' && <Building size={12} className="mr-1" />}
                     {carpeta.tipo.charAt(0).toUpperCase() + carpeta.tipo.slice(1)}
                   </span>
-                  
+
                   {carpeta.visibilidadPorArea?.habilitado && (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                       <Building size={12} className="mr-1" />
@@ -223,7 +235,7 @@ const CarpetaDetalle = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end gap-2">
-                          <button 
+                          <button
                             onClick={() => setPreviewFile(archivo)}
                             className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
                             title="Ver/Descargar"
@@ -231,7 +243,7 @@ const CarpetaDetalle = () => {
                             <Eye size={18} />
                           </button>
                           {tienePermisoEscritura() && (
-                            <button 
+                            <button
                               onClick={() => handleFileDelete(archivo._id)}
                               className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                               title="Eliminar"
@@ -257,9 +269,9 @@ const CarpetaDetalle = () => {
             <div className="flex justify-between items-center text-white mb-4">
               <h3 className="text-lg font-medium truncate">{previewFile.originalName}</h3>
               <div className="flex items-center gap-4">
-                <a 
-                  href={previewFile.url} 
-                  download 
+                <a
+                  href={previewFile.url}
+                  download
                   className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
                 >
                   <Download size={18} /> Descargar
@@ -269,7 +281,7 @@ const CarpetaDetalle = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="flex-1 bg-black rounded-xl overflow-hidden flex items-center justify-center border border-gray-800">
               {previewFile.tipo === 'image' && (
                 <img src={previewFile.url} alt={previewFile.originalName} className="max-w-full max-h-full object-contain" />
@@ -294,8 +306,29 @@ const CarpetaDetalle = () => {
           </div>
         </div>
       )}
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
+
+      {/* ConfirmDialog Component */}
+      <ConfirmDialog
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ ...confirmConfig, isOpen: false })}
+        onConfirm={confirmConfig.onConfirm}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        variant={confirmConfig.variant}
+      />
     </div>
   );
 };
 
 export default CarpetaDetalle;
+
+
+

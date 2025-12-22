@@ -77,3 +77,5 @@ const FolderDetail = () => {
 }
 
 export default FolderDetail
+
+

@@ -75,3 +75,5 @@ export default function MailPage() {
     </div>
   );
 }
+
+

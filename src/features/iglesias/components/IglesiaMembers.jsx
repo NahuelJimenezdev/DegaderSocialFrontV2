@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { ChevronRight, LayoutGrid, List } from 'lucide-react';
 import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { churchColors } from '../utils/colors';
 import MemberCard from './MemberCard';
 import { getSocket } from '../../../shared/lib/socket';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
-  
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+
   const miembros = iglesiaData?.miembros || [];
   const solicitudes = iglesiaData?.solicitudes || [];
   const pastorId = iglesiaData?.pastorPrincipal?._id || iglesiaData?.pastorPrincipal;
@@ -31,14 +34,14 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
 
     const handleNuevaSolicitud = (data) => {
       if (String(data.iglesiaId) === String(iglesiaData._id)) {
-        console.log('🔔 Nueva solicitud de iglesia recibida', data);
+        logger.log('🔔 Nueva solicitud de iglesia recibida', data);
         refetch();
       }
     };
 
     const handleSolicitudProcesada = (data) => {
       if (String(data.iglesiaId) === String(iglesiaData._id)) {
-        console.log('✅ Solicitud de iglesia procesada externamente', data);
+        logger.log('✅ Solicitud de iglesia procesada externamente', data);
         refetch();
       }
     };
@@ -59,8 +62,8 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
       await iglesiaService.manageRequest(iglesiaData._id, userId, 'aprobar');
       await refetch();
     } catch (err) {
-      console.error('Error approving request:', err);
-      alert('Error al aprobar la solicitud');
+      logger.error('Error approving request:', err);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al aprobar la solicitud' });
     } finally {
       setLoading(false);
     }
@@ -73,8 +76,8 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
       await iglesiaService.manageRequest(iglesiaData._id, userId, 'rechazar');
       await refetch();
     } catch (err) {
-      console.error('Error rejecting request:', err);
-      alert('Error al rechazar la solicitud');
+      logger.error('Error rejecting request:', err);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al rechazar la solicitud' });
     } finally {
       setLoading(false);
     }
@@ -83,7 +86,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
   return (
     <div className="h-full overflow-y-auto p-4 md:p-8 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
       <div className="max-w-6xl mx-auto space-y-8">
-        
+
         {/* Header & Search */}
         <div className={`${churchColors.cardBg} rounded-lg shadow-sm p-6`}>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -115,22 +118,20 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
               <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 flex-shrink-0">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-all ${
-                    viewMode === 'grid' 
-                      ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm' 
+                  className={`p-2 rounded-md transition-all ${viewMode === 'grid'
+                      ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
-                  }`}
+                    }`}
                   title="Vista Cuadrícula"
                 >
                   <LayoutGrid size={20} />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-all ${
-                    viewMode === 'list' 
-                      ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm' 
+                  className={`p-2 rounded-md transition-all ${viewMode === 'list'
+                      ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
-                  }`}
+                    }`}
                   title="Vista Lista"
                 >
                   <List size={20} />
@@ -213,9 +214,9 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredMembers.map((miembro) => (
-              <MemberCard 
-                key={miembro._id} 
-                member={miembro} 
+              <MemberCard
+                key={miembro._id}
+                member={miembro}
                 isPastor={miembro._id?.toString() === pastorId?.toString()}
                 isCurrentUser={miembro._id?.toString() === user?._id?.toString()}
               />
@@ -245,15 +246,15 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                   const isPastorMember = miembro._id?.toString() === pastorId?.toString();
 
                   return (
-                    <tr 
-                      key={miembro._id} 
+                    <tr
+                      key={miembro._id}
                       className={`hover:${churchColors.primaryLight} transition duration-150`}
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <img 
-                            className="h-10 w-10 rounded-full object-cover mr-4 border-2 border-indigo-300 dark:border-indigo-700" 
-                            src={getUserAvatar(miembro)} 
+                          <img
+                            className="h-10 w-10 rounded-full object-cover mr-4 border-2 border-indigo-300 dark:border-indigo-700"
+                            src={getUserAvatar(miembro)}
                             alt={fullName}
                             onError={(e) => e.target.src = '/avatars/default-avatar.png'}
                           />
@@ -301,8 +302,19 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
         </p>
 
       </div>
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 };
 
 export default IglesiaMembers;
+
+
+

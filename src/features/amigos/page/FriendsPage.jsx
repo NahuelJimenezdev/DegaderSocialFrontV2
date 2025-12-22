@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import FriendsTabs from '../components/FriendsTabs';
 import { FriendsSearch } from '../components/FriendsSearch'
 import { FriendsList } from '../components/FriendsList'
@@ -36,7 +37,7 @@ export default function FriendsPage() {
 
         setBirthdayCount(birthdaysToday.length)
       } catch (error) {
-        console.error('Error al calcular cumpleaños:', error)
+        logger.error('Error al calcular cumpleaños:', error)
         setBirthdayCount(0)
       }
     }
@@ -70,3 +71,6 @@ export default function FriendsPage() {
     </div>
   )
 }
+
+
+

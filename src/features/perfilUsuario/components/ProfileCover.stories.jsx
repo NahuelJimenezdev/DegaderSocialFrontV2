@@ -49,3 +49,5 @@ export const CoverAlternativo = {
     coverUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&h=300&fit=crop',
   },
 };
+
+

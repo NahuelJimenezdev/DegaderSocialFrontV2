@@ -33,3 +33,4 @@ const amistadService = {
 };
 
 export default amistadService;
+

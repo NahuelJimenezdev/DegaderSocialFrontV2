@@ -141,7 +141,7 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(2, 6, 23, 0.04);
+  background: var(--bg-hover);
 }
 
 .dropdownActive {
@@ -193,7 +193,8 @@
 }
 
 .item:hover {
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--bg-hover);
+  cursor: pointer;
 }
 
 .itemMenuOpen {
@@ -342,7 +343,7 @@
 }
 
 .iconBtn:hover {
-  background: rgba(2, 6, 23, 0.03);
+  background: var(--bg-hover);
 }
 
 .menuWrap {
@@ -372,7 +373,7 @@
 }
 
 .menuItem:hover {
-  background: rgba(2, 6, 23, 0.03);
+  background: var(--bg-hover);
 }
 
 .emptyState {
@@ -512,7 +513,7 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-hover);
 }
 
 .dropdownItem svg {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { churchColors } from '../utils/colors';
 import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
@@ -6,7 +7,7 @@ import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
 const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItems }) => {
   const navigate = useNavigate();
   
-  console.log('🖼️ IglesiaSidebar render - Data:', {
+  logger.log('🖼️ IglesiaSidebar render - Data:', {
     id: iglesiaData?._id,
     logo: iglesiaData?.logo,
     nombre: iglesiaData?.nombre
@@ -90,3 +91,6 @@ const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItem
 };
 
 export default IglesiaSidebar;
+
+
+

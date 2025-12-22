@@ -1,28 +1,49 @@
 import React, { useState } from "react";
+import { logger } from '../../../shared/utils/logger';
 import { Calendar, Clock, Users, Video, ExternalLink, XCircle } from "lucide-react";
 import { getStatusColor, getTypeColor, formatDate } from "../services/meetingService";
+import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 export function MeetingCard({ meeting, onCancel, currentUserId }) {
   const { title, description, date, time, duration, attendees, type, meetLink, status, creator } = meeting;
   const numAttendees = Array.isArray(attendees) ? attendees.length : 0;
   const [isCancelling, setIsCancelling] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
-  // Verificar si el usuario actual es el creador
-  const isCreator = creator && (creator._id === currentUserId || creator === currentUserId);
+  // Verificar si el usuario actual es el creador (manejo seguro de Strings/ObjectIds)
+  const isCreator = creator && (
+    (creator._id && creator._id.toString() === currentUserId?.toString()) ||
+    (creator.toString() === currentUserId?.toString())
+  );
 
-  const handleCancelClick = async () => {
-    if (!window.confirm('¿Estás seguro de que deseas cancelar esta reunión?')) {
-      return;
-    }
+  const handleCancelClick = () => {
+    logger.log('🔴 [CANCEL] Mostrando modal de confirmación');
+    setShowCancelConfirm(true);
+  };
 
+  const handleConfirmCancel = async () => {
+    logger.log('🔴 [CANCEL] Usuario confirmó cancelación');
+    setShowCancelConfirm(false);
     setIsCancelling(true);
+
     try {
-      await onCancel(meeting._id);
+      logger.log('🔴 [CANCEL] Llamando a onCancel con ID:', meeting._id);
+      const result = await onCancel(meeting._id);
+      logger.log('🔴 [CANCEL] Resultado de onCancel:', result);
+      logger.log('✅ [CANCEL] Reunión cancelada exitosamente');
     } catch (error) {
-      console.error('Error al cancelar:', error);
-      alert('Error al cancelar la reunión. Intenta nuevamente.');
+      logger.error('❌ [CANCEL] Error al cancelar:', error);
+      logger.error('❌ [CANCEL] Error completo:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al cancelar la reunión. Intenta nuevamente.' });
     } finally {
       setIsCancelling(false);
+      logger.log('🔴 [CANCEL] Proceso finalizado');
     }
   };
 
@@ -102,7 +123,7 @@ export function MeetingCard({ meeting, onCancel, currentUserId }) {
           <Users className="w-4 h-4" />
           <span>{numAttendees} participantes</span>
         </div>
-        
+
       </div>
 
       {/* ---------- Footer ---------- */}
@@ -187,6 +208,30 @@ export function MeetingCard({ meeting, onCancel, currentUserId }) {
         </div>
 
       </div>
+
+      {/* Modal de confirmación usando componente compartido */}
+      <ConfirmDialog
+        isOpen={showCancelConfirm}
+        onClose={() => setShowCancelConfirm(false)}
+        onConfirm={handleConfirmCancel}
+        title="Cancelar Reunión"
+        message="¿Estás seguro de que deseas cancelar esta reunión? La reunión pasará a estado 'Cancelada' y se moverá al historial."
+        confirmText="Sí, cancelar reunión"
+        cancelText="No, volver"
+        variant="danger"
+        isLoading={isCancelling}
+      />
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 }
+
+
+

@@ -302,7 +302,15 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
           )}
 
           {/* Botón */}
-          <div className="pt-4 flex justify-end ">
+          <div className="pt-4 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold transition-colors"
+            >
+              Cancelar
+            </button>
+
             <button
               type="submit"
               disabled={isSubmitting}
@@ -318,3 +326,5 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
     </div>
   );
 }
+
+

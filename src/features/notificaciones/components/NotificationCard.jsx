@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 
 import styles from '../styles/NotificationCard.module.css';
@@ -54,7 +55,7 @@ export default function NotificationCard({
     try {
       await action();
     } catch (error) {
-      console.error(`Error en acción ${actionType}:`, error);
+      logger.error(`Error en acción ${actionType}:`, error);
       setRemoving(false);
     } finally {
       setProcessing(false);
@@ -67,7 +68,7 @@ export default function NotificationCard({
     if (!e.target.closest('button') && !isProcessed && onProfileClick) {
       const userId = remitenteId?._id || remitenteId;
       if (userId) {
-        console.log('🔗 Navegando al perfil del usuario:', userId);
+        logger.log('🔗 Navegando al perfil del usuario:', userId);
         onProfileClick(userId);
       }
     }
@@ -186,3 +187,6 @@ export default function NotificationCard({
     </div>
   );
 }
+
+
+

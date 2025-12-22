@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { X, Camera, Save } from 'lucide-react';
+import { logger } from '../../../shared/utils/logger';
+import { X, Camera, Save, Loader } from 'lucide-react';
+import { API_BASE_URL } from '../../../shared/config/env';
 import { userService } from '../../../api';
 
 const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
@@ -21,9 +23,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
       // Si el avatar ya es una URL completa, usarla
       if (user.social.fotoPerfil.startsWith('http')) return user.social.fotoPerfil;
       // Si es una ruta relativa, agregar el dominio del backend
-      if (user.social.fotoPerfil.startsWith('/')) return `http://localhost:3001${user.social.fotoPerfil}`;
+      if (user.social.fotoPerfil.startsWith('/')) return `${API_BASE_URL}${user.social.fotoPerfil} `;
       // Si no tiene protocolo ni barra inicial, agregar ambos
-      return `http://localhost:3001/${user.social.fotoPerfil}`;
+      return `${API_BASE_URL}/${user.social.fotoPerfil}`;
     }
     return '';
   };
@@ -126,7 +128,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
         onClose();
       }, 1000);
     } catch (err) {
-      console.error('Error al actualizar perfil:', err);
+      logger.error('Error al actualizar perfil:', err);
       setError(err.response?.data?.message || 'Error al actualizar el perfil');
     } finally {
       setLoading(false);
@@ -327,3 +329,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
 };
 
 export default EditProfileModal;
+
+
+

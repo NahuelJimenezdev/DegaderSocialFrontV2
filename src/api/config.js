@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logger } from '../shared/utils/logger';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -13,18 +14,18 @@ const api = axios.create({
 // Request interceptor to add auth token to requests
 api.interceptors.request.use(
   (config) => {
-    console.log(`🚀 [AXIOS] Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
+    logger.log(`🚀 [AXIOS] Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('🔑 [AXIOS] Token agregado al header');
+      logger.log('🔑 [AXIOS] Token agregado al header');
     } else {
-      console.log('⚠️ [AXIOS] No hay token en localStorage');
+      logger.log('⚠️ [AXIOS] No hay token en localStorage');
     }
     return config;
   },
   (error) => {
-    console.error('💥 [AXIOS] Error en request interceptor:', error);
+    logger.error('💥 [AXIOS] Error en request interceptor:', error);
     return Promise.reject(error);
   }
 );
@@ -43,21 +44,21 @@ api.interceptors.response.use(
           window.location.href = '/login';
           break;
         case 403:
-          console.error('Forbidden: You do not have permission to perform this action');
+          logger.error('Forbidden: You do not have permission to perform this action');
           break;
         case 404:
-          console.error('Resource not found');
+          logger.error('Resource not found');
           break;
         case 500:
-          console.error('Server error. Please try again later.');
+          logger.error('Server error. Please try again later.');
           break;
         default:
-          console.error('An error occurred:', error.response.data.message || error.message);
+          logger.error('An error occurred:', error.response.data.message || error.message);
       }
     } else if (error.request) {
-      console.error('Network error. Please check your connection.');
+      logger.error('Network error. Please check your connection.');
     } else {
-      console.error('Error:', error.message);
+      logger.error('Error:', error.message);
     }
     return Promise.reject(error);
   }
@@ -65,3 +66,6 @@ api.interceptors.response.use(
 
 export default api;
 export { API_URL };
+
+
+

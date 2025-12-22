@@ -1,9 +1,4 @@
-:root {
-  --bg: var(--card-bg, #1F2937);
-  --muted: var(--color-muted, #6b7280);
-  --border: rgba(15, 23, 42, 0.06);
-  --accent: var(--color-primary, #4f46e5);
-}
+/* Removed :root override - now uses global CSS variables from index.css */
 
 .container {
   display: flex;
@@ -67,7 +62,7 @@
 }
 
 .item:hover {
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--bg-hover);
 }
 
 .avatar {

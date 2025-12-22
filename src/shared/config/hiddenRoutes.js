@@ -23,3 +23,5 @@ export const hideSidebarRoutes = [
   // /Mis_grupos/1, /Mis_grupos/2, etc. - Los grupos tienen su propio sidebar
   /^\/Mis_grupos\/\d+$/,
 ]
+
+

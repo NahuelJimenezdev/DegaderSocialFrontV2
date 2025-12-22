@@ -6,8 +6,9 @@ import EditProfileModal from '../components/EditProfileModal';
 import ProfileCover from '../components/ProfileCover';
 import ProfileInfo from '../components/ProfileInfo';
 import ProfileTabs from '../components/ProfileTabs';
-import PostComposer from '../components/PostComposer';
 import PostList from '../components/PostList';
+import CreatePostCard from '../../../shared/components/Post/CreatePostCard';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 /**
  * Componente interno que consume el ProfileContext
@@ -22,7 +23,11 @@ const ProfilePageContent = () => {
     coverUrl,
     loading,
     userStats,
-    handleProfileUpdate
+    handleProfileUpdate,
+    createPost, // Exposed by ProfileContext via ...postComposer (now usePostComposer refactored)
+    postError,  // Exposed by ProfileContext
+    alertConfig,
+    setAlertConfig
   } = useProfileContext();
 
   // Mostrar skeleton mientras carga
@@ -48,8 +53,13 @@ const ProfilePageContent = () => {
 
       {/* Contenido */}
       <div className="max-w-3xl mx-auto px-4 mt-6 space-y-6">
-        {/* Composer para crear publicación */}
-        <PostComposer />
+        {/* Composer para crear publicación - REPLACED */}
+        <CreatePostCard
+          currentUser={user}
+          onPostCreated={createPost}
+          alwaysExpanded={true}
+          error={postError}
+        />
 
         {/* Lista de publicaciones */}
         <PostList activeTab={activeTab} />
@@ -62,6 +72,14 @@ const ProfilePageContent = () => {
         user={user}
         onUpdate={handleProfileUpdate}
         className="z-1000"
+      />
+
+      {/* AlertDialog para mensajes de error/éxito */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
       />
     </div>
   );
@@ -87,3 +105,5 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+

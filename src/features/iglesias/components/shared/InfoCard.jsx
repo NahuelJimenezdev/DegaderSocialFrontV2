@@ -18,3 +18,5 @@ const InfoCard = ({ icon: Icon, title, content, accent = false }) => {
 };
 
 export default InfoCard;
+
+

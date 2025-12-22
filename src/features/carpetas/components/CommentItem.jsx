@@ -24,3 +24,5 @@ const CommentItem = ({ author, avatar, time, text }) => {
 }
 
 export default CommentItem
+
+

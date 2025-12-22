@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { logger } from '../../../shared/utils/logger';
 import ArchivoVideoView from './ArchivoVideoView'
 import MediaControls from './MediaControls'
 
@@ -43,8 +44,8 @@ const ArchivoDetalle = ({ archivoName, onClose }) => {
         <MediaControls
           variant="vertical"
           onVideoClick={handleVerVideo}
-          onAudioClick={() => console.log('Audio clicked')}
-          onPdfClick={() => console.log('PDF clicked')}
+          onAudioClick={() => logger.log('Audio clicked')}
+          onPdfClick={() => logger.log('PDF clicked')}
         />
 
         <p className="text-sm text-[#1F2937] dark:text-[#F9FAFB] leading-relaxed">
@@ -69,3 +70,6 @@ const ArchivoDetalle = ({ archivoName, onClose }) => {
 };
 
 export default ArchivoDetalle;
+
+
+

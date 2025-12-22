@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import AdCard from './AdCard';
 import api from '../../api/config';
 import { Loader2, AlertCircle } from 'lucide-react';
@@ -51,8 +52,8 @@ const AdsSidebar = () => {
 
         setAds(response.data);
       } catch (err) {
-        console.error('❌ Error cargando anuncios:', err);
-        
+        logger.error('❌ Error cargando anuncios:', err);
+
         // Si el error es 401 (no autenticado), no mostrar error
         if (err.response?.status === 401) {
           setAds([]);
@@ -143,3 +144,5 @@ const AdsSidebar = () => {
 };
 
 export default AdsSidebar;
+
+

@@ -3,7 +3,9 @@
  * Basado en DegaderFront/src/shared/utils/avatarUtils.js
  */
 
-const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, '') || 'http://localhost:3001';
+import { API_BASE_URL } from '../config/env';
+
+const API_BASE = API_BASE_URL;
 
 export const getAvatarUrl = (avatar, defaultPath = '/avatars/default-avatar.png') => {
   // Si no hay avatar, usar default
@@ -187,3 +189,5 @@ export const getUserAvatar = (user) => {
   // Generar avatar con iniciales usando SVG local
   return generateInitialsAvatar(fullName || '?', '3b82f6');
 };
+
+

@@ -1,6 +1,10 @@
+import { Save, AlertCircle, Loader, Camera } from 'lucide-react';
+import { API_BASE_URL } from '../../../shared/config/env';
 import { useState } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import groupService from '../../../api/groupService';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => {
   const navigate = useNavigate();
@@ -9,6 +13,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageError, setImageError] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   const [formData, setFormData] = useState({
     nombre: groupData?.nombre || '',
@@ -71,10 +76,10 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
       setEditMode(false);
       setImageFile(null);
       setImagePreview(null);
-      alert('Grupo actualizado exitosamente');
+      setAlertConfig({ isOpen: true, variant: 'success', message: 'Grupo actualizado exitosamente' });
     } catch (err) {
-      console.error('Error updating group:', err);
-      alert('Error al actualizar el grupo');
+      logger.error('Error updating group:', err);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar el grupo' });
     } finally {
       setLoading(false);
     }
@@ -86,10 +91,10 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
         setLoading(true);
         await groupService.deleteGroupAvatar(groupData._id);
         await refetch();
-        alert('Imagen eliminada exitosamente');
+        setAlertConfig({ isOpen: true, variant: 'success', message: 'Imagen eliminada exitosamente' });
       } catch (err) {
-        console.error('Error deleting avatar:', err);
-        alert('Error al eliminar la imagen');
+        logger.error('Error deleting avatar:', err);
+        setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar la imagen' });
       } finally {
         setLoading(false);
       }
@@ -98,7 +103,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
 
   const handleDeleteGroup = async () => {
     if (!isOwner) {
-      alert('Solo el propietario puede eliminar el grupo');
+      setAlertConfig({ isOpen: true, variant: 'warning', message: 'Solo el propietario puede eliminar el grupo' });
       return;
     }
 
@@ -110,22 +115,22 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
       try {
         setLoading(true);
         await groupService.deleteGroup(groupData._id);
-        alert('Grupo eliminado exitosamente');
+        setAlertConfig({ isOpen: true, variant: 'success', message: 'Grupo eliminado exitosamente' });
         navigate('/Mis_grupos');
       } catch (err) {
-        console.error('Error deleting group:', err);
-        alert('Error al eliminar el grupo');
+        logger.error('Error deleting group:', err);
+        setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el grupo' });
       } finally {
         setLoading(false);
       }
     } else if (confirmation !== null) {
-      alert('El nombre no coincide. Operación cancelada.');
+      setAlertConfig({ isOpen: true, variant: 'warning', message: 'El nombre no coincide. Operación cancelada.' });
     }
   };
 
   const handleLeaveGroup = async () => {
     if (isOwner) {
-      alert('El propietario no puede abandonar el grupo. Debes transferir la propiedad primero.');
+      setAlertConfig({ isOpen: true, variant: 'warning', message: 'El propietario no puede abandonar el grupo. Debes transferir la propiedad primero.' });
       return;
     }
 
@@ -135,8 +140,8 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
         await groupService.leaveGroup(groupData._id);
         navigate('/Mis_grupos');
       } catch (err) {
-        console.error('Error leaving group:', err);
-        alert('Error al abandonar el grupo');
+        logger.error('Error leaving group:', err);
+        setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al abandonar el grupo' });
       } finally {
         setLoading(false);
       }
@@ -199,7 +204,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
                         <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                       ) : groupData?.imagePerfilGroup && !imageError ? (
                         <img
-                          src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${groupData.imagePerfilGroup}`}
+                          src={`${API_BASE_URL}${groupData.imagePerfilGroup}`}
                           alt={groupData.nombre}
                           className="w-full h-full object-cover"
                           onError={() => setImageError(true)}
@@ -315,7 +320,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
                   <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden shadow-md ring-4 ring-white dark:ring-gray-700 flex items-center justify-center">
                     {groupData?.imagePerfilGroup && !imageError ? (
                       <img
-                        src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${groupData.imagePerfilGroup}`}
+                        src={`${API_BASE_URL}${groupData.imagePerfilGroup}`}
                         alt={groupData.nombre}
                         className="w-full h-full object-cover"
                         onError={() => setImageError(true)}
@@ -332,7 +337,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
                     <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nombre del Grupo</p>
                     <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white break-words">{groupData?.nombre}</p>
                   </div>
-                  
+
                   <div className="md:col-span-2 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
                     <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Descripción</p>
                     <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
@@ -486,8 +491,19 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
           </div>
         </div>
       </div>
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 };
 
 export default GroupSettings;
+
+
+

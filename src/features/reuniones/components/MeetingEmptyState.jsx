@@ -22,3 +22,4 @@ export function MeetingEmptyState({ onCreateClick }) {
     </div>
   );
 }
+

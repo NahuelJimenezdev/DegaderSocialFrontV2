@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import api from '../../../api/config';
 
 export function usePostsVisitante(usuarioId, puedeVer = false) {
@@ -30,7 +31,7 @@ export function usePostsVisitante(usuarioId, puedeVer = false) {
           setPosts([]);
         }
       } catch (err) {
-        console.error('Error al cargar publicaciones:', err);
+        logger.error('Error al cargar publicaciones:', err);
         setError(err.message);
         setPosts([]);
       } finally {
@@ -43,3 +44,6 @@ export function usePostsVisitante(usuarioId, puedeVer = false) {
 
   return { posts, loading, error };
 }
+
+
+

@@ -78,3 +78,5 @@ const EventCard = ({ event, isOnline }) => {
 };
 
 export default EventCard;
+
+

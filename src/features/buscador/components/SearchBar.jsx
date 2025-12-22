@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, User, Loader } from 'lucide-react';
 import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
+import { API_BASE_URL } from '../../../shared/config/env';
 import styles from '../styles/SearchBar.module.css';
 
 const SearchBar = () => {
@@ -44,7 +46,7 @@ const SearchBar = () => {
         return;
       }
       const response = await fetch(
-        `http://localhost:3001/api/buscar?q=${encodeURIComponent(query)}`,
+        `${API_BASE_URL}/api/buscar?q=${encodeURIComponent(query)}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -151,7 +153,7 @@ const SearchBar = () => {
               {resultados.resultados.usuarios.map(usuario => {
                 const avatarUrl = getUserAvatar(usuario);
                 const fullName = `${usuario?.nombres?.primero || ''} ${usuario?.apellidos?.primero || ''}`.trim() || 'Usuario';
-                console.log('🔍 Search Result User:', {
+                logger.log('🔍 Search Result User:', {
                   nombre: fullName,
                   fotoPerfil: usuario?.social?.fotoPerfil,
                   avatarUrl: avatarUrl,
@@ -168,7 +170,7 @@ const SearchBar = () => {
                       alt={`${fullName} avatar`}
                       className={styles.avatar}
                       onError={(e) => {
-                        console.error('❌ Avatar load error for:', fullName, 'URL:', e.target.src);
+                        logger.error('❌ Avatar load error for:', fullName, 'URL:', e.target.src);
                         // Generar un SVG de fallback local
                         const fallbackSvg = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="128" height="128" fill="#6b7280"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui" font-size="48" fill="white" font-weight="600">?</text></svg>`)))}`;
                         e.target.src = fallbackSvg;
@@ -199,3 +201,6 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+
+
+

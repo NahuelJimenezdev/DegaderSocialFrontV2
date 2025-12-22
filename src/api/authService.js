@@ -1,4 +1,5 @@
 import api from './config';
+import { logger } from '../shared/utils/logger';
 
 const authService = {
   /**
@@ -30,15 +31,15 @@ const authService = {
    * @returns {Promise<Object>} Response with token and user data
    */
   login: async (email, password) => {
-    console.log('🔐 [FRONTEND] ===== INICIO LOGIN =====');
-    console.log('📧 Email:', email);
-    console.log('🌐 API URL:', api.defaults.baseURL);
+    logger.log('🔐 [FRONTEND] ===== INICIO LOGIN =====');
+    logger.log('📧 Email:', email);
+    logger.log('🌐 API URL:', api.defaults.baseURL);
 
     try {
-      console.log('📤 Enviando petición POST a /auth/login...');
+      logger.log('📤 Enviando petición POST a /auth/login...');
       const response = await api.post('/auth/login', { email, password });
 
-      console.log('✅ Respuesta recibida:', {
+      logger.log('✅ Respuesta recibida:', {
         status: response.status,
         success: response.data.success,
         message: response.data.message
@@ -46,23 +47,23 @@ const authService = {
 
       // Backend devuelve: { success, message, data: { token, user } }
       if (response.data.data && response.data.data.token) {
-        console.log('💾 Guardando token y usuario en localStorage...');
+        logger.log('💾 Guardando token y usuario en localStorage...');
         localStorage.setItem('token', response.data.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        console.log('✅ Token y usuario guardados');
+        logger.log('✅ Token y usuario guardados');
       }
 
-      console.log('🔐 [FRONTEND] ===== FIN LOGIN EXITOSO =====\n');
+      logger.log('🔐 [FRONTEND] ===== FIN LOGIN EXITOSO =====\n');
       return response.data;
     } catch (error) {
-      console.error('💥 [FRONTEND] ERROR EN LOGIN:', error);
-      console.error('Error completo:', {
+      logger.error('💥 [FRONTEND] ERROR EN LOGIN:', error);
+      logger.error('Error completo:', {
         message: error.message,
         code: error.code,
         response: error.response?.data,
         status: error.response?.status
       });
-      console.log('🔐 [FRONTEND] ===== FIN LOGIN CON ERROR =====\n');
+      logger.log('🔐 [FRONTEND] ===== FIN LOGIN CON ERROR =====\n');
       throw error;
     }
   },
@@ -129,3 +130,6 @@ const authService = {
 };
 
 export default authService;
+
+
+

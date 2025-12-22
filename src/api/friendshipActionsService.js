@@ -1,4 +1,5 @@
 import api from './config';
+import { logger } from '../shared/utils/logger';
 
 // Toggle favorito
 export const toggleFavorite = async (friendshipId) => {
@@ -20,13 +21,13 @@ export const toggleMute = async (friendshipId) => {
 
 // Eliminar amistad
 export const removeFriendship = async (friendshipId) => {
-    console.log(`🚀 [Service] removeFriendship called with ID: ${friendshipId}`);
+    logger.log(`🚀 [Service] removeFriendship called with ID: ${friendshipId}`);
     try {
         const response = await api.delete(`/friendships/${friendshipId}/remove`);
-        console.log(`✅ [Service] removeFriendship response:`, response.data);
+        logger.log(`✅ [Service] removeFriendship response:`, response.data);
         return response.data;
     } catch (error) {
-        console.error(`❌ [Service] removeFriendship failed:`, error);
+        logger.error(`❌ [Service] removeFriendship failed:`, error);
         throw error;
     }
 };
@@ -42,3 +43,6 @@ export const unblockUser = async (friendshipId) => {
     const response = await api.post(`/friendships/${friendshipId}/unblock`);
     return response.data;
 };
+
+
+

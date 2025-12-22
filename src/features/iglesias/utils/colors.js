@@ -58,3 +58,5 @@ export const ministryColors = [
 export const getMinistryColor = (index) => {
   return ministryColors[index % ministryColors.length];
 };
+
+

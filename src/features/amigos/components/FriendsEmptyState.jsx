@@ -5,3 +5,5 @@ export const FriendsEmptyState = () => (
     No se encontraron resultados
   </div>
 )
+
+

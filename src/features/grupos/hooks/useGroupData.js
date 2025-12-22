@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import groupService from '../../../api/groupService';
 import { getSocket } from '../../../shared/lib/socket';
@@ -14,14 +15,14 @@ export const useGroupData = (id) => {
       setLoading(true);
       setError(null);
       const response = await groupService.getGroupById(id);
-      console.log('📥 Datos del grupo recibidos:', response);
+      logger.log('📥 Datos del grupo recibidos:', response);
 
       // El backend devuelve { success: true, message: '...', data: group }
       const group = response?.data || response;
-      console.log('✅ Grupo procesado:', group);
+      logger.log('✅ Grupo procesado:', group);
       setGroupData(group);
     } catch (err) {
-      console.error('❌ Error loading group:', err);
+      logger.error('❌ Error loading group:', err);
       setError(err.response?.data?.message || err.response?.data?.error || 'Error al cargar el grupo');
       if (err.response?.status === 404) {
         navigate('/Mis_grupos');
@@ -45,7 +46,7 @@ export const useGroupData = (id) => {
     const handleGroupUpdated = (updatedGroup) => {
       // Verificar si la actualización es para este grupo
       if (String(updatedGroup._id) === String(id)) {
-        console.log('🔄 [SOCKET] Grupo actualizado:', updatedGroup);
+        logger.log('🔄 [SOCKET] Grupo actualizado:', updatedGroup);
         setGroupData(prev => ({ ...prev, ...updatedGroup }));
       }
     };
@@ -59,3 +60,6 @@ export const useGroupData = (id) => {
 
   return { groupData, loading, error, refetch: loadGroupData };
 };
+
+
+

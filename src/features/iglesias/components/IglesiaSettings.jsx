@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
 import iglesiaService from '../../../api/iglesiaService';
 import { getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 const IglesiaSettings = ({ iglesiaData, refetch }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
-  
+
   // Verificar si el usuario es el pastor
-  const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id || 
-                   iglesiaData?.pastorPrincipal === user?._id;
+  const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id ||
+    iglesiaData?.pastorPrincipal === user?._id;
 
   const [formData, setFormData] = useState({
     nombre: iglesiaData?.nombre || '',
@@ -37,6 +39,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
   const [bannerPreview, setBannerPreview] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [bannerFile, setBannerFile] = useState(null);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -96,16 +99,16 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      console.log('🚀 Starting handleSubmit');
+      logger.log('🚀 Starting handleSubmit');
       // Si hay imágenes nuevas, primero subirlas
       const uploadData = new FormData();
-      
+
       if (logoFile) {
-        console.log('📎 Appending logo file:', logoFile.name);
+        logger.log('📎 Appending logo file:', logoFile.name);
         uploadData.append('logo', logoFile);
       }
       if (bannerFile) {
-        console.log('📎 Appending banner file:', bannerFile.name);
+        logger.log('📎 Appending banner file:', bannerFile.name);
         uploadData.append('portada', bannerFile);
       }
 
@@ -113,34 +116,34 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
       Object.keys(formData).forEach(key => {
         if (typeof formData[key] === 'object' && !Array.isArray(formData[key])) {
           const jsonValue = JSON.stringify(formData[key]);
-          console.log(`📝 Appending object field ${key}:`, jsonValue);
+          logger.log(`📝 Appending object field ${key}:`, jsonValue);
           uploadData.append(key, jsonValue);
         } else if (Array.isArray(formData[key])) {
           const jsonValue = JSON.stringify(formData[key]);
-          console.log(`📝 Appending array field ${key}:`, jsonValue);
+          logger.log(`📝 Appending array field ${key}:`, jsonValue);
           uploadData.append(key, jsonValue);
         } else {
-          console.log(`📝 Appending field ${key}:`, formData[key]);
+          logger.log(`📝 Appending field ${key}:`, formData[key]);
           uploadData.append(key, formData[key]);
         }
       });
 
-      console.log('📤 Sending updateIglesia request...');
+      logger.log('📤 Sending updateIglesia request...');
       const response = await iglesiaService.updateIglesia(iglesiaData._id, uploadData);
-      console.log('✅ Update response:', response);
-      
+      logger.log('✅ Update response:', response);
+
       await refetch();
-      
+
       // Limpiar previews
       setLogoPreview(null);
       setBannerPreview(null);
       setLogoFile(null);
       setBannerFile(null);
-      
-      alert('Cambios guardados exitosamente');
+
+      setAlertConfig({ isOpen: true, variant: 'success', message: 'Cambios guardados exitosamente' });
     } catch (error) {
-      console.error('❌ Error al guardar:', error);
-      alert('Error al guardar los cambios');
+      logger.error('❌ Error al guardar:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al guardar los cambios' });
     } finally {
       setLoading(false);
     }
@@ -168,11 +171,10 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
       <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6">
         <button
           onClick={() => setActiveTab('general')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${
-            activeTab === 'general'
+          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'general'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-          }`}
+            }`}
         >
           General
           {activeTab === 'general' && (
@@ -181,11 +183,10 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
         </button>
         <button
           onClick={() => setActiveTab('ubicacion')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${
-            activeTab === 'ubicacion'
+          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'ubicacion'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-          }`}
+            }`}
         >
           Ubicación
           {activeTab === 'ubicacion' && (
@@ -194,11 +195,10 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
         </button>
         <button
           onClick={() => setActiveTab('contacto')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${
-            activeTab === 'contacto'
+          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'contacto'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-          }`}
+            }`}
         >
           Contacto
           {activeTab === 'contacto' && (
@@ -531,8 +531,19 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
           </button>
         </div>
       </form>
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 };
 
 export default IglesiaSettings;
+
+
+

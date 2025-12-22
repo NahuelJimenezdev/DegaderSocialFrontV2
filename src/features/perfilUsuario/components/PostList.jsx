@@ -1,12 +1,13 @@
 import React from 'react';
-import PostCard from './PostCard';
+import PostCard from '../../../shared/components/Post/PostCard';
 import { useProfileContext } from '../context/ProfileContext';
 
 /**
  * Componente para listar las publicaciones del usuario
  */
 const PostList = ({ activeTab }) => {
-  const { posts, savedPosts } = useProfileContext();
+  const context = useProfileContext();
+  const { posts, savedPosts } = context;
 
   // Filtrar posts según la pestaña activa
   const getFilteredPosts = () => {
@@ -46,10 +47,17 @@ const PostList = ({ activeTab }) => {
   return (
     <>
       {filteredPosts.map(post => (
-        <PostCard key={post._id} post={post} />
+        <PostCard
+          key={post._id}
+          variant="profile"
+          post={post}
+          profileContext={context}
+        />
       ))}
     </>
   );
 };
 
 export default PostList;
+
+

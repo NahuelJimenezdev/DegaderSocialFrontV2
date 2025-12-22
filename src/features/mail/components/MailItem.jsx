@@ -17,3 +17,5 @@ export default function MailItem({ mail, onClick, isActive }) {
     </div>
   );
 }
+
+

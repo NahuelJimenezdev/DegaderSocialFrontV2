@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../shared/utils/logger';
 import { getSocket } from '../shared/lib/socket';
 import conversationService from '../api/conversationService';
 
@@ -20,7 +21,7 @@ export const useMessageCounter = (userId) => {
         const count = response.data?.count || response.count || 0;
         setUnreadCount(count);
       } catch (error) {
-        console.error('Error fetching unread messages count:', error);
+        logger.error('Error fetching unread messages count:', error);
         setUnreadCount(0);
       }
     };
@@ -32,7 +33,7 @@ export const useMessageCounter = (userId) => {
     if (!socket) return;
 
     const handleNewMessage = (message) => {
-      console.log('💬 [useMessageCounter] Nuevo mensaje recibido:', message);
+      logger.log('💬 [useMessageCounter] Nuevo mensaje recibido:', message);
 
       // Solo incrementar si el mensaje NO es del usuario actual
       if (message.emisor && String(message.emisor._id || message.emisor) !== String(userId)) {
@@ -41,7 +42,7 @@ export const useMessageCounter = (userId) => {
     };
 
     const handleMessageRead = (data) => {
-      console.log('👁️ [useMessageCounter] Conversación leída:', data);
+      logger.log('👁️ [useMessageCounter] Conversación leída:', data);
       // Recargar contador desde el servidor para estar sincronizado
       fetchCount();
     };
@@ -57,3 +58,6 @@ export const useMessageCounter = (userId) => {
 
   return unreadCount;
 };
+
+
+

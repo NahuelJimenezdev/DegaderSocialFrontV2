@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { createPortal } from 'react-dom';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import api from '../../../api/config';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 const ShareModal = ({ isOpen, onClose, post }) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -11,6 +13,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   useEffect(() => {
     if (selectedOption === 'user') {
@@ -28,7 +31,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
         setFriends(response.data.data || []);
       }
     } catch (error) {
-      console.error('Error fetching friends:', error);
+      logger.error('Error fetching friends:', error);
     } finally {
       setLoading(false);
     }
@@ -40,13 +43,13 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       const response = await api.get('/grupos');
       if (response.data.success) {
         // Handle both array and object responses
-        const groupsData = Array.isArray(response.data.data) 
-          ? response.data.data 
+        const groupsData = Array.isArray(response.data.data)
+          ? response.data.data
           : (response.data.data?.grupos || []);
         setGroups(groupsData);
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      logger.error('Error fetching groups:', error);
     } finally {
       setLoading(false);
     }
@@ -55,17 +58,17 @@ const ShareModal = ({ isOpen, onClose, post }) => {
   const handleSendToUser = async (friendId) => {
     try {
       setSending(true);
-      
+
       // Copy link to clipboard
       const postUrl = `${window.location.origin}/post/${post._id}`;
       await navigator.clipboard.writeText(postUrl);
-      
+
       // Show success message with instructions
-      alert('¡Enlace copiado al portapapeles!\n\nAhora puedes enviarlo a tu amigo por mensaje privado.');
+      setAlertConfig({ isOpen: true, variant: 'success', message: '¡Enlace copiado al portapapeles!\n\nAhora puedes enviarlo a tu amigo por mensaje privado.' });
       onClose();
     } catch (error) {
-      console.error('Error sharing to user:', error);
-      alert('Error al copiar enlace. Por favor intenta de nuevo.');
+      logger.error('Error sharing to user:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al copiar enlace. Por favor intenta de nuevo.' });
     } finally {
       setSending(false);
     }
@@ -85,11 +88,11 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       };
 
       await api.post(`/grupos/${groupId}/mensajes`, message);
-      alert('¡Publicación compartida en el grupo!');
+      setAlertConfig({ isOpen: true, variant: 'success', message: '¡Publicación compartida en el grupo!' });
       onClose();
     } catch (error) {
-      console.error('Error sharing to group:', error);
-      alert('Error al compartir. Intenta de nuevo.');
+      logger.error('Error sharing to group:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al compartir. Intenta de nuevo.' });
     } finally {
       setSending(false);
     }
@@ -115,7 +118,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       color: 'bg-gray-500 hover:bg-gray-600',
       action: () => {
         navigator.clipboard.writeText(`${window.location.origin}/post/${post._id}`);
-        alert('¡Enlace copiado al portapapeles!');
+        setAlertConfig({ isOpen: true, variant: 'success', message: '¡Enlace copiado al portapapeles!' });
         onClose();
       }
     },
@@ -143,7 +146,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
     return friendName.includes(searchQuery.toLowerCase());
   });
 
-  const filteredGroups = groups.filter(group => 
+  const filteredGroups = groups.filter(group =>
     group.nombre?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -259,8 +262,8 @@ const ShareModal = ({ isOpen, onClose, post }) => {
                         disabled={sending}
                         className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors disabled:opacity-50"
                       >
-                        <img 
-                          src={getUserAvatar(friend)} 
+                        <img
+                          src={getUserAvatar(friend)}
                           alt={friend.nombres?.primero}
                           className="w-10 h-10 rounded-full object-cover"
                         />
@@ -308,6 +311,14 @@ const ShareModal = ({ isOpen, onClose, post }) => {
             </div>
           )}
         </div>
+
+        {/* AlertDialog Component */}
+        <AlertDialog
+          isOpen={alertConfig.isOpen}
+          onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+          variant={alertConfig.variant}
+          message={alertConfig.message}
+        />
       </div>
     </div>,
     document.body
@@ -315,3 +326,6 @@ const ShareModal = ({ isOpen, onClose, post }) => {
 };
 
 export default ShareModal;
+
+
+

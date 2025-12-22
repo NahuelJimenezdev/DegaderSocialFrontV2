@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Users, Award, Check, Briefcase, Calendar } from 'lucide-react';
 import { getUserAvatar, getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
@@ -85,7 +86,7 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
         ]
       }));
     } catch (error) {
-      console.error('Error al unirse:', error);
+      logger.error('Error al unirse:', error);
     } finally {
       setIsJoining(false);
     }
@@ -266,3 +267,6 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
 };
 
 export default ChurchCard;
+
+
+

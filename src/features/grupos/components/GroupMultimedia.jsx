@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../../shared/config/env';
+import { logger } from '../../../shared/utils/logger';
 import { createPortal } from 'react-dom';
 import groupService from '../../../api/groupService';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  const apiUrl = API_BASE_URL;
   return apiUrl.replace('/api', '');
 };
 
@@ -20,7 +22,7 @@ const GroupMultimedia = ({ groupData }) => {
         const data = await groupService.getMultimedia(groupData._id);
         setMultimedia(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Error loading multimedia:', err);
+        logger.error('Error loading multimedia:', err);
         setMultimedia([]);
       } finally {
         setLoading(false);
@@ -49,11 +51,11 @@ const GroupMultimedia = ({ groupData }) => {
       <div className="max-w-6xl mx-auto space-y-6 overflow-hidden">
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Multimedia</h2>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
-          {images.length} {images.length === 1 ? 'imagen' : 'imágenes'} compartidas
-        </p>
-      </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Multimedia</h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            {images.length} {images.length === 1 ? 'imagen' : 'imágenes'} compartidas
+          </p>
+        </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
@@ -61,42 +63,42 @@ const GroupMultimedia = ({ groupData }) => {
           </div>
         ) : images.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
-          <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">
-            image
-          </span>
-          <p className="text-gray-600 dark:text-gray-400 mt-4">
-            No se han compartido imágenes en este grupo aún
+            <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">
+              image
+            </span>
+            <p className="text-gray-600 dark:text-gray-400 mt-4">
+              No se han compartido imágenes en este grupo aún
             </p>
           </div>
         ) : (
           <>
             {/* Grid de imágenes - 3 por fila en todos los dispositivos */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-            {images.map((img, idx) => {
-              const senderName = img.sender
-                ? `${img.sender.nombres?.primero || ''} ${img.sender.apellidos?.primero || ''}`.trim()
-                : 'Usuario';
+              {images.map((img, idx) => {
+                const senderName = img.sender
+                  ? `${img.sender.nombres?.primero || ''} ${img.sender.apellidos?.primero || ''}`.trim()
+                  : 'Usuario';
 
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedImage(img)}
-                  className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity group relative"
-                >
-                  <img
-                    src={`${getBaseUrl()}${img.url}`}
-                    alt={img.name || 'Imagen'}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  {/* Overlay con info */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
-                    <p className="text-white text-xs font-medium truncate">{senderName}</p>
-                    <p className="text-white/75 text-xs">
-                      {new Date(img.createdAt).toLocaleDateString()}
-                    </p>
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => setSelectedImage(img)}
+                    className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity group relative"
+                  >
+                    <img
+                      src={`${getBaseUrl()}${img.url}`}
+                      alt={img.name || 'Imagen'}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    {/* Overlay con info */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                      <p className="text-white text-xs font-medium truncate">{senderName}</p>
+                      <p className="text-white/75 text-xs">
+                        {new Date(img.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
-                </div>
                 );
               })}
             </div>
@@ -166,3 +168,6 @@ const GroupMultimedia = ({ groupData }) => {
 };
 
 export default GroupMultimedia;
+
+
+

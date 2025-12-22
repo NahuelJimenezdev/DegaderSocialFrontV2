@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../../shared/config/env';
+import { logger } from '../../../shared/utils/logger';
 import groupService from '../../../api/groupService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import AudioPlayer from '../../../shared/components/AudioPlayer/AudioPlayer';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  const apiUrl = `${API_BASE_URL}/api`;
   return apiUrl.replace('/api', '');
 };
 
@@ -76,7 +78,7 @@ const GroupEvents = ({ groupData, onGoToMessage }) => {
         const data = response.data || response;
         setDestacados(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Error loading destacados:', err);
+        logger.error('Error loading destacados:', err);
         setDestacados([]);
       } finally {
         setLoading(false);
@@ -219,7 +221,7 @@ const GroupEvents = ({ groupData, onGoToMessage }) => {
                           // Archivos genéricos y links simplificados
                           const isLink = att.type === 'link';
                           const icon = isLink ? 'link' : getFileInfo(att.name).icon;
-                          
+
                           return (
                             <a
                               key={idx}
@@ -259,3 +261,6 @@ const GroupEvents = ({ groupData, onGoToMessage }) => {
 };
 
 export default GroupEvents;
+
+
+

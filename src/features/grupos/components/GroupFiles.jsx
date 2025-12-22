@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import { FileText, Download, Trash2, AlertCircle, Loader } from 'lucide-react';
+import { API_BASE_URL } from '../../../shared/config/env';
+import { logger } from '../../../shared/utils/logger';
 import groupService from '../../../api/groupService';
 import '../styles/GroupFiles.css';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  const apiUrl = API_BASE_URL;
   return apiUrl.replace('/api', '');
 };
 
@@ -33,7 +36,7 @@ const GroupFiles = ({ groupData }) => {
         const data = await groupService.getArchivos(groupData._id);
         setFiles(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Error loading files:', err);
+        logger.error('Error loading files:', err);
         setFiles([]);
       } finally {
         setLoading(false);
@@ -135,7 +138,7 @@ const GroupFiles = ({ groupData }) => {
       if (audioRef.current) {
         audioRef.current.pause();
       }
-      const audio = new Audio(`${getBaseUrl()}${audioUrl}`);
+      const audio = new Audio(`${getBaseUrl()}${audioUrl} `);
       audio.onended = () => setPlayingAudio(null);
       audio.play();
       audioRef.current = audio;
@@ -161,12 +164,12 @@ const GroupFiles = ({ groupData }) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveFilter(tab.id)}
-                className={`files-tab ${activeFilter === tab.id ? 'files-tab-active' : ''}`}
+                className={`files - tab ${activeFilter === tab.id ? 'files-tab-active' : ''} `}
               >
                 <span className="material-symbols-outlined files-tab-icon">{tab.icon}</span>
                 <span className="files-tab-label">{tab.label}</span>
                 {counts[tab.id] > 0 && (
-                  <span className={`files-tab-count ${activeFilter === tab.id ? 'files-tab-count-active' : ''}`}>
+                  <span className={`files - tab - count ${activeFilter === tab.id ? 'files-tab-count-active' : ''} `}>
                     {counts[tab.id]}
                   </span>
                 )}
@@ -193,90 +196,90 @@ const GroupFiles = ({ groupData }) => {
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm divide-y divide-gray-200 dark:divide-gray-700">
             {filteredFiles.map((file, idx) => {
-            const senderName = file.sender
-              ? `${file.sender.nombre || file.sender.primernombreUsuario || ''} ${file.sender.apellido || file.sender.primerapellidoUsuario || ''}`.trim()
-              : 'Usuario';
+              const senderName = file.sender
+                ? `${file.sender.nombre || file.sender.primernombreUsuario || ''} ${file.sender.apellido || file.sender.primerapellidoUsuario || ''} `.trim()
+                : 'Usuario';
 
-            return (
-              <div key={idx} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  {/* Icono del archivo */}
-                  {(() => {
-                    const fileInfo = getFileInfo(file.type, file.name);
-                    return (
-                      <div className={`w-12 h-12 rounded-lg ${fileInfo.color} flex items-center justify-center flex-shrink-0 shadow-sm`}>
-                        <span className="material-symbols-outlined text-2xl text-white">
-                          {fileInfo.icon}
-                        </span>
+              return (
+                <div key={idx} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    {/* Icono del archivo */}
+                    {(() => {
+                      const fileInfo = getFileInfo(file.type, file.name);
+                      return (
+                        <div className={`w - 12 h - 12 rounded - lg ${fileInfo.color} flex items - center justify - center flex - shrink - 0 shadow - sm`}>
+                          <span className="material-symbols-outlined text-2xl text-white">
+                            {fileInfo.icon}
+                          </span>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Info del archivo */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-gray-900 dark:text-white truncate">
+                        {file.name || 'Archivo sin nombre'}
+                      </h3>
+                      <div className="flex items-center gap-3 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        <span>{senderName}</span>
+                        <span>•</span>
+                        <span>{new Date(file.createdAt).toLocaleDateString()}</span>
                       </div>
-                    );
-                  })()}
-
-                  {/* Info del archivo */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-gray-900 dark:text-white truncate">
-                      {file.name || 'Archivo sin nombre'}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                      <span>{senderName}</span>
-                      <span>•</span>
-                      <span>{new Date(file.createdAt).toLocaleDateString()}</span>
                     </div>
-                  </div>
 
-                  {/* Preview para videos y audios */}
-                  {file.type === 'video' && (
-                    <div className="hidden sm:block flex-shrink-0">
-                      <video
-                        src={`${getBaseUrl()}${file.url}`}
-                        className="w-32 h-20 rounded-lg object-cover"
-                        muted
-                      />
-                    </div>
-                  )}
-
-                  {/* Botones de acción */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {/* Preview para videos y audios */}
                     {file.type === 'video' && (
-                      <a
-                        href={`${getBaseUrl()}${file.url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                        title="Ver"
-                      >
-                        <span className="material-symbols-outlined">play_circle</span>
-                      </a>
+                      <div className="hidden sm:block flex-shrink-0">
+                        <video
+                          src={`${getBaseUrl()}${file.url} `}
+                          className="w-32 h-20 rounded-lg object-cover"
+                          muted
+                        />
+                      </div>
                     )}
-                    {file.type === 'audio' && (
-                      <button
-                        onClick={() => handleAudioPlay(`audio-${idx}`, file.url)}
-                        className={`audio-player-btn ${playingAudio === `audio-${idx}` ? 'audio-player-btn-playing' : ''}`}
-                        title={playingAudio === `audio-${idx}` ? 'Pausar' : 'Reproducir'}
-                      >
-                        <span className="material-symbols-outlined">
-                          {playingAudio === `audio-${idx}` ? 'pause' : 'play_arrow'}
-                        </span>
-                      </button>
-                    )}
-                    <a
-                      href={`${getBaseUrl()}${file.url}`}
-                      download
-                      className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                      title="Descargar"
-                    >
-                      <span className="material-symbols-outlined">download</span>
-                    </a>
-                  </div>
-                </div>
 
-                {/* Contenido del mensaje */}
-                {file.message?.content && (
-                  <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 pl-16">
-                    {file.message.content}
-                  </p>
-                )}
-              </div>
+                    {/* Botones de acción */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {file.type === 'video' && (
+                        <a
+                          href={`${getBaseUrl()}${file.url} `}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          title="Ver"
+                        >
+                          <span className="material-symbols-outlined">play_circle</span>
+                        </a>
+                      )}
+                      {file.type === 'audio' && (
+                        <button
+                          onClick={() => handleAudioPlay(`audio - ${idx} `, file.url)}
+                          className={`audio - player - btn ${playingAudio === `audio-${idx}` ? 'audio-player-btn-playing' : ''} `}
+                          title={playingAudio === `audio - ${idx} ` ? 'Pausar' : 'Reproducir'}
+                        >
+                          <span className="material-symbols-outlined">
+                            {playingAudio === `audio - ${idx} ` ? 'pause' : 'play_arrow'}
+                          </span>
+                        </button>
+                      )}
+                      <a
+                        href={`${getBaseUrl()}${file.url} `}
+                        download
+                        className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        title="Descargar"
+                      >
+                        <span className="material-symbols-outlined">download</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Contenido del mensaje */}
+                  {file.message?.content && (
+                    <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 pl-16">
+                      {file.message.content}
+                    </p>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -287,3 +290,6 @@ const GroupFiles = ({ groupData }) => {
 };
 
 export default GroupFiles;
+
+
+

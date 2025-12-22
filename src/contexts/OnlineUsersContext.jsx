@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { logger } from '../shared/utils/logger';
 
 const OnlineUsersContext = createContext();
 
@@ -7,22 +8,22 @@ export const OnlineUsersProvider = ({ children }) => {
     const [version, setVersion] = useState(0); // Para forzar re-renders
 
     useEffect(() => {
-        console.log('🌐 [ONLINE CONTEXT] Iniciando listener global de estado online');
+        logger.log('🌐 [ONLINE CONTEXT] Iniciando listener global de estado online');
 
         const handleFriendStatusChange = (event) => {
             const { userId, isOnline } = event.detail;
-            console.log('📥 [ONLINE CONTEXT] Evento recibido:', { userId, isOnline, timestamp: event.detail.timestamp });
+            logger.log('📥 [ONLINE CONTEXT] Evento recibido:', { userId, isOnline, timestamp: event.detail.timestamp });
 
             setOnlineUsers(prev => {
                 const newSet = new Set(prev);
                 if (isOnline) {
                     newSet.add(userId);
-                    console.log(`✅ [ONLINE CONTEXT] Usuario ${userId} marcado como ONLINE`);
+                    logger.log(`✅ [ONLINE CONTEXT] Usuario ${userId} marcado como ONLINE`);
                 } else {
                     newSet.delete(userId);
-                    console.log(`❌ [ONLINE CONTEXT] Usuario ${userId} marcado como OFFLINE`);
+                    logger.log(`❌ [ONLINE CONTEXT] Usuario ${userId} marcado como OFFLINE`);
                 }
-                console.log(`📊 [ONLINE CONTEXT] Total usuarios online:`, newSet.size, Array.from(newSet));
+                logger.log(`📊 [ONLINE CONTEXT] Total usuarios online:`, newSet.size, Array.from(newSet));
                 return newSet;
             });
 
@@ -33,7 +34,7 @@ export const OnlineUsersProvider = ({ children }) => {
         window.addEventListener('socket:friend:status_changed', handleFriendStatusChange);
 
         return () => {
-            console.log('🔇 [ONLINE CONTEXT] Removiendo listener global');
+            logger.log('🔇 [ONLINE CONTEXT] Removiendo listener global');
             window.removeEventListener('socket:friend:status_changed', handleFriendStatusChange);
         };
     }, []);
@@ -52,3 +53,6 @@ export const useOnlineUsers = () => {
     }
     return context.onlineUsers;
 };
+
+
+

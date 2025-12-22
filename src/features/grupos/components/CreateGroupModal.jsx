@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from '../../../shared/utils/logger';
 import groupService from "../../../api/groupService";
 
 const CreateGroupModal = ({ onClose, onSuccess }) => {
@@ -55,19 +56,19 @@ const CreateGroupModal = ({ onClose, onSuccess }) => {
         formDataToSend.append('avatar', imageFile);
       }
 
-      console.log('📤 Enviando datos del grupo con imagen');
+      logger.log('📤 Enviando datos del grupo con imagen');
       const response = await groupService.createGroup(formDataToSend);
-      console.log('✅ Respuesta del servidor:', response);
+      logger.log('✅ Respuesta del servidor:', response);
 
       // Extraer el grupo del response (viene en response.data)
       const newGroup = response.data || response;
-      console.log('📦 Grupo creado:', newGroup);
-      console.log('🖼️ Campo imagen:', newGroup.imagen);
-      console.log('🖼️ Campo imagePerfilGroup:', newGroup.imagePerfilGroup);
+      logger.log('📦 Grupo creado:', newGroup);
+      logger.log('🖼️ Campo imagen:', newGroup.imagen);
+      logger.log('🖼️ Campo imagePerfilGroup:', newGroup.imagePerfilGroup);
 
       onSuccess(newGroup);
     } catch (err) {
-      console.error("❌ Error creating group:", err);
+      logger.error("❌ Error creating group:", err);
       setError(err.response?.data?.message || err.response?.data?.error || "Error al crear el grupo");
     } finally {
       setLoading(false);
@@ -222,3 +223,6 @@ const CreateGroupModal = ({ onClose, onSuccess }) => {
 };
 
 export default CreateGroupModal;
+
+
+

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { X, UserPlus, Shield, Check, Search, User } from 'lucide-react';
 import userService from '../../../api/userService';
 import { getAvatarUrl, handleImageError } from '../../../shared/utils/avatarUtils';
@@ -29,7 +30,7 @@ const ModalCompartirCarpeta = ({ isOpen, onClose, onCompartir, carpeta }) => {
           const users = Array.isArray(res) ? res : (res.data || []);
           setResultados(users);
         } catch (error) {
-          console.error("Error buscando usuarios:", error);
+          logger.error("Error buscando usuarios:", error);
           setResultados([]);
         } finally {
           setSearching(false);
@@ -253,3 +254,6 @@ const ModalCompartirCarpeta = ({ isOpen, onClose, onCompartir, carpeta }) => {
 };
 
 export default ModalCompartirCarpeta;
+
+
+

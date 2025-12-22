@@ -29,3 +29,5 @@ const CommentSection = ({ comments = [], currentUserAvatar, onAddComment }) => {
 }
 
 export default CommentSection
+
+

@@ -24,3 +24,5 @@ const ProfileStats = memo(({ stats }) => {
 ProfileStats.displayName = 'ProfileStats';
 
 export default ProfileStats;
+
+

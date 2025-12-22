@@ -1,13 +1,13 @@
 import React from 'react';
 import { Search, MapPin, Users, Calendar } from 'lucide-react';
 
-const HeroSection = ({ 
-  searchQuery, 
-  onSearchChange, 
-  stats = { churches: 0, members: 0, events: 0 } 
+const HeroSection = ({
+  searchQuery,
+  onSearchChange,
+  stats = { churches: 0, members: 0, events: 0 }
 }) => {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl mb-8">
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-600 dark:to-purple-600 text-gray-900 dark:text-white shadow-xl mb-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -20,7 +20,7 @@ const HeroSection = ({
           <h1 className="text-3xl md:text-5xl font-bold mb-6 animate-in slide-in-from-bottom duration-500">
             Encuentra tu Comunidad de Fe
           </h1>
-          <p className="text-lg md:text-xl text-indigo-100 mb-8 animate-in slide-in-from-bottom duration-700 delay-100">
+          <p className="text-lg md:text-xl text-indigo-700 dark:text-indigo-100 mb-8 animate-in slide-in-from-bottom duration-700 delay-100">
             Conecta con iglesias, únete a eventos y crece espiritualmente junto a otros creyentes.
           </p>
 
@@ -40,20 +40,20 @@ const HeroSection = ({
 
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto animate-in slide-in-from-bottom duration-700 delay-300">
-            <div className="flex flex-col items-center p-3 rounded-lg bg-white/10 backdrop-blur-md">
-              <MapPin className="w-6 h-6 mb-2 text-indigo-200" />
-              <span className="text-2xl font-bold">{stats.churches}</span>
-              <span className="text-xs md:text-sm text-indigo-200">Iglesias</span>
+            <div className="flex flex-col items-center p-3 rounded-lg bg-indigo-100/80 dark:bg-white/10 backdrop-blur-md">
+              <MapPin className="w-6 h-6 mb-2 text-indigo-600 dark:text-indigo-200" />
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">{stats.churches}</span>
+              <span className="text-xs md:text-sm text-indigo-700 dark:text-indigo-200">Iglesias</span>
             </div>
-            <div className="flex flex-col items-center p-3 rounded-lg bg-white/10 backdrop-blur-md">
-              <Users className="w-6 h-6 mb-2 text-purple-200" />
-              <span className="text-2xl font-bold">{stats.members}</span>
-              <span className="text-xs md:text-sm text-purple-200">Miembros</span>
+            <div className="flex flex-col items-center p-3 rounded-lg bg-purple-100/80 dark:bg-white/10 backdrop-blur-md">
+              <Users className="w-6 h-6 mb-2 text-purple-600 dark:text-purple-200" />
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">{stats.members}</span>
+              <span className="text-xs md:text-sm text-purple-700 dark:text-purple-200">Miembros</span>
             </div>
-            <div className="flex flex-col items-center p-3 rounded-lg bg-white/10 backdrop-blur-md">
-              <Calendar className="w-6 h-6 mb-2 text-pink-200" />
-              <span className="text-2xl font-bold">{stats.events}</span>
-              <span className="text-xs md:text-sm text-pink-200">Eventos</span>
+            <div className="flex flex-col items-center p-3 rounded-lg bg-pink-100/80 dark:bg-white/10 backdrop-blur-md">
+              <Calendar className="w-6 h-6 mb-2 text-pink-600 dark:text-pink-200" />
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">{stats.events}</span>
+              <span className="text-xs md:text-sm text-pink-700 dark:text-pink-200">Eventos</span>
             </div>
           </div>
         </div>
@@ -63,3 +63,5 @@ const HeroSection = ({
 };
 
 export default HeroSection;
+
+

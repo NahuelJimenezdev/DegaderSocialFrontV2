@@ -252,3 +252,5 @@ const IglesiaInfo = ({ iglesiaData }) => {
 };
 
 export default IglesiaInfo;
+
+

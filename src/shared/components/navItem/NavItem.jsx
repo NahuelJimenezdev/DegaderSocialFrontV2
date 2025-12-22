@@ -13,3 +13,4 @@ const NavItem = ({to, icon: Icon, label }) => {
 }
 
 export default NavItem
+

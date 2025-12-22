@@ -42,3 +42,5 @@ export const getNombreDisplay = (user) => {
   const nombreCompleto = getNombreCompleto(user);
   return nombreCompleto !== 'Usuario' ? nombreCompleto : user?.email || 'Usuario';
 };
+
+

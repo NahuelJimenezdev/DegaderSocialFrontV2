@@ -1,23 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Send, Image as ImageIcon, X, Paperclip, MoreVertical, Smile } from 'lucide-react';
+import { API_BASE_URL, SOCKET_URL } from '../../../shared/config/env';
+import { logger } from '../../../shared/utils/logger';
 import { io } from 'socket.io-client';
 import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { useAuth } from '../../../context/AuthContext';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 // Helper to format time
 const formatTime = (dateString) => {
   const date = new Date(dateString);
   const now = new Date();
   const diff = now - date;
-  
+
   if (diff < 60000) return 'ahora';
-  
+
   const minutes = Math.floor(diff / 60000);
   if (minutes < 60) return `${minutes}m`;
-  
+
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours}h`;
-  
+
   return `${Math.floor(hours / 24)}d`;
 };
 
@@ -26,6 +30,7 @@ const IglesiaChat = ({ iglesiaData }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
   const messagesEndRef = useRef(null);
   const socketRef = useRef(null);
 
@@ -47,7 +52,7 @@ const IglesiaChat = ({ iglesiaData }) => {
         const data = await iglesiaService.getMessages(iglesiaData._id);
         setMessages(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error('Error loading messages:', error);
+        logger.error('Error loading messages:', error);
       } finally {
         setLoading(false);
       }
@@ -62,7 +67,7 @@ const IglesiaChat = ({ iglesiaData }) => {
 
     const socketUrl = import.meta.env.VITE_API_URL
       ? import.meta.env.VITE_API_URL.replace('/api', '')
-      : 'http://localhost:3001';
+      : API_BASE_URL;
 
     const socket = io(socketUrl, {
       transports: ['websocket'],
@@ -72,7 +77,7 @@ const IglesiaChat = ({ iglesiaData }) => {
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      console.log('Connected to socket');
+      logger.log('Connected to socket');
       socket.emit('joinRoom', `iglesia:${iglesiaData._id}`);
     });
 
@@ -100,8 +105,8 @@ const IglesiaChat = ({ iglesiaData }) => {
       await iglesiaService.sendMessage(iglesiaData._id, { content });
       // Message will be added via socket event
     } catch (error) {
-      console.error('Error sending message:', error);
-      alert('Error al enviar mensaje');
+      logger.error('Error sending message:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al enviar mensaje' });
     }
   };
 
@@ -110,7 +115,7 @@ const IglesiaChat = ({ iglesiaData }) => {
     try {
       await iglesiaService.deleteMessage(iglesiaData._id, messageId);
     } catch (error) {
-      console.error('Error deleting message:', error);
+      logger.error('Error deleting message:', error);
     }
   };
 
@@ -148,17 +153,17 @@ const IglesiaChat = ({ iglesiaData }) => {
           messages.map((msg) => {
             const isMe = msg.author?._id === user?._id;
             const authorName = msg.author ? `${msg.author.nombres?.primero} ${msg.author.apellidos?.primero}` : 'Usuario';
-            
+
             return (
               <div key={msg._id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : ''} group`}>
                 <div className="flex-shrink-0">
-                  <img 
-                    src={getUserAvatar(msg.author)} 
+                  <img
+                    src={getUserAvatar(msg.author)}
                     alt={authorName}
                     className="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800"
                   />
                 </div>
-                
+
                 <div className={`flex flex-col max-w-[75%] ${isMe ? 'items-end' : 'items-start'}`}>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
@@ -168,11 +173,11 @@ const IglesiaChat = ({ iglesiaData }) => {
                       {formatTime(msg.createdAt)}
                     </span>
                   </div>
-                  
+
                   <div className={`
                     px-4 py-2 rounded-2xl shadow-sm relative group-hover:shadow-md transition-shadow
-                    ${isMe 
-                      ? 'bg-indigo-600 text-white rounded-tr-none' 
+                    ${isMe
+                      ? 'bg-indigo-600 text-white rounded-tr-none'
                       : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-gray-700'
                     }
                   `}>
@@ -181,7 +186,7 @@ const IglesiaChat = ({ iglesiaData }) => {
 
                   {/* Actions (Delete) */}
                   {isMe && (
-                    <button 
+                    <button
                       onClick={() => handleDeleteMessage(msg._id)}
                       className="opacity-0 group-hover:opacity-100 transition-opacity text-xs text-red-500 hover:text-red-600 mt-1 flex items-center gap-1"
                     >
@@ -218,8 +223,19 @@ const IglesiaChat = ({ iglesiaData }) => {
           </button>
         </form>
       </div>
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 };
 
 export default IglesiaChat;
+
+
+

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Building } from 'lucide-react';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
@@ -12,7 +13,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
   const [loading, setLoading] = useState(false);
   const [imgError, setImgError] = useState(false);
 
-  console.log('🔔 IglesiaNotificationCard - notification:', notification);
+  logger.log('🔔 IglesiaNotificationCard - notification:', notification);
 
   const { emisor, metadata, createdAt, tipo, referencia } = notification;
   const { iglesiaNombre, solicitanteId } = metadata || {};
@@ -39,20 +40,20 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 
   const handleAction = async (accion) => {
     if (!iglesiaId) {
-      console.error('❌ No se pudo obtener el ID de la iglesia:', referencia);
+      logger.error('❌ No se pudo obtener el ID de la iglesia:', referencia);
       toast.error('Error: No se puede identificar la iglesia');
       return;
     }
 
     if (!solicitanteId) {
-      console.error('❌ No se pudo obtener el ID del solicitante:', metadata);
+      logger.error('❌ No se pudo obtener el ID del solicitante:', metadata);
       toast.error('Error: No se puede identificar el solicitante');
       return;
     }
 
     setLoading(true);
     try {
-      console.log('📤 Gestionando solicitud:', { iglesiaId, solicitanteId, accion });
+      logger.log('📤 Gestionando solicitud:', { iglesiaId, solicitanteId, accion });
       
       await iglesiaService.manageRequest(
         iglesiaId,
@@ -70,7 +71,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
       try {
         await notificationService.deleteNotification(notification._id);
       } catch (deleteError) {
-        console.warn('⚠️ Error al eliminar notificación (puede que ya no exista):', deleteError);
+        logger.warn('⚠️ Error al eliminar notificación (puede que ya no exista):', deleteError);
       }
       
       // Notificar al componente padre para actualizar la lista
@@ -78,7 +79,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
         onAction(notification._id);
       }
     } catch (error) {
-      console.error('❌ Error al gestionar solicitud:', error);
+      logger.error('❌ Error al gestionar solicitud:', error);
       toast.error('Error al procesar la solicitud');
     } finally {
       setLoading(false);
@@ -89,11 +90,11 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
     // Si es notificación final (aprobada/rechazada), borrarla al hacer click
     if (tipo === 'solicitud_iglesia_aprobada' || tipo === 'solicitud_iglesia_rechazada') {
       try {
-        console.log('🗑️ Eliminando notificación al clickear:', notification._id);
+        logger.log('🗑️ Eliminando notificación al clickear:', notification._id);
         await notificationService.deleteNotification(notification._id);
         if (onAction) onAction(notification._id);
       } catch (error) {
-        console.error('❌ Error eliminando notificación:', error);
+        logger.error('❌ Error eliminando notificación:', error);
       }
     }
 
@@ -211,3 +212,6 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 };
 
 export default IglesiaNotificationCard;
+
+
+

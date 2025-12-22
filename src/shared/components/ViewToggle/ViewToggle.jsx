@@ -25,3 +25,5 @@ const ViewToggle = ({ view, onViewChange, options = ['Grid', 'List'] }) => {
 }
 
 export default ViewToggle
+
+

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { logger } from '../../../shared/utils/logger';
 import { Search, MapPin } from 'lucide-react'
 import { FriendCard } from './FriendCard'
 import { FriendsEmptyState } from './FriendsEmptyState'
@@ -19,7 +20,7 @@ export const CityFriends = () => {
         const friendsList = response.data || response || []
         setFriends(friendsList)
       } catch (err) {
-        console.error('❌ Error al obtener amigos:', err)
+        logger.error('❌ Error al obtener amigos:', err)
         setError('Error al cargar amigos')
       } finally {
         setLoading(false)
@@ -165,3 +166,6 @@ export const CityFriends = () => {
     </div>
   )
 }
+
+
+

@@ -42,3 +42,5 @@ export default function FriendsTabs({ birthdaysTodayCount = 0, onChange }) {
     </div>
   );
 }
+
+

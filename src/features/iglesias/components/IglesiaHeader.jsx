@@ -1,4 +1,5 @@
 import React from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { Share2, Bookmark, MoreVertical, MapPin, Users, Calendar, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
@@ -8,7 +9,7 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  console.log('🖼️ IglesiaHeader render - Data:', {
+  logger.log('🖼️ IglesiaHeader render - Data:', {
     id: iglesia?._id,
     logo: iglesia?.logo,
     portada: iglesia?.portada
@@ -115,3 +116,6 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
 };
 
 export default IglesiaHeader;
+
+
+

@@ -40,3 +40,5 @@ const CommentForm = ({ currentUserAvatar, onSubmit }) => {
 }
 
 export default CommentForm
+
+

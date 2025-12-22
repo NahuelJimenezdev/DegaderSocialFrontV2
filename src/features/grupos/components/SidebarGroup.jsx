@@ -45,3 +45,4 @@ const SidebarGroup = ({ groupData, navigate, activeSection, setActiveSection, me
 };
 
 export default SidebarGroup;
+

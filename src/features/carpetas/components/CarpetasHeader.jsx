@@ -42,3 +42,5 @@ const CarpetasHeader = ({ onCrearCarpeta, totalCarpetas }) => {
 };
 
 export default CarpetasHeader;
+
+

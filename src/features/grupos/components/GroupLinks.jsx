@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import groupService from '../../../api/groupService';
 
 const GroupLinks = ({ groupData }) => {
@@ -14,7 +15,7 @@ const GroupLinks = ({ groupData }) => {
         const data = response.data || response;
         setEnlaces(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Error loading enlaces:', err);
+        logger.error('Error loading enlaces:', err);
         setEnlaces([]);
       } finally {
         setLoading(false);
@@ -182,3 +183,6 @@ const GroupLinks = ({ groupData }) => {
 };
 
 export default GroupLinks;
+
+
+

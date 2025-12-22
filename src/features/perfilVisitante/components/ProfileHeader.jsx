@@ -50,3 +50,4 @@ const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
 };
 
 export default ProfileHeader;
+

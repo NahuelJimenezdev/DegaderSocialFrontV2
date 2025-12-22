@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { BarChart3, DollarSign, TrendingUp, Users, Eye, MousePointer, Filter, Search, CheckCircle, XCircle } from 'lucide-react';
 import adService from '../../api/adService';
@@ -24,28 +25,28 @@ const FounderAdsDashboard = () => {
     try {
       setLoading(true);
       const params = filter !== 'all' ? { estado: filter } : {};
-      
-      console.log('📡 Fetching founder data...');
+
+      logger.log('📡 Fetching founder data...');
       const [campaignsRes, revenueRes] = await Promise.all([
         adService.getAllCampaigns(params),
         adService.getRevenue()
       ]);
-      
-      console.log('📦 Founder Campaigns Response:', campaignsRes);
-      console.log('💰 Revenue Response:', revenueRes);
+
+      logger.log('📦 Founder Campaigns Response:', campaignsRes);
+      logger.log('💰 Revenue Response:', revenueRes);
 
       // La API devuelve { campaigns: [...], total, ... }
       // Aseguramos que seteamos el array
       const campaignsArray = campaignsRes.campaigns || campaignsRes.data || [];
-      console.log('✅ Campaigns Array to Set:', campaignsArray);
-      
+      logger.log('✅ Campaigns Array to Set:', campaignsArray);
+
       setCampaigns(campaignsArray);
       setRevenue(revenueRes.data || revenueRes);
     } catch (error) {
-      console.error('❌ Error cargando datos en Founder Dashboard:', error);
+      logger.error('❌ Error cargando datos en Founder Dashboard:', error);
       if (error.response) {
-        console.error('Response Status:', error.response.status);
-        console.error('Response Data:', error.response.data);
+        logger.error('Response Status:', error.response.status);
+        logger.error('Response Data:', error.response.data);
       }
     } finally {
       setLoading(false);
@@ -63,14 +64,14 @@ const FounderAdsDashboard = () => {
 
   const handleApproveCampaign = (campaignId) => {
     // Actualizar la lista de campañas
-    setCampaigns(prev => prev.map(c => 
+    setCampaigns(prev => prev.map(c =>
       c._id === campaignId ? { ...c, estado: 'activo' } : c
     ));
   };
 
   const handleRejectCampaign = (campaignId) => {
     // Actualizar la lista de campañas
-    setCampaigns(prev => prev.map(c => 
+    setCampaigns(prev => prev.map(c =>
       c._id === campaignId ? { ...c, estado: 'rechazado' } : c
     ));
   };
@@ -85,9 +86,9 @@ const FounderAdsDashboard = () => {
       'sin_creditos': { color: '#ef4444', text: 'Sin Créditos' },
       'rechazado': { color: '#ef4444', text: 'Rechazado' }
     };
-    
+
     const badge = badges[estado] || badges.borrador;
-    
+
     return (
       <span style={{
         padding: '0.25rem 0.75rem',
@@ -124,23 +125,23 @@ const FounderAdsDashboard = () => {
         <p style={{ color: '#9ca3af' }}>
           Gestiona todas las campañas publicitarias y monitorea los ingresos
         </p>
-        
+
         {/* DEBUG PANEL - REMOVE AFTER FIX */}
         <div style={{ padding: '1rem', marginTop: '1rem', background: '#111', border: '1px solid yellow', borderRadius: '8px', fontFamily: 'monospace', fontSize: '10px', color: '#fff', maxHeight: '200px', overflow: 'auto' }}>
-           <strong>DEBUG INFO (Visible solo para testing):</strong><br/>
-           Loading: {loading ? 'YES' : 'NO'}<br/>
-           Filter: {filter}<br/>
-           Revenue: {JSON.stringify(revenue)}<br/>
-           Campaigns Count: {campaigns.length}<br/>
-           Campaigns Raw Data:<br/>
-           {JSON.stringify(campaigns, null, 2)}
+          <strong>DEBUG INFO (Visible solo para testing):</strong><br />
+          Loading: {loading ? 'YES' : 'NO'}<br />
+          Filter: {filter}<br />
+          Revenue: {JSON.stringify(revenue)}<br />
+          Campaigns Count: {campaigns.length}<br />
+          Campaigns Raw Data:<br />
+          {JSON.stringify(campaigns, null, 2)}
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
         gap: '1.5rem',
         marginBottom: '2rem'
       }}>
@@ -222,9 +223,9 @@ const FounderAdsDashboard = () => {
       </div>
 
       {/* Filtros y Búsqueda */}
-      <div style={{ 
-        display: 'flex', 
-        gap: '1rem', 
+      <div style={{
+        display: 'flex',
+        gap: '1rem',
         marginBottom: '2rem',
         flexWrap: 'wrap'
       }}>
@@ -252,15 +253,15 @@ const FounderAdsDashboard = () => {
 
         {/* Búsqueda */}
         <div style={{ flex: 1, maxWidth: '400px', position: 'relative' }}>
-          <Search 
-            size={20} 
-            style={{ 
-              position: 'absolute', 
-              left: '1rem', 
-              top: '50%', 
-              transform: 'translateY(-50%)', 
-              color: '#9ca3af' 
-            }} 
+          <Search
+            size={20}
+            style={{
+              position: 'absolute',
+              left: '1rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#9ca3af'
+            }}
           />
           <input
             type="text"
@@ -329,10 +330,10 @@ const FounderAdsDashboard = () => {
               </thead>
               <tbody>
                 {filteredCampaigns.map((campaign) => (
-                  <tr 
-                    key={campaign._id} 
+                  <tr
+                    key={campaign._id}
                     onClick={() => handleCampaignClick(campaign)}
-                    style={{ 
+                    style={{
                       borderTop: '1px solid #1a1f3a',
                       cursor: 'pointer',
                       transition: 'background-color 0.2s'
@@ -342,8 +343,8 @@ const FounderAdsDashboard = () => {
                   >
                     <td style={{ padding: '1rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <img 
-                          src={campaign.imagenUrl} 
+                        <img
+                          src={campaign.imagenUrl}
                           alt={campaign.nombreCliente}
                           style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }}
                           onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }}
@@ -460,3 +461,5 @@ const FounderAdsDashboard = () => {
 };
 
 export default FounderAdsDashboard;
+
+

@@ -1,3 +1,7 @@
+import { format, formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { API_BASE_URL } from '../../../shared/config/env';
+
 /**
  * Formatea una fecha a formato relativo en español
  * @param {Date|string} date - Fecha a formatear
@@ -26,8 +30,8 @@ export const formatDate = (date) => {
 export const normalizeAvatarUrl = (avatar) => {
   if (!avatar) return '';
   if (avatar.startsWith('http')) return avatar;
-  if (avatar.startsWith('/')) return `http://localhost:3001${avatar}`;
-  return `http://localhost:3001/${avatar}`;
+  if (avatar.startsWith('/')) return `${API_BASE_URL}${avatar}`;
+  return `${API_BASE_URL}/${avatar}`;
 };
 
 /**
@@ -59,3 +63,5 @@ export const getUserAvatarUrl = (user) => {
       : 'Usuario');
   return getDefaultAvatar(name);
 };
+
+

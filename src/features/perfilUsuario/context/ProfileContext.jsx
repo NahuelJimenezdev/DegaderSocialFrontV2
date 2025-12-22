@@ -107,3 +107,5 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
     </ProfileContext.Provider>
   );
 };
+
+

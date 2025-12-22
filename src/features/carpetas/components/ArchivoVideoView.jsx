@@ -1,4 +1,5 @@
 import MediaControls from './MediaControls'
+import { logger } from '../../../shared/utils/logger';
 import CommentSection from './CommentSection'
 
 const ArchivoVideoView = ({ archivo, onClose }) => {
@@ -18,7 +19,7 @@ const ArchivoVideoView = ({ archivo, onClose }) => {
   ]
 
   const handleAddComment = (comment) => {
-    console.log('Nuevo comentario:', comment)
+    logger.log('Nuevo comentario:', comment)
     // Aquí iría la lógica para agregar el comentario
   }
 
@@ -81,3 +82,6 @@ const ArchivoVideoView = ({ archivo, onClose }) => {
 }
 
 export default ArchivoVideoView
+
+
+

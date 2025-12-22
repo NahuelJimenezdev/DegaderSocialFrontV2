@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { postService, userService } from '../../../api';
 
 /**
@@ -14,6 +15,7 @@ import { postService, userService } from '../../../api';
 export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts, loadSavedPosts) => {
   const [showComments, setShowComments] = useState({});
   const [commentText, setCommentText] = useState({});
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   /**
    * Maneja el like de un post con actualización optimista
@@ -38,7 +40,7 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
     try {
       await postService.toggleLike(postId);
     } catch (error) {
-      console.error('Error al dar like:', error);
+      logger.error('Error al dar like:', error);
 
       // Revertir cambio
       setPosts(posts.map(post =>
@@ -47,8 +49,13 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
           : post
       ));
 
-      alert('No se pudo actualizar el like. Intenta de nuevo.');
+      setAlertConfig({
+        isOpen: true,
+        variant: 'error',
+        message: 'No se pudo actualizar el like. Intenta de nuevo.'
+      });
     }
+
   };
 
   /**
@@ -69,10 +76,10 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
 
       if (response.success) {
         setSavedPosts(response.data.savedPosts);
-        console.log(isSaved ? '✅ Post eliminado de guardados' : '✅ Post guardado exitosamente');
+        logger.log(isSaved ? '✅ Post eliminado de guardados' : '✅ Post guardado exitosamente');
       }
     } catch (error) {
-      console.error('Error al guardar post:', error);
+      logger.error('Error al guardar post:', error);
       loadSavedPosts();
     }
   };
@@ -103,28 +110,32 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
         return post;
       }));
     } catch (error) {
-      console.error('Error al dar like al comentario:', error);
+      logger.error('Error al dar like al comentario:', error);
     }
   };
 
   /**
    * Agrega un comentario a un post
    */
-  const handleAddComment = async (postId) => {
-    const comment = commentText[postId];
-    if (!comment || !comment.trim()) return;
+  /**
+   * Agrega un comentario a un post
+   */
+  const handleAddComment = async (postId, content, parentId = null, image = null) => {
+    if (!content || !content.trim()) return;
 
     try {
-      await postService.addComment(postId, comment);
+      // Usar postService.addComment con la firma correcta (postId, contenido, parentId, image)
+      await postService.addComment(postId, content, parentId, image);
 
       const response = await postService.getPostById(postId);
       if (response.success && response.data) {
         setPosts(posts.map(p => p._id === postId ? response.data : p));
       }
 
-      setCommentText({ ...commentText, [postId]: '' });
+      // Limpiar estado local si existiera (aunque ahora lo maneja CommentSection)
+      setCommentText(prev => ({ ...prev, [postId]: '' }));
     } catch (error) {
-      console.error('Error al comentar:', error);
+      logger.error('Error al comentar:', error);
     }
   };
 
@@ -143,6 +154,11 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
     handleSavePost,
     handleCommentLike,
     handleAddComment,
-    toggleComments
+    toggleComments,
+    alertConfig,
+    setAlertConfig
   };
 };
+
+
+

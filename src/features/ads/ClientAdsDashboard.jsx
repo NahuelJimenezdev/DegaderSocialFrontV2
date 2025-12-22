@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  TrendingUp, 
-  Eye, 
-  MousePointerClick, 
+import { logger } from '../../shared/utils/logger';
+import {
+  Plus,
+  TrendingUp,
+  Eye,
+  MousePointerClick,
   DollarSign,
   Pause,
   Play,
@@ -15,6 +16,8 @@ import {
 import * as adService from '../../api/adService';
 import CreateCampaignModal from './CreateCampaignModal';
 import EditCampaignModal from './EditCampaignModal';
+import { AlertDialog } from '../../shared/components/AlertDialog';
+import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
 
 /**
  * Dashboard de Cliente para gestionar campañas publicitarias
@@ -26,6 +29,8 @@ const ClientAdsDashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
 
   useEffect(() => {
     fetchData();
@@ -42,7 +47,7 @@ const ClientAdsDashboard = () => {
       setCampaigns(Array.isArray(campaignsRes) ? campaignsRes : []);
       setBalance(balanceRes);
     } catch (error) {
-      console.error('Error cargando datos:', error);
+      logger.error('Error cargando datos:', error);
     } finally {
       setLoading(false);
     }
@@ -53,21 +58,26 @@ const ClientAdsDashboard = () => {
       await adService.toggleCampaign(id);
       fetchData();
     } catch (error) {
-      console.error('Error al pausar/reanudar:', error);
-      alert('Error al cambiar estado de la campaña');
+      logger.error('Error al pausar/reanudar:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al cambiar estado de la campaña' });
     }
   };
 
   const handleDeleteCampaign = async (id) => {
-    if (!confirm('¿Estás seguro de eliminar esta campaña?')) return;
-    
-    try {
-      await adService.deleteCampaign(id);
-      fetchData();
-    } catch (error) {
-      console.error('Error al eliminar:', error);
-      alert('Error al eliminar la campaña');
-    }
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Eliminar Campaña',
+      message: '¿Estás seguro de eliminar esta campaña?',
+      onConfirm: async () => {
+        try {
+          await adService.deleteCampaign(id);
+          fetchData();
+        } catch (error) {
+          logger.error('Error al eliminar:', error);
+          setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar la campaña' });
+        }
+      }
+    });
   };
 
   const handleEditCampaign = (campaign) => {
@@ -85,9 +95,9 @@ const ClientAdsDashboard = () => {
       'sin_creditos': { color: '#ef4444', text: 'Sin Créditos' },
       'rechazado': { color: '#ef4444', text: 'Rechazado' }
     };
-    
+
     const badge = badges[estado] || badges.borrador;
-    
+
     return (
       <span style={{
         padding: '0.25rem 0.75rem',
@@ -123,9 +133,9 @@ const ClientAdsDashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
         gap: '1.5rem',
         marginBottom: '2rem'
       }}>
@@ -147,7 +157,7 @@ const ClientAdsDashboard = () => {
             Créditos disponibles
           </p>
           <button
-            onClick={() => alert('Función de compra en desarrollo')}
+            onClick={() => setAlertConfig({ isOpen: true, variant: 'info', message: 'Función de compra en desarrollo' })}
             style={{
               marginTop: '1rem',
               width: '100%',
@@ -313,8 +323,8 @@ const ClientAdsDashboard = () => {
                   <tr key={campaign._id} style={{ borderTop: '1px solid #1a1f3a' }}>
                     <td style={{ padding: '1rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <img 
-                          src={campaign.imagenUrl} 
+                        <img
+                          src={campaign.imagenUrl}
                           alt={campaign.nombreCliente}
                           style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }}
                           onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }}
@@ -379,7 +389,7 @@ const ClientAdsDashboard = () => {
                           </button>
                         )}
                         <button
-                          onClick={() => alert('Función de estadísticas en desarrollo')}
+                          onClick={() => setAlertConfig({ isOpen: true, variant: 'info', message: 'Función de estadísticas en desarrollo' })}
                           style={{
                             padding: '0.5rem',
                             backgroundColor: 'transparent',
@@ -432,17 +442,41 @@ const ClientAdsDashboard = () => {
       <EditCampaignModal
         isOpen={showEditModal}
         onClose={() => {
-            setShowEditModal(false);
-            setSelectedCampaign(null);
+          setShowEditModal(false);
+          setSelectedCampaign(null);
         }}
         onSuccess={() => {
-          fetchData(); 
+          fetchData();
         }}
         currentBalance={balance?.balance || 0}
         campaign={selectedCampaign}
+      />
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
+
+      {/* ConfirmDialog Component */}
+      <ConfirmDialog
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={() => {
+          if (confirmConfig.onConfirm) confirmConfig.onConfirm();
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        }}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        variant="danger"
       />
     </div>
   );
 };
 
 export default ClientAdsDashboard;
+
+
+

@@ -76,3 +76,5 @@ const ProfileActions = ({ estadoAmistad, onAccion }) => {
 };
 
 export default ProfileActions;
+
+

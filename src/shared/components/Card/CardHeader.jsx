@@ -24,3 +24,5 @@ const CardHeader = ({ thumbnail, color, icon, overlayText, timeAgo }) => {
 }
 
 export default CardHeader
+
+

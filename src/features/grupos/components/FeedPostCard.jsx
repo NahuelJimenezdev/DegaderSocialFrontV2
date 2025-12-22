@@ -75,3 +75,4 @@ const FeedPostCard = ({ post }) => {
 };
 
 export default FeedPostCard;
+

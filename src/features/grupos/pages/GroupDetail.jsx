@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../../context/AuthContext'
 import { useGroupData } from '../hooks/useGroupData'
@@ -113,7 +114,7 @@ const GroupDetail = () => {
           setUnreadMessagesCount(unreadCount);
         }
       } catch (error) {
-        console.error('Error loading unread count:', error);
+        logger.error('Error loading unread count:', error);
       }
     };
 
@@ -261,3 +262,6 @@ const GroupDetail = () => {
 }
 
 export default GroupDetail
+
+
+

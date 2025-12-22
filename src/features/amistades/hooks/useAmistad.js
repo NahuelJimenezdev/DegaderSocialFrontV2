@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { getSocket } from '../../../shared/lib/socket';
 import { useAuth } from '../../../context/AuthContext';
 import amistadService from '../services/amistadService';
@@ -6,10 +7,11 @@ import amistadService from '../services/amistadService';
 export function useAmistad(usuarioId) {
   const [estado, setEstado] = useState('default');
   const [friendshipId, setFriendshipId] = useState(null);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
   const socket = getSocket();
   const { user } = useAuth();
 
-  console.log('🔄 [useAmistad] Hook renderizado - usuarioId:', usuarioId, 'estado:', estado);
+  logger.log('🔄 [useAmistad] Hook renderizado - usuarioId:', usuarioId, 'estado:', estado);
 
   // Consultar estado inicial
   useEffect(() => {
@@ -49,11 +51,11 @@ export function useAmistad(usuarioId) {
       // Si soy el receptor de una solicitud de este usuario
       if (data.tipo === 'solicitud_amistad' &&
         (data.emisor?._id === usuarioId || data.emisor === usuarioId)) {
-        console.log('📨 [Amistad] Solicitud recibida de este usuario');
-        console.log('📨 [Amistad] Datos del evento:', data);
+        logger.log('📨 [Amistad] Solicitud recibida de este usuario');
+        logger.log('📨 [Amistad] Datos del evento:', data);
         // Lo ideal sería recargar el estado para obtener el friendshipId
         amistadService.getEstado(usuarioId).then(res => {
-          console.log('📨 [Amistad] Estado recargado:', res.data);
+          logger.log('📨 [Amistad] Estado recargado:', res.data);
           if (res.success && res.data) {
             setFriendshipId(res.data.friendshipId);
             // Mapear el estado correctamente
@@ -65,24 +67,24 @@ export function useAmistad(usuarioId) {
             } else if (res.data.status === 'rechazada') {
               estadoFrontend = 'rechazado';
             }
-            console.log('📨 [Amistad] Nuevo estado:', estadoFrontend);
+            logger.log('📨 [Amistad] Nuevo estado:', estadoFrontend);
             setEstado(estadoFrontend);
           }
         }).catch(err => {
-          console.error('📨 [Amistad] Error al recargar estado:', err);
+          logger.error('📨 [Amistad] Error al recargar estado:', err);
         });
       }
 
       // Si aceptaron mi solicitud
       if (data.tipo === 'amistad_aceptada' &&
         (data.emisor?._id === usuarioId || data.emisor === usuarioId)) {
-        console.log('✅ [Amistad] Solicitud aceptada por este usuario');
+        logger.log('✅ [Amistad] Solicitud aceptada por este usuario');
         setEstado('aceptado');
       }
 
       // Si se actualizó el estado de amistad (evento en tiempo real)
       if (data.tipo === 'amistad:actualizada' && data.usuarioId === usuarioId) {
-        console.log('🔄 [Amistad] Estado actualizado:', data.nuevoEstado);
+        logger.log('🔄 [Amistad] Estado actualizado:', data.nuevoEstado);
         setEstado(data.nuevoEstado);
       }
 
@@ -93,10 +95,10 @@ export function useAmistad(usuarioId) {
         const eliminadorIdStr = String(eliminadorId);
         const usuarioIdStr = String(usuarioId);
 
-        console.log('🔍 [Amistad] Verificando eliminación/cancelación - eliminadorId:', eliminadorIdStr, 'usuarioId:', usuarioIdStr);
+        logger.log('🔍 [Amistad] Verificando eliminación/cancelación - eliminadorId:', eliminadorIdStr, 'usuarioId:', usuarioIdStr);
 
         if (eliminadorIdStr === usuarioIdStr) {
-          console.log('❌ [Amistad] Amistad eliminada o solicitud cancelada por este usuario');
+          logger.log('❌ [Amistad] Amistad eliminada o solicitud cancelada por este usuario');
           setEstado('default');
           setFriendshipId(null);
         }
@@ -117,7 +119,7 @@ export function useAmistad(usuarioId) {
     if (!userId || !usuarioId) return;
 
     if (String(userId) === String(usuarioId)) {
-      alert('No puedes enviarte una solicitud a ti mismo.');
+      setAlertConfig({ isOpen: true, variant: 'warning', message: 'No puedes enviarte una solicitud a ti mismo.' });
       return;
     }
 
@@ -128,8 +130,8 @@ export function useAmistad(usuarioId) {
         setFriendshipId(res.data._id); // Guardar ID de la nueva amistad
       }
     } catch (error) {
-      console.error('Error al enviar solicitud:', error);
-      alert('Error al enviar solicitud');
+      logger.error('Error al enviar solicitud:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al enviar solicitud' });
     }
   };
 
@@ -139,7 +141,7 @@ export function useAmistad(usuarioId) {
       const res = await amistadService.aceptarSolicitud(friendshipId);
       if (res.success) setEstado('aceptado');
     } catch (error) {
-      console.error('Error al aceptar solicitud:', error);
+      logger.error('Error al aceptar solicitud:', error);
     }
   };
 
@@ -152,7 +154,7 @@ export function useAmistad(usuarioId) {
         setFriendshipId(null);
       }
     } catch (error) {
-      console.error('Error al cancelar/eliminar:', error);
+      logger.error('Error al cancelar/eliminar:', error);
     }
   };
 
@@ -165,9 +167,11 @@ export function useAmistad(usuarioId) {
         setFriendshipId(null);
       }
     } catch (error) {
-      console.error('Error al rechazar solicitud:', error);
+      logger.error('Error al rechazar solicitud:', error);
     }
   };
 
-  return { estado, agregarAmigo, aceptarAmigo, cancelarAmigo, rechazarAmigo };
+  return { estado, agregarAmigo, aceptarAmigo, cancelarAmigo, rechazarAmigo, alertConfig, setAlertConfig };
 }
+
+

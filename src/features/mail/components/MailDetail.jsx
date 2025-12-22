@@ -1,4 +1,5 @@
 import React from "react";
+import DOMPurify from 'dompurify';
 import styles from "../styles/MailDetail.module.css";
 
 export default function MailDetail({ mail }) {
@@ -8,6 +9,13 @@ export default function MailDetail({ mail }) {
         <p>Selecciona un correo para leer su contenido</p>
       </div>
     );
+
+  // Sanitize HTML to prevent XSS attacks
+  const sanitizedBody = DOMPurify.sanitize(mail.body, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'img'],
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class'],
+    ALLOW_DATA_ATTR: false,
+  });
 
   return (
     <div className={styles.container}>
@@ -20,8 +28,10 @@ export default function MailDetail({ mail }) {
 
       <div
         className={styles.body}
-        dangerouslySetInnerHTML={{ __html: mail.body }}
+        dangerouslySetInnerHTML={{ __html: sanitizedBody }}
       />
     </div>
   );
 }
+
+

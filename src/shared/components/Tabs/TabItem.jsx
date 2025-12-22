@@ -34,3 +34,5 @@ const TabItem = ({ tab, isActive, onClick }) => {
 }
 
 export default TabItem
+
+

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { MeetingHeader } from '../components/MeetingHeader';
@@ -108,10 +109,10 @@ export function ReunionesPage() {
     if (result.success) {
       // Éxito
       setIsModalOpen(false);
-      console.log('Reunión creada y lista actualizada.');
+      logger.log('Reunión creada y lista actualizada.');
     } else {
       // No cerramos el modal, dejamos que el modal maneje el error
-      console.error('Fallo la creación:', result.error);
+      logger.error('Fallo la creación:', result.error);
     }
 
     // Retornar el resultado para que el modal lo maneje
@@ -255,3 +256,5 @@ export function ReunionesPage() {
     </div>
   );
 }
+
+

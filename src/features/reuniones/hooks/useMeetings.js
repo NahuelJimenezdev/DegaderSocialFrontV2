@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
 import meetingService from '../services/meetingService';
 import { getSocket } from '../../../shared/lib/socket';
@@ -43,15 +44,26 @@ export function useMeetings() {
 
   // Función para cancelar una reunión
   const cancelMeeting = useCallback(async (meetingId) => {
+    logger.log('🔴 [useMeetings] cancelMeeting llamado con ID:', meetingId);
+
     try {
-      await meetingService.cancelMeeting(meetingId);
+      logger.log('🔴 [useMeetings] Llamando a meetingService.cancelMeeting...');
+      const result = await meetingService.cancelMeeting(meetingId);
+      logger.log('🔴 [useMeetings] Respuesta del servicio:', result);
 
       // Refrescar la lista después de cancelar
+      logger.log('🔴 [useMeetings] Refrescando lista de reuniones...');
       await fetchMeetings();
+      logger.log('✅ [useMeetings] Lista refrescada exitosamente');
 
       return { success: true };
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || 'Fallo al cancelar la reunión.';
+      logger.error('❌ [useMeetings] Error al cancelar:', {
+        message: errMsg,
+        error: err,
+        response: err.response?.data
+      });
       setError(errMsg);
       return { success: false, error: errMsg };
     }
@@ -70,7 +82,7 @@ export function useMeetings() {
     if (!userId) {
       // Solo mostrar warning una vez
       if (user !== undefined) {
-        console.warn('⚠️ userId no disponible para reuniones, esperando autenticación...');
+        logger.warn('⚠️ userId no disponible para reuniones, esperando autenticación...');
       }
       return;
     }
@@ -78,15 +90,15 @@ export function useMeetings() {
     // Esperar a que el socket esté disponible
     const socket = getSocket();
     if (!socket) {
-      console.warn('⚠️ Socket no inicializado aún, esperando conexión...');
+      logger.warn('⚠️ Socket no inicializado aún, esperando conexión...');
       // Reintentar después de un breve delay
       const timer = setTimeout(() => {
         const retrySocket = getSocket();
         if (!retrySocket) {
-          console.error('❌ Socket no pudo inicializarse para reuniones');
+          logger.error('❌ Socket no pudo inicializarse para reuniones');
           return;
         }
-        console.log('♻️ Socket inicializado, recargando componente...');
+        logger.log('♻️ Socket inicializado, recargando componente...');
         window.location.reload();
       }, 1000);
       return () => clearTimeout(timer);
@@ -94,7 +106,7 @@ export function useMeetings() {
 
     // Listener para actualizaciones de reuniones en tiempo real
     const handleMeetingUpdate = (data) => {
-      console.log('📅 Actualización de reunión recibida:', data);
+      logger.log('📅 Actualización de reunión recibida:', data);
 
       const { type, meeting } = data;
 
@@ -128,7 +140,7 @@ export function useMeetings() {
           break;
 
         default:
-          console.warn('Tipo de evento desconocido:', type);
+          logger.warn('Tipo de evento desconocido:', type);
       }
     };
 
@@ -136,15 +148,15 @@ export function useMeetings() {
     const suscribirseAReuniones = () => {
       if (socket.connected) {
         socket.emit('subscribeMeetings', { userId });
-        console.log('📅 Suscrito a reuniones para userId:', userId);
+        logger.log('📅 Suscrito a reuniones para userId:', userId);
       } else {
-        console.warn('⚠️ Socket no conectado aún, esperando...');
+        logger.warn('⚠️ Socket no conectado aún, esperando...');
       }
     };
 
     // Listener para cuando el socket se conecte
     const handleConnect = () => {
-      console.log('🔌 Socket conectado, suscribiendo a reuniones');
+      logger.log('🔌 Socket conectado, suscribiendo a reuniones');
       suscribirseAReuniones();
     };
 
@@ -161,7 +173,7 @@ export function useMeetings() {
 
     // Cleanup: Desuscribirse al desmontar (pero NO desconectar el socket)
     return () => {
-      console.log('🧹 Limpiando listeners de reuniones');
+      logger.log('🧹 Limpiando listeners de reuniones');
       socket.off('meetingUpdate', handleMeetingUpdate);
       socket.off('connect', handleConnect);
 
@@ -181,3 +193,5 @@ export function useMeetings() {
     refetch: fetchMeetings, // Permite recargar la lista manualmente
   };
 }
+
+

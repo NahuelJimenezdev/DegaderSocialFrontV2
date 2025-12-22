@@ -9,11 +9,11 @@ const ThemeSwitcher = () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
 
-    // Aplicar tema al body
+    // Aplicar tema al html element (requerido por Tailwind)
     if (savedTheme === 'dark') {
-      document.body.classList.add('dark');
+      document.documentElement.classList.add('dark');
     } else {
-      document.body.classList.remove('dark');
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
@@ -22,11 +22,11 @@ const ThemeSwitcher = () => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
 
-    // Toggle dark class en body
+    // Toggle dark class en html element (requerido por Tailwind)
     if (newTheme === 'dark') {
-      document.body.classList.add('dark');
+      document.documentElement.classList.add('dark');
     } else {
-      document.body.classList.remove('dark');
+      document.documentElement.classList.remove('dark');
     }
   };
 
@@ -51,3 +51,5 @@ const ThemeSwitcher = () => {
 };
 
 export default ThemeSwitcher;
+
+

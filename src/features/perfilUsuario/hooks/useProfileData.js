@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { postService, userService } from '../../../api';
 
 /**
@@ -21,7 +22,7 @@ export const useProfileData = (user) => {
       const response = await postService.getUserPosts(user._id);
       setPosts(response.data.posts || []);
     } catch (error) {
-      console.error('Error al cargar publicaciones:', error);
+      logger.error('Error al cargar publicaciones:', error);
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,7 @@ export const useProfileData = (user) => {
       const response = await userService.getUserStats(user._id);
       setUserStats(response.data);
     } catch (error) {
-      console.error('Error al cargar estadísticas:', error);
+      logger.error('Error al cargar estadísticas:', error);
     }
   };
 
@@ -50,7 +51,7 @@ export const useProfileData = (user) => {
         setSavedPosts(savedPostIds);
       }
     } catch (error) {
-      console.error('Error al cargar posts guardados:', error);
+      logger.error('Error al cargar posts guardados:', error);
     }
   };
 
@@ -115,4 +116,7 @@ export const useProfileData = (user) => {
     loadSavedPosts
   };
 };
+
+
+
 

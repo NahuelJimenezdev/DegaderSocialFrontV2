@@ -58,3 +58,5 @@ const MediaControls = ({ onVideoClick, onAudioClick, onPdfClick, variant = 'hori
 }
 
 export default MediaControls
+
+

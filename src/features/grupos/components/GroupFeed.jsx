@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
-import PostCard from '../../feed/components/PostCard';
-import CreatePostCard from '../../feed/components/CreatePostCard';
+import PostCard from '../../../shared/components/Post/PostCard';
+import CreatePostCard from '../../../shared/components/Post/CreatePostCard';
 import ShareModal from '../../feed/components/ShareModal';
 import postService from '../../feed/services/postService';
 import { useAuth } from '../../../context/AuthContext';
@@ -22,7 +23,7 @@ const GroupFeed = ({ groupData }) => {
       const response = await postService.getGroupPosts(groupData._id, 1, 50);
       setPosts(response.data.posts);
     } catch (err) {
-      console.error('Error fetching group posts:', err);
+      logger.error('Error fetching group posts:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -42,7 +43,7 @@ const GroupFeed = ({ groupData }) => {
       // Verificar si el post pertenece a este grupo
       // Handle both object and ID for updatedPost.grupo
       const updatedPostGroupId = updatedPost.grupo?._id || updatedPost.grupo;
-      
+
       if (updatedPostGroupId === groupData?._id) {
         setPosts(prevPosts => {
           const exists = prevPosts.some(p => p._id === updatedPost._id);
@@ -67,13 +68,13 @@ const GroupFeed = ({ groupData }) => {
         ...postData,
         grupo: groupData._id
       });
-      
+
       if (response.success) {
         // No necesitamos recargar todo si el socket funciona
       }
       return response;
     } catch (err) {
-      console.error('Error creating group post:', err);
+      logger.error('Error creating group post:', err);
       throw err;
     }
   };
@@ -88,7 +89,7 @@ const GroupFeed = ({ groupData }) => {
           const isLiked = post.likes.includes(user._id);
           return {
             ...post,
-            likes: isLiked 
+            likes: isLiked
               ? post.likes.filter(id => id !== user._id)
               : [...post.likes, user._id]
           };
@@ -97,12 +98,12 @@ const GroupFeed = ({ groupData }) => {
       }));
 
       const response = await postService.toggleLike(postId);
-      
+
       if (!response.success) {
         await fetchGroupPosts();
       }
     } catch (err) {
-      console.error('Error liking post:', err);
+      logger.error('Error liking post:', err);
       await fetchGroupPosts();
     }
   };
@@ -113,13 +114,13 @@ const GroupFeed = ({ groupData }) => {
       if (response.success) {
         const updatedPostData = await postService.getPostById(postId);
         if (updatedPostData.success) {
-          setPosts(prevPosts => prevPosts.map(p => 
+          setPosts(prevPosts => prevPosts.map(p =>
             p._id === postId ? updatedPostData.data : p
           ));
         }
       }
     } catch (err) {
-      console.error('Error adding comment:', err);
+      logger.error('Error adding comment:', err);
     }
   };
 
@@ -166,6 +167,7 @@ const GroupFeed = ({ groupData }) => {
           {!loading && posts.map((post) => (
             <PostCard
               key={post._id}
+              variant="feed"
               post={post}
               currentUser={user}
               onLike={handleLike}
@@ -176,7 +178,7 @@ const GroupFeed = ({ groupData }) => {
         </div>
       </div>
 
-      <ShareModal 
+      <ShareModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
         post={selectedPost}
@@ -186,3 +188,5 @@ const GroupFeed = ({ groupData }) => {
 };
 
 export default GroupFeed;
+
+

@@ -1,10 +1,12 @@
 import { MessageSquare, MoreHorizontal, Cake, Star, Pin, BellOff, UserMinus, Ban, MoreVertical, MessageCircle, Bell } from 'lucide-react'
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import styles from '../styles/FriendsPage.module.css'
 import { getUserAvatar } from '../../../shared/utils/avatarUtils'
 import * as friendshipActionsService from '../../../api/friendshipActionsService'
 import ConfirmationModal from './ConfirmationModal'
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
   const navigate = useNavigate()
@@ -56,6 +58,7 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
   }
 
   const [confirmAction, setConfirmAction] = useState(null) // { type: 'unfriend' | 'block', title: string, message: string } | null
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   const handleFavorite = async (e) => {
     e.stopPropagation()
@@ -63,8 +66,8 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
       await friendshipActionsService.toggleFavorite(friend.friendshipId)
       if (onUpdate) onUpdate()
     } catch (error) {
-      console.error('Error al toggle favorito:', error)
-      alert('Error al actualizar favorito')
+      logger.error('Error al toggle favorito:', error)
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar favorito' })
     }
     setShowMenu(false)
   }
@@ -75,8 +78,8 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
       await friendshipActionsService.togglePin(friend.friendshipId)
       if (onUpdate) onUpdate()
     } catch (error) {
-      console.error('Error al toggle pin:', error)
-      alert('Error al actualizar fijado')
+      logger.error('Error al toggle pin:', error)
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar fijado' })
     }
     setShowMenu(false)
   }
@@ -87,8 +90,8 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
       await friendshipActionsService.toggleMute(friend.friendshipId)
       if (onUpdate) onUpdate()
     } catch (error) {
-      console.error('Error al toggle mute:', error)
-      alert('Error al actualizar silenciado')
+      logger.error('Error al toggle mute:', error)
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar silenciado' })
     }
     setShowMenu(false)
   }
@@ -164,8 +167,8 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
 
       if (onUpdate) onUpdate()
     } catch (error) {
-      console.error(`Error executing ${confirmAction.type}:`, error)
-      alert(`Error al realizar la acción`)
+      logger.error(`Error executing ${confirmAction.type}:`, error)
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al realizar la acción' })
     } finally {
       setConfirmAction(null)
     }
@@ -305,6 +308,17 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
         }
         isDangerous={confirmAction?.type !== 'unblock'}
       />
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   )
 }
+
+
+

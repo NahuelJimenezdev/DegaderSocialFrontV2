@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { User } from 'lucide-react';
 
 const estados = {
@@ -23,7 +24,7 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
 
   // Verificación adicional de seguridad
   if (!estadoActual) {
-    console.error('Estado inválido:', estado);
+    logger.error('Estado inválido:', estado);
     return null;
   }
 
@@ -112,3 +113,5 @@ const AmistadButton = ({ estado = 'default', onAccion }) => {
 };
 
 export default AmistadButton;
+
+

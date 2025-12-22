@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState } from 'react';
 import useFeed from '../hooks/useFeed';
-import PostCard from '../components/PostCard';
-import CreatePostCard from '../components/CreatePostCard';
+import PostCard from '../../../shared/components/Post/PostCard';
+import CreatePostCard from '../../../shared/components/Post/CreatePostCard';
 import ShareModal from '../components/ShareModal';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -10,7 +10,7 @@ const FeedPage = () => {
   const { posts, loading, error, hasMore, loadMore, fetchFeed, handleLike, handleAddComment, handleShare, handleCreatePost } = useFeed(null, user);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  
+
   const observer = useRef();
   const lastPostElementRef = useCallback(node => {
     if (loading) return;
@@ -41,14 +41,15 @@ const FeedPage = () => {
     <div className="max-w-2xl mx-auto py-8 px-4">
       {/* Create Post Widget */}
       <CreatePostCard currentUser={user} onPostCreated={handleCreatePost} />
-      
+
       <div className="space-y-6">
         {posts.map((post, index) => {
           if (posts.length === index + 1) {
             return (
               <div ref={lastPostElementRef} key={post._id}>
-                <PostCard 
-                  post={post} 
+                <PostCard
+                  variant="feed"
+                  post={post}
                   currentUser={user}
                   onLike={handleLike}
                   onComment={handleAddComment}
@@ -58,9 +59,10 @@ const FeedPage = () => {
             );
           } else {
             return (
-              <PostCard 
-                key={post._id} 
-                post={post} 
+              <PostCard
+                key={post._id}
+                variant="feed"
+                post={post}
                 currentUser={user}
                 onLike={handleLike}
                 onComment={handleAddComment}
@@ -90,7 +92,7 @@ const FeedPage = () => {
       )}
 
       {selectedPost && (
-        <ShareModal 
+        <ShareModal
           isOpen={shareModalOpen}
           onClose={() => setShareModalOpen(false)}
           onShare={onShareSubmit}
@@ -102,3 +104,5 @@ const FeedPage = () => {
 };
 
 export default FeedPage;
+
+

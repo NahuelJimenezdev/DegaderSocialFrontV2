@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { logger } from '../../../shared/utils/logger';
 import { Loader } from 'lucide-react'
 import styles from '../styles/FriendsPage.module.css'
 import { FriendCard } from './FriendCard'
@@ -15,15 +16,15 @@ export const FriendsList = () => {
   const fetchFriends = async () => {
     try {
       const response = await friendshipService.getFriends()
-      console.log('📥 Respuesta completa de amigos:', response)
+      logger.log('📥 Respuesta completa de amigos:', response)
 
       // friendshipService ya devuelve response.data, que contiene { success: true, message: "...", data: [...] }
       const friendsList = response.data || response || []
-      console.log('👥 Lista de amigos procesada:', friendsList)
+      logger.log('👥 Lista de amigos procesada:', friendsList)
 
       // Log detallado de cada amigo para debugging
       friendsList.forEach((friend, index) => {
-        console.log(`👤 Amigo ${index + 1}:`, {
+        logger.log(`👤 Amigo ${index + 1}:`, {
           nombre: `${friend?.nombres?.primero} ${friend?.apellidos?.primero}`,
           fechaNacimiento: friend?.personal?.fechaNacimiento,
           ubicacion: friend?.personal?.ubicacion,
@@ -53,8 +54,8 @@ export const FriendsList = () => {
 
       setFriends(Array.isArray(sortedFriends) ? sortedFriends : [])
     } catch (err) {
-      console.error('❌ Error al obtener amigos:', err)
-      console.error('❌ Detalles del error:', err.response?.data || err.message)
+      logger.error('❌ Error al obtener amigos:', err)
+      logger.error('❌ Detalles del error:', err.response?.data || err.message)
       setError('Error al cargar amigos')
     } finally {
       setLoading(false)
@@ -85,3 +86,6 @@ export const FriendsList = () => {
     </div>
   )
 }
+
+
+

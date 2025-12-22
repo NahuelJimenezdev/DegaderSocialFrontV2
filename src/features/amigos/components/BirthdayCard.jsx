@@ -40,3 +40,5 @@ const BirthdayCard = ({ user, formatDate, calcAge, onProfileClick, onMessageClic
 }
 
 export default BirthdayCard
+
+

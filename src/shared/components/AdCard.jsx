@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { logger } from '../utils/logger';
 import { ExternalLink } from 'lucide-react';
 import api from '../../api/config';
 
@@ -14,7 +15,7 @@ const AdCard = ({ ad }) => {
   const getDeviceInfo = () => {
     const ua = navigator.userAgent;
     let dispositivo = 'desktop';
-    
+
     if (/mobile/i.test(ua)) {
       dispositivo = 'mobile';
     } else if (/tablet|ipad/i.test(ua)) {
@@ -57,9 +58,9 @@ const AdCard = ({ ad }) => {
     try {
       const deviceInfo = getDeviceInfo();
       await api.post(`/ads/impression/${ad._id}`, deviceInfo);
-      console.log(`✅ Impresión registrada para anuncio: ${ad._id}`);
+      logger.log(`✅ Impresión registrada para anuncio: ${ad._id}`);
     } catch (error) {
-      console.error('❌ Error registrando impresión:', error);
+      logger.error('❌ Error registrando impresión:', error);
     }
   };
 
@@ -69,9 +70,9 @@ const AdCard = ({ ad }) => {
       // 1. Registrar click en el backend
       const deviceInfo = getDeviceInfo();
       await api.post(`/ads/click/${ad._id}`, deviceInfo);
-      console.log(`✅ Click registrado para anuncio: ${ad._id}`);
+      logger.log(`✅ Click registrado para anuncio: ${ad._id}`);
     } catch (error) {
-      console.error('❌ Error registrando click:', error);
+      logger.error('❌ Error registrando click:', error);
     }
 
     // 2. Abrir enlace en nueva pestaña
@@ -101,7 +102,7 @@ const AdCard = ({ ad }) => {
             e.target.src = 'https://via.placeholder.com/400x300?text=Anuncio';
           }}
         />
-        
+
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
@@ -133,3 +134,6 @@ const AdCard = ({ ad }) => {
 };
 
 export default AdCard;
+
+
+

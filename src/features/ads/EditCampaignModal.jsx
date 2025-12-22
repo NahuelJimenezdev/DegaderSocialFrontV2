@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../shared/utils/logger';
 import { X, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import * as adService from '../../api/adService';
 
@@ -39,38 +40,38 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
   // Cargar datos de la campaña al abrir
   useEffect(() => {
     if (campaign && isOpen) {
-        // Formatear fechas para inputs tipo date
-        const formatDate = (dateString) => {
-            if (!dateString) return '';
-            return new Date(dateString).toISOString().split('T')[0];
-        };
+      // Formatear fechas para inputs tipo date
+      const formatDate = (dateString) => {
+        if (!dateString) return '';
+        return new Date(dateString).toISOString().split('T')[0];
+      };
 
-        setFormData({
-            nombreCliente: campaign.nombreCliente || '',
-            callToAction: campaign.callToAction || '',
-            linkDestino: campaign.linkDestino || '',
-            textoAlternativo: campaign.textoAlternativo || '',
-            imagenUrl: campaign.imagenUrl || '',
-            segmentacion: {
-                edadMin: campaign.segmentacion?.edadMin || 18,
-                edadMax: campaign.segmentacion?.edadMax || 65,
-                genero: campaign.segmentacion?.genero || 'todos',
-                intereses: campaign.segmentacion?.intereses || [],
-                ubicacion: {
-                    esGlobal: campaign.segmentacion?.ubicacion?.esGlobal ?? true
-                    // Nota: Si no es global, necesitaríamos más lógica para mostrar/editar coordenadas, 
-                    // por ahora simplificamos a mantener si es global o no.
-                }
-            },
-            fechaInicio: formatDate(campaign.fechaInicio),
-            fechaFin: formatDate(campaign.fechaFin),
-            presupuesto: 0, // El presupuesto no se edita directamente así, depende del diseño. 
-                            // Omitiremos edición de presupuesto por ahora ya que implica lógica de créditos compleja.
-            costoPorImpresion: campaign.costoPorImpresion || 1,
-            maxImpresionesUsuario: campaign.maxImpresionesUsuario || 3,
-            prioridad: campaign.prioridad || 'basica',
-            estado: campaign.estado
-        });
+      setFormData({
+        nombreCliente: campaign.nombreCliente || '',
+        callToAction: campaign.callToAction || '',
+        linkDestino: campaign.linkDestino || '',
+        textoAlternativo: campaign.textoAlternativo || '',
+        imagenUrl: campaign.imagenUrl || '',
+        segmentacion: {
+          edadMin: campaign.segmentacion?.edadMin || 18,
+          edadMax: campaign.segmentacion?.edadMax || 65,
+          genero: campaign.segmentacion?.genero || 'todos',
+          intereses: campaign.segmentacion?.intereses || [],
+          ubicacion: {
+            esGlobal: campaign.segmentacion?.ubicacion?.esGlobal ?? true
+            // Nota: Si no es global, necesitaríamos más lógica para mostrar/editar coordenadas, 
+            // por ahora simplificamos a mantener si es global o no.
+          }
+        },
+        fechaInicio: formatDate(campaign.fechaInicio),
+        fechaFin: formatDate(campaign.fechaFin),
+        presupuesto: 0, // El presupuesto no se edita directamente así, depende del diseño. 
+        // Omitiremos edición de presupuesto por ahora ya que implica lógica de créditos compleja.
+        costoPorImpresion: campaign.costoPorImpresion || 1,
+        maxImpresionesUsuario: campaign.maxImpresionesUsuario || 3,
+        prioridad: campaign.prioridad || 'basica',
+        estado: campaign.estado
+      });
     }
   }, [campaign, isOpen]);
 
@@ -110,13 +111,13 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
         } else if (formData.nombreCliente.length < 3) {
           newErrors.nombreCliente = 'Mínimo 3 caracteres';
         }
-        
+
         if (!formData.callToAction.trim()) {
           newErrors.callToAction = 'El Call to Action es requerido';
         } else if (formData.callToAction.length > 30) {
           newErrors.callToAction = 'Máximo 30 caracteres';
         }
-        
+
         if (!formData.linkDestino.trim()) {
           newErrors.linkDestino = 'El link de destino es requerido';
         } else if (!/^https?:\/\/.+/.test(formData.linkDestino)) {
@@ -163,7 +164,7 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      
+
       const campaignData = {
         nombreCliente: formData.nombreCliente,
         imagenUrl: formData.imagenUrl,
@@ -187,11 +188,11 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
       };
 
       await adService.updateCampaign(campaign._id, campaignData);
-      
+
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('Error actualizando campaña:', error);
+      logger.error('Error actualizando campaña:', error);
       setErrors({ submit: error.response?.data?.msg || 'Error al actualizar la campaña' });
     } finally {
       setLoading(false);
@@ -280,9 +281,9 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
                 {errors.imagenUrl && <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{errors.imagenUrl}</p>}
               </div>
               {formData.imagenUrl && !errors.imagenUrl && (
-                  <div style={{ width: '100%', maxWidth: '400px', height: '300px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#1a1f3a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img src={formData.imagenUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src = 'https://via.placeholder.com/400x300?text=Error+al+cargar+imagen'; }} />
-                  </div>
+                <div style={{ width: '100%', maxWidth: '400px', height: '300px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#1a1f3a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <img src={formData.imagenUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.src = 'https://via.placeholder.com/400x300?text=Error+al+cargar+imagen'; }} />
+                </div>
               )}
             </div>
           )}
@@ -293,8 +294,8 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Rango de Edad</label>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                    <input type="number" min="13" max="100" value={formData.segmentacion.edadMin} onChange={(e) => updateSegmentation('edadMin', parseInt(e.target.value))} style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a1f3a', border: '1px solid #374151', borderRadius: '8px', color: '#ffffff', fontSize: '1rem' }} />
-                    <input type="number" min="13" max="100" value={formData.segmentacion.edadMax} onChange={(e) => updateSegmentation('edadMax', parseInt(e.target.value))} style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a1f3a', border: '1px solid #374151', borderRadius: '8px', color: '#ffffff', fontSize: '1rem' }} />
+                  <input type="number" min="13" max="100" value={formData.segmentacion.edadMin} onChange={(e) => updateSegmentation('edadMin', parseInt(e.target.value))} style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a1f3a', border: '1px solid #374151', borderRadius: '8px', color: '#ffffff', fontSize: '1rem' }} />
+                  <input type="number" min="13" max="100" value={formData.segmentacion.edadMax} onChange={(e) => updateSegmentation('edadMax', parseInt(e.target.value))} style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a1f3a', border: '1px solid #374151', borderRadius: '8px', color: '#ffffff', fontSize: '1rem' }} />
                 </div>
                 {errors.edadMin && <p style={{ color: '#ef4444', fontSize: '0.75rem' }}>{errors.edadMin}</p>}
               </div>
@@ -314,8 +315,8 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
                   {['religión', 'deportes', 'tecnología', 'música', 'arte', 'educación'].map(i => (
                     <label key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: '#fff' }}>
                       <input type="checkbox" checked={formData.segmentacion.intereses.includes(i)} onChange={(e) => {
-                          const newIntereses = e.target.checked ? [...formData.segmentacion.intereses, i] : formData.segmentacion.intereses.filter(int => int !== i);
-                          updateSegmentation('intereses', newIntereses);
+                        const newIntereses = e.target.checked ? [...formData.segmentacion.intereses, i] : formData.segmentacion.intereses.filter(int => int !== i);
+                        updateSegmentation('intereses', newIntereses);
                       }} /> <span style={{ textTransform: 'capitalize' }}>{i}</span>
                     </label>
                   ))}
@@ -339,12 +340,12 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
                 </div>
               </div>
               <div style={{ marginBottom: '1.5rem' }}>
-                  <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Prioridad</label>
-                  <select value={formData.prioridad} onChange={(e) => updateField('prioridad', e.target.value)} style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a1f3a', border: '1px solid #374151', borderRadius: '8px', color: '#ffffff', fontSize: '1rem' }}>
-                      <option value="basica">Básica</option>
-                      <option value="premium">Premium</option>
-                      <option value="destacada">Destacada</option>
-                  </select>
+                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Prioridad</label>
+                <select value={formData.prioridad} onChange={(e) => updateField('prioridad', e.target.value)} style={{ width: '100%', padding: '0.75rem', backgroundColor: '#1a1f3a', border: '1px solid #374151', borderRadius: '8px', color: '#ffffff', fontSize: '1rem' }}>
+                  <option value="basica">Básica</option>
+                  <option value="premium">Premium</option>
+                  <option value="destacada">Destacada</option>
+                </select>
               </div>
             </div>
           )}
@@ -395,3 +396,5 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
 };
 
 export default EditCampaignModal;
+
+

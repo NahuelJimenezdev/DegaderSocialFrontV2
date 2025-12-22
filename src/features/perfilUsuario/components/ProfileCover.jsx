@@ -60,3 +60,5 @@ const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
 ProfileCover.displayName = 'ProfileCover';
 
 export default ProfileCover;
+
+

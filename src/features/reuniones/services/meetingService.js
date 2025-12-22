@@ -3,6 +3,7 @@
 // 1. IMPORTACIÓN DE CONFIGURACIÓN DE AXIOS
 // Asegúrate de que esta ruta sea correcta para acceder a tu instancia de Axios
 import api from '../../../api/config';
+import { logger } from '../../../shared/utils/logger';
 
 
 // ===================================================================
@@ -19,7 +20,7 @@ const meetingService = {
       const response = await api.post('/reuniones', meetingData);
       return response.data.data;
     } catch (error) {
-      console.error('Error al crear la reunión:', error);
+      logger.error('Error al crear la reunión:', error);
       throw error;
     }
   },
@@ -32,7 +33,7 @@ const meetingService = {
       const response = await api.get('/reuniones/me');
       return response.data.data;
     } catch (error) {
-      console.error('Error al obtener las reuniones:', error);
+      logger.error('Error al obtener las reuniones:', error);
       throw error;
     }
   },
@@ -45,7 +46,7 @@ const meetingService = {
       const response = await api.put(`/reuniones/${meetingId}/cancel`);
       return response.data.data;
     } catch (error) {
-      console.error('Error al cancelar la reunión:', error);
+      logger.error('Error al cancelar la reunión:', error);
       throw error;
     }
   },
@@ -110,3 +111,5 @@ export const formatDate = (dateString) => {
     day: 'numeric'
   });
 };
+
+

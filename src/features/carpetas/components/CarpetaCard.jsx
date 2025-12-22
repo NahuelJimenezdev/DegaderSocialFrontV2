@@ -110,3 +110,5 @@ const CarpetaCard = ({
 };
 
 export default CarpetaCard;
+
+

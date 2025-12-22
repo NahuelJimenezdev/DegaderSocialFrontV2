@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import postService from '../services/postService';
 
 const useFeed = (userId = null, currentUser) => {
@@ -21,7 +22,7 @@ const useFeed = (userId = null, currentUser) => {
       setHasMore(data.data.pagination.page < data.data.pagination.pages);
       setPage(pageNum);
     } catch (err) {
-      console.error('Error fetching feed:', err);
+      logger.error('Error fetching feed:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -90,7 +91,7 @@ const useFeed = (userId = null, currentUser) => {
         }
       }
     } catch (err) {
-      console.error('Error liking post:', err);
+      logger.error('Error liking post:', err);
     }
   };
 
@@ -104,7 +105,7 @@ const useFeed = (userId = null, currentUser) => {
         }
       }
     } catch (err) {
-      console.error('Error adding comment:', err);
+      logger.error('Error adding comment:', err);
     }
   };
 
@@ -121,7 +122,7 @@ const useFeed = (userId = null, currentUser) => {
       }
       return response;
     } catch (err) {
-      console.error('Error creating post:', err);
+      logger.error('Error creating post:', err);
       throw err;
     }
   };
@@ -130,3 +131,6 @@ const useFeed = (userId = null, currentUser) => {
 };
 
 export default useFeed;
+
+
+

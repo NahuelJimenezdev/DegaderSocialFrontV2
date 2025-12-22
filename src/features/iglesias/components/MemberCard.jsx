@@ -59,3 +59,5 @@ const MemberCard = ({ member, isPastor, isCurrentUser }) => {
 };
 
 export default MemberCard;
+
+

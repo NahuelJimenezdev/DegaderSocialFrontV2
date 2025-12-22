@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
+import { logger } from '../../../shared/utils/logger';
 import friendshipService from '../../../api/friendshipService'
 
 export const useBirthdays = (monthOffset = 0) => {
@@ -12,7 +13,7 @@ export const useBirthdays = (monthOffset = 0) => {
         const friendsList = response.data || response || []
         setFriends(friendsList)
       } catch (error) {
-        console.error('Error al obtener amigos para cumpleaños:', error)
+        logger.error('Error al obtener amigos para cumpleaños:', error)
         setFriends([])
       }
     }
@@ -122,3 +123,6 @@ export const useBirthdays = (monthOffset = 0) => {
     monthLabel
   }
 }
+
+
+

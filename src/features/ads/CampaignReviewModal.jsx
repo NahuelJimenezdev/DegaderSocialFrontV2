@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
+import { logger } from '../../shared/utils/logger';
 import { X, CheckCircle, XCircle, Calendar, Target, Users, MapPin, DollarSign } from 'lucide-react';
 import adService from '../../api/adService';
+import { AlertDialog } from '../../shared/components/AlertDialog';
 
 export default function CampaignReviewModal({ campaign, onClose, onApprove, onReject }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectInput, setShowRejectInput] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   if (!campaign) return null;
 
   const handleApprove = async () => {
     if (isProcessing) return;
-    
+
     try {
       setIsProcessing(true);
       await adService.approveCampaign(campaign._id, 'aprobar');
       onApprove(campaign._id);
       onClose();
     } catch (error) {
-      console.error('Error aprobando campaña:', error);
-      alert('Error al aprobar la campaña');
+      logger.error('Error aprobando campaña:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al aprobar la campaña' });
     } finally {
       setIsProcessing(false);
     }
@@ -27,9 +30,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
 
   const handleReject = async () => {
     if (isProcessing) return;
-    
+
     if (!rejectReason.trim()) {
-      alert('Por favor ingresa un motivo de rechazo');
+      setAlertConfig({ isOpen: true, variant: 'warning', message: 'Por favor ingresa un motivo de rechazo' });
       return;
     }
 
@@ -39,8 +42,8 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
       onReject(campaign._id);
       onClose();
     } catch (error) {
-      console.error('Error rechazando campaña:', error);
-      alert('Error al rechazar la campaña');
+      logger.error('Error rechazando campaña:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al rechazar la campaña' });
     } finally {
       setIsProcessing(false);
     }
@@ -71,7 +74,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
   };
 
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         top: 0,
@@ -87,7 +90,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
       }}
       onClick={onClose}
     >
-      <div 
+      <div
         style={{
           backgroundColor: '#1a1a2e',
           borderRadius: '16px',
@@ -144,8 +147,8 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
               overflow: 'hidden',
               border: '1px solid #2a2a3e'
             }}>
-              <img 
-                src={campaign.imagenUrl} 
+              <img
+                src={campaign.imagenUrl}
                 alt={campaign.textoAlternativo}
                 style={{
                   width: '100%',
@@ -161,7 +164,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                 <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                   {campaign.textoAlternativo}
                 </p>
-                <a 
+                <a
                   href={campaign.linkDestino}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -198,9 +201,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
             <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Información del Cliente
             </h3>
-            <div style={{ 
-              backgroundColor: '#0f0f1e', 
-              padding: '1rem', 
+            <div style={{
+              backgroundColor: '#0f0f1e',
+              padding: '1rem',
               borderRadius: '12px',
               border: '1px solid #2a2a3e'
             }}>
@@ -223,9 +226,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
               gap: '1rem'
             }}>
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e'
               }}>
@@ -238,9 +241,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                 </p>
               </div>
 
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e'
               }}>
@@ -253,9 +256,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                 </p>
               </div>
 
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e'
               }}>
@@ -268,9 +271,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                 </p>
               </div>
 
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e'
               }}>
@@ -290,9 +293,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
             <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Segmentación
             </h3>
-            <div style={{ 
-              backgroundColor: '#0f0f1e', 
-              padding: '1rem', 
+            <div style={{
+              backgroundColor: '#0f0f1e',
+              padding: '1rem',
               borderRadius: '12px',
               border: '1px solid #2a2a3e'
             }}>
@@ -319,7 +322,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                   <strong style={{ color: '#e5e7eb', display: 'block', marginBottom: '0.5rem' }}>Intereses:</strong>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                     {campaign.segmentacion.intereses.map((interes, idx) => (
-                      <span 
+                      <span
                         key={idx}
                         style={{
                           backgroundColor: '#6366f1',
@@ -348,9 +351,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
               gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
               gap: '1rem'
             }}>
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e',
                 textAlign: 'center'
@@ -360,9 +363,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                   {campaign.metricas?.impresiones || 0}
                 </p>
               </div>
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e',
                 textAlign: 'center'
@@ -372,9 +375,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                   {campaign.metricas?.clicks || 0}
                 </p>
               </div>
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e',
                 textAlign: 'center'
@@ -384,9 +387,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                   {campaign.metricas?.ctr?.toFixed(2) || 0}%
                 </p>
               </div>
-              <div style={{ 
-                backgroundColor: '#0f0f1e', 
-                padding: '1rem', 
+              <div style={{
+                backgroundColor: '#0f0f1e',
+                padding: '1rem',
                 borderRadius: '12px',
                 border: '1px solid #2a2a3e',
                 textAlign: 'center'
@@ -401,8 +404,8 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
 
           {/* Acciones - Solo para campañas pendientes */}
           {campaign.estado === 'pendiente_aprobacion' && (
-            <div style={{ 
-              borderTop: '1px solid #2a2a3e', 
+            <div style={{
+              borderTop: '1px solid #2a2a3e',
               paddingTop: '1.5rem',
               position: 'sticky',
               bottom: 0,
@@ -528,6 +531,17 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
           )}
         </div>
       </div>
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 }
+
+
+

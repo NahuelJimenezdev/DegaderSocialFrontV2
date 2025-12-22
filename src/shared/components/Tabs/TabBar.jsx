@@ -20,3 +20,5 @@ const TabBar = ({ tabs, activeTab, onTabChange, layout = 'grid', columns = 3 }) 
 }
 
 export default TabBar
+
+

@@ -2,6 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   CSS VARIABLES - LIGHT & DARK MODE
+   ============================================ */
+
+/* Variables para Light Mode (default) */
+:root {
+  /* Backgrounds */
+  --bg-app: #f9fafb;
+  --bg-sidebar: #ffffff;
+  --bg-navbar: #ffffff;
+  --bg-main: #f9fafb;
+  --bg-card: #ffffff;
+  --bg-hover: #f3f4f6;
+  --bg-input: #f3f4f6;
+
+  /* Text */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+
+  /* Borders */
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+
+  /* Scrollbar */
+  --scrollbar-track: #f3f4f6;
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-thumb-hover: #9ca3af;
+
+  /* Accents */
+  --accent-primary: #4a9eff;
+  --accent-hover: #3b82f6;
+
+  /* Legacy variables for CSS modules (light mode) */
+  --surface: #ffffff;
+  --bg: #ffffff;
+  --bg-soft: #f9fafb;
+  --bg-primary: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+  --primary: #4f46e5;
+  --primary-10: rgba(79, 70, 229, 0.1);
+  --success: #10b981;
+  --accent: #4f46e5;
+  --shadow-modal: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --info: #3b82f6;
+}
+
+/* Variables para Dark Mode */
+.dark {
+  /* Backgrounds */
+  --bg-app: #0a0e27;
+  --bg-sidebar: #0f1229;
+  --bg-navbar: #0f1229;
+  --bg-main: #0a0e27;
+  --bg-card: #1a1f3a;
+  --bg-hover: #2a2f4a;
+  --bg-input: #1a1f3a;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+
+  /* Borders */
+  --border-primary: #1a1f3a;
+  --border-secondary: #374151;
+
+  /* Scrollbar */
+  --scrollbar-track: #0f1229;
+  --scrollbar-thumb: #2a2f4a;
+  --scrollbar-thumb-hover: #374151;
+
+  /* Accents */
+  --accent-primary: #4a9eff;
+  --accent-hover: #60a5fa;
+
+  /* Legacy variables for CSS modules (dark mode) */
+  --surface: #1a1f3a;
+  --bg: #0f1229;
+  --bg-soft: #1a1f3a;
+  --bg-primary: #1a1f3a;
+  --text: #ffffff;
+  --muted: #9ca3af;
+  --text-muted: #6b7280;
+  --border: #374151;
+  --primary: #6366f1;
+  --primary-10: rgba(99, 102, 241, 0.15);
+  --success: #10b981;
+  --accent: #6366f1;
+  --shadow-modal: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --info: #3b82f6;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,12 +106,15 @@
 
 /* Ocultar scrollbar pero mantener funcionalidad */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
+  /* Chrome, Safari and Opera */
 }
 
 /* Scrollbar personalizado elegante y minimalista */
@@ -59,10 +158,11 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #0a0e27;
-  color: #ffffff;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   /* permitir scroll si algo queda fuera de vista (especialmente paneles fijos) */
   overflow: auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================
@@ -82,12 +182,13 @@ body {
 .navbar {
   width: 100%;
   height: 70px;
-  background-color: #0f1229;
-  border-bottom: 1px solid #1a1f3a;
+  background-color: var(--bg-navbar);
+  border-bottom: 1px solid var(--border-primary);
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-content {
@@ -100,7 +201,7 @@ body {
 
 .navbar-logo h1 {
   font-size: 1.5rem;
-  color: #4a9eff;
+  color: var(--accent-primary);
 }
 
 .navbar-links {
@@ -131,12 +232,13 @@ body {
 .sidebar {
   width: 250px;
   height: 100%;
-  background-color: #0f1229;
-  border-right: 1px solid #1a1f3a;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-primary);
   position: fixed;
   left: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -144,12 +246,16 @@ body {
 }
 
 .sidebar::-webkit-scrollbar-track {
-  background: #0f1229;
+  background: var(--scrollbar-track);
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background: #2a2f4a;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
 }
 
 .sidebar-content {
@@ -161,7 +267,7 @@ body {
 
 .sidebar-title {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   letter-spacing: 0.05em;
 }
@@ -180,16 +286,16 @@ body {
 .theme-toggle {
   width: 100%;
   padding: 0.75rem;
-  background-color: #1a1f3a;
+  background-color: var(--bg-card);
   border: none;
   border-radius: 8px;
-  color: #ffffff;
+  color: var(--text-primary);
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .theme-toggle:hover {
-  background-color: #2a2f4a;
+  background-color: var(--bg-hover);
 }
 
 /* ============================================
@@ -203,11 +309,14 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   /* padding: 2rem; */
-  background-color: #0a0e27;
+  background-color: var(--bg-main);
+  transition: background-color 0.3s ease;
 }
+
 .main-content.full-width {
   margin-right: 0;
 }
+
 .main-content.no-sidebar {
   margin-left: 0;
 }
@@ -217,12 +326,16 @@ body {
 }
 
 .main-content::-webkit-scrollbar-track {
-  background: #0a0e27;
+  background: var(--scrollbar-track);
 }
 
 .main-content::-webkit-scrollbar-thumb {
-  background: #2a2f4a;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* ============================================
@@ -231,12 +344,13 @@ body {
 .quick-search {
   width: 350px;
   height: 100%;
-  background-color: #0f1229;
-  border-left: 1px solid #1a1f3a;
+  background-color: var(--bg-sidebar);
+  border-left: 1px solid var(--border-primary);
   position: fixed;
   right: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .quick-search::-webkit-scrollbar {
@@ -244,12 +358,16 @@ body {
 }
 
 .quick-search::-webkit-scrollbar-track {
-  background: #0f1229;
+  background: var(--scrollbar-track);
 }
 
 .quick-search::-webkit-scrollbar-thumb {
-  background: #2a2f4a;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
+}
+
+.quick-search::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
 }
 
 .quick-search-content {
@@ -262,7 +380,7 @@ body {
 .search-title,
 .section-title {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   letter-spacing: 0.05em;
 }
@@ -270,20 +388,21 @@ body {
 .search-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: #1a1f3a;
-  border: 1px solid #2a2f4a;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-secondary);
   border-radius: 8px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 0.875rem;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .search-input::placeholder {
-  color: #6b7280;
+  color: var(--text-tertiary);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #4a9eff;
+  border-color: var(--accent-primary);
 }
 
 /* ============================================
@@ -333,7 +452,8 @@ body {
   .main-content {
     margin-left: 0;
     padding: 1rem;
-    padding-bottom: 80px; /* Space for bottom navbar */
+    padding-bottom: 80px;
+    /* Space for bottom navbar */
   }
 
   .quick-search {

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import groupService from "../../../api/groupService";
 import CreateGroupModal from "../components/CreateGroupModal";
 import { getAvatarUrl } from "../../../shared/utils/avatarUtils";
 import { getSocket } from "../../../shared/lib/socket";
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 const GruposPages = () => {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ const GruposPages = () => {
 
   // Modal de crear grupo
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   // Cargar grupos desde la API
   useEffect(() => {
@@ -43,14 +46,14 @@ const GruposPages = () => {
         setLoading(true);
         setError(null);
         const response = await groupService.getAllGroups();
-        console.log('📥 Grupos recibidos:', response);
+        logger.log('📥 Grupos recibidos:', response);
 
         // El backend devuelve { success: true, data: { groups, pagination } }
         const groups = response?.data?.groups || response?.groups || response || [];
-        console.log('✅ Grupos procesados:', groups);
+        logger.log('✅ Grupos procesados:', groups);
         setAllGroups(Array.isArray(groups) ? groups : []);
       } catch (err) {
-        console.error('Error loading groups:', err);
+        logger.error('Error loading groups:', err);
         setError('Error al cargar los grupos. Por favor, intenta de nuevo.');
         setAllGroups([]);
       } finally {
@@ -67,18 +70,18 @@ const GruposPages = () => {
     if (!socket) return;
 
     const handleNewNotification = async (notification) => {
-      console.log('🔔 Notificación recibida en GruposPages:', notification);
+      logger.log('🔔 Notificación recibida en GruposPages:', notification);
 
       // Si es una notificación de solicitud aprobada, recargar grupos
       if (notification.tipo === 'solicitud_grupo_aprobada') {
-        console.log('✅ Solicitud de grupo aprobada - recargando lista de grupos');
+        logger.log('✅ Solicitud de grupo aprobada - recargando lista de grupos');
         try {
           const response = await groupService.getAllGroups();
           const groups = response?.data?.groups || response?.groups || response || [];
           setAllGroups(Array.isArray(groups) ? groups : []);
-          alert('¡Tu solicitud para unirte al grupo ha sido aprobada!');
+          setAlertConfig({ isOpen: true, variant: 'success', message: '¡Tu solicitud para unirte al grupo ha sido aprobada!' });
         } catch (err) {
-          console.error('Error recargando grupos:', err);
+          logger.error('Error recargando grupos:', err);
         }
       }
     };
@@ -187,7 +190,7 @@ const GruposPages = () => {
     e.stopPropagation();
     try {
       const response = await groupService.joinGroup(groupId);
-      console.log('📥 Respuesta de joinGroup:', response);
+      logger.log('📥 Respuesta de joinGroup:', response);
 
       // El backend devuelve diferentes mensajes según el tipo de grupo:
       // - Grupo público: "Te has unido al grupo exitosamente"
@@ -196,37 +199,37 @@ const GruposPages = () => {
 
       // Si se unió exitosamente (grupo público), recargar grupos
       if (message.toLowerCase().includes('unido') || message.toLowerCase().includes('exitosamente')) {
-        console.log('✅ Usuario unido al grupo - recargando lista');
+        logger.log('✅ Usuario unido al grupo - recargando lista');
         const groupsResponse = await groupService.getAllGroups();
         const groups = groupsResponse?.data?.groups || groupsResponse?.groups || groupsResponse || [];
         setAllGroups(Array.isArray(groups) ? groups : []);
-        alert('¡Te has unido al grupo exitosamente!');
+        setAlertConfig({ isOpen: true, variant: 'success', message: '¡Te has unido al grupo exitosamente!' });
       }
       // Si envió solicitud (grupo privado), NO recargar grupos
       else if (message.toLowerCase().includes('solicitud')) {
-        console.log('📨 Solicitud enviada - esperando aprobación');
-        alert('Solicitud enviada. Espera la aprobación del administrador del grupo.');
+        logger.log('📨 Solicitud enviada - esperando aprobación');
+        setAlertConfig({ isOpen: true, variant: 'info', message: 'Solicitud enviada. Espera la aprobación del administrador del grupo.' });
       }
       // Fallback
       else {
-        console.log('ℹ️ Respuesta desconocida - recargando por si acaso');
+        logger.log('ℹ️ Respuesta desconocida - recargando por si acaso');
         const groupsResponse = await groupService.getAllGroups();
         const groups = groupsResponse?.data?.groups || groupsResponse?.groups || groupsResponse || [];
         setAllGroups(Array.isArray(groups) ? groups : []);
-        alert(message || 'Operación completada');
+        setAlertConfig({ isOpen: true, variant: 'info', message: message || 'Operación completada' });
       }
     } catch (err) {
-      console.error('❌ Error joining group:', err);
+      logger.error('❌ Error joining group:', err);
       const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Error al procesar la solicitud';
-      alert(errorMessage);
+      setAlertConfig({ isOpen: true, variant: 'error', message: errorMessage });
     }
   };
 
   // Handler para crear grupo
   const handleGroupCreated = (newGroup) => {
-    console.log('🎉 Nuevo grupo creado:', newGroup);
-    console.log('🖼️ Imagen del nuevo grupo:', newGroup.imagen);
-    console.log('🖼️ imagePerfilGroup del nuevo grupo:', newGroup.imagePerfilGroup);
+    logger.log('🎉 Nuevo grupo creado:', newGroup);
+    logger.log('🖼️ Imagen del nuevo grupo:', newGroup.imagen);
+    logger.log('🖼️ imagePerfilGroup del nuevo grupo:', newGroup.imagePerfilGroup);
     setAllGroups([newGroup, ...allGroups]);
     setShowCreateModal(false);
     // Cambiar a la sección "Mis grupos" automáticamente
@@ -365,11 +368,10 @@ const GruposPages = () => {
               <button
                 key={label}
                 onClick={() => setView(label)}
-                className={`flex items-center justify-center gap-2 px-4 h-10 rounded-md text-sm font-medium transition-all ${
-                  view === label
+                className={`flex items-center justify-center gap-2 px-4 h-10 rounded-md text-sm font-medium transition-all ${view === label
                     ? "bg-primary text-white shadow-sm"
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-lg">
                   {label === "Grid" ? "grid_view" : "view_list"}
@@ -506,8 +508,19 @@ const GruposPages = () => {
           onSuccess={handleGroupCreated}
         />
       )}
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </main>
   );
 };
 
 export default GruposPages;
+
+
+

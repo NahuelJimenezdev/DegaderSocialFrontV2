@@ -27,3 +27,5 @@ const Skeleton = ({ className = '', variant = 'text', count = 1 }) => {
 };
 
 export default Skeleton;
+
+

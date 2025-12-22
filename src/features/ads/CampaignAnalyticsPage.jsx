@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../../shared/utils/logger';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  TrendingUp, 
-  MousePointer, 
-  Eye, 
+import {
+  ArrowLeft,
+  TrendingUp,
+  MousePointer,
+  Eye,
   DollarSign,
   Calendar,
   Monitor,
@@ -12,24 +13,25 @@ import {
   Tablet,
   Globe
 } from 'lucide-react';
-import { 
-  LineChart, 
-  Line, 
+import {
+  LineChart,
+  Line,
   AreaChart,
   Area,
-  PieChart, 
-  Pie, 
+  PieChart,
+  Pie,
   Cell,
   BarChart,
   Bar,
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer 
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
 } from 'recharts';
 import adService from '../../api/adService';
+import { AlertDialog } from '../../shared/components/AlertDialog';
 
 const COLORS = {
   primary: '#6366f1',
@@ -43,7 +45,7 @@ const COLORS = {
 export default function CampaignAnalyticsPage() {
   const { campaignId } = useParams();
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(true);
   const [campaign, setCampaign] = useState(null);
   const [stats, setStats] = useState(null);
@@ -51,6 +53,7 @@ export default function CampaignAnalyticsPage() {
     startDate: '',
     endDate: ''
   });
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   useEffect(() => {
     fetchAnalytics();
@@ -62,15 +65,15 @@ export default function CampaignAnalyticsPage() {
       const params = {};
       if (dateRange.startDate) params.startDate = dateRange.startDate;
       if (dateRange.endDate) params.endDate = dateRange.endDate;
-      
+
       const data = await adService.getCampaignStats(campaignId, params);
-      console.log('📊 Analytics data:', data);
-      
+      logger.log('📊 Analytics data:', data);
+
       setCampaign(data.campaign || data.ad);
       setStats(data);
     } catch (error) {
-      console.error('Error fetching analytics:', error);
-      alert('Error al cargar estadísticas');
+      logger.error('Error fetching analytics:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al cargar estadísticas' });
     } finally {
       setLoading(false);
     }
@@ -87,7 +90,7 @@ export default function CampaignAnalyticsPage() {
         color: '#ffffff'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ 
+          <div style={{
             fontSize: '3rem',
             marginBottom: '1rem',
             animation: 'spin 1s linear infinite'
@@ -174,9 +177,9 @@ export default function CampaignAnalyticsPage() {
           <ArrowLeft size={20} />
           Volver
         </button>
-        
-        <h1 style={{ 
-          fontSize: '2rem', 
+
+        <h1 style={{
+          fontSize: '2rem',
           fontWeight: 'bold',
           marginBottom: '0.5rem'
         }}>
@@ -294,7 +297,7 @@ export default function CampaignAnalyticsPage() {
               De impresiones a clicks
             </p>
           </div>
-          
+
           <div>
             <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
               Costo por Impresión
@@ -347,33 +350,33 @@ export default function CampaignAnalyticsPage() {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={trendsData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
-              <XAxis 
-                dataKey="date" 
+              <XAxis
+                dataKey="date"
                 stroke="#9ca3af"
                 tick={{ fill: '#9ca3af' }}
               />
               <YAxis stroke="#9ca3af" tick={{ fill: '#9ca3af' }} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#1a1a2e', 
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#1a1a2e',
                   border: '1px solid #2a2a3e',
                   borderRadius: '8px',
                   color: '#ffffff'
                 }}
               />
               <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="impressions" 
-                stroke={COLORS.primary} 
+              <Line
+                type="monotone"
+                dataKey="impressions"
+                stroke={COLORS.primary}
                 strokeWidth={2}
                 name="Impresiones"
                 dot={{ fill: COLORS.primary }}
               />
-              <Line 
-                type="monotone" 
-                dataKey="clicks" 
-                stroke={COLORS.success} 
+              <Line
+                type="monotone"
+                dataKey="clicks"
+                stroke={COLORS.success}
                 strokeWidth={2}
                 name="Clicks"
                 dot={{ fill: COLORS.success }}
@@ -416,9 +419,9 @@ export default function CampaignAnalyticsPage() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1a1a2e', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1a1a2e',
                     border: '1px solid #2a2a3e',
                     borderRadius: '8px'
                   }}
@@ -441,15 +444,15 @@ export default function CampaignAnalyticsPage() {
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={browserData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
-                <XAxis 
-                  dataKey="name" 
+                <XAxis
+                  dataKey="name"
                   stroke="#9ca3af"
                   tick={{ fill: '#9ca3af' }}
                 />
                 <YAxis stroke="#9ca3af" tick={{ fill: '#9ca3af' }} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1a1a2e', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1a1a2e',
                     border: '1px solid #2a2a3e',
                     borderRadius: '8px'
                   }}
@@ -475,7 +478,7 @@ export default function CampaignAnalyticsPage() {
           </h3>
           <div style={{ display: 'grid', gap: '0.75rem' }}>
             {stats.geography.slice(0, 10).map((location, idx) => (
-              <div 
+              <div
                 key={idx}
                 style={{
                   display: 'flex',
@@ -487,7 +490,7 @@ export default function CampaignAnalyticsPage() {
                 }}
               >
                 <span>{location.city || location.country || 'Desconocido'}</span>
-                <span style={{ 
+                <span style={{
                   color: COLORS.primary,
                   fontWeight: '600'
                 }}>
@@ -562,13 +565,13 @@ function MetricCard({ icon, title, value, subtitle, color }) {
       borderRadius: '12px',
       border: `1px solid ${color}20`
     }}>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
         gap: '1rem',
         marginBottom: '1rem'
       }}>
-        <div style={{ 
+        <div style={{
           color: color,
           backgroundColor: `${color}20`,
           padding: '0.75rem',
@@ -578,8 +581,8 @@ function MetricCard({ icon, title, value, subtitle, color }) {
         </div>
         <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{title}</span>
       </div>
-      <div style={{ 
-        fontSize: '2rem', 
+      <div style={{
+        fontSize: '2rem',
         fontWeight: 'bold',
         color: color,
         marginBottom: subtitle ? '0.5rem' : 0
@@ -587,13 +590,24 @@ function MetricCard({ icon, title, value, subtitle, color }) {
         {value}
       </div>
       {subtitle && (
-        <div style={{ 
+        <div style={{
           fontSize: '0.875rem',
           color: '#6b7280'
         }}>
           {subtitle}
         </div>
       )}
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 }
+
+
+

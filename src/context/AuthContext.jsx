@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { logger } from '../shared/utils/logger';
 import { authService } from '../api';
 import { initSocket, disconnectSocket } from '../shared/lib/socket';
 
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }) => {
           setUser(response.data || response.user);
         }
       } catch (err) {
-        console.error('Failed to initialize auth:', err);
+        logger.error('Failed to initialize auth:', err);
         // Clear invalid token
         authService.logout();
         disconnectSocket();
@@ -118,3 +119,6 @@ export const AuthProvider = ({ children }) => {
 };
 
 export default AuthContext;
+
+
+

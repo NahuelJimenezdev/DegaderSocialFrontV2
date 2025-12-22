@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Search, Heart, MapPin, Users, Award, Briefcase, Plus, Check, X } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
@@ -13,6 +14,7 @@ import FilterBar from '../components/FilterBar';
 import Skeleton from '../../../shared/components/Skeleton/Skeleton';
 import EmptyState from '../../../shared/components/EmptyState/EmptyState';
 import styles from '../styles/IglesiaPage.module.css';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 export default function IglesiaPage() {
   const navigate = useNavigate();
@@ -21,17 +23,17 @@ export default function IglesiaPage() {
   const [activeTab, setActiveTab] = useState('iglesias');
   const [loading, setLoading] = useState(false);
   const [jerarquia, setJerarquia] = useState({ areas: [], cargos: [], niveles: [] });
-  
+
   // Estado Iglesias
   const [iglesias, setIglesias] = useState([]);
   const [busquedaIglesia, setBusquedaIglesia] = useState('');
   const [loadingIglesias, setLoadingIglesias] = useState(false);
-  
+
   // Estado Filtros y Visualización
   const [filters, setFilters] = useState({ denominacion: '', ubicacion: '' });
   const [sort, setSort] = useState('newest');
   const [viewMode, setViewMode] = useState('grid');
-  
+
   const [mostrarFormIglesia, setMostrarFormIglesia] = useState(false);
   const [formIglesia, setFormIglesia] = useState({
     nombre: '',
@@ -51,6 +53,7 @@ export default function IglesiaPage() {
     departamento: '',
     municipio: ''
   });
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
   useEffect(() => {
     cargarJerarquia();
@@ -77,7 +80,7 @@ export default function IglesiaPage() {
       const response = await folderService.getHierarchy();
       setJerarquia(response.data || { areas: [], cargos: [], niveles: [] });
     } catch (error) {
-      console.error('Error cargando jerarquía:', error);
+      logger.error('Error cargando jerarquía:', error);
     }
   };
 
@@ -86,25 +89,25 @@ export default function IglesiaPage() {
       setLoadingIglesias(true);
       const response = await iglesiaService.getAll({ q: busquedaIglesia });
       const todasIglesias = response.data || [];
-      
+
       // Filtrar iglesias: si el usuario ya es miembro de una iglesia, solo mostrar esa
       const iglesiaDelUsuario = todasIglesias.find(iglesia => {
         const pastorId = iglesia.pastorPrincipal?._id || iglesia.pastorPrincipal;
         const isPastor = pastorId && user?._id && pastorId.toString() === user._id.toString();
-        
+
         const isMember = iglesia.miembros?.some(m => {
           const memberId = m._id || m;
           return memberId.toString() === user?._id?.toString();
         });
-        
+
         return isPastor || isMember;
       });
-      
+
       // Si el usuario ya pertenece a una iglesia, solo mostrar esa
       // Si no pertenece a ninguna, mostrar todas para que pueda unirse
       setIglesias(iglesiaDelUsuario ? [iglesiaDelUsuario] : todasIglesias);
     } catch (error) {
-      console.error('Error cargando iglesias:', error);
+      logger.error('Error cargando iglesias:', error);
       toast.error('Error al cargar las iglesias');
     } finally {
       setLoadingIglesias(false);
@@ -159,14 +162,14 @@ export default function IglesiaPage() {
 
   const cargarSolicitudesPendientes = async () => {
     try {
-      console.log('🔍 Cargando solicitudes pendientes...');
+      logger.log('🔍 Cargando solicitudes pendientes...');
       const response = await fundacionService.getPendingRequests();
-      console.log('📋 Respuesta de solicitudes:', response);
+      logger.log('📋 Respuesta de solicitudes:', response);
       setSolicitudesPendientes(response.data?.solicitudes || []);
-      console.log('✅ Solicitudes cargadas:', response.data?.solicitudes?.length || 0);
+      logger.log('✅ Solicitudes cargadas:', response.data?.solicitudes?.length || 0);
     } catch (error) {
-      console.error('❌ Error cargando solicitudes:', error);
-      console.error('Detalles:', error.response?.data);
+      logger.error('❌ Error cargando solicitudes:', error);
+      logger.error('Detalles:', error.response?.data);
     }
   };
 
@@ -193,7 +196,7 @@ export default function IglesiaPage() {
       updateUser({ ...user, ...response.data });
       toast.success('Solicitud enviada. Tu estado ahora es PENDIENTE de aprobación.');
     } catch (error) {
-      console.error('Error actualizando perfil:', error);
+      logger.error('Error actualizando perfil:', error);
       toast.error('Error al enviar la solicitud');
     } finally {
       setLoading(false);
@@ -219,7 +222,7 @@ export default function IglesiaPage() {
       const userRes = await userService.getUserById(user._id);
       updateUser(userRes.data);
     } catch (error) {
-      console.error('Error creando iglesia:', error);
+      logger.error('Error creando iglesia:', error);
       toast.error('Error al crear la iglesia');
     }
   };
@@ -227,9 +230,9 @@ export default function IglesiaPage() {
   const handleUnirseIglesia = async (id) => {
     try {
       await iglesiaService.join(id, 'Deseo unirme a esta iglesia');
-      alert('Solicitud enviada al pastor');
+      setAlertConfig({ isOpen: true, variant: 'success', message: 'Solicitud enviada al pastor' });
     } catch (error) {
-      alert(error.response?.data?.message || 'Error al unirse');
+      setAlertConfig({ isOpen: true, variant: 'error', message: error.response?.data?.message || 'Error al unirse' });
     }
   };
 
@@ -244,7 +247,7 @@ export default function IglesiaPage() {
       }
       cargarSolicitudesPendientes();
     } catch (error) {
-      console.error('Error gestionando solicitud:', error);
+      logger.error('Error gestionando solicitud:', error);
       toast.error('Error al gestionar solicitud');
     }
   };
@@ -274,7 +277,7 @@ export default function IglesiaPage() {
               placeholder="Nombre de la Iglesia"
               className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               value={formIglesia.nombre}
-              onChange={e => setFormIglesia({...formIglesia, nombre: e.target.value})}
+              onChange={e => setFormIglesia({ ...formIglesia, nombre: e.target.value })}
               required
             />
             <input
@@ -282,14 +285,14 @@ export default function IglesiaPage() {
               placeholder="Denominación"
               className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               value={formIglesia.denominacion}
-              onChange={e => setFormIglesia({...formIglesia, denominacion: e.target.value})}
+              onChange={e => setFormIglesia({ ...formIglesia, denominacion: e.target.value })}
             />
             <input
               type="text"
               placeholder="País"
               className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               value={formIglesia.pais}
-              onChange={e => setFormIglesia({...formIglesia, pais: e.target.value})}
+              onChange={e => setFormIglesia({ ...formIglesia, pais: e.target.value })}
               required
             />
             <input
@@ -297,7 +300,7 @@ export default function IglesiaPage() {
               placeholder="Ciudad"
               className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               value={formIglesia.ciudad}
-              onChange={e => setFormIglesia({...formIglesia, ciudad: e.target.value})}
+              onChange={e => setFormIglesia({ ...formIglesia, ciudad: e.target.value })}
               required
             />
             <input
@@ -305,7 +308,7 @@ export default function IglesiaPage() {
               placeholder="Dirección"
               className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white col-span-2"
               value={formIglesia.direccion}
-              onChange={e => setFormIglesia({...formIglesia, direccion: e.target.value})}
+              onChange={e => setFormIglesia({ ...formIglesia, direccion: e.target.value })}
               required
             />
             <div className="col-span-2 flex justify-end gap-2">
@@ -327,17 +330,17 @@ export default function IglesiaPage() {
         </div>
       )}
 
-      <HeroSection 
+      <HeroSection
         searchQuery={busquedaIglesia}
         onSearchChange={(val) => {
           setBusquedaIglesia(val);
           // Debounce idealmente, por ahora mantenemos el comportamiento original
-          cargarIglesias(); 
+          cargarIglesias();
         }}
         stats={stats}
       />
 
-      <FilterBar 
+      <FilterBar
         filters={filters}
         onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
         sort={sort}
@@ -351,7 +354,7 @@ export default function IglesiaPage() {
           <Skeleton variant="card" count={4} />
         </div>
       ) : filteredIglesias.length === 0 ? (
-        <EmptyState 
+        <EmptyState
           icon={Building2}
           title="No se encontraron iglesias"
           description={busquedaIglesia || filters.denominacion || filters.ubicacion ? "Intenta ajustar tus filtros de búsqueda" : "Sé el primero en crear una iglesia en tu comunidad"}
@@ -361,10 +364,10 @@ export default function IglesiaPage() {
       ) : (
         <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
           {filteredIglesias.map((iglesia) => (
-            <ChurchCard 
-              key={iglesia._id} 
-              iglesia={iglesia} 
-              user={user} 
+            <ChurchCard
+              key={iglesia._id}
+              iglesia={iglesia}
+              user={user}
               onJoin={handleUnirseIglesia}
             />
           ))}
@@ -388,11 +391,10 @@ export default function IglesiaPage() {
 
         {/* Estado Actual */}
         {user?.esMiembroFundacion && (
-          <div className={`p-4 rounded-lg mb-6 ${
-            user.fundacion.estadoAprobacion === 'aprobado' ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200' :
-            user.fundacion.estadoAprobacion === 'rechazado' ? 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200' :
-            'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200'
-          }`}>
+          <div className={`p-4 rounded-lg mb-6 ${user.fundacion.estadoAprobacion === 'aprobado' ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200' :
+              user.fundacion.estadoAprobacion === 'rechazado' ? 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200' :
+                'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200'
+            }`}>
             <p className="font-semibold">
               Estado: {user.fundacion.estadoAprobacion.toUpperCase()}
             </p>
@@ -545,11 +547,10 @@ export default function IglesiaPage() {
       <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-8">
         <button
           onClick={() => setActiveTab('iglesias')}
-          className={`pb-4 px-2 text-sm font-medium transition-colors relative ${
-            activeTab === 'iglesias'
+          className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'iglesias'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-          }`}
+            }`}
         >
           <div className="flex items-center gap-2">
             <Building2 size={18} />
@@ -562,11 +563,10 @@ export default function IglesiaPage() {
 
         <button
           onClick={() => setActiveTab('fundacion')}
-          className={`pb-4 px-2 text-sm font-medium transition-colors relative ${
-            activeTab === 'fundacion'
+          className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'fundacion'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-          }`}
+            }`}
         >
           <div className="flex items-center gap-2">
             <Heart size={18} />
@@ -582,6 +582,17 @@ export default function IglesiaPage() {
       <div className="min-h-[400px]">
         {activeTab === 'iglesias' ? renderIglesiasTab() : renderFundacionTab()}
       </div>
+
+      {/* AlertDialog Component */}
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
+      />
     </div>
   );
 }
+
+
+

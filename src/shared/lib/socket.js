@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
+import { logger } from '../utils/logger';
+import { SOCKET_URL } from '../config/env';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3001';
 
 let socket = null;
 let currentToken = null;
@@ -13,7 +14,7 @@ let currentToken = null;
 export const initSocket = (token) => {
   // Si ya existe un socket conectado y el token es el mismo, reutilizarlo
   if (socket && socket.connected && currentToken === token) {
-    console.debug('[Socket] Reutilizando socket existente');
+    logger.debug('[Socket] Reutilizando socket existente');
     return socket;
   }
 
@@ -22,13 +23,13 @@ export const initSocket = (token) => {
     try {
       socket.disconnect();
     } catch (e) {
-      console.warn('[Socket] Error al desconectar socket previo', e);
+      logger.warn('[Socket] Error al desconectar socket previo', e);
     }
     socket = null;
   }
 
   currentToken = token;
-  console.debug('[Socket] Inicializando nuevo socket, URL:', SOCKET_URL, ' token present:', !!token);
+  logger.debug('[Socket] Inicializando nuevo socket, URL:', SOCKET_URL, ' token present:', !!token);
 
   socket = io(SOCKET_URL, {
     autoConnect: true,
@@ -40,7 +41,7 @@ export const initSocket = (token) => {
 
   // Eventos globales de conexión
   socket.on('connect', () => {
-    console.log('🔌 Socket conectado:', socket.id, 'connected:', socket.connected);
+    logger.log('🔌 Socket conectado:', socket.id, 'connected:', socket.connected);
 
     // Autenticar después de conectar
     if (token) {
@@ -50,15 +51,15 @@ export const initSocket = (token) => {
 
   // Evento de autenticación exitosa
   socket.on('authenticated', (data) => {
-    console.log('✅ Socket autenticado:', data);
+    logger.log('✅ Socket autenticado:', data);
   });
 
   socket.on('connect_error', (err) => {
-    console.error('🔌 Socket connect_error:', err?.message || err);
+    logger.error('🔌 Socket connect_error:', err?.message || err);
   });
 
   socket.on('disconnect', () => {
-    console.log('🔌 Socket desconectado');
+    logger.log('🔌 Socket desconectado');
   });
 
   // Eventos de publicaciones
@@ -72,7 +73,7 @@ export const initSocket = (token) => {
 
   // Evento de actualización de post (unificado)
   socket.on('post_updated', (post) => {
-    console.log('📢 Post actualizado recibido:', post._id);
+    logger.log('📢 Post actualizado recibido:', post._id);
     window.dispatchEvent(new CustomEvent('socket:post:updated', { detail: post }));
   });
 
@@ -114,8 +115,8 @@ export const initSocket = (token) => {
 
   // Evento de cambio de estado de amigos (online/offline)
   socket.on('friend_status_changed', (data) => {
-    console.log('👥 [SOCKET] Estado de amigo cambiado:', data);
-    console.log('👥 [SOCKET] Detalles:', {
+    logger.log('👥 [SOCKET] Estado de amigo cambiado:', data);
+    logger.log('👥 [SOCKET] Detalles:', {
       userId: data.userId,
       isOnline: data.isOnline,
       timestamp: data.timestamp,
@@ -126,13 +127,13 @@ export const initSocket = (token) => {
 
   // Eventos de notificaciones en tiempo real
   socket.on('newNotification', (notification) => {
-    console.log('📨 Nueva notificación recibida:', notification);
+    logger.log('📨 Nueva notificación recibida:', notification);
     window.dispatchEvent(new CustomEvent('socket:notification:new', { detail: notification }));
   });
 
   // Eventos de mensajes en tiempo real
   socket.on('newMessage', (message) => {
-    console.log('💬 Nuevo mensaje recibido:', message);
+    logger.log('💬 Nuevo mensaje recibido:', message);
     window.dispatchEvent(new CustomEvent('socket:message:new', { detail: message }));
   });
 
@@ -141,13 +142,13 @@ export const initSocket = (token) => {
     const originalEmit = socket.emit.bind(socket);
     socket.emit = (event, ...args) => {
       if (event === 'post:new' && !socket.auth?.token) {
-        console.warn('[Socket] Blocked unauthenticated attempt to emit "post:new"');
+        logger.warn('[Socket] Blocked unauthenticated attempt to emit "post:new"');
         return;
       }
       return originalEmit(event, ...args);
     };
   } catch (e) {
-    console.warn('[Socket] No se pudo aplicar el wrapper de seguridad para socket.emit', e);
+    logger.warn('[Socket] No se pudo aplicar el wrapper de seguridad para socket.emit', e);
   }
 
   return socket;
@@ -169,3 +170,5 @@ export const disconnectSocket = () => {
     currentToken = null;
   }
 };
+
+

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
 import folderService from '../../../api/folderService';
 
@@ -28,6 +29,8 @@ export const useCarpetas = () => {
   const [carpetaEditar, setCarpetaEditar] = useState(null);
   const [carpetaSeleccionada, setCarpetaSeleccionada] = useState(null); // Para compartir/ver detalle
   const [menuAbierto, setMenuAbierto] = useState(null);
+  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null, variant: 'warning' });
 
   // Jerarquía Institucional
   const [jerarquia, setJerarquia] = useState({
@@ -45,7 +48,7 @@ export const useCarpetas = () => {
           setJerarquia(response.data);
         }
       } catch (error) {
-        console.error('Error al cargar jerarquía:', error);
+        logger.error('Error al cargar jerarquía:', error);
       }
     };
     cargarJerarquia();
@@ -74,7 +77,7 @@ export const useCarpetas = () => {
         setCarpetas([]);
       }
     } catch (error) {
-      console.error('Error al cargar carpetas:', error);
+      logger.error('Error al cargar carpetas:', error);
       setCarpetas([]);
     } finally {
       setLoading(false);
@@ -89,7 +92,7 @@ export const useCarpetas = () => {
       cargarCarpetas();
       return { success: true };
     } catch (error) {
-      console.error('Error al crear carpeta:', error);
+      logger.error('Error al crear carpeta:', error);
       return { success: false, error: error.response?.data?.message || 'Error al crear la carpeta' };
     }
   };
@@ -102,7 +105,7 @@ export const useCarpetas = () => {
       cargarCarpetas();
       return { success: true };
     } catch (error) {
-      console.error('Error al editar carpeta:', error);
+      logger.error('Error al editar carpeta:', error);
       return { success: false, error: error.response?.data?.message || 'Error al editar la carpeta' };
     }
   };
@@ -120,19 +123,27 @@ export const useCarpetas = () => {
       ? '¿Estás seguro de que deseas eliminar esta carpeta? Esta acción no se puede deshacer.'
       : '¿Estás seguro de que deseas salir de esta carpeta compartida? Dejarás de tener acceso a ella.';
 
-    if (window.confirm(mensaje)) {
-      try {
-        if (isOwner) {
-          await folderService.deleteFolder(id);
-        } else {
-          await folderService.leaveFolder(id);
+    setConfirmConfig({
+      isOpen: true,
+      title: isOwner ? 'Eliminar Carpeta' : 'Salir de Carpeta',
+      message: mensaje,
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          if (isOwner) {
+            await folderService.deleteFolder(id);
+          } else {
+            await folderService.leaveFolder(id);
+          }
+          cargarCarpetas();
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+        } catch (error) {
+          logger.error('Error al eliminar/salir carpeta:', error);
+          setAlertConfig({ isOpen: true, variant: 'error', message: error.response?.data?.message || 'Error al procesar la solicitud' });
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
         }
-        cargarCarpetas();
-      } catch (error) {
-        console.error('Error al eliminar/salir carpeta:', error);
-        alert(error.response?.data?.message || 'Error al procesar la solicitud');
       }
-    }
+    });
   };
 
   const handleCompartirCarpeta = async (id, data) => {
@@ -142,7 +153,7 @@ export const useCarpetas = () => {
       // Si estamos en lista, no cambia mucho visualmente
       return { success: true };
     } catch (error) {
-      console.error('Error al compartir carpeta:', error);
+      logger.error('Error al compartir carpeta:', error);
       return { success: false, error: error.response?.data?.message || 'Error al compartir' };
     }
   };
@@ -153,7 +164,7 @@ export const useCarpetas = () => {
       setModalCompartirAbierto(false);
       return { success: true };
     } catch (error) {
-      console.error('Error al compartir masivamente:', error);
+      logger.error('Error al compartir masivamente:', error);
       return { success: false, error: error.response?.data?.message || 'Error al compartir' };
     }
   };
@@ -163,21 +174,29 @@ export const useCarpetas = () => {
       const response = await folderService.uploadFile(folderId, file);
       return { success: true, data: response.data };
     } catch (error) {
-      console.error('Error al subir archivo:', error);
+      logger.error('Error al subir archivo:', error);
       return { success: false, error: error.response?.data?.message || 'Error al subir archivo' };
     }
   };
 
   const handleEliminarArchivo = async (folderId, fileId) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este archivo?')) {
-      try {
-        await folderService.deleteFile(folderId, fileId);
-        return { success: true };
-      } catch (error) {
-        console.error('Error al eliminar archivo:', error);
-        return { success: false, error: error.response?.data?.message || 'Error al eliminar archivo' };
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Eliminar Archivo',
+      message: '¿Estás seguro de que deseas eliminar este archivo?',
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          await folderService.deleteFile(folderId, fileId);
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+          return { success: true };
+        } catch (error) {
+          logger.error('Error al eliminar archivo:', error);
+          setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+          return { success: false, error: error.response?.data?.message || 'Error al eliminar archivo' };
+        }
       }
-    }
+    });
     return { success: false, cancelled: true };
   };
 
@@ -243,5 +262,12 @@ export const useCarpetas = () => {
     abrirModalCrear,
     abrirModalCompartir,
     cargarCarpetas,
+    alertConfig,
+    setAlertConfig,
+    confirmConfig,
+    setConfirmConfig,
   };
 };
+
+
+

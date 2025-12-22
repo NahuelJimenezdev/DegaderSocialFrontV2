@@ -46,3 +46,5 @@ const ProfileInfo = memo(({ user, stats }) => {
 ProfileInfo.displayName = 'ProfileInfo';
 
 export default ProfileInfo;
+
+
