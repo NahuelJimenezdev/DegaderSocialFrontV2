@@ -10,6 +10,17 @@ const getBaseUrl = () => {
   return apiUrl.replace('/api', '');
 };
 
+// Helper para construir URL de imagen (soporta R2 y rutas locales)
+const getImageUrl = (url) => {
+  if (!url) return '';
+  // Si la URL ya es absoluta (R2), usarla directamente
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  // Si es una ruta relativa, concatenar con la base URL
+  return `${getBaseUrl()}${url}`;
+};
+
 const GroupMultimedia = ({ groupData }) => {
   const [multimedia, setMultimedia] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,7 +97,7 @@ const GroupMultimedia = ({ groupData }) => {
                     className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity group relative"
                   >
                     <img
-                      src={`${getBaseUrl()}${img.url}`}
+                      src={getImageUrl(img.url)}
                       alt={img.name || 'Imagen'}
                       className="w-full h-full object-cover"
                       loading="lazy"
@@ -118,7 +129,7 @@ const GroupMultimedia = ({ groupData }) => {
 
                 <div className="max-w-6xl max-h-[90vh] relative" onClick={(e) => e.stopPropagation()}>
                   <img
-                    src={`${getBaseUrl()}${selectedImage.url}`}
+                    src={getImageUrl(selectedImage.url)}
                     alt={selectedImage.name || 'Imagen'}
                     className="max-w-full max-h-[85vh] object-contain mx-auto rounded-lg"
                   />
