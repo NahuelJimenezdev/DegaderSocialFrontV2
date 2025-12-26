@@ -25,6 +25,12 @@ export const useProfileContext = () => {
  * Optimizado con useMemo y useCallback
  */
 export const ProfileProvider = ({ user, updateUser, children }) => {
+  // Debug: ver cuando cambia el user
+  React.useEffect(() => {
+    console.log('🔄 [ProfileProvider] user cambió:', user);
+    console.log('🔄 [ProfileProvider] Avatar:', user?.social?.fotoPerfil);
+  }, [user]);
+
   // Hook para datos del perfil
   const {
     posts,
@@ -59,12 +65,20 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
 
   // Memoizar callback para actualizar el perfil
   const handleProfileUpdate = useCallback((updatedUser) => {
+    console.log('🔄 handleProfileUpdate llamado con:', updatedUser);
+    console.log('🔄 Avatar en updatedUser:', updatedUser.social?.fotoPerfil);
     updateUser(updatedUser);
-    refetchAll();
-  }, [updateUser, refetchAll]);
+    // NO refetchAll() porque sobrescribe los datos actualizados con datos viejos del servidor
+    // refetchAll();
+  }, [updateUser]);
 
   // Memoizar URLs calculadas
-  const avatarUrl = useMemo(() => getUserAvatar(user), [user]);
+  const avatarUrl = useMemo(() => {
+    const url = getUserAvatar(user);
+    console.log('🖼️ [ProfileProvider] avatarUrl recalculado:', url);
+    console.log('🖼️ [ProfileProvider] user.social?.fotoPerfil:', user?.social?.fotoPerfil);
+    return url;
+  }, [user]);
   const coverUrl = useMemo(() => 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=300&fit=crop', []);
 
   // Memoizar el valor del contexto completo

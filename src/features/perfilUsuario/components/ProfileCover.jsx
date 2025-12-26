@@ -3,9 +3,10 @@ import { Camera } from 'lucide-react';
 
 /**
  * Componente para el cover, avatar y botón de editar perfil
- * Optimizado con React.memo para evitar re-renders innecesarios
  */
-const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
+const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
+  console.log('🖼️ [ProfileCover] Renderizando con avatarUrl:', avatarUrl);
+
   return (
     <div className="relative">
       <div
@@ -55,7 +56,7 @@ const ProfileCover = memo(({ user, avatarUrl, coverUrl, onEditClick }) => {
       </div>
     </div>
   );
-});
+};
 
 ProfileCover.displayName = 'ProfileCover';
 

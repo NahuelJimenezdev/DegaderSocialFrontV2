@@ -106,6 +106,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
       // Si hay un avatar nuevo, subirlo
       if (avatarFile) {
         const avatarResponse = await userService.uploadAvatar(avatarFile);
+        console.log('🖼️ Respuesta del servidor al subir avatar:', avatarResponse);
+        console.log('🖼️ Avatar URL recibida:', avatarResponse.data?.avatar || avatarResponse.avatar);
+
         // Combinar los datos del perfil con el avatar actualizado
         updatedUser = {
           ...updatedUser,
@@ -119,6 +122,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
       setSuccess('Perfil actualizado exitosamente');
 
       // Notificar al padre con los datos actualizados incluyendo el avatar
+      console.log('👤 Usuario actualizado que se envía al padre:', updatedUser);
+      console.log('👤 Avatar en usuario actualizado:', updatedUser.social?.fotoPerfil);
       if (onUpdate) {
         onUpdate(updatedUser);
       }
