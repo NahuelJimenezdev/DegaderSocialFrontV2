@@ -248,7 +248,7 @@ const GruposPages = () => {
         <div
           key={group._id}
           onClick={() => navigate(`/Mis_grupos/${group._id}`)}
-          className="group relative bg-white dark:bg-[#1F2937] rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+          className="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
         >
           {/* Imagen o gradiente */}
           <div className={`h-32 ${hasImage ? '' : `bg-gradient-to-br ${getGroupColor(group._id)}`}`}>
@@ -267,14 +267,14 @@ const GruposPages = () => {
 
           {/* Contenido */}
           <div className="p-4">
-            <h3 className="font-semibold text-base text-[#1F2937] dark:text-[#F9FAFB] mb-1 line-clamp-1">
+            <h3 className="font-semibold text-base text-gray-900 dark:text-gray-100 mb-1 line-clamp-1">
               {group.nombre}
             </h3>
-            <p className="text-xs text-[#6B7280] dark:text-[#9CA3AF] mb-3 line-clamp-2">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
               {group.descripcion || 'Sin descripción'}
             </p>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1 text-xs text-[#6B7280] dark:text-[#9CA3AF]">
+              <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
                 <span className="material-symbols-outlined text-sm">group</span>
                 <span>{memberCount} miembros</span>
               </div>
@@ -296,7 +296,7 @@ const GruposPages = () => {
         <div
           key={group._id}
           onClick={() => navigate(`/Mis_grupos/${group._id}`)}
-          className="flex items-center gap-3 p-3 bg-white dark:bg-[#1F2937] rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           {/* Avatar */}
           <div className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 ${hasImage ? '' : `bg-gradient-to-br ${getGroupColor(group._id)}`}`}>
@@ -315,10 +315,10 @@ const GruposPages = () => {
 
           {/* Info */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm text-[#1F2937] dark:text-[#F9FAFB] truncate">
+            <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate">
               {group.nombre}
             </h3>
-            <p className="text-xs text-[#6B7280] dark:text-[#9CA3AF] flex items-center gap-1">
+            <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
               <span className="material-symbols-outlined text-xs">group</span>
               {memberCount} miembros
             </p>
@@ -348,29 +348,29 @@ const GruposPages = () => {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-4 mb-1">
-              <h1 className="text-3xl font-bold text-[#1F2937] dark:text-[#F9FAFB]">Mis Grupos</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Mis Grupos</h1>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
+                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
               >
                 <span className="material-symbols-outlined text-xl">add</span>
-                <span className="hidden sm:inline">Crear Grupo</span>
+                <span className="hidden sm:inline">Nuevo Grupo</span>
               </button>
             </div>
-            <p className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">Explora y participa en comunidades relevantes</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Explora y participa en comunidades relevantes</p>
           </div>
         </div>
 
         {/* Pestañas Grid/List Global */}
         <div className="flex justify-end">
-          <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1F2937] p-1">
+          <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-1">
             {["Grid", "List"].map((label) => (
               <button
                 key={label}
                 onClick={() => setView(label)}
                 className={`flex items-center justify-center gap-2 px-4 h-10 rounded-md text-sm font-medium transition-all ${view === label
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
                   }`}
               >
                 <span className="material-symbols-outlined text-lg">
@@ -405,22 +405,22 @@ const GruposPages = () => {
             {/* SECCIÓN 1: Mis Grupos */}
             <div className="flex flex-col gap-4">
               {/* Header de la sección */}
-              <div className="flex items-center gap-3 p-4 bg-white dark:bg-[#1F2937] rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <span className="material-symbols-outlined text-2xl text-primary">groups</span>
                 <div className="flex-1">
-                  <h2 className="font-semibold text-lg text-[#1F2937] dark:text-[#F9FAFB]">Mis Grupos</h2>
-                  <p className="text-xs text-[#6B7280] dark:text-[#9CA3AF]">Comunidades en las que participas</p>
+                  <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Mis Grupos</h2>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">Comunidades en las que participas</p>
                 </div>
                 <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-bold rounded-full">{filteredMyGroups.length}</span>
               </div>
 
               {/* Buscador */}
               <div className="relative">
-                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2">search</span>
+                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
                 <input
                   value={searchTermMyGroups}
                   onChange={(e) => setSearchTermMyGroups(e.target.value)}
-                  className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1F2937] text-[#1F2937] dark:text-[#F9FAFB] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Buscar mis grupos..."
                 />
                 {searchTermMyGroups && (
@@ -436,7 +436,7 @@ const GruposPages = () => {
 
               {/* Lista de grupos */}
               {filteredMyGroups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4 bg-white dark:bg-[#1F2937] rounded-xl border border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col items-center justify-center py-12 gap-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                   <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">groups</span>
                   <div className="text-center">
                     <p className="text-lg font-medium text-gray-700 dark:text-gray-300">No perteneces a ningún grupo aún</p>
@@ -453,22 +453,22 @@ const GruposPages = () => {
             {/* SECCIÓN 2: Grupos para Unirse */}
             <div className="flex flex-col gap-4">
               {/* Header de la sección */}
-              <div className="flex items-center gap-3 p-4 bg-white dark:bg-[#1F2937] rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <span className="material-symbols-outlined text-2xl text-primary">group_add</span>
                 <div className="flex-1">
-                  <h2 className="font-semibold text-lg text-[#1F2937] dark:text-[#F9FAFB]">Grupos para Unirse</h2>
-                  <p className="text-xs text-[#6B7280] dark:text-[#9CA3AF]">Explora y únete a nuevos grupos</p>
+                  <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Grupos para Unirse</h2>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">Explora y únete a nuevos grupos</p>
                 </div>
                 <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-bold rounded-full">{filteredJoinGroups.length}</span>
               </div>
 
               {/* Buscador */}
               <div className="relative">
-                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2">search</span>
+                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
                 <input
                   value={searchTermJoinGroups}
                   onChange={(e) => setSearchTermJoinGroups(e.target.value)}
-                  className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1F2937] text-[#1F2937] dark:text-[#F9FAFB] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Buscar grupos..."
                 />
                 {searchTermJoinGroups && (
@@ -484,7 +484,7 @@ const GruposPages = () => {
 
               {/* Lista de grupos */}
               {filteredJoinGroups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4 bg-white dark:bg-[#1F2937] rounded-xl border border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col items-center justify-center py-12 gap-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                   <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">group_add</span>
                   <div className="text-center">
                     <p className="text-lg font-medium text-gray-700 dark:text-gray-300">No hay grupos disponibles</p>

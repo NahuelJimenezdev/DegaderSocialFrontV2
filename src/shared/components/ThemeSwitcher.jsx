@@ -5,16 +5,10 @@ const ThemeSwitcher = () => {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    // Leer tema guardado en localStorage
+    // Leer tema guardado en localStorage para sincronizar el estado del componente
+    // El tema ya fue aplicado en main.jsx antes de montar React
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
-
-    // Aplicar tema al html element (requerido por Tailwind)
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   }, []);
 
   const toggleTheme = () => {

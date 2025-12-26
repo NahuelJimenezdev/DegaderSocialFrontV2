@@ -1,84 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '../../shared/utils/logger';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft,
-  TrendingUp,
-  MousePointer,
-  Eye,
-  DollarSign,
-  Calendar,
-  Monitor,
-  Smartphone,
-  Tablet,
-  Globe
-} from 'lucide-react';
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer
-} from 'recharts';
-import adService from '../../api/adService';
+import { ArrowLeft, Calendar, Globe } from 'lucide-react';
 import { AlertDialog } from '../../shared/components/AlertDialog';
+import { useCampaignAnalytics } from './hooks/useCampaignAnalytics';
+import MetricsOverview from './components/MetricsOverview';
+import PerformanceAnalysis from './components/PerformanceAnalysis';
+import PerformanceCharts from './components/PerformanceCharts';
+import AudienceInsights from './components/AudienceInsights';
 
 const COLORS = {
   primary: '#6366f1',
-  success: '#10b981',
-  warning: '#f59e0b',
-  danger: '#ef4444',
-  purple: '#a855f7',
-  cyan: '#06b6d4'
+  success: '#10b981'
 };
 
 export default function CampaignAnalyticsPage() {
   const { campaignId } = useParams();
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(true);
-  const [campaign, setCampaign] = useState(null);
-  const [stats, setStats] = useState(null);
   const [dateRange, setDateRange] = useState({
     startDate: '',
     endDate: ''
   });
-  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [campaignId, dateRange]);
+  // Use custom hook for analytics data
+  const {
+    loading,
+    campaign,
+    stats,
+    metrics,
+    trendsData,
+    deviceData,
+    browserData,
+    alertConfig,
+    setAlertConfig
+  } = useCampaignAnalytics(campaignId, dateRange);
 
-  const fetchAnalytics = async () => {
-    try {
-      setLoading(true);
-      const params = {};
-      if (dateRange.startDate) params.startDate = dateRange.startDate;
-      if (dateRange.endDate) params.endDate = dateRange.endDate;
-
-      const data = await adService.getCampaignStats(campaignId, params);
-      logger.log('📊 Analytics data:', data);
-
-      setCampaign(data.campaign || data.ad);
-      setStats(data);
-    } catch (error) {
-      logger.error('Error fetching analytics:', error);
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al cargar estadísticas' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Loading state
   if (loading) {
     return (
       <div style={{
@@ -101,6 +57,7 @@ export default function CampaignAnalyticsPage() {
     );
   }
 
+  // No data state
   if (!campaign || !stats) {
     return (
       <div style={{
@@ -130,26 +87,6 @@ export default function CampaignAnalyticsPage() {
       </div>
     );
   }
-
-  const metrics = stats.metrics || {
-    totalImpressions: campaign.metricas?.impresiones || 0,
-    totalClicks: campaign.metricas?.clicks || 0,
-    ctr: campaign.metricas?.ctr || 0,
-    creditsSpent: campaign.creditosGastados || 0
-  };
-
-  // Preparar datos para gráficas
-  const trendsData = stats.trends?.daily || [];
-  const deviceData = stats.devices ? [
-    { name: 'Desktop', value: stats.devices.desktop || 0, color: COLORS.primary },
-    { name: 'Mobile', value: stats.devices.mobile || 0, color: COLORS.success },
-    { name: 'Tablet', value: stats.devices.tablet || 0, color: COLORS.warning }
-  ].filter(d => d.value > 0) : [];
-
-  const browserData = stats.browsers ? Object.entries(stats.browsers).map(([name, value]) => ({
-    name: name.charAt(0).toUpperCase() + name.slice(1),
-    value
-  })) : [];
 
   return (
     <div style={{
@@ -190,7 +127,7 @@ export default function CampaignAnalyticsPage() {
         </p>
       </div>
 
-      {/* Filtros de Fecha */}
+      {/* Date Filters */}
       <div style={{
         backgroundColor: '#1a1a2e',
         padding: '1.5rem',
@@ -234,237 +171,19 @@ export default function CampaignAnalyticsPage() {
         </label>
       </div>
 
-      {/* Métricas Principales - MEJORADAS */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '1.5rem',
-        marginBottom: '2rem'
-      }}>
-        <MetricCard
-          icon={<Eye size={24} />}
-          title="Impresiones Totales"
-          value={metrics.totalImpressions.toLocaleString()}
-          subtitle={`${(metrics.totalImpressions / ((campaign.metricas?.impresionesMaxPorUsuario || 3))).toFixed(0)} usuarios alcanzados`}
-          color={COLORS.primary}
-        />
-        <MetricCard
-          icon={<MousePointer size={24} />}
-          title="Clicks Totales"
-          value={metrics.totalClicks.toLocaleString()}
-          subtitle={`${metrics.totalClicks > 0 ? ((metrics.totalImpressions / metrics.totalClicks).toFixed(1)) : 'N/A'} impresiones por click`}
-          color={COLORS.success}
-        />
-        <MetricCard
-          icon={<TrendingUp size={24} />}
-          title="CTR (Click-Through Rate)"
-          value={`${metrics.ctr.toFixed(2)}%`}
-          subtitle={metrics.ctr > 2 ? '🎯 Excelente rendimiento' : metrics.ctr > 1 ? '✅ Buen rendimiento' : '⚠️ Mejorable'}
-          color={COLORS.warning}
-        />
-        <MetricCard
-          icon={<DollarSign size={24} />}
-          title="Costo por Click (CPC)"
-          value={metrics.totalClicks > 0 ? `${(metrics.creditsSpent / metrics.totalClicks).toFixed(2)} créditos` : 'N/A'}
-          subtitle={`Total gastado: ${metrics.creditsSpent} créditos`}
-          color={COLORS.danger}
-        />
-      </div>
+      {/* Metrics Overview */}
+      <MetricsOverview metrics={metrics} campaign={campaign} />
 
-      {/* Métricas Adicionales de Rendimiento */}
-      <div style={{
-        backgroundColor: '#1a1a2e',
-        padding: '1.5rem',
-        borderRadius: '12px',
-        marginBottom: '2rem'
-      }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-          📊 Análisis de Rendimiento
-        </h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1.5rem'
-        }}>
-          <div>
-            <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-              Tasa de Conversión
-            </p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.success }}>
-              {metrics.totalClicks > 0 ? `${((metrics.totalClicks / metrics.totalImpressions) * 100).toFixed(2)}%` : '0%'}
-            </p>
-            <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-              De impresiones a clicks
-            </p>
-          </div>
+      {/* Performance Analysis */}
+      <PerformanceAnalysis metrics={metrics} campaign={campaign} />
 
-          <div>
-            <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-              Costo por Impresión
-            </p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.primary }}>
-              {campaign.costoPorImpresion || 1} crédito(s)
-            </p>
-            <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-              Configurado en la campaña
-            </p>
-          </div>
+      {/* Performance Charts */}
+      <PerformanceCharts trendsData={trendsData} />
 
-          <div>
-            <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-              Presupuesto Restante
-            </p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.warning }}>
-              {((campaign.presupuesto || 0) - metrics.creditsSpent).toLocaleString()}
-            </p>
-            <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-              De {campaign.presupuesto?.toLocaleString() || 0} créditos totales
-            </p>
-          </div>
+      {/* Audience Insights */}
+      <AudienceInsights deviceData={deviceData} browserData={browserData} />
 
-          <div>
-            <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-              Días Activos
-            </p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.cyan }}>
-              {Math.ceil((new Date() - new Date(campaign.fechaInicio)) / (1000 * 60 * 60 * 24))}
-            </p>
-            <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-              De {Math.ceil((new Date(campaign.fechaFin) - new Date(campaign.fechaInicio)) / (1000 * 60 * 60 * 24))} días totales
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Gráfica de Tendencias */}
-      {trendsData.length > 0 && (
-        <div style={{
-          backgroundColor: '#1a1a2e',
-          padding: '1.5rem',
-          borderRadius: '12px',
-          marginBottom: '2rem'
-        }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-            Tendencias en el Tiempo
-          </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={trendsData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
-              <XAxis
-                dataKey="date"
-                stroke="#9ca3af"
-                tick={{ fill: '#9ca3af' }}
-              />
-              <YAxis stroke="#9ca3af" tick={{ fill: '#9ca3af' }} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1a1a2e',
-                  border: '1px solid #2a2a3e',
-                  borderRadius: '8px',
-                  color: '#ffffff'
-                }}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="impressions"
-                stroke={COLORS.primary}
-                strokeWidth={2}
-                name="Impresiones"
-                dot={{ fill: COLORS.primary }}
-              />
-              <Line
-                type="monotone"
-                dataKey="clicks"
-                stroke={COLORS.success}
-                strokeWidth={2}
-                name="Clicks"
-                dot={{ fill: COLORS.success }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )}
-
-      {/* Distribución de Dispositivos y Navegadores */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '1.5rem',
-        marginBottom: '2rem'
-      }}>
-        {/* Dispositivos */}
-        {deviceData.length > 0 && (
-          <div style={{
-            backgroundColor: '#1a1a2e',
-            padding: '1.5rem',
-            borderRadius: '12px'
-          }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Dispositivos
-            </h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={deviceData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {deviceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1a1a2e',
-                    border: '1px solid #2a2a3e',
-                    borderRadius: '8px'
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-
-        {/* Navegadores */}
-        {browserData.length > 0 && (
-          <div style={{
-            backgroundColor: '#1a1a2e',
-            padding: '1.5rem',
-            borderRadius: '12px'
-          }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>
-              Navegadores
-            </h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={browserData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
-                <XAxis
-                  dataKey="name"
-                  stroke="#9ca3af"
-                  tick={{ fill: '#9ca3af' }}
-                />
-                <YAxis stroke="#9ca3af" tick={{ fill: '#9ca3af' }} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1a1a2e',
-                    border: '1px solid #2a2a3e',
-                    borderRadius: '8px'
-                  }}
-                />
-                <Bar dataKey="value" fill={COLORS.primary} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-      </div>
-
-      {/* Geografía */}
+      {/* Geography */}
       {stats.geography && stats.geography.length > 0 && (
         <div style={{
           backgroundColor: '#1a1a2e',
@@ -502,7 +221,7 @@ export default function CampaignAnalyticsPage() {
         </div>
       )}
 
-      {/* Eventos Recientes */}
+      {/* Recent Events */}
       {stats.recentEvents && stats.recentEvents.length > 0 && (
         <div style={{
           backgroundColor: '#1a1a2e',
@@ -552,51 +271,6 @@ export default function CampaignAnalyticsPage() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-// Componente de Card de Métrica
-function MetricCard({ icon, title, value, subtitle, color }) {
-  return (
-    <div style={{
-      backgroundColor: '#1a1a2e',
-      padding: '1.5rem',
-      borderRadius: '12px',
-      border: `1px solid ${color}20`
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-        marginBottom: '1rem'
-      }}>
-        <div style={{
-          color: color,
-          backgroundColor: `${color}20`,
-          padding: '0.75rem',
-          borderRadius: '12px'
-        }}>
-          {icon}
-        </div>
-        <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{title}</span>
-      </div>
-      <div style={{
-        fontSize: '2rem',
-        fontWeight: 'bold',
-        color: color,
-        marginBottom: subtitle ? '0.5rem' : 0
-      }}>
-        {value}
-      </div>
-      {subtitle && (
-        <div style={{
-          fontSize: '0.875rem',
-          color: '#6b7280'
-        }}>
-          {subtitle}
-        </div>
-      )}
 
       {/* AlertDialog Component */}
       <AlertDialog
@@ -608,6 +282,3 @@ function MetricCard({ icon, title, value, subtitle, color }) {
     </div>
   );
 }
-
-
-

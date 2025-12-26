@@ -8,6 +8,7 @@ import friendshipService from '../../../api/friendshipService';
 import groupService from '../../../api/groupService';
 import NotificationCard from './NotificationCard';
 import IglesiaNotificationCard from './IglesiaNotificationCard';
+import FundacionNotificationCard from './FundacionNotificationCard';
 import styles from '../styles/NotificationsDropdown.module.css';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { getNombreCompleto } from '../../../shared/utils/userUtils';
@@ -92,6 +93,8 @@ export default function NotificationsDropdown() {
     const typesToDelete = [
       'solicitud_iglesia_aprobada',
       'solicitud_iglesia_rechazada',
+      'solicitud_fundacion_aprobada',
+      'solicitud_fundacion_rechazada',
       'solicitud_grupo_aprobada',
       'solicitud_grupo_rechazada',
       'solicitud_rechazada',
@@ -128,6 +131,12 @@ export default function NotificationsDropdown() {
         setOpen(false);
         return;
       }
+    }
+
+    if (['solicitud_fundacion', 'solicitud_fundacion_aprobada', 'solicitud_fundacion_rechazada'].includes(notificacion.tipo)) {
+      navigate('/Mi_iglesia', { state: { activeTab: 'fundacion' } });
+      setOpen(false);
+      return;
     }
 
     if (notificacion.tipo === 'nuevo_anuncio') {
@@ -191,6 +200,18 @@ export default function NotificationsDropdown() {
                   if (['solicitud_iglesia', 'solicitud_iglesia_aprobada', 'solicitud_iglesia_rechazada'].includes(n.tipo)) {
                     return (
                       <IglesiaNotificationCard
+                        key={n._id}
+                        notification={n}
+                        onAction={(notifId) => {
+                          setNotifications(prev => prev.filter(notif => notif._id !== notifId));
+                        }}
+                      />
+                    );
+                  }
+
+                  if (['solicitud_fundacion', 'solicitud_fundacion_aprobada', 'solicitud_fundacion_rechazada'].includes(n.tipo)) {
+                    return (
+                      <FundacionNotificationCard
                         key={n._id}
                         notification={n}
                         onAction={(notifId) => {

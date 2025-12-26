@@ -8,6 +8,19 @@ import { OnlineUsersProvider } from './contexts/OnlineUsersContext'
 // import './index.css'
 // import App from './App.jsx'
 
+// 🎨 Inicializar tema ANTES de montar React
+// Esto asegura que el tema se aplique inmediatamente al cargar la página
+const initializeTheme = () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+};
+
+initializeTheme();
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>

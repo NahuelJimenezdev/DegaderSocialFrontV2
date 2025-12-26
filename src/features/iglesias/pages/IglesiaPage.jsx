@@ -1,255 +1,84 @@
 import { useState, useEffect } from 'react';
-import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
-import { Building2, Search, Heart, MapPin, Users, Award, Briefcase, Plus, Check, X } from 'lucide-react';
+import { Building2, Heart, Plus, Info } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
-import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import userService from '../../../api/userService';
-import folderService from '../../../api/folderService';
-import iglesiaService from '../../../api/iglesiaService';
-import fundacionService from '../../../api/fundacionService';
 import ChurchCard from '../components/ChurchCard';
 import HeroSection from '../components/HeroSection';
 import FilterBar from '../components/FilterBar';
 import Skeleton from '../../../shared/components/Skeleton/Skeleton';
 import EmptyState from '../../../shared/components/EmptyState/EmptyState';
-import styles from '../styles/IglesiaPage.module.css';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import CreateIglesiaForm from '../components/CreateIglesiaForm';
+import SolicitudesList from '../components/SolicitudesList';
+import FounderMonitoringPanel from '../components/FounderMonitoringPanel';
+import { useIglesias } from '../hooks/useIglesias';
+import { useFundacion } from '../hooks/useFundacion';
 
 export default function IglesiaPage() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
-  const toast = useToast();
   const [activeTab, setActiveTab] = useState('iglesias');
-  const [loading, setLoading] = useState(false);
-  const [jerarquia, setJerarquia] = useState({ areas: [], cargos: [], niveles: [] });
 
-  // Estado Iglesias
-  const [iglesias, setIglesias] = useState([]);
-  const [busquedaIglesia, setBusquedaIglesia] = useState('');
-  const [loadingIglesias, setLoadingIglesias] = useState(false);
+  // Hook de Iglesias
+  const {
+    busquedaIglesia,
+    loadingIglesias,
+    filters,
+    sort,
+    viewMode,
+    mostrarFormIglesia,
+    formIglesia,
+    alertConfig,
+    filteredIglesias,
+    stats,
+    setBusquedaIglesia,
+    setFilters,
+    setSort,
+    setViewMode,
+    setMostrarFormIglesia,
+    setFormIglesia,
+    setAlertConfig,
+    cargarIglesias,
+    handleCrearIglesia,
+    handleUnirseIglesia
+  } = useIglesias(user);
 
-  // Estado Filtros y Visualización
-  const [filters, setFilters] = useState({ denominacion: '', ubicacion: '' });
-  const [sort, setSort] = useState('newest');
-  const [viewMode, setViewMode] = useState('grid');
+  // Hook de Fundación
+  const {
+    loading,
+    solicitudesPendientes,
+    formData,
+    setFormData,
+    getAreasDisponibles,
+    getSubAreasDisponibles,
+    getProgramasDisponibles,
+    getCargosDisponibles,
+    getRolesDisponibles,
+    getNivelesDisponibles,
+    esDirectorGeneral,
+    getPaisesDisponibles,
+    getDivisionesTerritoriales,
+    getNombreDivisionTerritorial,
+    handleNivelChange,
+    handleAreaChange,
+    handleSubAreaChange,
+    handleUpdateProfile,
+    handleGestionarSolicitud
+  } = useFundacion(user, updateUser);
 
-  const [mostrarFormIglesia, setMostrarFormIglesia] = useState(false);
-  const [formIglesia, setFormIglesia] = useState({
-    nombre: '',
-    denominacion: '',
-    pais: 'Colombia',
-    ciudad: '',
-    direccion: ''
-  });
-
-  // Estado Fundación
-  const [solicitudesPendientes, setSolicitudesPendientes] = useState([]);
-  const [formData, setFormData] = useState({
-    area: '',
-    nivel: '',
-    cargo: '',
-    pais: 'Colombia',
-    departamento: '',
-    municipio: ''
-  });
-  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
-
+  // Cargar iglesias al montar
   useEffect(() => {
-    cargarJerarquia();
     cargarIglesias();
-    if (user?.fundacion) {
-      setFormData(prev => ({
-        ...prev,
-        area: user.fundacion.area || '',
-        nivel: user.fundacion.nivel || '',
-        cargo: user.fundacion.cargo || '',
-        pais: user.fundacion.territorio?.pais || 'Colombia',
-        departamento: user.fundacion.territorio?.departamento || '',
-        municipio: user.fundacion.territorio?.municipio || ''
-      }));
+  }, []);
 
-      if (user.fundacion.estadoAprobacion === 'aprobado') {
-        cargarSolicitudesPendientes();
-      }
-    }
-  }, [user]);
-
-  const cargarJerarquia = async () => {
-    try {
-      const response = await folderService.getHierarchy();
-      setJerarquia(response.data || { areas: [], cargos: [], niveles: [] });
-    } catch (error) {
-      logger.error('Error cargando jerarquía:', error);
-    }
-  };
-
-  const cargarIglesias = async () => {
-    try {
-      setLoadingIglesias(true);
-      const response = await iglesiaService.getAll({ q: busquedaIglesia });
-      const todasIglesias = response.data || [];
-
-      // Filtrar iglesias: si el usuario ya es miembro de una iglesia, solo mostrar esa
-      const iglesiaDelUsuario = todasIglesias.find(iglesia => {
-        const pastorId = iglesia.pastorPrincipal?._id || iglesia.pastorPrincipal;
-        const isPastor = pastorId && user?._id && pastorId.toString() === user._id.toString();
-
-        const isMember = iglesia.miembros?.some(m => {
-          const memberId = m._id || m;
-          return memberId.toString() === user?._id?.toString();
-        });
-
-        return isPastor || isMember;
-      });
-
-      // Si el usuario ya pertenece a una iglesia, solo mostrar esa
-      // Si no pertenece a ninguna, mostrar todas para que pueda unirse
-      setIglesias(iglesiaDelUsuario ? [iglesiaDelUsuario] : todasIglesias);
-    } catch (error) {
-      logger.error('Error cargando iglesias:', error);
-      toast.error('Error al cargar las iglesias');
-    } finally {
-      setLoadingIglesias(false);
-    }
-  };
-
-  // Lógica de Filtrado y Ordenamiento
-  const getFilteredIglesias = () => {
-    let result = [...iglesias];
-
-    // Filtrar por denominación
-    if (filters.denominacion) {
-      result = result.filter(i => i.denominacion === filters.denominacion);
-    }
-
-    // Filtrar por ubicación (ciudad)
-    if (filters.ubicacion) {
-      result = result.filter(i => i.ubicacion?.ciudad === filters.ubicacion);
-    }
-
-    // Ordenar
-    switch (sort) {
-      case 'name_asc':
-        result.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        break;
-      case 'name_desc':
-        result.sort((a, b) => b.nombre.localeCompare(a.nombre));
-        break;
-      case 'members_desc':
-        result.sort((a, b) => (b.miembros?.length || 0) - (a.miembros?.length || 0));
-        break;
-      case 'oldest':
-        result.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
-        break;
-      case 'newest':
-      default:
-        result.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-        break;
-    }
-
-    return result;
-  };
-
-  const filteredIglesias = getFilteredIglesias();
-
-  // Calcular estadísticas para el Hero
-  const stats = {
-    churches: iglesias.length,
-    members: iglesias.reduce((acc, curr) => acc + (curr.miembros?.length || 0), 0),
-    events: iglesias.reduce((acc, curr) => acc + (curr.reuniones?.length || 0), 0)
-  };
-
-  const cargarSolicitudesPendientes = async () => {
-    try {
-      logger.log('🔍 Cargando solicitudes pendientes...');
-      const response = await fundacionService.getPendingRequests();
-      logger.log('📋 Respuesta de solicitudes:', response);
-      setSolicitudesPendientes(response.data?.solicitudes || []);
-      logger.log('✅ Solicitudes cargadas:', response.data?.solicitudes?.length || 0);
-    } catch (error) {
-      logger.error('❌ Error cargando solicitudes:', error);
-      logger.error('Detalles:', error.response?.data);
-    }
-  };
-
-  const handleUpdateProfile = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const updatedData = {
-        esMiembroFundacion: true,
-        fundacion: {
-          activo: true,
-          area: formData.area,
-          nivel: formData.nivel,
-          cargo: formData.cargo,
-          territorio: {
-            pais: formData.pais,
-            departamento: formData.departamento,
-            municipio: formData.municipio
-          }
-        }
-      };
-
-      const response = await userService.updateProfile(updatedData);
-      updateUser({ ...user, ...response.data });
-      toast.success('Solicitud enviada. Tu estado ahora es PENDIENTE de aprobación.');
-    } catch (error) {
-      logger.error('Error actualizando perfil:', error);
-      toast.error('Error al enviar la solicitud');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCrearIglesia = async (e) => {
-    e.preventDefault();
-    try {
-      await iglesiaService.create({
-        nombre: formIglesia.nombre,
-        denominacion: formIglesia.denominacion,
-        ubicacion: {
-          pais: formIglesia.pais,
-          ciudad: formIglesia.ciudad,
-          direccion: formIglesia.direccion
-        }
-      });
-      toast.success('¡Iglesia creada exitosamente!');
-      setMostrarFormIglesia(false);
-      cargarIglesias();
-      // Refrescar usuario para ver rol de pastor
+  // Wrapper para crear iglesia con actualización de usuario
+  const handleCrearIglesiaWrapper = async (e) => {
+    const refreshUser = async () => {
       const userRes = await userService.getUserById(user._id);
       updateUser(userRes.data);
-    } catch (error) {
-      logger.error('Error creando iglesia:', error);
-      toast.error('Error al crear la iglesia');
-    }
-  };
-
-  const handleUnirseIglesia = async (id) => {
-    try {
-      await iglesiaService.join(id, 'Deseo unirme a esta iglesia');
-      setAlertConfig({ isOpen: true, variant: 'success', message: 'Solicitud enviada al pastor' });
-    } catch (error) {
-      setAlertConfig({ isOpen: true, variant: 'error', message: error.response?.data?.message || 'Error al unirse' });
-    }
-  };
-
-  const handleGestionarSolicitud = async (userId, accion) => {
-    try {
-      if (accion === 'aprobar') {
-        await fundacionService.approveRequest(userId);
-        toast.success('Solicitud aprobada correctamente');
-      } else {
-        await fundacionService.rejectRequest(userId, 'No cumple requisitos');
-        toast.info('Solicitud rechazada');
-      }
-      cargarSolicitudesPendientes();
-    } catch (error) {
-      logger.error('Error gestionando solicitud:', error);
-      toast.error('Error al gestionar solicitud');
-    }
+    };
+    await handleCrearIglesia(e, refreshUser);
   };
 
   const renderIglesiasTab = () => (
@@ -268,73 +97,18 @@ export default function IglesiaPage() {
         </button>
       </div>
 
-      {mostrarFormIglesia && (
-        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
-          <h4 className="font-semibold mb-4 text-gray-900 dark:text-white">Nueva Iglesia</h4>
-          <form onSubmit={handleCrearIglesia} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Nombre de la Iglesia"
-              className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={formIglesia.nombre}
-              onChange={e => setFormIglesia({ ...formIglesia, nombre: e.target.value })}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Denominación"
-              className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={formIglesia.denominacion}
-              onChange={e => setFormIglesia({ ...formIglesia, denominacion: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="País"
-              className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={formIglesia.pais}
-              onChange={e => setFormIglesia({ ...formIglesia, pais: e.target.value })}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Ciudad"
-              className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              value={formIglesia.ciudad}
-              onChange={e => setFormIglesia({ ...formIglesia, ciudad: e.target.value })}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Dirección"
-              className="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white col-span-2"
-              value={formIglesia.direccion}
-              onChange={e => setFormIglesia({ ...formIglesia, direccion: e.target.value })}
-              required
-            />
-            <div className="col-span-2 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setMostrarFormIglesia(false)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-              >
-                Crear Iglesia
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      <CreateIglesiaForm
+        mostrarForm={mostrarFormIglesia}
+        setMostrarForm={setMostrarFormIglesia}
+        formIglesia={formIglesia}
+        setFormIglesia={setFormIglesia}
+        onSubmit={handleCrearIglesiaWrapper}
+      />
 
       <HeroSection
         searchQuery={busquedaIglesia}
         onSearchChange={(val) => {
           setBusquedaIglesia(val);
-          // Debounce idealmente, por ahora mantenemos el comportamiento original
           cargarIglesias();
         }}
         stats={stats}
@@ -376,6 +150,12 @@ export default function IglesiaPage() {
     </div>
   );
 
+  const renderMonitoreoTab = () => (
+    <div className="space-y-6">
+      <FounderMonitoringPanel />
+    </div>
+  );
+
   const renderFundacionTab = () => (
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
@@ -392,8 +172,8 @@ export default function IglesiaPage() {
         {/* Estado Actual */}
         {user?.esMiembroFundacion && (
           <div className={`p-4 rounded-lg mb-6 ${user.fundacion.estadoAprobacion === 'aprobado' ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200' :
-              user.fundacion.estadoAprobacion === 'rechazado' ? 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200' :
-                'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200'
+            user.fundacion.estadoAprobacion === 'rechazado' ? 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200' :
+              'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200'
             }`}>
             <p className="font-semibold">
               Estado: {user.fundacion.estadoAprobacion.toUpperCase()}
@@ -404,71 +184,300 @@ export default function IglesiaPage() {
           </div>
         )}
 
-        {/* Formulario (Solo si no está aprobado o quiere actualizar) */}
-        <form onSubmit={handleUpdateProfile} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Área Institucional
-              </label>
-              <select
-                value={formData.area}
-                onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                required
-              >
-                <option value="">Seleccionar Área</option>
-                {jerarquia.areas?.map(area => (
-                  <option key={area} value={area}>{area}</option>
-                ))}
-              </select>
-            </div>
+        {/* Formulario */}
+        <form onSubmit={handleUpdateProfile} className="space-y-8">
 
-            <div>
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
+            <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Definición de Perfil Institucional</h4>
+            <ul className="space-y-1 text-sm text-blue-700 dark:text-blue-300">
+              <li>• ¿En qué nivel actúa? → <strong>Nivel</strong></li>
+              <li>• ¿En qué área trabaja? → <strong>Área</strong></li>
+              <li>• ¿Qué responsabilidad tiene? → <strong>Cargo</strong></li>
+              <li>• ¿Qué función operativa cumple? → <strong>Rol</strong></li>
+              <li>• ¿En qué unidad específica trabaja? → <strong>Unidad / Programa</strong></li>
+            </ul>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* 1. NIVEL */}
+            <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nivel Jerárquico
+                ¿En qué nivel actúa? <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.nivel}
-                onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
+                onChange={(e) => handleNivelChange(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                 required
               >
-                <option value="">Seleccionar Nivel</option>
-                {jerarquia.niveles?.map(nivel => (
-                  <option key={nivel} value={nivel}>{nivel}</option>
+                <option value="">Seleccionar Nivel Jerárquico</option>
+                {getNivelesDisponibles().map(nivel => (
+                  <option key={nivel} value={nivel}>{nivel.replace(/_/g, ' ').toUpperCase()}</option>
                 ))}
               </select>
             </div>
 
-            <div>
+            {/* 2. CARGO (AHORA ANTES DE ÁREA) */}
+            <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Cargo
+                ¿Qué responsabilidad tiene? (Cargo) <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.cargo}
                 onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                 required
+                disabled={!formData.nivel}
               >
-                <option value="">Seleccionar Cargo</option>
-                {jerarquia.cargos?.map(cargo => (
+                <option value="">{!formData.nivel ? 'Primero selecciona un nivel' : 'Seleccionar Cargo'}</option>
+                {getCargosDisponibles().map(cargo => (
                   <option key={cargo} value={cargo}>{cargo}</option>
                 ))}
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                País
-              </label>
-              <input
-                type="text"
-                value={formData.pais}
-                onChange={(e) => setFormData({ ...formData, pais: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              />
-            </div>
+            {/* 3. LÓGICA CONDICIONAL: DIRECTOR GENERAL vs DIRECTOR DE ÁREA */}
+
+            {!esDirectorGeneral() ? (
+              // ========== DIRECTORES DE ÁREA (Profesionales) ==========
+              <>
+                {/* ÁREA */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    ¿En qué área trabaja? <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.area}
+                    onChange={(e) => handleAreaChange(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required
+                    disabled={!formData.cargo}
+                  >
+                    <option value="">{!formData.cargo ? 'Primero selecciona un cargo' : 'Seleccionar Área Principal'}</option>
+                    {getAreasDisponibles().map(area => (
+                      <option key={area} value={area}>{area}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* SUBÁREA (solo si existen) */}
+                {getSubAreasDisponibles().length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Sub-Área / Dirección Específica
+                    </label>
+                    <select
+                      value={formData.subArea}
+                      onChange={(e) => handleSubAreaChange(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    >
+                      <option value="">Seleccionar Sub-Área (Opcional)</option>
+                      {getSubAreasDisponibles().map(sub => (
+                        <option key={sub} value={sub}>{sub}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* PROGRAMA (solo si existen) */}
+                {getProgramasDisponibles().length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      ¿En qué unidad trabaja? (Programa)
+                    </label>
+                    <select
+                      value={formData.programa}
+                      onChange={(e) => setFormData({ ...formData, programa: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    >
+                      <option value="">Seleccionar Programa (Opcional)</option>
+                      {getProgramasDisponibles().map(prog => (
+                        <option key={prog} value={prog}>{prog}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </>
+            ) : (
+              // ========== DIRECTORES GENERALES (Pastores con Territorio) ==========
+              <div className="md:col-span-2 bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                  <strong>Director General:</strong> Gobierna un territorio geográfico completo (no un área funcional específica). Solo pastores pueden ocupar este cargo.
+                </p>
+              </div>
+            )}
+
+            {/* TERRITORIO (Para Directores Generales Nacional O para TODOS en niveles Regional/Departamental/Municipal) */}
+            {((esDirectorGeneral() && formData.nivel === 'nacional') || formData.nivel === 'regional' || formData.nivel === 'departamental' || formData.nivel === 'municipal') && (
+              <>
+                {/* PAÍS (SELECT) */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    País <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.pais}
+                    onChange={(e) => setFormData({ ...formData, pais: e.target.value, region: '', departamento: '', municipio: '' })}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    required
+                  >
+                    <option value="">Seleccionar País</option>
+                    {getPaisesDisponibles().map(pais => (
+                      <option key={pais} value={pais}>{pais}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* PROVINCIA/DEPARTAMENTO (SELECT DINÁMICO - Solo para Regional/Departamental/Municipal) */}
+                {formData.pais && formData.nivel !== 'nacional' && (
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {getNombreDivisionTerritorial()} <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.region || formData.departamento || formData.municipio}
+                      onChange={(e) => {
+                        if (formData.nivel === 'regional') {
+                          setFormData({ ...formData, region: e.target.value, departamento: '', municipio: '' });
+                        } else if (formData.nivel === 'departamental') {
+                          setFormData({ ...formData, departamento: e.target.value, municipio: '', region: '' });
+                        } else {
+                          setFormData({ ...formData, municipio: e.target.value, departamento: '', region: '' });
+                        }
+                      }}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                      required
+                    >
+                      <option value="">Seleccionar {getNombreDivisionTerritorial()}</option>
+                      {getDivisionesTerritoriales().map(div => (
+                        <option key={div} value={div}>{div}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </>
+            )}
+
+
+
+            {/* 4. ROL FUNCIONAL (Solo para NO Directores Generales) */}
+            {!esDirectorGeneral() && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  ¿Qué función operativa cumple? (Rol) <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={formData.rolFuncional}
+                  onChange={(e) => setFormData({ ...formData, rolFuncional: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                  required
+                >
+                  <option value="">Seleccionar Rol Funcional</option>
+                  {getRolesDisponibles().map(rol => (
+                    <option key={rol} value={rol}>{rol.toUpperCase()}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* ESPACIO VACÍO PARA MANTENER GRID */}
+            {esDirectorGeneral() && <div></div>}
+
+
+            {/* SECCIÓN TERRITORIAL (Solo para Directores de Área) */}
+            {!esDirectorGeneral() && (
+              <div className="md:col-span-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-2 mb-4">
+                  <h5 className="font-medium text-gray-900 dark:text-white">Jurisdicción Territorial (Opcional)</h5>
+                  <div className="group relative">
+                    <Info size={18} className="text-gray-400 hover:text-indigo-600 cursor-help" />
+                    <div className="absolute left-0 top-6 w-80 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                      <p className="font-semibold mb-1">¿Para qué sirve esta sección?</p>
+                      <p className="text-gray-300">
+                        {formData.cargo && formData.area && formData.nivel ? (
+                          <>
+                            Como <strong>{formData.cargo}</strong> de <strong>{formData.area}</strong> a nivel <strong>{formData.nivel}</strong>
+                            {formData.region && ` de ${formData.region}`}
+                            {formData.departamento && ` de ${formData.departamento}`}
+                            {formData.municipio && ` de ${formData.municipio}`}
+                            {formData.pais && ` (${formData.pais})`},
+                            tu jurisdicción cubre todo ese territorio. Esta sección es solo para indicar dónde está ubicada tu oficina física dentro de tu jurisdicción.
+                            <br /><br />
+                            <em>Ejemplo: "Soy {formData.cargo} de {formData.area} de TODO {formData.region || formData.departamento || formData.municipio || 'el territorio'}, pero mi oficina está en la ciudad de {formData.departamento || 'X'}"</em>
+                          </>
+                        ) : (
+                          <>
+                            Indica la ubicación física de tu oficina, NO tu jurisdicción de autoridad.
+                            <br /><br />
+                            <em>Ejemplo: "Soy Director Regional de Salud de TODA la provincia de Buenos Aires, pero mi oficina física está en la ciudad de La Plata"</em>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                  <div>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">País</label>
+                    <input
+                      type="text"
+                      value={formData.pais}
+                      onChange={(e) => setFormData({ ...formData, pais: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                      placeholder="Colombia"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Región</label>
+                    <input
+                      type="text"
+                      value={formData.region}
+                      onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                      placeholder="Ej: Andina"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Departamento/Provincia</label>
+                    <input
+                      type="text"
+                      value={formData.departamento}
+                      onChange={(e) => setFormData({ ...formData, departamento: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                      placeholder="Departamento"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Municipio/Ciudad</label>
+                    <input
+                      type="text"
+                      value={formData.municipio}
+                      onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                      placeholder="Municipio"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Barrio/Localidad</label>
+                    <input
+                      type="text"
+                      value={formData.barrio}
+                      onChange={(e) => setFormData({ ...formData, barrio: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                      placeholder="Barrio"
+                    />
+                  </div>
+
+                </div>
+              </div>
+            )}
+
           </div>
 
           <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
@@ -483,63 +492,26 @@ export default function IglesiaPage() {
         </form>
       </div>
 
-      {/* Panel de Aprobaciones (Solo para líderes aprobados) */}
+      {/* Panel de Aprobaciones */}
       {user?.fundacion?.estadoAprobacion === 'aprobado' && (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Users className="text-indigo-600" />
-            Solicitudes Pendientes ({solicitudesPendientes.length})
-          </h3>
-          {solicitudesPendientes.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-              No hay solicitudes pendientes en este momento.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {solicitudesPendientes.map((solicitud) => (
-                <div key={solicitud._id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div>
-                    <p className="font-semibold text-gray-900 dark:text-white">
-                      {solicitud.nombres.primero} {solicitud.apellidos.primero}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Solicita: <strong>{solicitud.fundacion.cargo}</strong> ({solicitud.fundacion.nivel})
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Área: {solicitud.fundacion.area}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleGestionarSolicitud(solicitud._id, 'rechazar')}
-                      className="p-2 text-red-600 hover:bg-red-100 rounded-full"
-                      title="Rechazar"
-                    >
-                      <X size={20} />
-                    </button>
-                    <button
-                      onClick={() => handleGestionarSolicitud(solicitud._id, 'aprobar')}
-                      className="p-2 text-green-600 hover:bg-green-100 rounded-full"
-                      title="Aprobar"
-                    >
-                      <Check size={20} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <SolicitudesList
+          solicitudes={solicitudesPendientes}
+          onGestionarSolicitud={handleGestionarSolicitud}
+        />
       )}
     </div>
   );
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-        <div>
+      {/* Header Principal con Icono */}
+      <div className="flex items-start gap-4 mb-8">
+        <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0">
+          <Building2 className="text-white" size={28} />
+        </div>
+        <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Institución</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Gestiona tu vida eclesiástica e institucional</p>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Gestiona tu vida eclesiástica e institucional</p>
         </div>
       </div>
 
@@ -548,8 +520,8 @@ export default function IglesiaPage() {
         <button
           onClick={() => setActiveTab('iglesias')}
           className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'iglesias'
-              ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+            ? 'text-indigo-600 dark:text-indigo-400'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}
         >
           <div className="flex items-center gap-2">
@@ -564,8 +536,8 @@ export default function IglesiaPage() {
         <button
           onClick={() => setActiveTab('fundacion')}
           className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'fundacion'
-              ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+            ? 'text-indigo-600 dark:text-indigo-400'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}
         >
           <div className="flex items-center gap-2">
@@ -576,11 +548,31 @@ export default function IglesiaPage() {
             <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
           )}
         </button>
+
+        {/* Pestaña de Monitoreo Global - Solo Founder */}
+        {user?.seguridad?.rolSistema === 'Founder' && (
+          <button
+            onClick={() => setActiveTab('monitoreo')}
+            className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'monitoreo'
+              ? 'text-indigo-600 dark:text-indigo-400'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+              }`}
+          >
+            <div className="flex items-center gap-2">
+              📊 Monitoreo Global
+            </div>
+            {activeTab === 'monitoreo' && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Content */}
       <div className="min-h-[400px]">
-        {activeTab === 'iglesias' ? renderIglesiasTab() : renderFundacionTab()}
+        {activeTab === 'iglesias' ? renderIglesiasTab() :
+          activeTab === 'fundacion' ? renderFundacionTab() :
+            renderMonitoreoTab()}
       </div>
 
       {/* AlertDialog Component */}
@@ -593,6 +585,3 @@ export default function IglesiaPage() {
     </div>
   );
 }
-
-
-

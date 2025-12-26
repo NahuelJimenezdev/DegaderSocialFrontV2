@@ -114,12 +114,14 @@ const ChatInput = ({
                     <Send size={20} />
                 </button>
 
-                {/* Emoji Picker */}
+                {/* Emoji Picker - Posicionado hacia arriba */}
                 {mostrarEmojiPicker && (
-                    <EmojiPicker
-                        onEmojiSelect={handleEmojiSelect}
-                        onClose={() => setMostrarEmojiPicker(false)}
-                    />
+                    <div className="absolute bottom-full left-0 mb-2">
+                        <EmojiPicker
+                            onEmojiSelect={handleEmojiSelect}
+                            onClose={() => setMostrarEmojiPicker(false)}
+                        />
+                    </div>
                 )}
             </form>
         </div>

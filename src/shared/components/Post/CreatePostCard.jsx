@@ -1,9 +1,17 @@
 import React, { useState, useRef } from 'react';
 import { logger } from '../../utils/logger';
 import { getUserAvatar } from '../../utils/avatarUtils';
-import EmojiPicker from '../../components/EmojiPicker/EmojiPicker';
-import { Image as ImageIcon, X, Smile, Send } from 'lucide-react';
+import FilePreview from './FilePreview';
+import FormatToolbar from './FormatToolbar';
+import { Send } from 'lucide-react';
 
+/**
+ * CreatePostCard - Componente refactorizado para crear posts
+ * @param {Object} currentUser - Usuario actual
+ * @param {Function} onPostCreated - Callback al crear post
+ * @param {boolean} alwaysExpanded - Si siempre está expandido
+ * @param {string} error - Mensaje de error
+ */
 const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, error = null }) => {
     const [content, setContent] = useState('');
     const [isExpanded, setIsExpanded] = useState(alwaysExpanded);
@@ -33,7 +41,6 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                     return new Promise((resolve, reject) => {
                         const reader = new FileReader();
                         reader.onloadend = () => {
-                            // Simple detection based on MIME type
                             const isVideo = file.type.startsWith('video/');
                             resolve({
                                 url: reader.result,
@@ -52,10 +59,8 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                 const base64Media = await Promise.all(mediaPromises);
 
                 // Separate images and videos for API compatibility
-                // Using object format {url, alt} to support both Feed and Profile backend expectations
                 postData.images = base64Media.filter(m => m.type === 'image').map(m => ({ url: m.url, alt: m.name }));
 
-                // Some backends expect 'videos' array, others mix them. 
                 const videos = base64Media.filter(m => m.type === 'video').map(m => ({ url: m.url, title: m.name }));
                 if (videos.length > 0) {
                     postData.videos = videos;
@@ -80,7 +85,6 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
         } catch (error) {
             logger.error('❌ Error creating post:', error);
             logger.error('❌ Error response:', error.response?.data);
-            // Form remains populated so user can retry
         } finally {
             setIsSubmitting(false);
         }
@@ -88,12 +92,10 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
 
     const handleEmojiSelect = (emoji) => {
         setContent(prev => prev + emoji);
-        setShowEmojiPicker(false);
     };
 
     const handleImageSelect = (e) => {
         const files = Array.from(e.target.files);
-        // Allow images and videos
         const validFiles = files.filter(file =>
             file.type.startsWith('image/') || file.type.startsWith('video/')
         );
@@ -171,85 +173,20 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                                 autoFocus={!alwaysExpanded}
                             />
 
-                            {/* Media Previews - Max 4 with Counter */}
-                            {imagePreviews.length > 0 && (
-                                <div className={`mt-3 gap-2 ${imagePreviews.length === 1 ? 'grid grid-cols-1' :
-                                    'grid grid-cols-2'
-                                    }`}>
-                                    {imagePreviews.slice(0, 4).map((preview, index) => (
-                                        <div
-                                            key={index}
-                                            className={`relative group ${imagePreviews.length === 3 && index === 0 ? 'col-span-2' : ''
-                                                }`}
-                                        >
-                                            {preview.type === 'video' ? (
-                                                <video
-                                                    src={preview.url}
-                                                    className={`w-full object-cover rounded-lg border border-gray-200 dark:border-gray-700 ${imagePreviews.length === 1 ? 'h-64' :
-                                                        imagePreviews.length === 3 && index === 0 ? 'h-48' :
-                                                            'h-40'
-                                                        }`}
-                                                    controls
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={preview.url}
-                                                    alt={`Preview ${index + 1}`}
-                                                    className={`w-full object-cover rounded-lg border border-gray-200 dark:border-gray-700 ${imagePreviews.length === 1 ? 'h-64' :
-                                                        imagePreviews.length === 3 && index === 0 ? 'h-48' :
-                                                            'h-40'
-                                                        }`}
-                                                />
-                                            )}
-
-                                            {/* Counter overlay for 4th item if more than 4 */}
-                                            {index === 3 && imagePreviews.length > 4 && (
-                                                <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center">
-                                                    <span className="text-white text-4xl font-bold">+{imagePreviews.length - 4}</span>
-                                                </div>
-                                            )}
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoveImage(index)}
-                                                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100 z-10"
-                                            >
-                                                <X size={18} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                            {/* File Previews */}
+                            <FilePreview
+                                previews={imagePreviews}
+                                onRemove={handleRemoveImage}
+                            />
 
                             <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                                <div className="flex gap-2 relative">
-                                    <button
-                                        type="button"
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 dark:text-gray-400"
-                                        title="Agregar foto o video"
-                                    >
-                                        <ImageIcon size={20} />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-500 dark:text-gray-400"
-                                        title="Agregar emoji"
-                                    >
-                                        <Smile size={20} />
-                                    </button>
-
-                                    {/* Emoji Picker */}
-                                    {showEmojiPicker && (
-                                        <div className="absolute bottom-full left-0 mb-2 z-50">
-                                            <EmojiPicker
-                                                onEmojiSelect={handleEmojiSelect}
-                                                onClose={() => setShowEmojiPicker(false)}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                {/* Format Toolbar */}
+                                <FormatToolbar
+                                    fileInputRef={fileInputRef}
+                                    showEmojiPicker={showEmojiPicker}
+                                    onToggleEmojiPicker={() => setShowEmojiPicker(!showEmojiPicker)}
+                                    onEmojiSelect={handleEmojiSelect}
+                                />
 
                                 <div className="flex gap-2">
                                     {!alwaysExpanded && (

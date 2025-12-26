@@ -147,9 +147,19 @@ export const useNotifications = (user) => {
             handleNotification({ ...data, tipo: 'solicitudIglesiaProcesada' });
         });
 
+        // 📡 Escuchar cuando una notificación es eliminada (sincronización bell-cards)
+        socket.on('notificationDeleted', (data) => {
+            logger.log('🗑️ Notificación eliminada:', data);
+            setNotifications(prev => prev.filter(n => {
+                const emisorId = n.emisor?._id || n.emisor;
+                return !(String(emisorId) === String(data.emisorId) && n.tipo === data.tipo);
+            }));
+        });
+
         return () => {
             socket.off('newNotification', handleNotification);
             socket.off('solicitudIglesiaProcesada');
+            socket.off('notificationDeleted');
             socket.off('connect', handleConnect);
         };
     }, [userId]);

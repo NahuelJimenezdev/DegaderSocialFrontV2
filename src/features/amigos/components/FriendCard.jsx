@@ -1,140 +1,80 @@
-import { MessageSquare, MoreHorizontal, Cake, Star, Pin, BellOff, UserMinus, Ban, MoreVertical, MessageCircle, Bell } from 'lucide-react'
-import { logger } from '../../../shared/utils/logger';
-import { useNavigate } from 'react-router-dom'
-import { useState, useRef, useEffect } from 'react'
-import styles from '../styles/FriendsPage.module.css'
-import { getUserAvatar } from '../../../shared/utils/avatarUtils'
-import * as friendshipActionsService from '../../../api/friendshipActionsService'
-import ConfirmationModal from './ConfirmationModal'
+import { MessageSquare, MoreHorizontal, Cake, Star, Pin, BellOff, UserMinus, Ban } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import styles from '../styles/FriendsPage.module.css';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import ConfirmationModal from './ConfirmationModal';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { useFriendActions } from '../hooks/useFriendActions';
 
 export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
-  const navigate = useNavigate()
-  const [showMenu, setShowMenu] = useState(false)
-  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 })
-  const menuRef = useRef(null)
-  const buttonRef = useRef(null)
-  const fullName = `${friend?.nombres?.primero || ''} ${friend?.apellidos?.primero || ''}`.trim() || 'Usuario';
+  const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Hook de acciones de amigos
+  const {
+    confirmAction,
+    alertConfig,
+    fullName,
+    setConfirmAction,
+    setAlertConfig,
+    handleFavorite,
+    handlePin,
+    handleMute,
+    handleUnfriendClick,
+    handleBlockClick,
+    handleUnblockClick,
+    handleConfirmAction,
+    isBirthdayToday,
+    isOnlineByLastConnection
+  } = useFriendActions(friend, onUpdate);
+
   const avatarUrl = getUserAvatar(friend);
 
   // Click outside to close menu
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowMenu(false)
+        setShowMenu(false);
       }
-    }
+    };
 
     if (showMenu) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showMenu])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
 
   const handleCardClick = () => {
-    navigate(`/perfil/${friend._id}`)
-  }
+    navigate(`/perfil/${friend._id}`);
+  };
 
   const handleMessageClick = (e) => {
-    e.stopPropagation()
-    navigate(`/mensajes?userId=${friend._id}`)
-  }
+    e.stopPropagation();
+    navigate(`/mensajes?userId=${friend._id}`);
+  };
 
   const handleMenuClick = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
 
     if (!showMenu && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect()
+      const rect = buttonRef.current.getBoundingClientRect();
       setMenuPosition({
         top: rect.bottom + 4,
         right: window.innerWidth - rect.right
-      })
+      });
     }
 
-    setShowMenu(!showMenu)
-  }
-
-  const [confirmAction, setConfirmAction] = useState(null) // { type: 'unfriend' | 'block', title: string, message: string } | null
-  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
-
-  const handleFavorite = async (e) => {
-    e.stopPropagation()
-    try {
-      await friendshipActionsService.toggleFavorite(friend.friendshipId)
-      if (onUpdate) onUpdate()
-    } catch (error) {
-      logger.error('Error al toggle favorito:', error)
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar favorito' })
-    }
-    setShowMenu(false)
-  }
-
-  const handlePin = async (e) => {
-    e.stopPropagation()
-    try {
-      await friendshipActionsService.togglePin(friend.friendshipId)
-      if (onUpdate) onUpdate()
-    } catch (error) {
-      logger.error('Error al toggle pin:', error)
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar fijado' })
-    }
-    setShowMenu(false)
-  }
-
-  const handleMute = async (e) => {
-    e.stopPropagation()
-    try {
-      await friendshipActionsService.toggleMute(friend.friendshipId)
-      if (onUpdate) onUpdate()
-    } catch (error) {
-      logger.error('Error al toggle mute:', error)
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al actualizar silenciado' })
-    }
-    setShowMenu(false)
-  }
-
-  const handleUnfriendClick = (e) => {
-    e.stopPropagation()
-    setConfirmAction({
-      type: 'unfriend',
-      title: 'Eliminar amigo',
-      message: `¿Estás seguro de que quieres eliminar a ${fullName} de tus amigos? Ya no serán amigos y deberás enviar una nueva solicitud si cambias de opinión.`
-    })
-    setShowMenu(false)
-  }
-
-  const handleBlockClick = (e) => {
-    e.stopPropagation()
-    setConfirmAction({
-      type: 'block',
-      title: 'Bloquear usuario',
-      message: `¿Estás seguro de que quieres bloquear a ${fullName}? Esta persona no podrá encontrarte en la búsqueda ni ver tu perfil. Tú tampoco podrás ver el suyo.`
-    })
-    setShowMenu(false)
-  }
-
-
-
-  // Calcular si es el cumpleaños hoy
-  const isBirthdayToday = () => {
-    if (!friend?.personal?.fechaNacimiento) return false;
-    const today = new Date();
-    const birthDate = new Date(friend.personal.fechaNacimiento);
-    return today.getMonth() === birthDate.getUTCMonth() && today.getDate() === birthDate.getUTCDate();
+    setShowMenu(!showMenu);
   };
 
-  // Determinar si está online (basado en última conexión como fallback)
-  const isOnlineByLastConnection = () => {
-    if (!friend?.seguridad?.ultimaConexion) return false;
-    const lastConnection = new Date(friend.seguridad.ultimaConexion);
-    const now = new Date();
-    const diffMinutes = (now - lastConnection) / (1000 * 60);
-    return diffMinutes <= 5;
-  };
-
+  // Determinar estado online
   const hasRealTimeData = onlineUsers !== null && onlineUsers !== undefined;
   const isOnlineRealTime = hasRealTimeData ? onlineUsers.has(friend._id) : null;
   const isOnlineFallback = isOnlineByLastConnection();
@@ -142,37 +82,36 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
 
   const hasBirthday = isBirthdayToday();
 
-  // Handle Unblock Action
-  const handleUnblockClick = (e) => {
-    e.stopPropagation()
-    setConfirmAction({
-      type: 'unblock',
-      title: 'Desbloquear usuario',
-      message: `¿Quieres desbloquear a ${fullName}? Podrán volver a enviarte mensajes y ver tu perfil.`
-    })
-    setShowMenu(false)
-  }
+  // Wrapper functions para cerrar menú
+  const handleFavoriteWithClose = async (e) => {
+    await handleFavorite(e);
+    setShowMenu(false);
+  };
 
-  const handleConfirmAction = async () => {
-    if (!confirmAction) return
+  const handlePinWithClose = async (e) => {
+    await handlePin(e);
+    setShowMenu(false);
+  };
 
-    try {
-      if (confirmAction.type === 'unfriend') {
-        await friendshipActionsService.removeFriendship(friend.friendshipId)
-      } else if (confirmAction.type === 'block') {
-        await friendshipActionsService.blockUser(friend.friendshipId)
-      } else if (confirmAction.type === 'unblock') {
-        await friendshipActionsService.unblockUser(friend.friendshipId)
-      }
+  const handleMuteWithClose = async (e) => {
+    await handleMute(e);
+    setShowMenu(false);
+  };
 
-      if (onUpdate) onUpdate()
-    } catch (error) {
-      logger.error(`Error executing ${confirmAction.type}:`, error)
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al realizar la acción' })
-    } finally {
-      setConfirmAction(null)
-    }
-  }
+  const handleUnfriendWithClose = (e) => {
+    handleUnfriendClick(e);
+    setShowMenu(false);
+  };
+
+  const handleBlockWithClose = (e) => {
+    handleBlockClick(e);
+    setShowMenu(false);
+  };
+
+  const handleUnblockWithClose = (e) => {
+    handleUnblockClick(e);
+    setShowMenu(false);
+  };
 
   return (
     <div className={`${styles.item} ${showMenu ? styles.itemMenuOpen : ''} ${friend.isBlocked ? styles.blockedItem : ''}`} onClick={handleCardClick}>
@@ -187,7 +126,6 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
             <Ban size={12} color="white" />
           </div>
         ) : (
-          /* Solo mostrar indicador online si NO está bloqueado */
           <span className={online ? styles.onlineBadge : styles.offlineBadge} />
         )}
       </div>
@@ -260,20 +198,20 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
             >
               {!friend.isBlocked && (
                 <>
-                  <button className={styles.dropdownItem} onClick={handleFavorite}>
+                  <button className={styles.dropdownItem} onClick={handleFavoriteWithClose}>
                     <Star size={16} />
                     <span>{friend.isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}</span>
                   </button>
-                  <button className={styles.dropdownItem} onClick={handlePin}>
+                  <button className={styles.dropdownItem} onClick={handlePinWithClose}>
                     <Pin size={16} />
                     <span>{friend.isPinned ? 'Desfijar' : 'Fijar arriba'}</span>
                   </button>
-                  <button className={styles.dropdownItem} onClick={handleMute}>
+                  <button className={styles.dropdownItem} onClick={handleMuteWithClose}>
                     <BellOff size={16} />
                     <span>{friend.isMuted ? 'Activar notificaciones' : 'Silenciar notificaciones'}</span>
                   </button>
                   <div className={styles.divider} />
-                  <button onClick={handleUnfriendClick} className={styles.danger}>
+                  <button onClick={handleUnfriendWithClose} className={styles.danger}>
                     <UserMinus size={16} />
                     Eliminar amigo
                   </button>
@@ -281,12 +219,12 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
               )}
 
               {friend.isBlocked ? (
-                <button onClick={handleUnblockClick} className={styles.dropdownItem} style={{ color: '#2563eb' }}>
+                <button onClick={handleUnblockWithClose} className={styles.dropdownItem} style={{ color: '#2563eb' }}>
                   <Ban size={16} />
                   <span>Desbloquear usuario</span>
                 </button>
               ) : (
-                <button onClick={handleBlockClick} className={styles.danger}>
+                <button onClick={handleBlockWithClose} className={styles.danger}>
                   <Ban size={16} />
                   Bloquear usuario
                 </button>
@@ -309,7 +247,6 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
         isDangerous={confirmAction?.type !== 'unblock'}
       />
 
-      {/* AlertDialog Component */}
       <AlertDialog
         isOpen={alertConfig.isOpen}
         onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
@@ -317,8 +254,5 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
         message={alertConfig.message}
       />
     </div>
-  )
-}
-
-
-
+  );
+};

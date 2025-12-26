@@ -1,153 +1,35 @@
-import React, { useState } from 'react';
-import { logger } from '../../../shared/utils/logger';
+import React from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import iglesiaService from '../../../api/iglesiaService';
 import { getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { useIglesiaSettings } from '../hooks/useIglesiaSettings';
 
 const IglesiaSettings = ({ iglesiaData, refetch }) => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('general');
 
   // Verificar si el usuario es el pastor
   const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id ||
     iglesiaData?.pastorPrincipal === user?._id;
 
-  const [formData, setFormData] = useState({
-    nombre: iglesiaData?.nombre || '',
-    descripcion: iglesiaData?.descripcion || '',
-    mision: iglesiaData?.mision || '',
-    vision: iglesiaData?.vision || '',
-    valores: iglesiaData?.valores || '',
-    ubicacion: {
-      direccion: iglesiaData?.ubicacion?.direccion || '',
-      ciudad: iglesiaData?.ubicacion?.ciudad || '',
-      pais: iglesiaData?.ubicacion?.pais || '',
-      coordenadas: iglesiaData?.ubicacion?.coordenadas || { lat: 0, lng: 0 }
-    },
-    contacto: {
-      telefono: iglesiaData?.contacto?.telefono || '',
-      email: iglesiaData?.contacto?.email || '',
-      sitioWeb: iglesiaData?.contacto?.sitioWeb || ''
-    },
-    horarios: iglesiaData?.horarios || []
-  });
-
-  const [newHorario, setNewHorario] = useState({ dia: '', hora: '', tipo: '' });
-  const [logoPreview, setLogoPreview] = useState(null);
-  const [bannerPreview, setBannerPreview] = useState(null);
-  const [logoFile, setLogoFile] = useState(null);
-  const [bannerFile, setBannerFile] = useState(null);
-  const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: { ...prev[parent], [child]: value }
-      }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setLogoFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setLogoPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleBannerChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setBannerFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setBannerPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAddHorario = () => {
-    if (newHorario.dia && newHorario.hora && newHorario.tipo) {
-      setFormData(prev => ({
-        ...prev,
-        horarios: [...prev.horarios, newHorario]
-      }));
-      setNewHorario({ dia: '', hora: '', tipo: '' });
-    }
-  };
-
-  const handleRemoveHorario = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      horarios: prev.horarios.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      logger.log('🚀 Starting handleSubmit');
-      // Si hay imágenes nuevas, primero subirlas
-      const uploadData = new FormData();
-
-      if (logoFile) {
-        logger.log('📎 Appending logo file:', logoFile.name);
-        uploadData.append('logo', logoFile);
-      }
-      if (bannerFile) {
-        logger.log('📎 Appending banner file:', bannerFile.name);
-        uploadData.append('portada', bannerFile);
-      }
-
-      // Agregar los demás datos del formulario
-      Object.keys(formData).forEach(key => {
-        if (typeof formData[key] === 'object' && !Array.isArray(formData[key])) {
-          const jsonValue = JSON.stringify(formData[key]);
-          logger.log(`📝 Appending object field ${key}:`, jsonValue);
-          uploadData.append(key, jsonValue);
-        } else if (Array.isArray(formData[key])) {
-          const jsonValue = JSON.stringify(formData[key]);
-          logger.log(`📝 Appending array field ${key}:`, jsonValue);
-          uploadData.append(key, jsonValue);
-        } else {
-          logger.log(`📝 Appending field ${key}:`, formData[key]);
-          uploadData.append(key, formData[key]);
-        }
-      });
-
-      logger.log('📤 Sending updateIglesia request...');
-      const response = await iglesiaService.updateIglesia(iglesiaData._id, uploadData);
-      logger.log('✅ Update response:', response);
-
-      await refetch();
-
-      // Limpiar previews
-      setLogoPreview(null);
-      setBannerPreview(null);
-      setLogoFile(null);
-      setBannerFile(null);
-
-      setAlertConfig({ isOpen: true, variant: 'success', message: 'Cambios guardados exitosamente' });
-    } catch (error) {
-      logger.error('❌ Error al guardar:', error);
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al guardar los cambios' });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Hook de configuración
+  const {
+    loading,
+    activeTab,
+    formData,
+    logoPreview,
+    bannerPreview,
+    newHorario,
+    alertConfig,
+    setActiveTab,
+    setNewHorario,
+    setAlertConfig,
+    handleInputChange,
+    handleLogoChange,
+    handleBannerChange,
+    handleAddHorario,
+    handleRemoveHorario,
+    handleSubmit
+  } = useIglesiaSettings(iglesiaData, refetch);
 
   if (!isPastor) {
     return (
@@ -169,42 +51,21 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
     <div className="max-w-5xl mx-auto">
       {/* Tabs */}
       <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6">
-        <button
-          onClick={() => setActiveTab('general')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'general'
-              ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
-        >
-          General
-          {activeTab === 'general' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full" />
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('ubicacion')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'ubicacion'
-              ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
-        >
-          Ubicación
-          {activeTab === 'ubicacion' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full" />
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('contacto')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'contacto'
-              ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
-        >
-          Contacto
-          {activeTab === 'contacto' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full" />
-          )}
-        </button>
+        {['general', 'ubicacion', 'contacto'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === tab
+                ? 'text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+          >
+            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {activeTab === tab && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full" />
+            )}
+          </button>
+        ))}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -544,6 +405,3 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
 };
 
 export default IglesiaSettings;
-
-
-
