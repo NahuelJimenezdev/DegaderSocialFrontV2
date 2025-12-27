@@ -30,15 +30,23 @@ const postService = {
     // Detectar si es FormData
     const isFormData = postData instanceof FormData;
 
+    console.log('🚀 [postService] Enviando publicación:', {
+      type: isFormData ? 'FormData (archivos)' : 'JSON (base64)',
+      hasFiles: isFormData
+    });
+
     const config = {};
 
-    // Si NO es FormData, agregar Content-Type JSON
-    if (!isFormData) {
+    // ESTABLECER EXPLÍCITAMENTE el header (copiado de groupService.js que funciona)
+    if (isFormData) {
+      config.headers = {
+        'Content-Type': 'multipart/form-data',
+      };
+    } else {
       config.headers = {
         'Content-Type': 'application/json',
       };
     }
-    // Si ES FormData, NO agregar Content-Type (el navegador lo hace automáticamente con boundary)
 
     const response = await api.post('/publicaciones', postData, config);
     return response.data;
