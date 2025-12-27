@@ -121,7 +121,8 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
    * Agrega un comentario a un post
    */
   const handleAddComment = async (postId, content, parentId = null, image = null) => {
-    if (!content || !content.trim()) return;
+    // Validar: Debe haber contenido O imagen
+    if ((!content || !content.trim()) && !image) return;
 
     try {
       // Usar postService.addComment con la firma correcta (postId, contenido, parentId, image)

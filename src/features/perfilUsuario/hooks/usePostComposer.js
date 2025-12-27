@@ -37,8 +37,13 @@ export const usePostComposer = (user, onPostCreated) => {
         config.headers = {
           'Content-Type': 'application/json',
         };
+      } else {
+        // Fix Crítico R2: Establecer explícitamente multipart/form-data
+        // Aunque axios debería hacerlo solo, en este entorno falla si no se explicita
+        config.headers = {
+          'Content-Type': 'multipart/form-data',
+        };
       }
-      // Si ES FormData, NO agregar Content-Type (el navegador lo hace automáticamente)
 
       const response = await api.post('/publicaciones', postData, config);
 
