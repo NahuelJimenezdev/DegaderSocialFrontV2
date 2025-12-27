@@ -27,7 +27,20 @@ const postService = {
 
   // Crear nueva publicación
   createPost: async (postData) => {
-    const response = await api.post('/publicaciones', postData);
+    // Detectar si es FormData
+    const isFormData = postData instanceof FormData;
+
+    const config = {};
+
+    // Si NO es FormData, agregar Content-Type JSON
+    if (!isFormData) {
+      config.headers = {
+        'Content-Type': 'application/json',
+      };
+    }
+    // Si ES FormData, NO agregar Content-Type (el navegador lo hace automáticamente con boundary)
+
+    const response = await api.post('/publicaciones', postData, config);
     return response.data;
   },
 
