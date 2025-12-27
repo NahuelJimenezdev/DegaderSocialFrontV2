@@ -60,6 +60,22 @@ const postService = {
 
   // Agregar comentario o respuesta
   addComment: async (postId, contenido, parentCommentId = null, image = null) => {
+    // Si hay imagen, usar FormData
+    if (image && image instanceof File) {
+      const formData = new FormData();
+      formData.append('contenido', contenido);
+      if (parentCommentId) formData.append('parentCommentId', parentCommentId);
+      formData.append('image', image);
+
+      const response = await api.post(`/publicaciones/${postId}/comment`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    }
+
+    // Sin imagen, usar JSON
     const response = await api.post(`/publicaciones/${postId}/comment`, {
       contenido,
       parentCommentId,
