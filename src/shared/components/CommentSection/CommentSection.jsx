@@ -59,7 +59,7 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser }) =>
 
         setIsSubmitting(true);
         try {
-            await onAddComment(postId, newComment, null, imagePreview);
+            await onAddComment(postId, newComment, null, selectedImage);
             setNewComment('');
             setSelectedImage(null);
             setImagePreview(null);
