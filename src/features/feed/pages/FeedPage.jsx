@@ -52,7 +52,7 @@ const FeedPage = () => {
                   post={post}
                   currentUser={user}
                   onLike={handleLike}
-                  onComment={handleAddComment}
+                  onAddComment={handleAddComment}
                   onShare={() => onShareClick(post)}
                 />
               </div>
@@ -65,7 +65,7 @@ const FeedPage = () => {
                 post={post}
                 currentUser={user}
                 onLike={handleLike}
-                onComment={handleAddComment}
+                onAddComment={handleAddComment}
                 onShare={() => onShareClick(post)}
               />
             );
