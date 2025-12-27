@@ -65,7 +65,7 @@ const postService = {
       const formData = new FormData();
       formData.append('contenido', contenido);
       if (parentCommentId) formData.append('parentCommentId', parentCommentId);
-      formData.append('image', image);
+      formData.append('media', image); // Cambio 'image' a 'media' para coincidir con uploadPostMedia
 
       const response = await api.post(`/publicaciones/${postId}/comment`, formData, {
         headers: {
