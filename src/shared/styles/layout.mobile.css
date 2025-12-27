@@ -1,0 +1,52 @@
+/* ============================================
+   LAYOUT MOBILE - Espaciado para navbars
+   ============================================ */
+
+/* Altura del navbar superior */
+:root {
+    --navbar-height: 64px;
+    --bottom-navbar-height: 64px;
+}
+
+/* Contenedor principal en mobile */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-top: calc(var(--navbar-height) + 1rem) !important;
+        padding-bottom: calc(var(--bottom-navbar-height) + 1rem) !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        height: calc(100vh - var(--navbar-height)) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Asegurar que el contenido no se superponga */
+    .container {
+        padding-top: 0 !important;
+    }
+
+    /* Espaciado para cards y secciones */
+    .section-header {
+        margin-top: 0 !important;
+    }
+
+    /* Último elemento debe tener espacio antes del bottom navbar */
+    .main-content>*:last-child {
+        margin-bottom: 4px;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    :root {
+        --navbar-height: 60px;
+        --bottom-navbar-height: 60px;
+    }
+
+    .main-content {
+        padding-top: calc(var(--navbar-height) + 0.75rem) !important;
+        padding-bottom: calc(var(--bottom-navbar-height) + 0.75rem) !important;
+    }
+}

@@ -448,9 +448,13 @@ export const useFundacion = (user, updateUser) => {
         });
     };
 
-    // Cargar solicitudes pendientes
     const cargarSolicitudesPendientes = useCallback(async () => {
         try {
+            // Founder NO debe usar este endpoint, usa monitoreo global
+            if (user?.seguridad?.rolSistema === 'Founder') {
+                return;
+            }
+
             logger.log('🔍 Cargando solicitudes pendientes...');
             logger.log('👤 Usuario actual:', {
                 id: user?._id,

@@ -1,16 +1,7 @@
-import { Search } from 'lucide-react'
-import styles from '../styles/FriendsPage.module.css'
+import SearchBar from '../../../features/buscador/components/SearchBar';
 
 export const FriendsSearch = () => (
-  <div className={styles.searchRow}>
-    <Search className={styles.searchIcon} size={18} />
-    <input
-      className={styles.searchInput}
-      type="text"
-      placeholder="Buscar por nombre..."
-      disabled
-    />
+  <div style={{ width: '100%', maxWidth: '600px' }}>
+    <SearchBar />
   </div>
 )
-
-

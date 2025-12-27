@@ -1,9 +1,10 @@
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import '../styles/CarpetasHeader.css';
+import '../../../shared/styles/headers.style.css';
 
 const CarpetasHeader = ({ onCrearCarpeta, totalCarpetas }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 640);
@@ -13,34 +14,40 @@ const CarpetasHeader = ({ onCrearCarpeta, totalCarpetas }) => {
   }, []);
 
   return (
-    <div className="carpetas-header">
-      <div className="carpetas-header-content">
-        <span className="carpetas-header-icon material-symbols-outlined text-primary">folder</span>
-        <div className="flex flex-col">
-          <p className="carpetas-header-title text-[#1F2937] dark:text-[#F9FAFB] font-black leading-tight tracking-[-0.033em]">
-            Mis Carpetas
-          </p>
-          <p className="carpetas-header-subtitle text-[#6B7280] dark:text-[#9CA3AF] font-normal leading-normal">
-            Gestiona tus carpetas y mantén tu contenido siempre ordenado
-            {totalCarpetas > 0 && (
-              <span className="text-gray-600 dark:text-indigo-400 pl-1">
-                {totalCarpetas} {totalCarpetas === 1 ? 'carpeta' : 'carpetas'}
-              </span>
-            )}
-          </p>
-        </div>
+    <div className="section-header">
+      {/* Icono en caja con fondo */}
+      <div className="section-header__icon-box">
+        <span className="material-symbols-outlined section-header__icon">
+          folder
+        </span>
       </div>
+
+      {/* Contenido: Título + Subtítulo */}
+      <div className="section-header__content">
+        <h1 className="section-header__title section-header__title--heavy">
+          Mis Carpetas
+        </h1>
+        <p className="section-header__subtitle">
+          Gestiona tus carpetas y mantén tu contenido siempre ordenado
+          {totalCarpetas > 0 && (
+            <span style={{ color: 'var(--accent-primary)', paddingLeft: '0.25rem' }}>
+              · {totalCarpetas} {totalCarpetas === 1 ? 'carpeta' : 'carpetas'}
+            </span>
+          )}
+        </p>
+      </div>
+
+      {/* Botón CTA */}
       <button
         onClick={onCrearCarpeta}
-        className="carpetas-header-btn bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+        className="section-header__button section-header__button--indigo"
       >
-        <Plus />
-        <span className="carpetas-header-btn-text">Nueva Carpeta</span>
+        <Plus className="section-header__button-icon" size={20} />
+        <span className="section-header__button-text">Nueva Carpeta</span>
       </button>
     </div>
   );
 };
 
 export default CarpetasHeader;
-
 

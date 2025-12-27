@@ -14,6 +14,7 @@ import SolicitudesList from '../components/SolicitudesList';
 import FounderMonitoringPanel from '../components/FounderMonitoringPanel';
 import { useIglesias } from '../hooks/useIglesias';
 import { useFundacion } from '../hooks/useFundacion';
+import '../../../shared/styles/headers.style.css';
 
 export default function IglesiaPage() {
   const navigate = useNavigate();
@@ -504,14 +505,18 @@ export default function IglesiaPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      {/* Header Principal con Icono */}
-      <div className="flex items-start gap-4 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0">
-          <Building2 className="text-white" size={28} />
+      {/* Header unificado con clases BEM globales */}
+      <div className="section-header">
+        <div className="section-header__icon-box">
+          <Building2 className="section-header__icon" strokeWidth={2} />
         </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Institución</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Gestiona tu vida eclesiástica e institucional</p>
+        <div className="section-header__content">
+          <h1 className="section-header__title section-header__title--heavy">
+            Instituciones
+          </h1>
+          <p className="section-header__subtitle">
+            Conecta con comunidades de fe en tu región
+          </p>
         </div>
       </div>
 

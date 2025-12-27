@@ -7,6 +7,7 @@ import CreateGroupModal from "../components/CreateGroupModal";
 import { getAvatarUrl } from "../../../shared/utils/avatarUtils";
 import { getSocket } from "../../../shared/lib/socket";
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import '../../../shared/styles/headers.style.css';
 
 const GruposPages = () => {
   const navigate = useNavigate();
@@ -342,23 +343,34 @@ const GruposPages = () => {
     <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900">
       <div className="w-full mx-auto flex flex-col gap-6">
         {/* Header */}
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="material-symbols-outlined text-3xl text-white">groups</span>
+        <div className="section-header">
+          {/* Icono en caja con fondo */}
+          <div className="section-header__icon-box">
+            <span className="material-symbols-outlined section-header__icon">
+              groups
+            </span>
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-4 mb-1">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Mis Grupos</h1>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
-              >
-                <span className="material-symbols-outlined text-xl">add</span>
-                <span className="hidden sm:inline">Nuevo Grupo</span>
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Explora y participa en comunidades relevantes</p>
+
+          {/* Contenido: Título + Subtítulo */}
+          <div className="section-header__content">
+            <h1 className="section-header__title section-header__title--heavy">
+              Mis Grupos
+            </h1>
+            <p className="section-header__subtitle">
+              Explora y participa en comunidades relevantes
+            </p>
           </div>
+
+          {/* Botón CTA */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="section-header__button section-header__button--indigo"
+          >
+            <span className="material-symbols-outlined section-header__button-icon">
+              add
+            </span>
+            <span className="section-header__button-text">Nuevo Grupo</span>
+          </button>
         </div>
 
         {/* Pestañas Grid/List Global */}

@@ -15,7 +15,7 @@ const BottomNavbar = () => {
     {
       icon: Search,
       label: 'Buscar',
-      path: '/buscar'
+      path: '/Amigos' // Cambiado de /buscar a /Amigos
     },
     {
       icon: Building2,

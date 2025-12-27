@@ -1,6 +1,7 @@
 import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video } from "lucide-react";
 import NavItem from "../navItem/NavItem";
 import styles from './styles/Sidebar.module.css';
+import '../../../shared/styles/sidebar.style.css';
 
 const Sidebar = () => {
   return (

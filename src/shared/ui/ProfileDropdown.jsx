@@ -145,19 +145,21 @@ const ProfileDropdown = () => {
 
           {/* Sidebar Navigation Items (Mobile Only) */}
           <div className="mobile-sidebar-nav">
-            {sidebarItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleMenuClick(item.path)}
-                  className="mobile-sidebar-nav-item"
-                >
-                  <Icon size={18} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+            {sidebarItems
+              .filter(item => item.label !== 'Amigos') // Ocultar Amigos (se accede por icono de búsqueda)
+              .map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleMenuClick(item.path)}
+                    className="mobile-sidebar-nav-item"
+                  >
+                    <Icon size={18} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
           </div>
 
           {/* Menu Items */}

@@ -57,7 +57,9 @@
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
+  margin-top: 12px;
   align-items: center;
+  justify-content: center;
 }
 
 .tab,
@@ -287,6 +289,11 @@
 .name {
   font-size: 14px;
   font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .date {

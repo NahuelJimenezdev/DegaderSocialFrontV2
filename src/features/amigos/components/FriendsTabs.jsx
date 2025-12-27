@@ -5,7 +5,7 @@ import { Cake } from 'lucide-react';
 const TABS = [
   { id: 'friends', label: 'Amigos' },
   { id: 'birthdays', label: 'Cumpleaños' },
-  { id: 'city', label: 'Ciudad Actual' },
+  { id: 'city', label: 'Ciudad Actual', labelMobile: 'Ubicación' },
 ];
 
 export default function FriendsTabs({ birthdaysTodayCount = 0, onChange }) {
@@ -30,7 +30,10 @@ export default function FriendsTabs({ birthdaysTodayCount = 0, onChange }) {
           onClick={() => handleTabChange(tab.id)}
         >
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-            {tab.label}
+            {/* Desktop label */}
+            <span className="hidden md:inline">{tab.label}</span>
+            {/* Mobile label */}
+            <span className="md:hidden">{tab.labelMobile || tab.label}</span>
             {tab.id === 'birthdays' && birthdaysTodayCount > 0 && (
               <span className={`${styles.tabBadge} ${badgePulse ? styles.tabBadgePulse : ''}`} aria-hidden>
                 <span className={styles.tabBadgeCount}>{birthdaysTodayCount}</span>
