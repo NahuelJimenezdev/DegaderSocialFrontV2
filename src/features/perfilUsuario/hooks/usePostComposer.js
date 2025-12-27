@@ -22,17 +22,25 @@ export const usePostComposer = (user, onPostCreated) => {
     setPosting(true);
 
     try {
+      // Detectar si es FormData (archivos) o JSON (base64 legacy)
+      const isFormData = postData instanceof FormData;
+
       logger.log('🚀 Enviando publicación (Profile):', {
-        textLength: postData.contenido.length,
-        hasImages: postData.images?.length > 0,
-        hasVideos: postData.videos?.length > 0
+        type: isFormData ? 'FormData (archivos)' : 'JSON (base64)',
+        hasFiles: isFormData
       });
 
-      const response = await api.post('/publicaciones', postData, {
-        headers: {
+      const config = {};
+
+      // Si NO es FormData, agregar Content-Type JSON
+      if (!isFormData) {
+        config.headers = {
           'Content-Type': 'application/json',
-        },
-      });
+        };
+      }
+      // Si ES FormData, NO agregar Content-Type (el navegador lo hace automáticamente)
+
+      const response = await api.post('/publicaciones', postData, config);
 
       if (response.data.success && response.data.data) {
         // Notificar al contexto para que actualice la lista

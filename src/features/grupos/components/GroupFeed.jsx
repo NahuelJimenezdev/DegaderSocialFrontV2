@@ -64,15 +64,26 @@ const GroupFeed = ({ groupData }) => {
 
   const handleCreatePost = async (postData) => {
     try {
-      const response = await postService.createPost({
-        ...postData,
-        grupo: groupData._id
-      });
-
-      if (response.success) {
-        // No necesitamos recargar todo si el socket funciona
+      // Si es FormData, agregar el grupo
+      if (postData instanceof FormData) {
+        postData.append('grupo', groupData._id);
+        const response = await postService.createPost(postData);
+        if (response.success) {
+          // No necesitamos recargar todo si el socket funciona
+        }
+        return response;
       }
-      return response;
+      // Si es JSON (legacy), usar spread
+      else {
+        const response = await postService.createPost({
+          ...postData,
+          grupo: groupData._id
+        });
+        if (response.success) {
+          // No necesitamos recargar todo si el socket funciona
+        }
+        return response;
+      }
     } catch (err) {
       logger.error('Error creating group post:', err);
       throw err;

@@ -29,52 +29,21 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
 
         setIsSubmitting(true);
         try {
-            const postData = {
-                contenido: content || ' ',
-                privacidad: 'publico'
-            };
+            // 🆕 Usar FormData para enviar archivos reales (R2)
+            const formData = new FormData();
+            formData.append('contenido', content || ' ');
+            formData.append('privacidad', 'publico');
 
-            // Convert images/videos to base64 if present
+            // Agregar archivos reales (no base64)
             if (selectedImages.length > 0) {
-                logger.log('📸 Converting', selectedImages.length, 'files to base64...');
-                const mediaPromises = selectedImages.map(file => {
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                            const isVideo = file.type.startsWith('video/');
-                            resolve({
-                                url: reader.result,
-                                name: file.name,
-                                type: isVideo ? 'video' : 'image'
-                            });
-                        };
-                        reader.onerror = (error) => {
-                            logger.error('❌ Error converting file:', file.name, error);
-                            reject(error);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                });
-
-                const base64Media = await Promise.all(mediaPromises);
-
-                // Separate images and videos for API compatibility
-                postData.images = base64Media.filter(m => m.type === 'image').map(m => ({ url: m.url, alt: m.name }));
-
-                const videos = base64Media.filter(m => m.type === 'video').map(m => ({ url: m.url, title: m.name }));
-                if (videos.length > 0) {
-                    postData.videos = videos;
-                }
-
-                logger.log('📦 Post data prep:', {
-                    contenido: postData.contenido,
-                    imageCount: postData.images?.length || 0,
-                    videoCount: postData.videos?.length || 0
+                logger.log('📸 Adding', selectedImages.length, 'files to FormData...');
+                selectedImages.forEach(file => {
+                    formData.append('media', file);
                 });
             }
 
-            logger.log('🚀 Sending post data:', postData);
-            await onPostCreated(postData);
+            logger.log('🚀 Sending post with FormData');
+            await onPostCreated(formData);
 
             // Reset form on success
             setContent('');
