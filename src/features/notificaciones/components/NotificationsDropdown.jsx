@@ -139,10 +139,54 @@ export default function NotificationsDropdown() {
       return;
     }
 
+    console.log('🔔 [CLICK] Notification:', notificacion);
+    console.log('🔔 [CLICK] Tipo:', notificacion.tipo);
+    console.log('🔔 [CLICK] Referencia:', notificacion.referencia);
+
     if (notificacion.tipo === 'nuevo_anuncio') {
       navigate('/admin/publicidad');
       setOpen(false);
       return;
+    }
+
+    // Navegación a Publicación (Post)
+    // Tipos: like_post, comentario_post, respuesta_comentario, like_comentario, compartir_post
+    // Navegación a Publicación (Post)
+    const postTypes = ['like_post', 'comentario_post', 'respuesta_comentario', 'like_comentario', 'compartir_post'];
+    if (postTypes.includes(notificacion.tipo)) {
+      let postId = null;
+
+      // Intentar extraer ID de la referencia
+      if (notificacion.referencia && notificacion.referencia.id) {
+        // Caso 1: referencia.id es un objeto poblado (Post) -> usar ._id
+        if (typeof notificacion.referencia.id === 'object' && notificacion.referencia.id._id) {
+          postId = notificacion.referencia.id._id;
+        }
+        // Caso 2: referencia.id es un string directo
+        else if (typeof notificacion.referencia.id === 'string') {
+          postId = notificacion.referencia.id;
+        }
+        // Caso 3: referencia.id es el objeto pero sin _id (raro, pero posible si es un POJO)
+        else if (typeof notificacion.referencia.id === 'object') {
+          // Fallback: asumir que el objeto mismo tiene un id si no es mongo doc standard o algo asi
+          // Pero según logs user tiene _id.
+          postId = notificacion.referencia.id._id || notificacion.referencia.id.id;
+        }
+      }
+
+      if (postId) {
+        let navPath = `/publicacion/${postId}`;
+
+        // Extract comment ID from metadata (if available) for deep linking
+        const commentId = notificacion.metadata?.commentId;
+        if (commentId) {
+          navPath += `?commentId=${commentId}`;
+        }
+
+        navigate(navPath);
+        setOpen(false);
+        return;
+      }
     }
 
     const profileUserId = notificacion.remitenteId?._id || notificacion.remitenteId || notificacion.datos?.fromUserId;

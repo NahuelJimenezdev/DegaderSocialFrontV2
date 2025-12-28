@@ -1,55 +1,42 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import CommentItem from './CommentItem';
 import { getUserAvatar } from '../../utils/avatarUtils';
 import EmojiPicker from '../../components/EmojiPicker/EmojiPicker';
-import { Image as ImageIcon, X, Smile, Send } from 'lucide-react';
+import { Image as ImageIcon, X, Smile, Send, Gift } from 'lucide-react';
 
-const CommentSection = ({ comments = [], postId, onAddComment, currentUser }) => {
+const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMobileFormat = false, highlightCommentId }) => {
     const [newComment, setNewComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
-    const fileInputRef = useRef(null);
+    const [replyingTo, setReplyingTo] = useState(null); // { id: string, username: string }
 
-    // Build comment tree from flat array if needed
+    const fileInputRef = useRef(null);
+    const mainInputRef = useRef(null); // Ref for the main input
+
+    // Build comment tree from flat array (same logic)
     const commentTree = useMemo(() => {
         if (!comments || comments.length === 0) return [];
-
-        // If comments are already structured (e.g. have 'replies' likely not populated recursively from backend but let's assume flat list for safety as per Feed implementation)
-        // Feed implementation assumed flat list and built tree. Profile implementation assumed populated list?
-        // Let's reuse the robust tree builder from Feed logic.
-
-        // Deep clone to avoid mutating props
         const commentsClone = JSON.parse(JSON.stringify(comments));
         const commentMap = {};
         const roots = [];
-
-        // First pass: Create map
         commentsClone.forEach(comment => {
-            // Ensure replies array exists
             comment.replies = [];
             commentMap[comment._id] = comment;
         });
-
-        // Second pass: Link
         commentsClone.forEach(comment => {
             if (comment.parentComment) {
                 if (commentMap[comment.parentComment]) {
                     commentMap[comment.parentComment].replies.push(commentMap[comment._id]);
                 } else {
-                    // Parent not found in current set (maybe pagination?), treat as root or orphan
-                    // For now treat as root if parent missing
                     roots.push(commentMap[comment._id]);
                 }
             } else {
                 roots.push(commentMap[comment._id]);
             }
         });
-
-        // Sort: Newest roots first
         roots.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
         return roots;
     }, [comments]);
 
@@ -59,16 +46,35 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser }) =>
 
         setIsSubmitting(true);
         try {
-            await onAddComment(postId, newComment, null, selectedImage);
+            // Include parentId if we are replying
+            const parentId = replyingTo ? replyingTo.id : null;
+            await onAddComment(postId, newComment, parentId, selectedImage);
+
             setNewComment('');
             setSelectedImage(null);
             setImagePreview(null);
+            setReplyingTo(null); // Reset reply state
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleReply = async (parentCommentId, content, image) => {
+    // Callback used by interactions in children (CommentItem)
+    const handleReplyClick = (commentId, user) => {
+        if (isMobileFormat) {
+            // Mobile: Focus main input and set @mention
+            const username = user.nombres?.primero || user.username || 'Usuario';
+            setNewComment(`@${username} `);
+            setReplyingTo({ id: commentId, username });
+            mainInputRef.current?.focus();
+        } else {
+            // Desktop: We might still handle it here or let CommentItem handle it locally.
+            // For now, let's keep pass-through behavior or null to let CommentItem use its own.
+        }
+    };
+
+    // Helper for direct submission from CommentItem (Desktop nested forms)
+    const handleNestedReplySubmit = async (parentCommentId, content, image) => {
         await onAddComment(postId, content, parentCommentId, image);
     };
 
@@ -99,115 +105,177 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser }) =>
 
     const userAvatar = getUserAvatar(currentUser);
 
-    return (
-        <div className="px-4 pb-4 pt-2">
-            {/* Input Area */}
-            <div className="flex gap-3 mb-6">
+    // Render Input Form (Reusable)
+    const renderInputForm = () => (
+        <form onSubmit={handleSubmit} className={`flex items-center gap-3 ${isMobileFormat ? 'w-full' : 'flex-1'}`}>
+            {!isMobileFormat && (
                 <img
                     src={userAvatar}
                     alt="Tu perfil"
                     className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                 />
-                <form onSubmit={handleSubmit} className="flex-1">
-                    <div className="relative">
-                        {/* Image Preview */}
-                        {imagePreview && (
-                            <div className="mb-2 relative inline-block">
-                                <img
-                                    src={imagePreview}
-                                    alt="Preview"
-                                    className="max-h-32 rounded-lg border border-gray-200 dark:border-gray-700"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleRemoveImage}
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                                >
-                                    <X size={16} />
-                                </button>
-                            </div>
-                        )}
+            )}
 
-                        {/* Input Container */}
-                        <div className="relative flex items-center bg-gray-100 dark:bg-gray-800 rounded-2xl">
-                            <input
-                                type="text"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                placeholder="Escribe un comentario..."
-                                className="flex-1 bg-transparent border-0 rounded-2xl py-2 pl-4 pr-24 text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
-                            />
-
-                            {/* Action Buttons Container */}
-                            <div className="absolute right-2 flex items-center gap-1">
-                                {/* Emoji Button */}
-                                <button
-                                    type="button"
-                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                    className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
-                                    title="Agregar emoji"
-                                >
-                                    <Smile size={20} />
-                                </button>
-
-                                {/* Image Button */}
-                                <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
-                                    title="Agregar imagen"
-                                >
-                                    <ImageIcon size={20} />
-                                </button>
-
-                                {/* Send Button */}
-                                <button
-                                    type="submit"
-                                    disabled={(!newComment.trim() && !selectedImage) || isSubmitting}
-                                    className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {isSubmitting ? (
-                                        <span className="animate-spin h-5 w-5 border-2 border-indigo-600 dark:border-indigo-400 border-t-transparent rounded-full inline-block"></span>
-                                    ) : (
-                                        <Send size={20} />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Hidden File Input */}
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageSelect}
-                            className="hidden"
+            <div className="flex-1 relative">
+                {/* Image Preview */}
+                {imagePreview && (
+                    <div className="absolute bottom-full left-0 mb-2 relative inline-block z-10">
+                        <img
+                            src={imagePreview}
+                            alt="Preview"
+                            className="h-20 rounded-lg border border-gray-200 dark:border-gray-700 bg-white"
                         />
-
-                        {/* Emoji Picker */}
-                        {showEmojiPicker && (
-                            <div className="absolute bottom-full left-0 mb-2 z-50">
-                                <EmojiPicker
-                                    onEmojiSelect={handleEmojiSelect}
-                                    onClose={() => setShowEmojiPicker(false)}
-                                />
-                            </div>
-                        )}
+                        <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors shadow-sm"
+                        >
+                            <X size={14} />
+                        </button>
                     </div>
-                </form>
+                )}
+
+                {/* Replying Indicator (Mobile) */}
+                {isMobileFormat && replyingTo && (
+                    <div className="text-xs text-gray-500 mb-1 ml-4 flex justify-between">
+                        <span>Respondiendo a <b>{replyingTo.username}</b></span>
+                        <button type="button" onClick={() => { setReplyingTo(null); setNewComment(''); }}>
+                            <X size={12} />
+                        </button>
+                    </div>
+                )}
+
+                <div className={`relative flex items-center ${isMobileFormat ? 'bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2' : 'bg-gray-100 dark:bg-gray-800 rounded-2xl p-1'}`}>
+                    {isMobileFormat && (
+                        <img
+                            src={userAvatar}
+                            alt="Tu perfil"
+                            className="w-8 h-8 rounded-full object-cover flex-shrink-0 mr-2"
+                        />
+                    )}
+
+                    <input
+                        ref={mainInputRef}
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder={isMobileFormat ? (replyingTo ? `Respondiendo a ${replyingTo.username}...` : `Agrega un comentario...`) : "Escribe un comentario..."}
+                        className={`flex-1 bg-transparent border-0 text-sm focus:ring-0 focus:outline-none text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 ${isMobileFormat ? 'py-1' : 'py-2 pl-3 pr-24'}`}
+                    />
+                    {/* Hidden File Input */}
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageSelect}
+                        className="hidden"
+                    />
+
+                    {/* Actions if standard desktop or integrated in input for mobile */}
+                    <div className={`flex items-center gap-2 ${isMobileFormat ? 'ml-2' : 'absolute right-2'}`}>
+                        {/* For Desktop: Emoji, Image, Send inside input container */}
+                        {/* For Mobile: Send button only, maybe Gif/Insight icons outside? Keeping inside for now to match strict mock visual */}
+
+                        {!isMobileFormat ? (
+                            <>
+                                <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="p-1.5 text-gray-500 hover:bg-gray-200 rounded-full"><Smile size={20} /></button>
+                                <button type="button" onClick={() => fileInputRef.current?.click()} className="p-1.5 text-gray-500 hover:bg-gray-200 rounded-full"><ImageIcon size={20} /></button>
+                            </>
+                        ) : (
+                            // Mobile specific nice icons inside input often seen
+                            <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="text-gray-500"><Gift size={20} /></button>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={(!newComment.trim() && !selectedImage) || isSubmitting}
+                            className="text-blue-500 font-semibold text-sm disabled:opacity-50"
+                        >
+                            {isSubmitting ? '...' : (isMobileFormat ? <Send size={20} className="rotate-45 mb-1" /> : <Send size={18} />)}
+                        </button>
+                    </div>
+                </div>
             </div>
+        </form>
+    );
+
+    // Scroll to highlighted comment
+    useEffect(() => {
+        if (highlightCommentId && comments.length > 0) {
+            // Need a slight delay to allow rendering
+            setTimeout(() => {
+                const element = document.getElementById(`comment-${highlightCommentId}`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    element.classList.add('highlight-comment'); // Add highlight style
+                    setTimeout(() => element.classList.remove('highlight-comment'), 3000); // Remove after 3s
+                }
+            }, 500);
+        }
+    }, [highlightCommentId, comments]);
+
+    return (
+        <div className={isMobileFormat ? "flex flex-col h-full" : "px-4 pb-4 pt-2"}>
+            <style>{`
+                .highlight-comment {
+                    animation: highlightPulse 2s ease-in-out;
+                    border-left: 4px solid #8b5cf6; /* Indigo-500 equivalent */
+                    background-color: rgba(139, 92, 246, 0.1);
+                    transition: all 0.5s;
+                }
+                @keyframes highlightPulse {
+                    0% { background-color: rgba(139, 92, 246, 0.3); }
+                    100% { background-color: rgba(139, 92, 246, 0.0); }
+                }
+            `}</style>
+
+            {/* Desktop: Input at Top */}
+            {!isMobileFormat && (
+                <div className="mb-6">
+                    {renderInputForm()}
+                </div>
+            )}
 
             {/* Comments List */}
-            <div className="space-y-1">
-                {commentTree.map(comment => (
-                    <CommentItem
-                        key={comment._id}
-                        comment={comment}
-                        onReply={handleReply}
-                        level={0}
-                    />
-                ))}
+            <div className={`space-y-1 ${isMobileFormat ? 'flex-1 overflow-y-auto px-4 pb-32 scrollbar-hide' : ''}`}>
+                {/* Added larger padding-bottom (pb-32) to ensure content clears the fixed footer */}
+                {commentTree.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
+                        Sé el primero en comentar.
+                    </div>
+                ) : (
+                    commentTree.map(comment => (
+                        <CommentItem
+                            key={comment._id}
+                            comment={comment}
+                            postId={postId}
+                            currentUser={currentUser}
+                            onReply={handleNestedReplySubmit}
+                            onReplyClick={handleReplyClick} // New prop for initiating reply
+                            isMobileFormat={isMobileFormat}
+                            level={0}
+                            highlightCommentId={highlightCommentId}
+                        />
+                    ))
+                )}
             </div>
+
+
+            {/* Mobile: Fixed Bottom Input */}
+            {isMobileFormat && (
+                <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-black p-3 pb-6 safe-area-bottom w-full shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+                    {/* Quick Reactions Bar - Optional Extra */}
+                    <div className="flex justify-between px-2 mb-3 overflow-x-auto no-scrollbar gap-4">
+                        {['❤️', '🙌', '🔥', '👏', '😢', '😍', '😮', '😂'].map(emoji => (
+                            <button key={emoji} onClick={() => setNewComment(prev => prev + emoji)} className="text-xl hover:scale-110 transition-transform">
+                                {emoji}
+                            </button>
+                        ))}
+                    </div>
+
+                    {renderInputForm()}
+                </div>
+            )}
         </div>
     );
 };

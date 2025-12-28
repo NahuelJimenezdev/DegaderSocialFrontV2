@@ -58,6 +58,12 @@ const postService = {
     return response.data;
   },
 
+  // Toggle like en comentario
+  toggleCommentLike: async (postId, commentId) => {
+    const response = await api.post(`/publicaciones/${postId}/comment/${commentId}/like`);
+    return response.data;
+  },
+
   // Agregar comentario o respuesta
   addComment: async (postId, contenido, parentCommentId = null, image = null) => {
     // Si hay imagen, usar FormData

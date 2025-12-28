@@ -2,6 +2,23 @@
 
 ## ⚠️ REGLAS CRÍTICAS DE CSS
 
+### 📂 ESTRUCTURA DE CARPETAS OBLIGATORIA
+Cada "feature" o módulo principal debe tener su propia carpeta de estilos para mantener el código ordenado.
+
+**Estructura Correcta:**
+`src/features/[NombreFeature]/styles/`
+
+**Ejemplo:**
+- ✅ `src/features/amigos/styles/amigos.css`
+- ✅ `src/features/chat/styles/chat.mobile.css`
+
+**Reglas:**
+1. La carpeta SIEMPRE se debe llamar `styles` (en minúscula).
+2. **NUNCA** dejar archivos CSS sueltos en la raíz del feature.
+3. Si extraes estilos de `index.global.css`, deben ir a esta carpeta específica del componente.
+
+---
+
 ### ❌ NO MODIFICAR `index.global.css`
 
 **NUNCA editar directamente `src/shared/styles/index.global.css`**

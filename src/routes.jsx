@@ -21,6 +21,7 @@ import SearchPage from './pages/SearchPage'
 import ClientAdsDashboard from './features/ads/ClientAdsDashboard'
 import FounderAdsDashboard from './features/ads/FounderAdsDashboard'
 import CampaignAnalyticsPage from './features/ads/CampaignAnalyticsPage'
+import PostPage from './features/feed/pages/PostPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -55,6 +56,7 @@ export const router = createBrowserRouter([
       { path: '/Mis_carpetas/:id', element: <FolderDetailAdvanced /> },
       { path: '/Mi_perfil', element: <ProfilePage /> },
       { path: '/perfil/:id', element: <PerfilVisitantePage /> },
+      { path: '/publicacion/:id', element: <PostPage /> },
       // Advertising routes
       { path: '/publicidad', element: <ClientAdsDashboard /> },
       { path: '/admin/publicidad', element: <FounderAdsDashboard /> },
