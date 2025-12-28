@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Filter, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import useFounderMonitoring from '../hooks/useFounderMonitoring';
-import './FounderMonitoringPanel.css';
+import '../styles/FounderMonitoringPanel.css';
 
 const FounderMonitoringPanel = () => {
     const [isDark, setIsDark] = useState(false);
