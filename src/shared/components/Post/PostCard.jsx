@@ -158,7 +158,7 @@ const PostCard = ({
             {/* Content */}
             {post.contenido && (
                 <div className="px-4 pb-3">
-                    <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-relaxed">
+                    <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-relaxed text-justify">
                         {post.contenido}
                     </p>
                 </div>

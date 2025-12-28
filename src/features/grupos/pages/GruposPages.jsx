@@ -340,7 +340,7 @@ const GruposPages = () => {
   };
 
   return (
-    <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900">
+    <div className="page-container">
       <div className="w-full mx-auto flex flex-col gap-6">
         {/* Header */}
         <div className="section-header">
@@ -528,11 +528,8 @@ const GruposPages = () => {
         variant={alertConfig.variant}
         message={alertConfig.message}
       />
-    </main>
+    </div>
   );
 };
 
 export default GruposPages;
-
-
-

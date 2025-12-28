@@ -48,36 +48,30 @@ export default function FriendsPage() {
     fetchBirthdaysToday()
   }, []);
   return (
-    <div className={styles.container}>
-      <div className={styles.friendsCard}>
-        {/* Header unificado con clases BEM globales */}
-        <div className="section-header">
-          <div className="section-header__icon-box">
-            <Users className="section-header__icon" strokeWidth={2} />
-          </div>
-          <div className="section-header__content">
-            <h1 className="section-header__title section-header__title--heavy">
-              Mis Amigos
-            </h1>
-            <p className="section-header__subtitle">
-              Conecta, comparte y mantente al día con tus amigos
-            </p>
-          </div>
+    <div className="page-container">
+      {/* Header */}
+      <div className="section-header">
+        <div className="section-header__icon-box">
+          <Users className="section-header__icon" />
         </div>
-
-
-        <FriendsSearch />
-        <FriendsTabs birthdaysTodayCount={birthdayCount} onChange={handleTabChange} />
-
-        <div className={styles.content}>
-          {activeTab === 'friends' && <div><FriendsList /></div>}
-          {activeTab === 'birthdays' && <div><Birthday /></div>}
-          {activeTab === 'city' && <div><CityFriends /></div>}
+        <div className="section-header__text">
+          <h1 className="section-header__title section-header__title--heavy">Mis Amigos</h1>
+          <p className="section-header__subtitle">Conecta, comparte y mantente al día con tus amigos</p>
         </div>
+      </div>
+
+      {/* Barra de búsqueda funcional */}
+      <FriendsSearch />
+
+      {/* Tabs */}
+      <FriendsTabs birthdaysTodayCount={birthdayCount} onChange={handleTabChange} />
+
+      {/* Contenido según tab activo */}
+      <div className={styles.content}>
+        {activeTab === 'friends' && <div><FriendsList /></div>}
+        {activeTab === 'birthdays' && <div><Birthday /></div>}
+        {activeTab === 'city' && <div><CityFriends /></div>}
       </div>
     </div>
   )
 }
-
-
-

@@ -3,6 +3,23 @@
 @tailwind utilities;
 
 /* ============================================
+   ⚠️⚠️⚠️ ADVERTENCIA IMPORTANTE ⚠️⚠️⚠️
+   
+   NO MODIFICAR ESTE ARCHIVO DIRECTAMENTE
+   
+   Este archivo es solo REFERENCIA.
+   Para hacer cambios de CSS:
+   1. Ver este archivo para entender el estilo
+   2. Aplicar el código en:
+      - index.css (variables y estilos globales)
+      - layout.mobile.css (estilos mobile)
+      - Otros archivos CSS específicos
+   
+   Ver REGLAS_DESARROLLO.md para más info
+   ============================================ */
+
+
+/* ============================================
    CSS VARIABLES - LIGHT & DARK MODE
    ============================================ */
 
@@ -368,9 +385,16 @@ body {
     margin-right: 350px;
     overflow-y: auto;
     overflow-x: hidden;
-    /* padding: 2rem; */
+    padding: 2rem;
     background-color: var(--bg-main);
-    transition: background-color 0.3s ease;
+    transition: margin-left 0.3s ease, background-color 0.3s ease;
+}
+
+/* Desktop: agregar padding horizontal adicional */
+@media (min-width: 769px) {
+    .main-content {
+        padding: 2rem 3rem;
+    }
 }
 
 .main-content.full-width {
@@ -515,7 +539,7 @@ body {
     }
 
     .quick-search {
-        display: none;
+        display: none !important;
     }
 }
 

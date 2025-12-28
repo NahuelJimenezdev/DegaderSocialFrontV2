@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { Camera } from 'lucide-react';
+
 
 /**
  * Componente para el cover, avatar y botón de editar perfil
@@ -30,9 +30,7 @@ const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
                   e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
                 }}
               />
-              <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition">
-                <Camera size={16} />
-              </button>
+
             </div>
 
             <div className="flex-1 pb-2">

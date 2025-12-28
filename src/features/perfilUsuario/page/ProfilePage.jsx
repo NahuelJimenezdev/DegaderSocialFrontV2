@@ -36,8 +36,8 @@ const ProfilePageContent = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-      {/* Cover + Avatar */}
+    <>
+      {/* Cover + Avatar - Fuera del container para ocupar todo el ancho */}
       <ProfileCover
         user={user}
         avatarUrl={avatarUrl}
@@ -45,43 +45,47 @@ const ProfilePageContent = () => {
         onEditClick={() => setShowEditModal(true)}
       />
 
-      {/* Info del usuario + Stats */}
-      <ProfileInfo user={user} stats={userStats} />
+      {/* Resto del contenido dentro del page-container */}
+      <div className="page-container">
+        {/* Info del usuario + Stats */}
+        <ProfileInfo user={user} stats={userStats} />
 
-      {/* Tabs */}
-      <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* Tabs */}
+        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Contenido */}
-      <div className="max-w-3xl mx-auto px-4 mt-6 space-y-6">
-        {/* Composer para crear publicación - REPLACED */}
-        <CreatePostCard
-          currentUser={user}
-          onPostCreated={createPost}
-          alwaysExpanded={true}
-          error={postError}
+        {/* Contenido */}
+        <div className="max-w-3xl mx-auto px-4 mt-6 space-y-6">
+          {/* Composer para crear publicación - REPLACED */}
+          <CreatePostCard
+            currentUser={user}
+            onPostCreated={createPost}
+            alwaysExpanded={true}
+            error={postError}
+            showAvatar={false}
+          />
+
+          {/* Lista de publicaciones */}
+          <PostList activeTab={activeTab} />
+        </div>
+
+        {/* Modal de edición de perfil */}
+        <EditProfileModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          user={user}
+          onUpdate={handleProfileUpdate}
+          className="z-1000"
         />
 
-        {/* Lista de publicaciones */}
-        <PostList activeTab={activeTab} />
+        {/* AlertDialog para mensajes de error/éxito */}
+        <AlertDialog
+          isOpen={alertConfig.isOpen}
+          variant={alertConfig.variant}
+          message={alertConfig.message}
+          onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        />
       </div>
-
-      {/* Modal de edición de perfil */}
-      <EditProfileModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        user={user}
-        onUpdate={handleProfileUpdate}
-        className="z-1000"
-      />
-
-      {/* AlertDialog para mensajes de error/éxito */}
-      <AlertDialog
-        isOpen={alertConfig.isOpen}
-        variant={alertConfig.variant}
-        message={alertConfig.message}
-        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
-      />
-    </div>
+    </>
   );
 };
 

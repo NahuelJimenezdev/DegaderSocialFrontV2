@@ -80,67 +80,69 @@ const MensajesPage = () => {
   }), [getOtroParticipante, getUnreadCount, formatearTiempo]);
 
   return (
-    <div className="h-screen bg-white dark:bg-gray-900 overflow-hidden">
-      <div className="container mx-auto h-full max-w-7xl">
-        <ChatProvider
-          conversacionActual={conversacionActual}
-          userId={userId}
-          tabActiva={tabActiva}
-          menuAbierto={menuAbierto}
-          setMenuAbierto={setMenuAbierto}
-          handlers={handlers}
-          helpers={helpers}
-        >
-          <div className="flex h-full border-l border-r border-gray-200 dark:border-gray-700">
-            <ChatListSidebar
-              conversaciones={conversaciones}
-              cargandoConversaciones={cargandoConversaciones}
-              tabActiva={tabActiva}
-              setTabActiva={setTabActiva}
-              pendingCount={pendingCount}
-              mostrarBuscador={mostrarBuscador}
-              setMostrarBuscador={setMostrarBuscador}
-              busquedaGlobal={busquedaGlobal}
-              handleBusquedaGlobal={handleBusquedaGlobal}
-              resultadosBusqueda={resultadosBusqueda}
-              cargandoBusqueda={cargandoBusqueda}
-              seleccionarUsuarioBusqueda={seleccionarUsuarioBusqueda}
-              filtroActivo={filtroActivo}
-              setFiltroActivo={setFiltroActivo}
-            />
+    <ChatProvider
+      conversacionActual={conversacionActual}
+      userId={userId}
+      tabActiva={tabActiva}
+      menuAbierto={menuAbierto}
+      setMenuAbierto={setMenuAbierto}
+      handlers={handlers}
+      helpers={helpers}
+    >
+      <div className="page-container">
+        <div className="flex h-screen overflow-hidden dark:bg-gray-900">
+          <div className="container mx-auto h-full max-w-7xl">
+            <div className="flex h-full border-l border-r border-gray-200 dark:border-gray-700">
+              <ChatListSidebar
+                conversaciones={conversaciones}
+                cargandoConversaciones={cargandoConversaciones}
+                tabActiva={tabActiva}
+                setTabActiva={setTabActiva}
+                pendingCount={pendingCount}
+                mostrarBuscador={mostrarBuscador}
+                setMostrarBuscador={setMostrarBuscador}
+                busquedaGlobal={busquedaGlobal}
+                handleBusquedaGlobal={handleBusquedaGlobal}
+                resultadosBusqueda={resultadosBusqueda}
+                cargandoBusqueda={cargandoBusqueda}
+                seleccionarUsuarioBusqueda={seleccionarUsuarioBusqueda}
+                filtroActivo={filtroActivo}
+                setFiltroActivo={setFiltroActivo}
+              />
 
-            <ChatWindow
-              conversacionActual={conversacionActual}
-              cargando={cargando}
-              mensajes={mensajes}
-              userId={userId}
-              navigate={navigate}
-              mensajesEndRef={mensajesEndRef}
-              nuevoMensaje={nuevoMensaje}
-              setNuevoMensaje={setNuevoMensaje}
-              archivoSeleccionado={archivoSeleccionado}
-              previsualizacionArchivo={previsualizacionArchivo}
-              handleFileSelect={handleFileSelect}
-              handleCancelarArchivo={handleCancelarArchivo}
-              fileInputRef={fileInputRef}
-              mostrarEmojiPicker={mostrarEmojiPicker}
-              setMostrarEmojiPicker={setMostrarEmojiPicker}
-              handleEmojiSelect={handleEmojiSelect}
-              handleEnviarMensaje={handleEnviarMensaje}
-              getOtroParticipante={getOtroParticipante}
+              <ChatWindow
+                conversacionActual={conversacionActual}
+                cargando={cargando}
+                mensajes={mensajes}
+                userId={userId}
+                navigate={navigate}
+                mensajesEndRef={mensajesEndRef}
+                nuevoMensaje={nuevoMensaje}
+                setNuevoMensaje={setNuevoMensaje}
+                archivoSeleccionado={archivoSeleccionado}
+                previsualizacionArchivo={previsualizacionArchivo}
+                handleFileSelect={handleFileSelect}
+                handleCancelarArchivo={handleCancelarArchivo}
+                fileInputRef={fileInputRef}
+                mostrarEmojiPicker={mostrarEmojiPicker}
+                setMostrarEmojiPicker={setMostrarEmojiPicker}
+                handleEmojiSelect={handleEmojiSelect}
+                handleEnviarMensaje={handleEnviarMensaje}
+                getOtroParticipante={getOtroParticipante}
+              />
+            </div>
+
+            {/* AlertDialog Component */}
+            <AlertDialog
+              isOpen={alertConfig.isOpen}
+              onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+              variant={alertConfig.variant}
+              message={alertConfig.message}
             />
           </div>
-        </ChatProvider>
-
-        {/* AlertDialog Component */}
-        <AlertDialog
-          isOpen={alertConfig.isOpen}
-          onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
-          variant={alertConfig.variant}
-          message={alertConfig.message}
-        />
+        </div>
       </div>
-    </div>
+    </ChatProvider>
   );
 };
 

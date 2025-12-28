@@ -20,14 +20,14 @@ const MisCarpetasPage = () => {
     filtros,
     actualizarFiltro,
     jerarquia,
-    
+
     // Modales
     modalAbierto,
     setModalAbierto,
     modalCompartirAbierto,
     setModalCompartirAbierto,
     carpetaSeleccionada,
-    
+
     // Handlers
     handleCrearCarpeta,
     handleEliminarCarpeta,
@@ -83,7 +83,7 @@ const MisCarpetasPage = () => {
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
-              
+
               <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
                 <button
                   onClick={() => setVistaActual('grid')}
@@ -106,7 +106,7 @@ const MisCarpetasPage = () => {
                 <Filter size={16} />
                 Filtros:
               </div>
-              
+
               <select
                 value={filtros.tipo}
                 onChange={(e) => actualizarFiltro('tipo', e.target.value)}

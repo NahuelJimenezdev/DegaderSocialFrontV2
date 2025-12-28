@@ -1,0 +1,6 @@
+/* Eliminar padding superior de py-8 en mobile para el feed */
+@media (max-width: 768px) {
+    .py-8 {
+        padding-top: 0 !important;
+    }
+}

@@ -1,0 +1,33 @@
+/* ============================================
+   ADS SIDEBAR - MOBILE STYLES
+   ============================================ */
+
+/* Ocultar sidebar de anuncios en pantallas móviles y tablets */
+@media (max-width: 1024px) {
+
+    .quick-search,
+    .ads-sidebar,
+    .right-sidebar {
+        display: none !important;
+        visibility: hidden !important;
+    }
+}
+
+/* Ajustar margen del contenido principal cuando no hay sidebar derecho */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-right: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .app-content {
+        grid-template-columns: auto 1fr !important;
+    }
+}
+
+/* En desktop, asegurar que el sidebar se vea */
+@media (min-width: 1025px) {
+    .quick-search {
+        display: block;
+    }
+}

@@ -4,6 +4,8 @@ import AdsSidebar from '../../shared/components/AdsSidebar';
 import BottomNavbar from '../../shared/components/BottomNavbar';
 import '../../shared/styles/index.css';
 import '../../shared/styles/layout.mobile.css';
+import '../../shared/styles/ads.mobile.css';
+import '../../shared/styles/tailwind-mobile-overrides.css';
 import { Outlet, useLocation } from 'react-router-dom';
 import { hideAdsSidebarRoutes, hideSidebarRoutes } from '../../shared/config/hiddenRoutes';
 import Navbar from '../../shared/components/Navbar';

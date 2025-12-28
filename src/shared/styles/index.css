@@ -162,14 +162,31 @@
   --shadow-modal: 0 8px 24px rgba(0, 0, 0, 0.3);
 
   /* ===== VARIABLES LEGACY (para CSS modules) - Dark mode ===== */
+  --bg-navbar: #1e293b;
+  --bg-sidebar: #1e293b;
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-hover: #334155;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  /* Scrollbar - Diseño sutil */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #334155;
+  /* Slate-700 */
+  --scrollbar-thumb-hover: #475569;
+  /* Slate-600 */
+
+  --border-primary: #334155;
+  --border-secondary: #475569;
   --surface: #1a1f3a;
   --bg: #0f1229;
   --bg-soft: #1a1f3a;
   --bg-primary: #1a1f3a;
   --text: #ffffff;
   --muted: #9ca3af;
-  --text-muted: #6b7280;
-  --border: #374151;
   --primary-10: rgba(99, 102, 241, 0.15);
   --success: #10b981;
   --accent: #6366f1;
@@ -188,4 +205,110 @@ body {
   background-color: var(--bg-app);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  margin-top: 70px;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}
+
+/* En mobile, eliminar margin-top porque main-content ya tiene padding-top */
+@media (max-width: 768px) {
+  .app-content {
+    margin-top: 0 !important;
+    height: 100vh !important;
+  }
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-primary);
+  position: fixed;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1;
+  height: 100%;
+  margin-left: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  background-color: var(--bg-main);
+  transition: margin-left 0.3s ease, background-color 0.3s ease;
+}
+
+/* Desktop: padding horizontal adicional */
+@media (min-width: 769px) {
+  .main-content {
+    padding: 2rem 3rem;
+  }
+}
+
+.main-content.no-sidebar {
+  margin-left: 0;
+}
+
+/* ===== CONTENEDOR DE PÁGINA ===== */
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== SCROLLBAR GLOBAL MEJORADO ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Más delgado */
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  /* Redondeado */
+  border: 2px solid transparent;
+  /* Efecto flotante */
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    border-radius: 0;
+    padding: 0 1rem 1rem 1rem;
+    box-shadow: none;
+  }
 }

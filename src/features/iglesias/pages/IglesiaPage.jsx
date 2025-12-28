@@ -504,7 +504,7 @@ export default function IglesiaPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="page-container">
       {/* Header unificado con clases BEM globales */}
       <div className="section-header">
         <div className="section-header__icon-box">
