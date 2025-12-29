@@ -79,6 +79,17 @@ const postService = {
   },
 
   /**
+   * Like or unlike a comment
+   * @param {string} postId - Post ID
+   * @param {string} commentId - Comment ID
+   * @returns {Promise<Object>} Response data
+   */
+  toggleCommentLike: async (postId, commentId) => {
+    const response = await api.post(`/publicaciones/${postId}/comment/${commentId}/like`);
+    return response.data;
+  },
+
+  /**
    * Add comment to a post
    * @param {string} postId - Post ID
    * @param {string} contenido - Comment content

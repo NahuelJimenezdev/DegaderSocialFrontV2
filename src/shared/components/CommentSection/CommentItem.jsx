@@ -124,10 +124,20 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                                 </span>
                             </div>
 
-                            {/* Heart Icon moved here (Top Right) */}
-                            <button onClick={toggleLike} className={`flex items-center gap-1 ${isLiked ? 'text-red-500' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}>
-                                <Heart size={14} className={isLiked ? "fill-current" : ""} />
-                            </button>
+                            {/* Heart Icon with Counter (Top Right) */}
+                            <div className="flex flex-col items-center gap-0.5">
+                                <button
+                                    onClick={toggleLike}
+                                    className={`flex items-center gap-1 ${isLiked ? 'text-red-500' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
+                                >
+                                    <Heart size={14} className={isLiked ? "fill-current" : ""} />
+                                </button>
+                                {likesCount > 0 && (
+                                    <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">
+                                        {likesCount}
+                                    </span>
+                                )}
+                            </div>
                         </div>
 
                         {/* 2. Mensaje Escrito (Content Row) */}
@@ -136,7 +146,7 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                                  Using simple split/map to avoid dangerous HTML or complex parsing.
                                  Regex matches @ followed by word characters. 
                              */}
-                            {comment.contenido.split(/(@[\w\u00C0-\u00FF]+(?: [\w\u00C0-\u00FF]+)?)/g).map((part, index) =>
+                            {comment.contenido.split(/(@[\w\u00C0-\u00FF]+)/g).map((part, index) =>
                                 part.startsWith('@') ? (
                                     <span key={index} className="text-violet-600 dark:text-violet-400 font-medium">
                                         {part}

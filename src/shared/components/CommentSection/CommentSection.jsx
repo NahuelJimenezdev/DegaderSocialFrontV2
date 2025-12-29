@@ -3,6 +3,7 @@ import CommentItem from './CommentItem';
 import { getUserAvatar } from '../../utils/avatarUtils';
 import EmojiPicker from '../../components/EmojiPicker/EmojiPicker';
 import { Image as ImageIcon, X, Smile, SendHorizontal, Gift } from 'lucide-react';
+import MentionAutocomplete from '../MentionAutocomplete/MentionAutocomplete';
 
 const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMobileFormat = false, highlightCommentId }) => {
     const [newComment, setNewComment] = useState('');
@@ -11,6 +12,12 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [replyingTo, setReplyingTo] = useState(null); // { id: string, username: string }
+
+    // Mention autocomplete state
+    const [showMentions, setShowMentions] = useState(false);
+    const [mentionQuery, setMentionQuery] = useState('');
+    const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+    const [cursorPosition, setCursorPosition] = useState(0);
 
     const fileInputRef = useRef(null);
     const mainInputRef = useRef(null); // Ref for the main input
@@ -103,6 +110,57 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
         }
     };
 
+    // Handle input change and detect @ for mentions
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        const cursorPos = e.target.selectionStart;
+
+        setNewComment(value);
+        setCursorPosition(cursorPos);
+
+        // Detect @ symbol
+        const textBeforeCursor = value.substring(0, cursorPos);
+        const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+
+        if (lastAtIndex !== -1) {
+            const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+            // Check if there's no space after @
+            if (!textAfterAt.includes(' ')) {
+                setMentionQuery(textAfterAt);
+                setShowMentions(true);
+
+                // Calculate position for autocomplete dropdown
+                if (mainInputRef.current) {
+                    const rect = mainInputRef.current.getBoundingClientRect();
+                    setMentionPosition({
+                        top: rect.bottom + window.scrollY,
+                        left: rect.left + window.scrollX
+                    });
+                }
+            } else {
+                setShowMentions(false);
+            }
+        } else {
+            setShowMentions(false);
+        }
+    };
+
+    // Handle mention selection
+    const handleMentionSelect = (user) => {
+        const textBeforeCursor = newComment.substring(0, cursorPosition);
+        const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+        const textAfterCursor = newComment.substring(cursorPosition);
+
+        const newText = newComment.substring(0, lastAtIndex) + `@${user.username} ` + textAfterCursor;
+        setNewComment(newText);
+        setShowMentions(false);
+
+        // Focus back on input
+        if (mainInputRef.current) {
+            mainInputRef.current.focus();
+        }
+    };
+
     const userAvatar = getUserAvatar(currentUser);
 
     // Render Input Form (Reusable)
@@ -158,9 +216,17 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                         ref={mainInputRef}
                         type="text"
                         value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
+                        onChange={handleInputChange}
                         placeholder={isMobileFormat ? (replyingTo ? `Respondiendo a ${replyingTo.username}...` : `Agrega un comentario...`) : "Escribe un comentario..."}
                         className={`flex-1 bg-transparent border-0 text-sm focus:ring-0 focus:outline-none text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 ${isMobileFormat ? 'py-1' : 'py-2 pl-3 pr-24'}`}
+                    />
+
+                    {/* Mention Autocomplete */}
+                    <MentionAutocomplete
+                        show={showMentions}
+                        position={mentionPosition}
+                        query={mentionQuery}
+                        onSelect={handleMentionSelect}
                     />
                     {/* Hidden File Input */}
                     <input
