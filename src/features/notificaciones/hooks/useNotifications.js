@@ -129,11 +129,6 @@ export const useNotifications = (user) => {
             }
 
 
-            // Debug: Log incoming notification structure
-            console.log('📨 [NOTIF] Nueva notificación recibida:', noti);
-            console.log('📨 [NOTIF] Emisor:', noti.emisor);
-            console.log('📨 [NOTIF] RemitenteId:', noti.remitenteId);
-
             setNotifications(prev => {
                 if (prev.some(existingNoti => existingNoti._id === noti._id)) return prev;
                 return [noti, ...prev];

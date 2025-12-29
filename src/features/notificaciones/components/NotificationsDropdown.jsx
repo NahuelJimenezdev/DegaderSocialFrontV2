@@ -223,18 +223,17 @@ export default function NotificationsDropdown() {
                   let displayAvatar = null;
                   let displayMessage = n.mensaje || n.contenido;
 
-                  const remitente = n.remitenteId || n.emisor || n.datos;
-                  if (remitente) {
-                    const nombre = getNombreCompleto(remitente);
-                    displayName = nombre !== 'Usuario' ? nombre : displayName;
-                    displayAvatar = getUserAvatar(remitente);
-                  }
-
-                  // Manejo específico para notificaciones de likes
-                  if (n.tipo === 'like_post' && n.emisor) {
+                  // Siempre priorizar emisor si existe (tiene estructura correcta)
+                  if (n.emisor) {
                     const nombre = getNombreCompleto(n.emisor);
                     displayName = nombre !== 'Usuario' ? nombre : displayName;
                     displayAvatar = getUserAvatar(n.emisor);
+                  } else if (n.remitenteId || n.datos) {
+                    // Fallback para notificaciones antiguas sin emisor
+                    const remitente = n.remitenteId || n.datos;
+                    const nombre = getNombreCompleto(remitente);
+                    displayName = nombre !== 'Usuario' ? nombre : displayName;
+                    displayAvatar = getUserAvatar(remitente);
                   }
 
                   if (['solicitud_grupo', 'solicitud_grupo_aprobada', 'solicitud_grupo_rechazada', 'promocion_admin_grupo'].includes(n.tipo)) {
