@@ -31,9 +31,9 @@ export default function FriendsTabs({ birthdaysTodayCount = 0, onChange }) {
         >
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             {/* Desktop label */}
-            <span className="hidden md:inline">{tab.label}</span>
+            <span className={styles.desktopLabel}>{tab.label}</span>
             {/* Mobile label */}
-            <span className="md:hidden">{tab.labelMobile || tab.label}</span>
+            <span className={styles.mobileLabel}>{tab.labelMobile || tab.label}</span>
             {tab.id === 'birthdays' && birthdaysTodayCount > 0 && (
               <span className={`${styles.tabBadge} ${badgePulse ? styles.tabBadgePulse : ''}`} aria-hidden>
                 <span className={styles.tabBadgeCount}>{birthdaysTodayCount}</span>

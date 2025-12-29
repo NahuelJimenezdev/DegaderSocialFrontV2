@@ -230,6 +230,13 @@ export default function NotificationsDropdown() {
                     displayAvatar = getUserAvatar(remitente);
                   }
 
+                  // Manejo específico para notificaciones de likes
+                  if (n.tipo === 'like_post' && n.emisor) {
+                    const nombre = getNombreCompleto(n.emisor);
+                    displayName = nombre !== 'Usuario' ? nombre : displayName;
+                    displayAvatar = getUserAvatar(n.emisor);
+                  }
+
                   if (['solicitud_grupo', 'solicitud_grupo_aprobada', 'solicitud_grupo_rechazada', 'promocion_admin_grupo'].includes(n.tipo)) {
                     if (n.emisor) {
                       const nombre = getNombreCompleto(n.emisor);

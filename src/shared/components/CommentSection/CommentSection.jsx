@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import CommentItem from './CommentItem';
 import { getUserAvatar } from '../../utils/avatarUtils';
 import EmojiPicker from '../../components/EmojiPicker/EmojiPicker';
-import { Image as ImageIcon, X, Smile, Send, Gift } from 'lucide-react';
+import { Image as ImageIcon, X, Smile, SendHorizontal, Gift } from 'lucide-react';
 
 const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMobileFormat = false, highlightCommentId }) => {
     const [newComment, setNewComment] = useState('');
@@ -182,8 +182,8 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                                 <button type="button" onClick={() => fileInputRef.current?.click()} className="p-1.5 text-gray-500 hover:bg-gray-200 rounded-full"><ImageIcon size={20} /></button>
                             </>
                         ) : (
-                            // Mobile specific nice icons inside input often seen
-                            <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="text-gray-500"><Gift size={20} /></button>
+                            // Mobile: Image upload button
+                            <button type="button" onClick={() => fileInputRef.current?.click()} className="text-gray-500"><ImageIcon size={20} /></button>
                         )}
 
                         <button
@@ -191,7 +191,7 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                             disabled={(!newComment.trim() && !selectedImage) || isSubmitting}
                             className="text-blue-500 font-semibold text-sm disabled:opacity-50"
                         >
-                            {isSubmitting ? '...' : (isMobileFormat ? <Send size={20} className="rotate-45 mb-1" /> : <Send size={18} />)}
+                            {isSubmitting ? '...' : <SendHorizontal size={isMobileFormat ? 20 : 18} />}
                         </button>
                     </div>
                 </div>
