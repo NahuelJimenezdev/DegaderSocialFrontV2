@@ -12,7 +12,7 @@ import { Send } from 'lucide-react';
  * @param {boolean} alwaysExpanded - Si siempre está expandido
  * @param {string} error - Mensaje de error
  */
-const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, error = null, showAvatar = true }) => {
+const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, error = null, showAvatar = false }) => {
     // ... (state vars same)
     const [content, setContent] = useState('');
     const [isExpanded, setIsExpanded] = useState(alwaysExpanded);

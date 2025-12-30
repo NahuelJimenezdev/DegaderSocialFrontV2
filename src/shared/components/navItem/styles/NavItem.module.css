@@ -11,3 +11,7 @@
   transition: all 0.2s ease;
   position: relative;
 }
+
+:global(.dark) .navLink {
+  color: #e5e7eb;
+}
