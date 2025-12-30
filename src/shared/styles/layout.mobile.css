@@ -32,11 +32,9 @@
         margin-top: 0 !important;
     }
 
-    /* Aumentar padding interno de todos los componentes tipo card */
-    .card,
-    [class*="Card"],
-    [class*="card"] {
-        padding: 18px !important;
+    /* Aumentar padding interno del contenedor principal de páginas */
+    .page-container {
+        padding: 20px 16px !important;
     }
 
     /* Último elemento debe tener espacio antes del bottom navbar */
