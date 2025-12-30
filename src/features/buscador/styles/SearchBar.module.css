@@ -26,7 +26,7 @@
 }
 
 .inputWrap:focus-within {
-  background-color: #ffffff;
+  background-color: #f1f3f4;
   box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
   outline: none;
 }

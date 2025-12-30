@@ -4,7 +4,8 @@
 .navbar-search-container {
   display: flex;
   flex: 1;
-  max-width: 32rem; /* 512px */
+  max-width: 32rem;
+  /* 512px */
 }
 
 .bottom-navbar {
@@ -86,6 +87,7 @@
 /* Tablet (medium screens) - Keep everything visible */
 @media (min-width: 769px) and (max-width: 1024px) {
   .navbar-search-container {
-    max-width: 24rem; /* 384px - slightly smaller for tablets */
+    max-width: 24rem;
+    /* 384px - slightly smaller for tablets */
   }
 }
