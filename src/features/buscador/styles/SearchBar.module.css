@@ -31,7 +31,7 @@
   outline: none;
 }
 
-/* Dark mode */
+/* Dark mode - Class-based */
 :global(.dark) .inputWrap {
   background-color: #303134;
   border: none;
@@ -48,6 +48,25 @@
   outline: none;
 }
 
+/* Dark mode - Media query based */
+@media (prefers-color-scheme: dark) {
+  .inputWrap {
+    background-color: #303134;
+    border: none;
+    outline: none;
+  }
+
+  .inputWrap:hover {
+    background-color: #3c4043;
+  }
+
+  .inputWrap:focus-within {
+    background-color: #202124;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    outline: none;
+  }
+}
+
 .searchIcon {
   color: #5f6368;
   flex-shrink: 0;
@@ -56,6 +75,12 @@
 
 :global(.dark) .searchIcon {
   color: #9aa0a6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .searchIcon {
+    color: #9aa0a6;
+  }
 }
 
 .input {
@@ -83,12 +108,24 @@
   color: #e8eaed;
 }
 
+@media (prefers-color-scheme: dark) {
+  .input {
+    color: #e8eaed;
+  }
+}
+
 .input::placeholder {
   color: #5f6368;
 }
 
 :global(.dark) .input::placeholder {
   color: #9aa0a6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .input::placeholder {
+    color: #9aa0a6;
+  }
 }
 
 .clearBtn {
