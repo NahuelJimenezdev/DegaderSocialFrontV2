@@ -615,8 +615,15 @@
   .desktopLabel {
     display: inline;
   }
-  
+
   .mobileLabel {
     display: none;
+  }
+}
+
+/* Mobile spacing improvements */
+@media (max-width: 768px) {
+  .friendsCard {
+    padding: 18px;
   }
 }

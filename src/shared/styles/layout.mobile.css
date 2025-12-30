@@ -32,6 +32,13 @@
         margin-top: 0 !important;
     }
 
+    /* Aumentar padding interno de todos los componentes tipo card */
+    .card,
+    [class*="Card"],
+    [class*="card"] {
+        padding: 18px !important;
+    }
+
     /* Último elemento debe tener espacio antes del bottom navbar */
     .main-content>*:last-child {
         margin-bottom: 4px;
