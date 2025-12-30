@@ -3,8 +3,8 @@
 /* Desktop/Tablet (default) - Show everything */
 .navbar-search-container {
   display: flex;
-  max-width: 28rem;
-  /* 448px - más sutil */
+  flex: 1;
+  max-width: 32rem;
   /* 512px */
 }
 
