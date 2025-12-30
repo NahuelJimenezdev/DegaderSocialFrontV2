@@ -60,7 +60,7 @@
 
 .input {
   flex: 1;
-  background: transparent;
+  background: transparent !important;
   border: none;
   outline: none;
   padding: 0;
