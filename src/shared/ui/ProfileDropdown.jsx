@@ -153,7 +153,7 @@ const ProfileDropdown = () => {
                   <button
                     key={index}
                     onClick={() => handleMenuClick(item.path)}
-                    className="mobile-sidebar-nav-item"
+                    className="mobile-sidebar-nav-item dark:text-white dark:hover:bg-gray-700"
                   >
                     <Icon size={18} />
                     <span>{item.label}</span>

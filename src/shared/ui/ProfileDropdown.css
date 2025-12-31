@@ -37,7 +37,7 @@
   }
 
   :global(.dark) .mobile-sidebar-nav-item {
-    color: #d1d5db;
+    color: #f9fafb;
   }
 
   :global(.dark) .mobile-sidebar-nav-item:hover {
