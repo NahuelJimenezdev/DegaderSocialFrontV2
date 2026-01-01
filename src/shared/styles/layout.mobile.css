@@ -34,7 +34,7 @@
 
     /* Aumentar padding interno del contenedor principal de páginas */
     .page-container {
-        padding: 20px 16px !important;
+        /* padding: 20px 16px !important; */
     }
 
     /* Último elemento debe tener espacio antes del bottom navbar */
@@ -51,7 +51,7 @@
     }
 
     .main-content {
-        padding-top: calc(var(--navbar-height) + 0.5rem) !important;
+        padding-top: calc(var(--navbar-height) + 1rem) !important;
         padding-bottom: calc(var(--bottom-navbar-height) + 0.75rem) !important;
     }
 }
