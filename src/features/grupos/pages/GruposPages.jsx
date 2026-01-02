@@ -153,8 +153,8 @@ const GruposPages = () => {
     );
   });
 
-  // Clases para Grid (siempre 3 columnas)
-  const gridClasses = "grid grid-cols-3 gap-4";
+  // Clases para Grid (responsivo: 2 columnas en móvil, 3 en desktop)
+  const gridClasses = "grid grid-cols-2 md:grid-cols-3 gap-4";
 
   // Clases para List (una sola columna, diseño horizontal compacto)
   const listClasses = "flex flex-col gap-2";
