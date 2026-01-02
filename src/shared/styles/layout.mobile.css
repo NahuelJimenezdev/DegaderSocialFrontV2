@@ -34,7 +34,7 @@
 
     /* Aumentar padding interno del contenedor principal de páginas */
     .page-container {
-        /* padding: 20px 16px !important; */
+        padding: 20px 16px !important;
     }
 
     /* Último elemento debe tener espacio antes del bottom navbar */
