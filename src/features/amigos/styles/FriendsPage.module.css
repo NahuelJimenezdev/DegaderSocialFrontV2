@@ -627,3 +627,99 @@
     padding: 18px;
   }
 }
+
+/* Rediseño para móviles pequeños (Moto G, iPhone SE, etc.) */
+@media (max-width: 480px) {
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .avatarWrap {
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
+    margin-bottom: 4px;
+  }
+
+  .avatar,
+  .avatarBlocked {
+    width: 60px;
+    height: 60px;
+  }
+
+  .blockedBadge {
+    width: 24px;
+    height: 24px;
+    right: 0;
+    bottom: 0;
+  }
+
+  .onlineBadge,
+  .offlineBadge {
+    width: 16px;
+    height: 16px;
+    border-width: 3px;
+    right: 2px;
+    bottom: 2px;
+  }
+
+  .meta {
+    width: 100%;
+    text-align: left;
+  }
+
+  .nameRow {
+    margin-bottom: 4px;
+  }
+
+  .name {
+    font-size: 16px;
+    /* 1.1rem approx */
+    white-space: normal;
+    /* Permitir wrap si es muy largo */
+    max-width: 100%;
+  }
+
+  .subtitle {
+    margin-top: 2px;
+    flex-wrap: wrap;
+    /* Permitir que location baje si es necesario */
+  }
+
+  .onlineText,
+  .offlineText {
+    /* Opcional: Ocultar texto de estado para limpiar UI */
+    /* display: none; */
+    font-size: 12px;
+  }
+
+  .cityInfo {
+    margin-left: 0;
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    gap: 16px;
+    /* Más espacio entre iconos */
+  }
+
+  .iconBtn {
+    padding: 8px;
+    /* Touch target más grande */
+  }
+
+  .iconBtn svg {
+    width: 20px;
+    height: 20px;
+  }
+}
