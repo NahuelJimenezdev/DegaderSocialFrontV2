@@ -100,8 +100,8 @@ const MisCarpetasPage = () => {
           </div>
 
           {/* Fila 2: Filtros Avanzados */}
-          <div className="flex flex-wrap gap-3 items-center pt-2 border-t border-gray-100 dark:border-gray-700">
-            <div className="flex items-center gap-2 text-gray-500 text-sm font-medium mr-2">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 items-stretch sm:items-center pt-2 border-t border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-2 text-gray-500 text-sm font-medium sm:mr-2 mb-2 sm:mb-0">
               <Filter size={16} />
               Filtros:
             </div>
@@ -109,7 +109,7 @@ const MisCarpetasPage = () => {
             <select
               value={filtros.tipo}
               onChange={(e) => actualizarFiltro('tipo', e.target.value)}
-              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">Todos los tipos</option>
               <option value="personal">Personal</option>
@@ -120,7 +120,7 @@ const MisCarpetasPage = () => {
             <select
               value={filtros.area}
               onChange={(e) => actualizarFiltro('area', e.target.value)}
-              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">Todas las Áreas</option>
               {jerarquia.areas?.map(area => (
@@ -131,7 +131,7 @@ const MisCarpetasPage = () => {
             <select
               value={filtros.cargo}
               onChange={(e) => actualizarFiltro('cargo', e.target.value)}
-              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500"
+              className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">Todos los Cargos</option>
               {jerarquia.cargos?.map(cargo => (
@@ -139,7 +139,7 @@ const MisCarpetasPage = () => {
               ))}
             </select>
 
-            <label className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+            <label className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 w-full sm:w-auto justify-center sm:justify-start">
               <input
                 type="checkbox"
                 checked={filtros.compartidas}
