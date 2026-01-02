@@ -86,15 +86,17 @@ export default function IglesiaPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Building2 className="text-indigo-600" />
-          Encuentra tu Iglesia
+          {/* <Building2 className="text-indigo-600" /> */}
+          ¡Busca tu Iglesia,
+          <br />
+          o crea una!
         </h3>
         <button
           onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
         >
           <Plus size={18} />
-          Registrar mi Iglesia
+          {/* Crear Iglesia */}
         </button>
       </div>
 
