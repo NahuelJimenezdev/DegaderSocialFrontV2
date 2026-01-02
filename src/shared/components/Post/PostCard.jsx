@@ -59,6 +59,15 @@ const PostCard = ({
     const fullName = `${user?.nombres?.primero || ''} ${user?.apellidos?.primero || ''}`.trim() ||
         user?.email?.split('@')[0] || 'Usuario';
 
+    // Smart name truncation for mobile
+    const getShortName = () => {
+        if (!isMobile) return fullName;
+        const [firstName, ...lastNames] = fullName.split(' ');
+        if (lastNames.length === 0) return firstName;
+        const lastNameInitial = lastNames[0]?.charAt(0)?.toUpperCase();
+        return `${firstName} ${lastNameInitial}.`;
+    };
+
     const isLiked = isFeedMode
         ? post.likes.includes(currentUser?._id)
         : post.likes.includes(context.user?._id);
@@ -145,54 +154,64 @@ const PostCard = ({
         <>
             <div className={`bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 mb-4 overflow-hidden ${post.grupo ? 'border-t-4 border-t-indigo-500' : ''}`}>
                 {/* Header */}
-                <div className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="relative group cursor-pointer">
+                <div className="p-4 relative">
+                    <div className="flex items-start gap-3 pr-8">
+                        {/* Avatar - Perfect Circle */}
+                        <div className="relative group cursor-pointer flex-shrink-0">
                             <img
                                 src={avatar}
                                 alt={fullName}
-                                className="w-10 h-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
+                                className="w-10 h-10 rounded-full object-cover aspect-square ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
+                                style={{ clipPath: 'circle(50%)' }}
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`;
                                 }}
                             />
                         </div>
-                        <div>
-                            <h3 className="font-bold text-gray-900 dark:text-white text-sm hover:underline cursor-pointer">
-                                {fullName}
+
+                        {/* Name & Metadata */}
+                        <div className="flex-1 min-w-0">
+                            {/* Name - Smart Truncation */}
+                            <h3 className="font-bold text-gray-900 dark:text-white text-sm hover:underline cursor-pointer truncate">
+                                {getShortName()}
                             </h3>
 
-                            {/* Group Indicator (feed only) */}
-                            {isFeedMode && post.grupo && (
-                                <div className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-medium mt-0.5">
-                                    <span>Publicado en el grupo:</span>
-                                    <span className="hover:underline cursor-pointer font-bold">{post.grupo.nombre}</span>
-                                    <span className="text-gray-400 font-normal">
-                                        ({post.grupo.tipo === 'privado' ? 'Privado' : 'Público'})
+                            {/* Metadata - Two Lines */}
+                            <div className="space-y-0.5">
+                                {/* Line 1: Group Name (if exists) */}
+                                {isFeedMode && post.grupo && (
+                                    <div className="flex items-center gap-1 text-[11px] leading-tight">
+                                        <span className="font-medium text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">
+                                            {post.grupo.nombre}
+                                        </span>
+                                        <span className="text-gray-400">
+                                            · {post.grupo.tipo === 'privado' ? 'Privado' : 'Público'}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {/* Line 2: Time + Privacy Icon */}
+                                <div className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 leading-tight">
+                                    <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: es })}</span>
+                                    <span className="flex-shrink-0">
+                                        {post.privacidad === 'publico' ? <Globe size={12} /> : post.privacidad === 'amigos' ? <Users size={12} /> : <Lock size={12} />}
                                     </span>
                                 </div>
-                            )}
-
-                            <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: es })}</span>
-                                <span>•</span>
-                                <span className="flex items-center">
-                                    {post.privacidad === 'publico' ? <Globe size={12} /> : post.privacidad === 'amigos' ? <Users size={12} /> : <Lock size={12} />}
-                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    {/* Three Dots - Absolute Positioned */}
+                    <button className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                         <MoreHorizontal size={18} />
                     </button>
                 </div>
 
-                {/* Content */}
+                {/* Content - Improved Spacing */}
                 {post.contenido && (
-                    <div className="px-4 pb-3">
-                        <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-relaxed text-justify">
+                    <div className="px-4 pb-3 pt-1">
+                        <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-[1.6]">
                             {post.contenido}
                         </p>
                     </div>
