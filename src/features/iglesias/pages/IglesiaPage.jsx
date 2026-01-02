@@ -82,36 +82,49 @@ export default function IglesiaPage() {
     await handleCrearIglesia(e, refreshUser);
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar si es mobile o desktop (JS fallback para mayor seguridad)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const renderIglesiasTab = () => (
     <div className="space-y-6">
-      {/* Versión MÓBIL (< 768px) */}
-      <div className="flex justify-between items-center md:hidden">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          ¡Busca tu Iglesia, <br /> o crea una!
-        </h3>
-        <button
-          onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
-        >
-          <Plus size={18} />
-          {/* Crear Iglesia */}
-        </button>
-      </div>
-
-      {/* Versión DESKTOP (>= 768px) */}
-      <div className="hidden md:flex justify-between items-center">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Building2 className="text-indigo-600" />
-          Encuentra tu Iglesia
-        </h3>
-        <button
-          onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
-        >
-          <Plus size={18} />
-          Registrar mi Iglesia
-        </button>
-      </div>
+      {isMobile ? (
+        /* Versión MÓBIL (< 768px) */
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            ¡Busca tu Iglesia, <br /> o crea una!
+          </h3>
+          <button
+            onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
+          >
+            <Plus size={18} />
+          </button>
+        </div>
+      ) : (
+        /* Versión DESKTOP (>= 768px) */
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <Building2 className="text-indigo-600" />
+            Encuentra tu Iglesia
+          </h3>
+          <button
+            onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
+          >
+            <Plus size={18} />
+            Registrar mi Iglesia
+          </button>
+        </div>
+      )}
 
       <CreateIglesiaForm
         mostrarForm={mostrarFormIglesia}
