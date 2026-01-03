@@ -65,11 +65,22 @@ export default function NotificationCard({
   // Manejar click en la card (fuera de botones)
   const handleCardClick = (e) => {
     // Solo si no es un botón y no está procesada
-    if (!e.target.closest('button') && !isProcessed && onProfileClick) {
-      const userId = remitenteId?._id || remitenteId;
-      if (userId) {
-        logger.log('🔗 Navegando al perfil del usuario:', userId);
-        onProfileClick(userId);
+    if (!e.target.closest('button') && !isProcessed) {
+      // Si es notificación de mensaje pendiente, redirigir a mensajes pendientes
+      if (tipo === 'mensaje_pendiente' || notification?.tipo === 'mensaje_pendiente') {
+        logger.log('📬 Navegando a mensajes pendientes');
+        // Usar window.location para navegar a mensajes con tab=pending
+        window.location.href = '/mensajes?tab=pending';
+        return;
+      }
+
+      // Para otros tipos, navegar al perfil
+      if (onProfileClick) {
+        const userId = remitenteId?._id || remitenteId;
+        if (userId) {
+          logger.log('🔗 Navegando al perfil del usuario:', userId);
+          onProfileClick(userId);
+        }
       }
     }
   };

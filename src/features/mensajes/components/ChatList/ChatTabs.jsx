@@ -14,20 +14,40 @@ const ChatTabs = ({ tabActiva, setTabActiva, pendingCount }) => {
     ];
 
     return (
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-1 md:gap-2 mb-4 w-full">
             {tabs.map(tab => (
                 <button
                     key={tab.id}
                     onClick={() => setTabActiva(tab.id)}
-                    className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors relative ${tabActiva === tab.id
+                    className={`
+                        flex-1 
+                        py-2 px-1 md:px-4 
+                        rounded-lg 
+                        text-[11px] md:text-sm 
+                        font-medium 
+                        transition-colors 
+                        relative 
+                        flex items-center justify-center
+                        ${tabActiva === tab.id
                             ? 'bg-indigo-500 text-white'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        }`}
+                        }
+                    `}
                     aria-label={`${tab.label}${tab.count ? ` (${tab.count} pendientes)` : ''}`}
                 >
-                    {tab.label}
+                    <span className="truncate">{tab.label}</span>
                     {tab.count > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        <span className={`
+                            ml-1 md:ml-1.5 
+                            ${tabActiva === tab.id ? 'bg-indigo-400' : 'bg-red-500'} 
+                            text-white 
+                            text-[10px] md:text-xs 
+                            font-bold 
+                            rounded-full 
+                            min-w-[1.25rem] h-5 
+                            flex items-center justify-center 
+                            px-1
+                        `}>
                             {tab.count > 9 ? '9+' : tab.count}
                         </span>
                     )}

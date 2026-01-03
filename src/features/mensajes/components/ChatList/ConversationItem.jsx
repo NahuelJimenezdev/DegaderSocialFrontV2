@@ -141,7 +141,7 @@ const ConversationItem = ({ conversacion }) => {
                                 className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-300"
                             >
                                 <Archive size={16} />
-                                Archivar
+                                {tabActiva === 'archived' ? 'Desarchivar' : 'Archivar'}
                             </button>
                             <button
                                 onClick={(e) => {

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatarUtils';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
@@ -23,12 +23,19 @@ const ChatWindow = ({
     setMostrarEmojiPicker,
     handleEmojiSelect,
     handleEnviarMensaje,
-    getOtroParticipante
+    getOtroParticipante,
+    handleCerrarChat // Handler para botón atrás móvil
 }) => {
     const otroUsuario = conversacionActual ? getOtroParticipante(conversacionActual) : null;
 
     return (
-        <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 overflow-hidden">
+        <div className={`
+            flex-1 flex flex-col bg-white dark:bg-gray-900 overflow-hidden
+            ${conversacionActual
+                ? 'max-md:fixed max-md:inset-0 max-md:z-50'
+                : 'max-md:hidden'
+            }
+        `}>
             {!conversacionActual || cargando ? (
                 <div className="flex items-center justify-center h-full">
                     <div className="text-center">
@@ -45,6 +52,15 @@ const ChatWindow = ({
                 <>
                     {/* Header del chat */}
                     <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3 bg-white dark:bg-gray-900">
+                        {/* Botón atrás - solo visible en móvil */}
+                        <button
+                            onClick={handleCerrarChat}
+                            className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                            aria-label="Volver a lista de mensajes"
+                        >
+                            <ArrowLeft size={20} className="text-gray-700 dark:text-gray-300" />
+                        </button>
+
                         {otroUsuario && (
                             <>
                                 <img

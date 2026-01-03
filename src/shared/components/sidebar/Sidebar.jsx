@@ -1,9 +1,14 @@
 import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video } from "lucide-react";
 import NavItem from "../navItem/NavItem";
+import { useAuth } from '../../../context/AuthContext';
+import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
 import styles from './styles/Sidebar.module.css';
 import '../../../shared/styles/sidebar.style.css';
 
 const Sidebar = () => {
+  const { user } = useAuth();
+  const pendingCount = usePendingMessageCounter(user?._id || user?.id);
+
   return (
     <>
       <aside className="sidebar">
@@ -16,7 +21,7 @@ const Sidebar = () => {
             <NavItem to="/amigos" icon={Users} label="Amigos" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/mensajes" icon={MessageCircle} label="Mensajes" />
+            <NavItem to="/mensajes" icon={MessageCircle} label="Mensajes" badge={pendingCount} />
           </div>
           <div className="sidebar-items">
             <NavItem to="/Mis_reuniones" icon={Video} label="Mis Reuniones" />

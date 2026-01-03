@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { logger } from '../../../shared/utils/logger';
 import { getSocket } from '../../../shared/lib/socket';
 import conversationService from '../../../api/conversationService';
+import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
 import api from '../../../api/config';
 
 export const useChatController = () => {
@@ -34,9 +35,14 @@ export const useChatController = () => {
     const mensajesEndRef = useRef(null);
     const timeoutRef = useRef(null);
     const fileInputRef = useRef(null);
+    const isFetching = useRef(false); // Flag para evitar fetches concurrentes
+    const conversationCreationLock = useRef({}); // Lock para evitar creación duplicada de conversaciones
+
+    // Hook para actualizar contador de mensajes pendientes
+    const { refreshPendingCount } = usePendingMessageCounter(userId);
 
     // Helper local: Formatear tiempo
-    const formatearTiempo = (fecha) => {
+    const formatearTiempo = React.useCallback((fecha) => {
         if (!fecha) return '';
         const now = new Date();
         const msgDate = new Date(fecha);
@@ -50,19 +56,19 @@ export const useChatController = () => {
         if (hours < 24) return `${hours}h`;
         if (days < 7) return `${days}d`;
         return msgDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-    };
+    }, []);
 
     // Helper local: Obtener otro participante
-    const getOtroParticipante = (conv) => {
+    const getOtroParticipante = React.useCallback((conv) => {
         if (!conv || !conv.participantes) return null;
         return conv.participantes.find(p => p._id !== userId);
-    };
+    }, [userId]);
 
     // Helper local: Contador unread
-    const getUnreadCount = (conv) => {
+    const getUnreadCount = React.useCallback((conv) => {
         const unread = conv.mensajesNoLeidos?.find(m => m.usuario?.toString() === userId?.toString());
         return unread?.cantidad || 0;
-    };
+    }, [userId]);
 
     // Cargar contador de pendientes
     useEffect(() => {
@@ -124,7 +130,15 @@ export const useChatController = () => {
 
         if (targetUserId && userId && !paramConvId) {
             const loadConversation = async () => {
+                // Verificar si ya hay una solicitud en progreso para este usuario
+                const lockKey = `user:${targetUserId}`;
+                if (conversationCreationLock.current[lockKey]) {
+                    logger.log('🔒 [DEDUP] Ya hay una solicitud en progreso para:', lockKey);
+                    return;
+                }
+
                 try {
+                    conversationCreationLock.current[lockKey] = true;
                     setCargando(true);
                     const response = await conversationService.getOrCreateConversation(targetUserId);
                     const conv = response.data?.conversation || response.conversation || response.data;
@@ -143,6 +157,7 @@ export const useChatController = () => {
                     logger.error('Error al cargar conversación:', error);
                 } finally {
                     setCargando(false);
+                    delete conversationCreationLock.current[lockKey];
                 }
             };
             loadConversation();
@@ -156,6 +171,16 @@ export const useChatController = () => {
                 setCargando(true);
                 if (paramConvId.startsWith('user:')) {
                     const targetUserId = paramConvId.substring(5);
+
+                    // Verificar si ya hay una solicitud en progreso para este usuario
+                    const lockKey = `user:${targetUserId}`;
+                    if (conversationCreationLock.current[lockKey]) {
+                        logger.log('🔒 [DEDUP] Ya hay una solicitud en progreso para:', lockKey);
+                        return;
+                    }
+
+                    conversationCreationLock.current[lockKey] = true;
+
                     const response = await conversationService.getOrCreateConversation(targetUserId);
                     const conv = response.data?.conversation || response.conversation || response.data;
                     if (conv) {
@@ -167,6 +192,8 @@ export const useChatController = () => {
                         const convs = convResponse.data?.conversations || convResponse.conversations || convResponse.data || [];
                         setConversaciones(Array.isArray(convs) ? convs : []);
                     }
+
+                    delete conversationCreationLock.current[lockKey];
                 } else {
                     const response = await conversationService.getConversationById(paramConvId);
                     const conv = response.data?.conversation || response.conversation || response.data;
@@ -191,25 +218,46 @@ export const useChatController = () => {
         if (!socket) return;
 
         const handleNewMessage = (message) => {
-            logger.log('💬 Nuevo mensaje recibido:', message);
+            logger.log('🔍 [DEBUG] newMessage recibido:', {
+                messageId: message._id,
+                conversationId: message.conversationId,
+                timestamp: new Date().toISOString(),
+                conversacionActualId: conversacionActual?._id,
+                tabActiva
+            });
 
             const fetchConvsIfNeeded = async () => {
+                if (isFetching.current) {
+                    logger.log('🔍 [DEBUG] Ya hay fetch en progreso, ignorando duplicado');
+                    return;
+                }
+
+                isFetching.current = true;
+                logger.log('🔍 [DEBUG] Iniciando fetch de conversaciones...');
                 try {
                     const response = await conversationService.getAllConversations(tabActiva);
                     const convs = response.data?.conversations || response.conversations || response.data || [];
                     setConversaciones(Array.isArray(convs) ? convs : []);
+                    logger.log('🔍 [DEBUG] Conversaciones actualizadas:', convs.length);
                 } catch (error) {
                     logger.error('Error al actualizar conversaciones:', error);
+                } finally {
+                    isFetching.current = false;
                 }
             };
 
             if (message.conversationId !== conversacionActual?._id) {
+                logger.log('🔍 [DEBUG] Mensaje de otra conversación, recargando lista');
                 fetchConvsIfNeeded();
             }
 
             if (conversacionActual && message.conversationId === conversacionActual._id) {
+                logger.log('🔍 [DEBUG] Mensaje de conversación actual, agregando a lista');
                 setMensajes(prev => {
-                    if (prev.some(m => m._id === message._id)) return prev;
+                    if (prev.some(m => m._id === message._id)) {
+                        logger.log('🔍 [DEBUG] Mensaje duplicado detectado, ignorando');
+                        return prev;
+                    }
                     return [...prev, message];
                 });
                 scrollToBottom();
@@ -438,6 +486,10 @@ export const useChatController = () => {
             }
             const response = await conversationService.getAllConversations(tabActiva);
             setConversaciones(Array.isArray(response.data?.conversations) ? response.data.conversations : []);
+            // Actualizar contador de pendientes inmediatamente
+            if (refreshPendingCount) {
+                refreshPendingCount();
+            }
         } catch (error) {
             logger.error('Error al aceptar solicitud:', error);
             setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al aceptar la solicitud' });
@@ -453,6 +505,10 @@ export const useChatController = () => {
                 navigate('/mensajes');
                 setConversacionActual(null);
                 setMensajes([]);
+            }
+            // Actualizar contador de pendientes inmediatamente
+            if (refreshPendingCount) {
+                refreshPendingCount();
             }
         } catch (error) {
             logger.error('Error al rechazar solicitud:', error);
@@ -478,6 +534,15 @@ export const useChatController = () => {
             logger.error('Error al destacar conversación:', error);
             setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al destacar la conversación' });
         }
+    };
+
+    // ========================================
+    // Handler para cerrar chat (botón atrás móvil)
+    // ========================================
+    const handleCerrarChat = () => {
+        setConversacionActual(null);
+        setMensajes([]);
+        navigate('/mensajes');
     };
 
     return {
@@ -528,5 +593,6 @@ export const useChatController = () => {
         navigate,
         alertConfig,
         setAlertConfig,
+        handleCerrarChat, // Nuevo handler para botón atrás móvil
     };
 };

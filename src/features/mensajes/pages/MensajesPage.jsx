@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ChatListSidebar from '../components/ChatList/ChatListSidebar';
 import ChatWindow from '../components/ChatWindow/ChatWindow';
 import { useChatController } from '../hooks/useChatController';
@@ -52,6 +53,7 @@ const MensajesPage = () => {
     navigate,
     alertConfig,
     setAlertConfig,
+    handleCerrarChat, // Para botón atrás móvil
   } = useChatController();
 
   // Memoizar handlers y helpers para evitar re-renders
@@ -78,6 +80,18 @@ const MensajesPage = () => {
     getUnreadCount,
     formatearTiempo
   }), [getOtroParticipante, getUnreadCount, formatearTiempo]);
+
+  // Leer parámetro tab de la URL
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'pending') {
+      setTabActiva('pending');
+      // Limpiar el parámetro de la URL después de usarlo
+      setSearchParams({});
+    }
+  }, [searchParams, setTabActiva, setSearchParams]);
 
   return (
     <ChatProvider
@@ -129,6 +143,7 @@ const MensajesPage = () => {
                 handleEmojiSelect={handleEmojiSelect}
                 handleEnviarMensaje={handleEnviarMensaje}
                 getOtroParticipante={getOtroParticipante}
+                handleCerrarChat={handleCerrarChat}
               />
             </div>
 

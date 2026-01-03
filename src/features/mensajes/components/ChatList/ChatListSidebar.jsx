@@ -57,8 +57,17 @@ const ChatListSidebar = ({
         return true;
     });
 
+    // Obtener conversación actual del context para responsive mobile
+    const { conversacionActual } = useChatContext();
+
     return (
-        <div className="w-1/3 border-r border-gray-200 dark:border-gray-700 flex flex-col bg-white dark:bg-gray-900 overflow-hidden">
+        <div className={`
+            w-full md:w-96 md:min-w-96 md:max-w-96 md:shrink-0
+            flex flex-col
+            ${conversacionActual ? 'max-md:hidden' : ''}
+            border-r border-gray-200 dark:border-gray-700 
+            bg-white dark:bg-gray-900 overflow-hidden
+        `}>
             {/* Header */}
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                 <ChatListHeader
