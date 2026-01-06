@@ -233,7 +233,7 @@ export function ReunionesPage() {
       {/* 1. Encabezado y CTA: onNewMeeting abre el modal */}
       <MeetingHeader onNewMeeting={() => setIsModalOpen(true)} />
 
-      <hr className="border-gray-100" />
+      <hr className="border-gray-100 mb-4" />
 
       {/* 2. Selector de Vista (Lista / Calendario) */}
       <MeetingViewToggle

@@ -48,12 +48,13 @@ const FolderHeader = ({
                 <div className="flex items-start gap-5">
                     {/* Icon - Always Left */}
                     <div
-                        className="flex-shrink-0 p-4 md:p-5 rounded-2xl border-2 bg-yellow-500/10"
+                        className="flex-shrink-0 p-4 md:p-5 rounded-2xl border-2"
                         style={{
-                            borderColor: '#EAB308'
+                            backgroundColor: carpeta.color + '10',
+                            borderColor: carpeta.color
                         }}
                     >
-                        <HardDrive style={{ color: '#EAB308' }} size={40} />
+                        <HardDrive style={{ color: carpeta.color }} size={40} />
                     </div>
 
                     {/* Center Content: Text + Badges */}
@@ -92,7 +93,7 @@ const FolderHeader = ({
                         <div className="flex flex-wrap items-center gap-2">
                             <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${carpeta.tipo === 'personal' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
                                 carpeta.tipo === 'grupal' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
-                                    'bg-orange-500/20 text-orange-300 border border-orange-500/30'
+                                    'bg-cyan-500/20 text-cyan-500 border border-cyan-500/30'
                                 }`}>
                                 {carpeta.tipo === 'personal' && <Shield size={14} className="mr-1.5" />}
                                 {carpeta.tipo === 'grupal' && <Users size={14} className="mr-1.5" />}
@@ -101,13 +102,20 @@ const FolderHeader = ({
                             </span>
 
                             {carpeta.visibilidadPorArea?.habilitado && (
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-700/80 text-gray-300 border border-gray-600">
+                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/15 text-indigo-400 dark:text-indigo-300 border border-indigo-500/30">
                                     <Building size={14} className="mr-1.5" />
                                     {carpeta.visibilidadPorArea.areas[0]}
                                 </span>
                             )}
 
-                            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-700/80 text-gray-300 border border-gray-600">
+                            {carpeta.visibilidadPorCargo?.habilitado && carpeta.visibilidadPorCargo.cargos.length > 0 && (
+                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-500/15 text-purple-400 dark:text-purple-300 border border-purple-500/30">
+                                    <Users size={14} className="mr-1.5" />
+                                    {carpeta.visibilidadPorCargo.cargos.join(', ')}
+                                </span>
+                            )}
+
+                            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-500/12 text-slate-400 dark:text-slate-300 border border-slate-500/25">
                                 <File size={14} className="mr-1.5" />
                                 {carpeta.archivos.length} archivo{carpeta.archivos.length !== 1 ? 's' : ''}
                             </span>

@@ -15,8 +15,8 @@
         margin-right: 0 !important;
         padding-top: calc(var(--navbar-height) + 0.5rem) !important;
         padding-bottom: calc(var(--bottom-navbar-height) + 1rem) !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         height: calc(100vh - var(--navbar-height)) !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
@@ -34,6 +34,11 @@
 
     /* Aumentar padding interno del contenedor principal de páginas */
     .page-container {
+        padding: 1rem !important;
+    }
+
+    /* Excepción para la página de mensajes */
+    .page-container.messages-page {
         padding: 0 !important;
     }
 

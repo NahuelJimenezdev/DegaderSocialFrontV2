@@ -34,7 +34,7 @@ export function MeetingViewToggle({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-3 sm:p-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-3 sm:p-4 mb-4">
       {/* Layout Mobile: Stack vertical */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 

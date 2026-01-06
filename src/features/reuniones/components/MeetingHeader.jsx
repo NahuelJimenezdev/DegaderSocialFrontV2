@@ -1,23 +1,39 @@
 import React from 'react';
-import { Plus } from 'lucide-react';
+import '../../../shared/styles/headers.style.css';
 
 // Aceptar la prop onNewMeeting
 export function MeetingHeader({ onNewMeeting }) {
   return (
-    <div className="flex items-center justify-between">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Reuniones</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Gestiona y únete a reuniones virtuales</p>
+    <div className="section-header">
+      {/* Icono en caja con fondo */}
+      <div className="section-header__icon-box">
+        <span className="material-symbols-outlined section-header__icon">
+          video_call
+        </span>
       </div>
+
+      {/* Contenido: Título + Subtítulo */}
+      <div className="section-header__content">
+        <h1 className="section-header__title section-header__title--heavy">
+          Reuniones
+        </h1>
+        <p className="section-header__subtitle">
+          Gestiona y únete a reuniones virtuales
+        </p>
+      </div>
+
+      {/* Botón CTA */}
       <button
-        // Asignar la función onNewMeeting al evento onClick
         onClick={onNewMeeting}
-        className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-medium"
+        className="section-header__button section-header__button--indigo"
       >
-        <Plus className="w-4 h-4" />
-        <span>Nueva Reunión</span>
+        <span className="material-symbols-outlined section-header__button-icon">
+          add
+        </span>
+        <span className="section-header__button-text">Nueva Reunión</span>
       </button>
     </div>
   );
 }
+
 

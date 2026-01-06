@@ -5,6 +5,8 @@ import CarpetasGrid from '../components/CarpetasGrid';
 import CarpetasList from '../components/CarpetasList';
 import ModalCrearCarpeta from '../components/ModalCrearCarpeta';
 import ModalCompartirCarpeta from '../components/ModalCompartirCarpeta';
+import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
+import { AlertDialog } from '../../../shared/components/AlertDialog';
 import { Filter, Search, Grid, List, X } from 'lucide-react';
 
 const MisCarpetasPage = () => {
@@ -40,6 +42,10 @@ const MisCarpetasPage = () => {
     menuAbierto,
     setMenuAbierto,
     carpetaEditar,
+    alertConfig,
+    setAlertConfig,
+    confirmConfig,
+    setConfirmConfig,
   } = useCarpetas();
 
   const abrirCarpeta = (id) => {
@@ -241,6 +247,23 @@ const MisCarpetasPage = () => {
         onClose={() => setModalCompartirAbierto(false)}
         onCompartir={handleCompartirCarpeta}
         carpeta={carpetaSeleccionada}
+      />
+
+      {/* Diálogos de Confirmación y Alerta */}
+      <ConfirmDialog
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ ...confirmConfig, isOpen: false })}
+        onConfirm={confirmConfig.onConfirm}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        variant={confirmConfig.variant}
+      />
+
+      <AlertDialog
+        isOpen={alertConfig.isOpen}
+        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+        variant={alertConfig.variant}
+        message={alertConfig.message}
       />
     </div >
   );

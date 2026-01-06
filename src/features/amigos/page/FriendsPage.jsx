@@ -51,12 +51,21 @@ export default function FriendsPage() {
     <div className="page-container">
       {/* Header */}
       <div className="section-header">
+        {/* Icono en caja con fondo */}
         <div className="section-header__icon-box">
-          <Users className="section-header__icon" />
+          <span className="material-symbols-outlined section-header__icon">
+            <Users className="section-header__icon" />
+          </span>
         </div>
-        <div className="section-header__text">
-          <h1 className="section-header__title section-header__title--heavy">Mis Amigos</h1>
-          <p className="section-header__subtitle">Conecta, comparte y mantente al día con tus amigos</p>
+
+        {/* Contenido: Título + Subtítulo */}
+        <div className="section-header__content">
+          <h1 className="section-header__title section-header__title--heavy">
+            Mis Amigos
+          </h1>
+          <p className="section-header__subtitle">
+            Conecta, comparte y mantente al día con tus amigos
+          </p>
         </div>
       </div>
 

@@ -84,16 +84,15 @@ const CarpetaCard = ({
         </p>
 
         <div className="carpeta-card-footer flex items-center justify-between border-t border-gray-200 dark:border-gray-700">
-          <span className={`carpeta-card-badge rounded-full font-medium ${
-            carpeta.tipo === 'personal'
+          <span className={`carpeta-card-badge rounded-full font-medium ${carpeta.tipo === 'personal'
               ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
               : carpeta.tipo === 'grupal'
-              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-              : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-          }`}>
+                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                : 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400'
+            }`}>
             {carpeta.tipo === 'personal' ? 'Personal' : carpeta.tipo === 'grupal' ? 'Grupal' : 'Institucional'}
           </span>
-          
+
           {carpeta.visibilidadPorArea?.habilitado && (
             <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full truncate max-w-[100px]">
               {carpeta.visibilidadPorArea.areas[0]}
