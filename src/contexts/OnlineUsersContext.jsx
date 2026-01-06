@@ -31,13 +31,22 @@ export const OnlineUsersProvider = ({ children }) => {
             setVersion(v => v + 1);
         };
 
+        // Debug event listener
+        const handleDebugOnlineUsers = () => {
+            logger.log('🔍 [DEBUG] Estado actual de onlineUsers:');
+            logger.log('📊 [DEBUG] Total usuarios online:', onlineUsers.size);
+            logger.log('📋 [DEBUG] IDs de usuarios online:', Array.from(onlineUsers));
+        };
+
         window.addEventListener('socket:friend:status_changed', handleFriendStatusChange);
+        window.addEventListener('debug:online-users', handleDebugOnlineUsers);
 
         return () => {
             logger.log('🔇 [ONLINE CONTEXT] Removiendo listener global');
             window.removeEventListener('socket:friend:status_changed', handleFriendStatusChange);
+            window.removeEventListener('debug:online-users', handleDebugOnlineUsers);
         };
-    }, []);
+    }, [onlineUsers]);
 
     return (
         <OnlineUsersContext.Provider value={{ onlineUsers, version }}>
