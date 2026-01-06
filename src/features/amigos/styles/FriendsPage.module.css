@@ -629,7 +629,7 @@
 }
 
 /* Rediseño para móviles pequeños (Moto G, iPhone SE, etc.) - Coincide con Birthday Cards */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .item {
     display: grid;
     grid-template-columns: 48px 1fr;

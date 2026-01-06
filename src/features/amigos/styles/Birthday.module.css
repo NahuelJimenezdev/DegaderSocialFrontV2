@@ -127,7 +127,7 @@
 }
 
 /* Layout vertical para dispositivos pequeños (Moto G 360x640, etc.) */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .item {
     display: grid;
     grid-template-columns: 48px 1fr;
