@@ -43,6 +43,8 @@
 .monthLabel {
   font-size: 13px;
   color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
 }
 
 .list {
@@ -133,7 +135,7 @@
     gap: 8px 12px;
     padding: 12px;
     background: var(--bg);
-    border: 1px solid var(--border);
+    border: none;
     border-radius: 10px;
     margin-bottom: 8px;
   }
