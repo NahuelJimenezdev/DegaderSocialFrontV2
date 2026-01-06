@@ -4,6 +4,7 @@ import { Search, MapPin } from 'lucide-react'
 import { FriendCard } from './FriendCard'
 import { FriendsEmptyState } from './FriendsEmptyState'
 import friendshipService from '../../../api/friendshipService'
+import { useOnlineUsers } from '../../../contexts/OnlineUsersContext'
 import styles from '../styles/FriendsPage.module.css'
 
 export const CityFriends = () => {
@@ -12,6 +13,7 @@ export const CityFriends = () => {
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('all')
+  const onlineUsers = useOnlineUsers() // Usar contexto global
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -156,7 +158,7 @@ export const CityFriends = () => {
                 {/* Lista de amigos en esta ubicación */}
                 <div className={styles.list}>
                   {locationFriends.map(friend => (
-                    <FriendCard key={friend._id} friend={friend} />
+                    <FriendCard key={friend._id} friend={friend} onlineUsers={onlineUsers} />
                   ))}
                 </div>
               </div>
