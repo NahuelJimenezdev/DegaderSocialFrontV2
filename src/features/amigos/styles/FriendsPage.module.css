@@ -657,10 +657,12 @@
     height: 48px;
   }
 
-  /* Ocultar indicadores online/offline en móviles pequeños */
+  /* Mantener badge online/offline visible pero más pequeño */
   .onlineBadge,
   .offlineBadge {
-    display: none;
+    width: 12px;
+    height: 12px;
+    border-width: 2px;
   }
 
   .blockedBadge {
