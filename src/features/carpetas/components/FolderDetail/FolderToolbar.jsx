@@ -13,12 +13,12 @@ const FolderToolbar = ({
     setShowFilterMenu
 }) => {
     return (
-        <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4 shadow-sm">
             {/* Filter */}
             <div className="relative">
                 <button
                     onClick={() => setShowFilterMenu(!showFilterMenu)}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors border border-gray-600"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200"
                 >
                     <Filter size={18} />
                     <span className="text-sm font-medium">
@@ -31,7 +31,7 @@ const FolderToolbar = ({
                 </button>
 
                 {showFilterMenu && (
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-10 overflow-hidden">
+                    <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-10 overflow-hidden">
                         {[
                             { value: 'all', label: 'Todos los archivos', icon: File },
                             { value: 'documents', label: 'Documentos', icon: FileText },
@@ -44,7 +44,7 @@ const FolderToolbar = ({
                                     setFilterType(filter.value);
                                     setShowFilterMenu(false);
                                 }}
-                                className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-700 transition-colors ${filterType === filter.value ? 'bg-gray-700 text-indigo-400' : 'text-gray-300'
+                                className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${filterType === filter.value ? 'bg-indigo-50 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300'
                                     }`}
                             >
                                 <filter.icon size={16} />
@@ -56,10 +56,10 @@ const FolderToolbar = ({
             </div>
 
             {/* View Toggle */}
-            <div className="flex items-center gap-2 bg-gray-700 rounded-lg p-1 border border-gray-600">
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-gray-200 dark:border-gray-600">
                 <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'
+                    className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 shadow-sm text-indigo-600 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                         }`}
                     title="Vista de cuadrícula"
                 >
@@ -67,7 +67,7 @@ const FolderToolbar = ({
                 </button>
                 <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'
+                    className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white dark:bg-indigo-600 shadow-sm text-indigo-600 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                         }`}
                     title="Vista de lista"
                 >

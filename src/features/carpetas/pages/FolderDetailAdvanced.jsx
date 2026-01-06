@@ -130,10 +130,10 @@ const FolderDetailAdvanced = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
-          <p className="text-gray-400">Cargando carpeta...</p>
+          <p className="text-gray-500 dark:text-gray-400">Cargando carpeta...</p>
         </div>
       </div>
     );
@@ -141,13 +141,13 @@ const FolderDetailAdvanced = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-500 text-lg mb-4">⚠️</div>
-          <p className="text-gray-400">{error}</p>
+          <p className="text-gray-500 dark:text-gray-400">{error}</p>
           <button
             onClick={() => navigate('/Mis_carpetas')}
-            className="mt-4 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
+            className="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700"
           >
             Volver
           </button>
@@ -162,7 +162,7 @@ const FolderDetailAdvanced = () => {
   const canEdit = tienePermisoEscritura();
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -186,18 +186,18 @@ const FolderDetailAdvanced = () => {
 
         {/* Files Display */}
         {filteredFiles.length === 0 ? (
-          <div className="bg-gray-800 border border-gray-700 rounded-2xl p-16 text-center">
-            <div className="mx-auto w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center mb-6">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-16 text-center shadow-sm">
+            <div className="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
               {filterType === 'all' ? (
-                <Upload className="text-gray-500" size={40} />
+                <Upload className="text-gray-400 dark:text-gray-500" size={40} />
               ) : (
-                <Filter className="text-gray-500" size={40} />
+                <Filter className="text-gray-400 dark:text-gray-500" size={40} />
               )}
             </div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
               {filterType === 'all' ? 'Carpeta vacía' : 'No hay archivos de este tipo'}
             </h3>
-            <p className="text-gray-400">
+            <p className="text-gray-500 dark:text-gray-400">
               {filterType === 'all'
                 ? 'Sube archivos para comenzar a compartir'
                 : 'Intenta con otro filtro'}

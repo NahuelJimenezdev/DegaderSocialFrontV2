@@ -8,10 +8,10 @@ const FileGrid = ({ files, onPreview, onDelete, canEdit }) => {
             {files.map((archivo) => (
                 <div
                     key={archivo._id}
-                    className={`bg-gray-800 border rounded-xl overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all group ${getFileColor(archivo.tipo)}`}
+                    className={`bg-white dark:bg-gray-800 border-2 dark:border border-transparent dark:border-gray-700 rounded-xl overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all group ${getFileColor(archivo.tipo)}`}
                 >
                     {/* Preview Area */}
-                    <div className="aspect-video bg-gray-900/50 flex items-center justify-center p-6 relative overflow-hidden">
+                    <div className="aspect-video bg-gray-100 dark:bg-gray-900/50 flex items-center justify-center p-6 relative overflow-hidden">
                         {archivo.tipo === 'image' ? (
                             <img
                                 src={archivo.url}
@@ -53,13 +53,12 @@ const FileGrid = ({ files, onPreview, onDelete, canEdit }) => {
                         </div>
                     </div>
 
-                    {/* File Info */}
                     <div className="p-4">
-                        <h3 className="font-medium text-sm mb-2 truncate" title={archivo.originalName}>
+                        <h3 className="font-medium text-sm mb-2 truncate text-gray-900 dark:text-gray-100" title={archivo.originalName}>
                             {archivo.originalName}
                         </h3>
 
-                        <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-3">
                             <span className="flex items-center gap-1">
                                 <HardDrive size={12} />
                                 {formatSize(archivo.size)}
@@ -72,11 +71,11 @@ const FileGrid = ({ files, onPreview, onDelete, canEdit }) => {
 
                         {/* Uploader Info */}
                         {archivo.uploadedBy && (
-                            <div className="flex items-center gap-2 pt-3 border-t border-gray-700">
+                            <div className="flex items-center gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
                                 <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-medium">
                                     {getUserInitials(getUserName(archivo.uploadedBy))}
                                 </div>
-                                <span className="text-xs text-gray-400 truncate">
+                                <span className="text-xs text-gray-600 dark:text-gray-400 truncate">
                                     {getUserName(archivo.uploadedBy)}
                                 </span>
                             </div>

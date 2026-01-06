@@ -15,13 +15,13 @@ const FolderHeader = ({
         <div className="mb-6">
             <button
                 onClick={() => navigate('/Mis_carpetas')}
-                className="flex items-center text-gray-400 hover:text-white mb-6 transition-colors group"
+                className="flex items-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white mb-6 transition-colors group"
             >
                 <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
                 Volver a Mis Carpetas
             </button>
 
-            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 md:p-8 shadow-2xl">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 md:p-8 shadow-sm dark:shadow-2xl">
                 {/* Top Row: Button on mobile/tablet */}
                 <div className="flex lg:hidden justify-end mb-4">
                     {tienePermisoEscritura && (
@@ -61,8 +61,8 @@ const FolderHeader = ({
                         <div className="flex items-start justify-between gap-4">
                             {/* Text */}
                             <div className="flex-1 min-w-0">
-                                <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">{carpeta.nombre}</h1>
-                                <p className="text-gray-400 text-sm mb-4">{carpeta.descripcion}</p>
+                                <h1 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900 dark:text-white">{carpeta.nombre}</h1>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{carpeta.descripcion}</p>
                             </div>
 
                             {/* Button - Desktop Only (Top Right) */}
