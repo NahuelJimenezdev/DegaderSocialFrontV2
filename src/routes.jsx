@@ -22,6 +22,7 @@ import ClientAdsDashboard from './features/ads/ClientAdsDashboard'
 import FounderAdsDashboard from './features/ads/FounderAdsDashboard'
 import CampaignAnalyticsPage from './features/ads/CampaignAnalyticsPage'
 import PostPage from './features/feed/pages/PostPage'
+import NotificationsPage from './features/notificaciones/pages/NotificationsPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
       { path: '/Mi_perfil', element: <ProfilePage /> },
       { path: '/perfil/:id', element: <PerfilVisitantePage /> },
       { path: '/publicacion/:id', element: <PostPage /> },
+      { path: '/notificaciones', element: <NotificationsPage /> },
       // Advertising routes
       { path: '/publicidad', element: <ClientAdsDashboard /> },
       { path: '/admin/publicidad', element: <FounderAdsDashboard /> },

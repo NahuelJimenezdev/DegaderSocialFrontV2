@@ -1,0 +1,252 @@
+/* Header */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.titleSection {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.titleIcon {
+    color: white;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.25rem 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.unreadBadge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.markAllButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.markAllButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Filtros */
+.filtersContainer {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filterIcon {
+    color: #6b7280;
+}
+
+.filterLabel {
+    font-weight: 600;
+    color: #374151;
+}
+
+.filterSelect {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    color: #374151;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filterSelect:hover {
+    border-color: #667eea;
+}
+
+.filterSelect:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Loading */
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loadingText {
+    margin-top: 1rem;
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* Empty State */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.emptyIcon {
+    color: #d1d5db;
+    margin-bottom: 1.5rem;
+}
+
+.emptyTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 0.5rem 0;
+}
+
+.emptyText {
+    color: #6b7280;
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0;
+}
+
+/* Notifications List */
+.notificationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Dark Mode */
+:global(.dark) .header {
+    background: linear-gradient(135deg, #4c51bf 0%, #5a3d7a 100%);
+}
+
+:global(.dark) .filtersContainer {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+:global(.dark) .filterLabel {
+    color: #d1d5db;
+}
+
+:global(.dark) .filterIcon {
+    color: #9ca3af;
+}
+
+:global(.dark) .emptyTitle {
+    color: #e5e7eb;
+}
+
+:global(.dark) .emptyText {
+    color: #9ca3af;
+}
+
+:global(.dark) .emptyIcon {
+    color: #4b5563;
+}
+
+:global(.dark) .loadingText {
+    color: #9ca3af;
+}
+
+:global(.dark) .filterSelect {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        padding: 1.5rem;
+    }
+
+    .headerContent {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .markAllButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filterGroup {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filterSelect {
+        width: 100%;
+    }
+}
