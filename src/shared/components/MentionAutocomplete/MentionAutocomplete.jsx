@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../../../api/config';
 import styles from './MentionAutocomplete.module.css';
+import { getUserAvatar } from '../../utils/avatarUtils';
 
 const MentionAutocomplete = ({
     show,
@@ -26,9 +27,11 @@ const MentionAutocomplete = ({
                 const friends = response.data.data || response.data.amigos || response.data || [];
 
                 // Mapear amigos primero para asegurar tener un username
+                // Mapear amigos primero para asegurar tener un username
                 const mappedFriends = friends.map(friend => {
-                    // Generar username basado en nombre y apellido si no tiene uno
-                    let username = friend.username;
+                    // Prioridad: 1. Username root, 2. Social username, 3. Generado
+                    let username = friend.username || friend.social?.username;
+
                     if (!username && friend.nombres?.primero && friend.apellidos?.primero) {
                         username = `${friend.nombres.primero}${friend.apellidos.primero}`.toLowerCase().replace(/\s+/g, '');
                     }
@@ -93,9 +96,11 @@ const MentionAutocomplete = ({
             ref={listRef}
             className={styles.container}
             style={{
+                position: 'fixed', // Force fixed relative to viewport
                 top: position.top ? `${position.top}px` : 'auto',
                 bottom: position.bottom ? `${position.bottom}px` : 'auto',
-                left: `${position.left}px`
+                left: `${position.left}px`,
+                // Ensure it flips up if close to bottom (though parent does calculation, we can enforce max-height logic here if needed)
             }}
         >
             {users.map((user, index) => (
@@ -106,7 +111,7 @@ const MentionAutocomplete = ({
                     onMouseEnter={() => setSelectedIndex(index)}
                 >
                     <img
-                        src={user.fotoPerfil || '/avatars/default-avatar.png'}
+                        src={getUserAvatar(user)}
                         alt={user.username}
                         className={styles.avatar}
                     />

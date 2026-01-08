@@ -3,6 +3,7 @@ import { logger } from '../../utils/logger';
 import { getUserAvatar } from '../../utils/avatarUtils';
 import FilePreview from './FilePreview';
 import FormatToolbar from './FormatToolbar';
+import MentionAutocomplete from '../MentionAutocomplete/MentionAutocomplete';
 import { Send } from 'lucide-react';
 
 /**
@@ -13,49 +14,89 @@ import { Send } from 'lucide-react';
  * @param {string} error - Mensaje de error
  */
 const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, error = null, showAvatar = false }) => {
-    // ... (state vars same)
+    // State vars
     const [content, setContent] = useState('');
     const [isExpanded, setIsExpanded] = useState(alwaysExpanded);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
+
+    // Mention autocomplete state
+    const [showMentions, setShowMentions] = useState(false);
+    const [mentionQuery, setMentionQuery] = useState('');
+    const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+    const [cursorPosition, setCursorPosition] = useState(0);
+
+    // Refs
     const fileInputRef = useRef(null);
+    const textAreaRef = useRef(null);
 
     const userAvatar = getUserAvatar(currentUser);
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!content.trim() && selectedImages.length === 0) return;
 
-        setIsSubmitting(true);
-        try {
-            // 🆕 Usar FormData para enviar archivos reales (R2)
-            const formData = new FormData();
-            formData.append('contenido', content || ' ');
-            formData.append('privacidad', 'publico');
+    // Handle input change and detect @ for mentions
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        const cursorPos = e.target.selectionStart;
 
-            // Agregar archivos reales (no base64)
-            if (selectedImages.length > 0) {
-                logger.log('📸 Adding', selectedImages.length, 'files to FormData...');
-                selectedImages.forEach(file => {
-                    formData.append('media', file);
-                });
+        setContent(value);
+        setCursorPosition(cursorPos);
+
+        // Detect @ symbol
+        const textBeforeCursor = value.substring(0, cursorPos);
+        const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+
+        if (lastAtIndex !== -1) {
+            const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+            // Check if there's no space after @
+            if (!textAfterAt.includes(' ')) {
+                setMentionQuery(textAfterAt);
+                setShowMentions(true);
+
+                // Calculate position for autocomplete dropdown
+                if (textAreaRef.current) {
+                    // Start of textarea
+                    const rect = textAreaRef.current.getBoundingClientRect();
+                    // We need to approximation position inside textarea
+                    // For now, simpler approach: Position relative to textarea bottom or top
+
+                    // Logic to decide if show UP or DOWN based on screen space
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const spaceAbove = rect.top;
+
+                    if (spaceBelow < 220 && spaceAbove > 200) {
+                        setMentionPosition({
+                            bottom: window.innerHeight - rect.top + 5,
+                            left: rect.left + window.scrollX + (lastAtIndex * 8) + 20 // 20px padding offset
+                        });
+                    } else {
+                        setMentionPosition({
+                            top: rect.bottom + window.scrollY + 5,
+                            left: rect.left + window.scrollX + (lastAtIndex * 8) + 20
+                        });
+                    }
+                }
+            } else {
+                setShowMentions(false);
             }
+        } else {
+            setShowMentions(false);
+        }
+    };
 
-            logger.log('🚀 Sending post with FormData');
-            await onPostCreated(formData);
+    // Handle mention selection
+    const handleMentionSelect = (user) => {
+        const textBeforeCursor = content.substring(0, cursorPosition);
+        const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+        const textAfterCursor = content.substring(cursorPosition);
 
-            // Reset form on success
-            setContent('');
-            setSelectedImages([]);
-            setImagePreviews([]);
-            if (!alwaysExpanded) setIsExpanded(false);
+        const newText = content.substring(0, lastAtIndex) + `@${user.username} ` + textAfterCursor;
+        setContent(newText);
+        setShowMentions(false);
 
-        } catch (error) {
-            logger.error('❌ Error creating post:', error);
-            logger.error('❌ Error response:', error.response?.data);
-        } finally {
-            setIsSubmitting(false);
+        // Focus back on input
+        if (textAreaRef.current) {
+            textAreaRef.current.focus();
         }
     };
 
@@ -101,11 +142,53 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!content.trim() && selectedImages.length === 0) return;
+
+        setIsSubmitting(true);
+        try {
+            // 🆕 Usar FormData para enviar archivos reales (R2)
+            const formData = new FormData();
+            formData.append('contenido', content || ' ');
+            formData.append('privacidad', 'publico');
+
+            // Agregar archivos reales (no base64)
+            if (selectedImages.length > 0) {
+                logger.log('📸 Adding', selectedImages.length, 'files to FormData...');
+                selectedImages.forEach(file => {
+                    formData.append('media', file);
+                });
+            }
+
+            logger.log('🚀 Sending post with FormData');
+            await onPostCreated(formData);
+
+            // Reset form on success
+            setContent('');
+            setSelectedImages([]);
+            setImagePreviews([]);
+            if (!alwaysExpanded) setIsExpanded(false);
+
+        } catch (error) {
+            logger.error('❌ Error creating post:', error);
+            logger.error('❌ Error response:', error.response?.data);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // ... (handlers remain same)
+
+    // ...
+
     // ... (return)
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-900 p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-900 p-4 mb-6 relative">
             {!isExpanded && !alwaysExpanded ? (
+                // ... (collapsed view same)
                 <div className="flex gap-3">
+                    {/* ... same avatar code ... */}
                     {showAvatar && (
                         <img
                             src={userAvatar}
@@ -148,18 +231,28 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                                 }}
                             />
                         )}
-                        <div className="flex-1">
+                        <div className="flex-1 relative">
                             <textarea
+                                ref={textAreaRef}
                                 value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                                onChange={handleInputChange}
                                 placeholder="¿Qué estás pensando?"
                                 className="w-full bg-transparent border-0 focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none p-0 text-base text-justify"
                                 rows={3}
                                 autoFocus={!alwaysExpanded}
                             />
+
+                            {/* Insert MentionAutocomplete here */}
+                            <MentionAutocomplete
+                                show={showMentions}
+                                position={mentionPosition}
+                                query={mentionQuery}
+                                onSelect={handleMentionSelect}
+                            />
                         </div>
                     </div>
 
+                    {/* ... rest of the form ... */}
                     {/* File Previews - Ahora full width debajo del input */}
                     <div className="pl-0 md:pl-13"> {/* Padding left en desktop para alinear con texto, 0 en mobile */}
                         <FilePreview

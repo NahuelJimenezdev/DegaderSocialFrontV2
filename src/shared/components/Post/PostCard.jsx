@@ -212,7 +212,16 @@ const PostCard = ({
                 {post.contenido && (
                     <div className="px-4 pb-3 pt-1">
                         <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-[1.6]">
-                            {post.contenido}
+                            {post.contenido.split(/(@[a-zA-Z0-9._-]+)/g).map((part, index) => {
+                                if (part.match(/^@[a-zA-Z0-9._-]+$/)) {
+                                    return (
+                                        <span key={index} className="text-indigo-600 dark:text-indigo-400 font-semibold cursor-pointer hover:underline">
+                                            {part}
+                                        </span>
+                                    );
+                                }
+                                return part;
+                            })}
                         </p>
                     </div>
                 )}

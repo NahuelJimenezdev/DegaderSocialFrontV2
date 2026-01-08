@@ -132,10 +132,25 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                 // Calculate position for autocomplete dropdown
                 if (mainInputRef.current) {
                     const rect = mainInputRef.current.getBoundingClientRect();
-                    setMentionPosition({
-                        top: rect.bottom + window.scrollY,
-                        left: rect.left + window.scrollX
-                    });
+
+                    // Logic to decide if show UP or DOWN
+                    // If visual viewport height (considering keyboard) is small, or input is low
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const spaceAbove = rect.top;
+
+                    // If less than 200px below, show above
+                    if (spaceBelow < 220 && spaceAbove > 200) {
+                        setMentionPosition({
+                            bottom: window.innerHeight - rect.top + 5, // 5px padding above input
+                            left: rect.left + window.scrollX + (lastAtIndex * 8) // Approx char width offset
+                        });
+                    } else {
+                        // Default down
+                        setMentionPosition({
+                            top: rect.bottom + window.scrollY + 5,
+                            left: rect.left + window.scrollX + (lastAtIndex * 8)
+                        });
+                    }
                 }
             } else {
                 setShowMentions(false);
