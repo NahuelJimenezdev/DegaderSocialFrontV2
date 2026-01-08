@@ -123,31 +123,36 @@ const MisCarpetasPage = () => {
               <option value="institucional">Institucional</option>
             </select>
 
-            <select
-              value={filtros.area}
-              onChange={(e) => actualizarFiltro('area', e.target.value)}
-              className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 max-w-full"
-            >
-              <option value="">Todas las Áreas</option>
-              {jerarquia.areas?.map(area => (
-                <option key={area} value={area}>
-                  {area.length > 30 ? area.substring(0, 30) + '...' : area}
-                </option>
-              ))}
-            </select>
+            {/* Solo mostrar filtros de área y cargo para carpetas institucionales */}
+            {filtros.tipo === 'institucional' && (
+              <>
+                <select
+                  value={filtros.area}
+                  onChange={(e) => actualizarFiltro('area', e.target.value)}
+                  className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 max-w-full"
+                >
+                  <option value="">Todas las Áreas</option>
+                  {jerarquia.areas?.map(area => (
+                    <option key={area} value={area}>
+                      {area.length > 30 ? area.substring(0, 30) + '...' : area}
+                    </option>
+                  ))}
+                </select>
 
-            <select
-              value={filtros.cargo}
-              onChange={(e) => actualizarFiltro('cargo', e.target.value)}
-              className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 max-w-full"
-            >
-              <option value="">Todos los Cargos</option>
-              {jerarquia.cargos?.map(cargo => (
-                <option key={cargo} value={cargo}>
-                  {cargo.length > 30 ? cargo.substring(0, 30) + '...' : cargo}
-                </option>
-              ))}
-            </select>
+                <select
+                  value={filtros.cargo}
+                  onChange={(e) => actualizarFiltro('cargo', e.target.value)}
+                  className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 max-w-full"
+                >
+                  <option value="">Todos los Cargos</option>
+                  {jerarquia.cargos?.map(cargo => (
+                    <option key={cargo} value={cargo}>
+                      {cargo.length > 30 ? cargo.substring(0, 30) + '...' : cargo}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
 
             <label className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 w-full sm:w-auto justify-center sm:justify-start">
               <input
