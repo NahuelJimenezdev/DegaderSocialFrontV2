@@ -17,6 +17,10 @@ import { getUserAvatar } from '../../utils/avatarUtils';
 import ImageGallery from '../../../features/feed/components/ImageGallery';
 import CommentSection from '../CommentSection/CommentSection';
 import { API_BASE_URL } from '../../config/env';
+import PostOptionsMenu from './PostOptionsMenu';
+import { AlertDialog } from '../AlertDialog/AlertDialog';
+import { userService, friendshipService } from '../../../api';
+import { logger } from '../../utils/logger';
 
 const PostCard = ({
     post,
@@ -31,6 +35,9 @@ const PostCard = ({
 }) => {
     const [localShowComments, setLocalShowComments] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -51,8 +58,10 @@ const PostCard = ({
     const isFeedMode = variant === 'feed';
     const context = profileContext || {};
 
-    const user = isFeedMode ? post.usuario : context.user;
-    const avatar = isFeedMode ? getUserAvatar(user) : context.avatarUrl;
+    // ✅ SIEMPRE usar el autor del post (post.usuario) para el header
+    // No importa si estamos en feed o perfil, el autor del post debe mostrarse
+    const user = post.usuario;
+    const avatar = getUserAvatar(user);
 
     const showComments = isFeedMode ? localShowComments : context.showComments?.[post._id];
 
@@ -118,6 +127,82 @@ const PostCard = ({
         } else {
             await context.handleAddComment?.(postId, content, parentId, image);
         }
+    };
+
+    // Handler: Guardar publicación
+    const handleSavePost = async () => {
+        try {
+            logger.log('💾 [SAVE] Intentando guardar publicación:', {
+                postId: post._id,
+                postAuthorId: post.usuario?._id || post.usuario,
+                currentUserId: currentUser?._id,
+                isOwnPost: (post.usuario?._id || post.usuario) === currentUser?._id
+            });
+
+            const response = await userService.toggleSavePost(post._id);
+
+            logger.log('💾 [SAVE] Respuesta del servidor:', response);
+
+            if (response.success) {
+                setIsSaved(!isSaved);
+                setAlertConfig({
+                    isOpen: true,
+                    variant: 'success',
+                    message: isSaved ? '❌ Publicación eliminada de guardados' : '✅ Publicación guardada correctamente'
+                });
+            } else {
+                logger.error('💾 [SAVE] Respuesta no exitosa:', response);
+                setAlertConfig({
+                    isOpen: true,
+                    variant: 'error',
+                    message: response.message || 'No se pudo guardar la publicación'
+                });
+            }
+        } catch (error) {
+            logger.error('💾 [SAVE] Error completo:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
+            setAlertConfig({
+                isOpen: true,
+                variant: 'error',
+                message: error.response?.data?.message || 'No se pudo guardar la publicación'
+            });
+        }
+    };
+
+    // Handler: Dejar de seguir
+    const handleUnfollow = async () => {
+        try {
+            // Obtener ID de amistad
+            const friendUserId = post.usuario?._id || post.usuario;
+
+            setAlertConfig({
+                isOpen: true,
+                variant: 'warning',
+                message: '⚠️ Esta función requiere confirmar. Por ahora en desarrollo.'
+            });
+
+            // TODO: Implementar confirmación antes de eliminar amistad
+            // const response = await friendshipService.removeFriendship(friendshipId);
+        } catch (error) {
+            logger.error('Error al dejar de seguir:', error);
+            setAlertConfig({
+                isOpen: true,
+                variant: 'error',
+                message: 'No se pudo eliminar la amistad'
+            });
+        }
+    };
+
+    // Handler: Reportar (temporal)
+    const handleReport = () => {
+        setAlertConfig({
+            isOpen: true,
+            variant: 'info',
+            message: '🚧 Sistema de reportes en desarrollo.\nPróximamente podrás reportar contenido inapropiado.'
+        });
     };
 
     // Mobile Modal Component
@@ -203,9 +288,24 @@ const PostCard = ({
                     </div>
 
                     {/* Three Dots - Absolute Positioned */}
-                    <button className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <button
+                        onClick={() => setShowOptionsMenu(!showOptionsMenu)}
+                        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    >
                         <MoreHorizontal size={18} />
                     </button>
+
+                    {/* Options Menu */}
+                    <PostOptionsMenu
+                        post={post}
+                        currentUser={currentUser}
+                        isOpen={showOptionsMenu}
+                        onClose={() => setShowOptionsMenu(false)}
+                        onSave={handleSavePost}
+                        onUnfollow={handleUnfollow}
+                        onReport={handleReport}
+                        isSaved={isSaved}
+                    />
                 </div>
 
                 {/* Content - Improved Spacing */}
@@ -334,6 +434,14 @@ const PostCard = ({
             {showComments && isMobile && (
                 <MobileCommentModal />
             )}
+
+            {/* Alert Dialog */}
+            <AlertDialog
+                isOpen={alertConfig.isOpen}
+                onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+                variant={alertConfig.variant}
+                message={alertConfig.message}
+            />
         </>
     );
 };

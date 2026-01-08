@@ -21,7 +21,9 @@ const PostList = ({ activeTab }) => {
           post.imagen
         );
       case 'likes':
-        return posts.filter(post => savedPosts.includes(post._id));
+        // Retornar directamente los posts guardados (CORREGIDO)
+        // savedPosts ya contiene los posts completos de la API, no solo IDs
+        return Array.isArray(savedPosts) ? savedPosts : [];
       default:
         return posts;
     }

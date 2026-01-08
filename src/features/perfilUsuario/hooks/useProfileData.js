@@ -47,8 +47,9 @@ export const useProfileData = (user) => {
     try {
       const response = await userService.getSavedPosts();
       if (response.success && response.data) {
-        const savedPostIds = response.data.posts.map(post => post._id);
-        setSavedPosts(savedPostIds);
+        // Guardar los posts completos, NO solo los IDs
+        setSavedPosts(response.data.posts || []);
+        logger.log('✅ Posts guardados cargados:', response.data.posts?.length || 0);
       }
     } catch (error) {
       logger.error('Error al cargar posts guardados:', error);

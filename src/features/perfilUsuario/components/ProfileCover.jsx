@@ -39,7 +39,7 @@ const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
                   <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                     {`${user.nombres?.primero || ''} ${user.apellidos?.primero || ''}`.trim() || user.email?.split('@')[0] || 'Usuario'}
                   </h1>
-                  <p className="text-gray-500 text-sm">@{user.email.split('@')[0]}</p>
+                  <p className="text-gray-500 text-sm">@{user.social?.username || user.email.split('@')[0]}</p>
                 </div>
                 <button
                   onClick={onEditClick}
