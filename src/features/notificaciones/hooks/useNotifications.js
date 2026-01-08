@@ -82,6 +82,21 @@ export const useNotifications = (user) => {
         };
 
         const handleNotification = (noti) => {
+            // 🆕 VALIDAR QUE LA NOTIFICACIÓN NO SEA NULL
+            if (!noti) {
+                logger.warn('⚠️ [NOTIFICATIONS] Received null notification, ignoring');
+                return;
+            }
+
+            logger.log('📨 Nueva notificación recibida:', noti);
+
+            // Manejar evento de eliminación de notificación
+            if (noti.tipo === 'notificacion_eliminada') {
+                logger.log('🗑️ [NOTIFICATIONS] Eliminando notificación:', noti.notificacionId);
+                setNotifications(prev => prev.filter(n => n._id !== noti.notificacionId));
+                return;
+            }
+
             // Manejar notificaciones de actualización de estado de amistad
             if (noti.tipo === 'amistad:actualizada') {
                 if (noti.nuevoEstado === 'aceptado' || noti.nuevoEstado === 'default') {
