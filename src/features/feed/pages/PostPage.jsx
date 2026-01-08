@@ -43,7 +43,7 @@ const PostPage = () => {
         const handleSocketPostUpdate = (event) => {
             const updatedPost = event.detail;
             if (updatedPost._id === post._id) {
-                setPost(prev => ({ ...prev, ...updatedPost }));
+                setPost(updatedPost); // Reemplazo completo - incluye comentarios con likes actualizados
             }
         };
 
