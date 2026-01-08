@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import './PostCard.css'; // Importar estilos de animación
 import {
     MoreHorizontal,
     Heart,
@@ -38,6 +40,9 @@ const PostCard = ({
     const [showOptionsMenu, setShowOptionsMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+    const [isUnfollowed, setIsUnfollowed] = useState(false); // Estado para animación de fade-out
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -99,6 +104,22 @@ const PostCard = ({
     const handleCloseModal = () => {
         setLocalShowComments(false);
         document.body.style.overflow = 'auto';
+    };
+
+    // Handler: Navegar al perfil del usuario
+    const handleProfileClick = () => {
+        const userId = user?._id;
+        const currentUserId = isFeedMode ? currentUser?._id : context.user?._id;
+
+        if (!userId) return;
+
+        // Si es tu propio post, ir a /Mi_perfil
+        if (userId === currentUserId) {
+            navigate('/Mi_perfil');
+        } else {
+            // Si es de un amigo, ir a /perfil/:userId
+            navigate(`/perfil/${userId}`);
+        }
     };
 
     const handleLikeClick = () => {
@@ -175,23 +196,82 @@ const PostCard = ({
     // Handler: Dejar de seguir
     const handleUnfollow = async () => {
         try {
-            // Obtener ID de amistad
             const friendUserId = post.usuario?._id || post.usuario;
+
+            logger.log('👥 [UNFOLLOW] Inicio handleUnfollow:', {
+                friendUserId,
+                fullName,
+                postId: post._id
+            });
+
+            // Mostrar modal de confirmación
+            logger.log('👥 [UNFOLLOW] Mostrando modal de confirmación...');
 
             setAlertConfig({
                 isOpen: true,
                 variant: 'warning',
-                message: '⚠️ Esta función requiere confirmar. Por ahora en desarrollo.'
-            });
+                title: '¿Dejar de seguir?',
+                message: `¿Estás seguro de que quieres dejar de seguir a ${fullName}?\n\nYa no verás sus nuevas publicaciones, pero conservarás tus posts guardados.`,
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                buttonText: 'Dejar de seguir',
+                onConfirm: async () => {
+                    logger.log('👥 [UNFOLLOW] ¡Botón CONFIRMAR presionado!');
 
-            // TODO: Implementar confirmación antes de eliminar amistad
-            // const response = await friendshipService.removeFriendship(friendshipId);
+                    try {
+                        setAlertConfig({ isOpen: false }); // Cerrar modal de confirmación
+
+                        logger.log('👥 [UNFOLLOW] Obteniendo friendshipId...');
+
+                        // 1. Obtener friendshipId
+                        const friendshipResponse = await friendshipService.getFriendshipWithUser(friendUserId);
+
+                        if (!friendshipResponse.success) {
+                            throw new Error('No se encontró la amistad');
+                        }
+
+                        logger.log('👥 [UNFOLLOW] Eliminando amistad:', friendshipResponse.data.friendshipId);
+
+                        // 2. Eliminar amistad
+                        const removeResponse = await friendshipService.removeFriendship(
+                            friendshipResponse.data.friendshipId
+                        );
+
+                        if (removeResponse.success) {
+                            logger.log('✅ [UNFOLLOW] Amistad eliminada exitosamente');
+
+                            setAlertConfig({
+                                isOpen: true,
+                                variant: 'success',
+                                message: `✅ Has dejado de seguir a ${fullName}\n\nYa no verás sus nuevas publicaciones en tu feed.`
+                            });
+
+                            // Activar animación de fade-out después de 1.5 segundos
+                            setTimeout(() => {
+                                setIsUnfollowed(true);
+                            }, 1500);
+                        }
+                    } catch (error) {
+                        logger.error('❌ [UNFOLLOW] Error:', error);
+
+                        const errorMessage = error.response?.data?.message || error.message;
+
+                        setAlertConfig({
+                            isOpen: true,
+                            variant: 'error',
+                            message: errorMessage === 'No hay amistad con este usuario'
+                                ? 'No eres amigo de esta persona'
+                                : 'No se pudo eliminar la amistad. Intenta de nuevo.'
+                        });
+                    }
+                }
+            });
         } catch (error) {
-            logger.error('Error al dejar de seguir:', error);
+            logger.error('❌ [UNFOLLOW] Error al preparar confirmación:', error);
             setAlertConfig({
                 isOpen: true,
                 variant: 'error',
-                message: 'No se pudo eliminar la amistad'
+                message: 'Ocurrió un error inesperado'
             });
         }
     };
@@ -237,12 +317,20 @@ const PostCard = ({
 
     return (
         <>
-            <div className={`bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 mb-4 overflow-hidden ${post.grupo ? 'border-t-4 border-t-indigo-500' : ''}`}>
+            {/* Post Card Container con animación de fade-out */}
+            <div className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-4 overflow-hidden transition-all ${isUnfollowed ? 'post-fade-out' : ''} ${post.grupo ? 'border-t-4 border-t-indigo-500' : ''}`}
+                onAnimationEnd={() => {
+                    if (isUnfollowed) {
+                        // Ocultar completamente después de la animación
+                        document.querySelector('.post-fade-out')?.classList.add('post-hidden');
+                    }
+                }}
+            >
                 {/* Header */}
                 <div className="p-4 relative">
                     <div className="flex items-start gap-3 pr-8">
                         {/* Avatar - Perfect Circle */}
-                        <div className="relative group cursor-pointer flex-shrink-0">
+                        <div onClick={handleProfileClick} className="relative group cursor-pointer flex-shrink-0">
                             <img
                                 src={avatar}
                                 alt={fullName}
@@ -258,7 +346,7 @@ const PostCard = ({
                         {/* Name & Metadata */}
                         <div className="flex-1 min-w-0">
                             {/* Name - Smart Truncation */}
-                            <h3 className="font-bold text-gray-900 dark:text-white text-sm hover:underline cursor-pointer truncate">
+                            <h3 onClick={handleProfileClick} className="font-bold text-gray-900 dark:text-white text-sm hover:underline cursor-pointer truncate">
                                 {getShortName()}
                             </h3>
 
@@ -437,10 +525,8 @@ const PostCard = ({
 
             {/* Alert Dialog */}
             <AlertDialog
-                isOpen={alertConfig.isOpen}
+                {...alertConfig}
                 onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
-                variant={alertConfig.variant}
-                message={alertConfig.message}
             />
         </>
     );

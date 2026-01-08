@@ -17,7 +17,10 @@ export function AlertDialog({
     title,
     message,
     variant = 'info',
-    buttonText = 'Aceptar'
+    buttonText = 'Aceptar',
+    showCancelButton = false,
+    cancelButtonText = 'Cancelar',
+    onConfirm
 }) {
     if (!isOpen) return null;
 
@@ -99,10 +102,25 @@ export function AlertDialog({
                     {message}
                 </p>
 
-                {/* Botón */}
-                <div className="flex justify-end">
+                {/* Botones */}
+                <div className="flex justify-end gap-2">
+                    {showCancelButton && (
+                        <button
+                            onClick={onClose}
+                            className="px-6 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        >
+                            {cancelButtonText}
+                        </button>
+                    )}
                     <button
-                        onClick={onClose}
+                        onClick={() => {
+                            console.log('🔘 [ALERT] Botón clickeado!', { onConfirm: !!onConfirm });
+                            if (onConfirm) {
+                                console.log('🔘 [ALERT] Ejecutando onConfirm...');
+                                onConfirm();
+                            }
+                            onClose();
+                        }}
                         className={`px-6 py-2 text-white rounded-lg transition-colors ${config.buttonClass}`}
                     >
                         {buttonText}

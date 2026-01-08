@@ -78,6 +78,26 @@ const friendshipService = {
   removeFriend: async (friendId) => {
     const response = await api.delete(`/amistades/${friendId}`);
     return response.data;
+  },
+
+  /**
+   * Get friendshipId with a specific user
+   * @param {string} userId - Target user ID
+   * @returns {Promise<Object>} Response with friendshipId
+   */
+  getFriendshipWithUser: async (userId) => {
+    const response = await api.get(`/amistades/con-usuario/${userId}`);
+    return response.data;
+  },
+
+  /**
+   * Remove friendship by friendshipId
+   * @param {string} friendshipId - Friendship ID
+   * @returns {Promise<Object>} Response data
+   */
+  removeFriendship: async (friendshipId) => {
+    const response = await api.delete(`/amistades/${friendshipId}/remove`);
+    return response.data;
   }
 };
 
