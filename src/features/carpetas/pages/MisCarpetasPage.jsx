@@ -129,7 +129,8 @@ const MisCarpetasPage = () => {
                 <select
                   value={filtros.area}
                   onChange={(e) => actualizarFiltro('area', e.target.value)}
-                  className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 max-w-full"
+                  className="w-full sm:w-auto px-3 py-1.5 text-sm border-2 border-cyan-400 dark:border-cyan-400 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-cyan-500 max-w-full shadow-sm shadow-cyan-200 dark:shadow-cyan-900/50"
+                  style={{ borderColor: 'rgb(34, 211, 238)' }}
                 >
                   <option value="">Todas las Áreas</option>
                   {jerarquia.areas?.map(area => (
@@ -142,7 +143,8 @@ const MisCarpetasPage = () => {
                 <select
                   value={filtros.cargo}
                   onChange={(e) => actualizarFiltro('cargo', e.target.value)}
-                  className="w-full sm:w-auto px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 max-w-full"
+                  className="w-full sm:w-auto px-3 py-1.5 text-sm border-2 border-cyan-400 dark:border-cyan-400 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-cyan-500 max-w-full shadow-sm shadow-cyan-200 dark:shadow-cyan-900/50"
+                  style={{ borderColor: 'rgb(34, 211, 238)' }}
                 >
                   <option value="">Todos los Cargos</option>
                   {jerarquia.cargos?.map(cargo => (
