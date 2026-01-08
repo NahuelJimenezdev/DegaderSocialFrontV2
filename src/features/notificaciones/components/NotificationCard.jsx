@@ -86,10 +86,14 @@ export default function NotificationCard({
   };
 
 
-  // Determinar si es una solicitud procesable
+  // Determinar si es una solicitud (procesada o no)
   const messageText = mensaje || notification?.contenido || '';
-  const isIncomingFriendRequest = (tipo === 'amistad' || tipo === 'solicitud_amistad') && messageText.includes('te envió una solicitud') && !isProcessed;
-  const isIncomingGroupRequest = tipo === 'solicitud_grupo' && !isProcessed;
+  const isFriendRequest = (tipo === 'amistad' || tipo === 'solicitud_amistad') && messageText.includes('te envió una solicitud');
+  const isGroupRequest = tipo === 'solicitud_grupo';
+
+  // Determinar si se puede procesar (no procesada aún)
+  const canProcessFriendRequest = isFriendRequest && !isProcessed;
+  const canProcessGroupRequest = isGroupRequest && !isProcessed;
 
   return (
     <div
@@ -123,14 +127,14 @@ export default function NotificationCard({
         <div className={styles.message}>{mensaje}</div>
 
         {/* Botones de acción para solicitudes de amistad */}
-        {isIncomingFriendRequest && (
+        {isFriendRequest && (
           <div className={styles.actions} role="group" aria-label="Acciones de solicitud de amistad">
             <button
-              className={`${styles.actionButton} ${styles.acceptButton}`}
-              onClick={() => handleAction(onAccept, 'accept')}
-              disabled={processing}
+              className={`${styles.actionButton} ${styles.acceptButton} ${isProcessed ? styles.disabled : ''}`}
+              onClick={() => canProcessFriendRequest && handleAction(onAccept, 'accept')}
+              disabled={processing || isProcessed}
               aria-label={`Confirmar solicitud de amistad de ${nombre}`}
-              title="Confirmar solicitud de amistad"
+              title={isProcessed ? 'Solicitud ya procesada' : 'Confirmar solicitud de amistad'}
             >
               {processing ? (
                 <span className={styles.spinner} aria-hidden="true" />
@@ -139,11 +143,11 @@ export default function NotificationCard({
               )}
             </button>
             <button
-              className={`${styles.actionButton} ${styles.rejectButton}`}
-              onClick={() => handleAction(onReject, 'reject')}
-              disabled={processing}
+              className={`${styles.actionButton} ${styles.rejectButton} ${isProcessed ? styles.disabled : ''}`}
+              onClick={() => canProcessFriendRequest && handleAction(onReject, 'reject')}
+              disabled={processing || isProcessed}
               aria-label={`Rechazar solicitud de amistad de ${nombre}`}
-              title="Rechazar solicitud de amistad"
+              title={isProcessed ? 'Solicitud ya procesada' : 'Rechazar solicitud de amistad'}
             >
               {processing ? (
                 <span className={styles.spinner} aria-hidden="true" />
@@ -155,14 +159,14 @@ export default function NotificationCard({
         )}
 
         {/* Botones de acción para solicitudes de grupo */}
-        {isIncomingGroupRequest && (
+        {isGroupRequest && (
           <div className={styles.actions} role="group" aria-label="Acciones de solicitud de grupo">
             <button
-              className={`${styles.actionButton} ${styles.acceptButton}`}
-              onClick={() => handleAction(onAccept, 'accept')}
-              disabled={processing}
+              className={`${styles.actionButton} ${styles.acceptButton} ${isProcessed ? styles.disabled : ''}`}
+              onClick={() => canProcessGroupRequest && handleAction(onAccept, 'accept')}
+              disabled={processing || isProcessed}
               aria-label={`Aprobar solicitud de ${nombre} para unirse al grupo`}
-              title="Aprobar solicitud de grupo"
+              title={isProcessed ? 'Solicitud ya procesada' : 'Aprobar solicitud de grupo'}
             >
               {processing ? (
                 <span className={styles.spinner} aria-hidden="true" />
@@ -171,11 +175,11 @@ export default function NotificationCard({
               )}
             </button>
             <button
-              className={`${styles.actionButton} ${styles.rejectButton}`}
-              onClick={() => handleAction(onReject, 'reject')}
-              disabled={processing}
+              className={`${styles.actionButton} ${styles.rejectButton} ${isProcessed ? styles.disabled : ''}`}
+              onClick={() => canProcessGroupRequest && handleAction(onReject, 'reject')}
+              disabled={processing || isProcessed}
               aria-label={`Rechazar solicitud de ${nombre} para unirse al grupo`}
-              title="Rechazar solicitud de grupo"
+              title={isProcessed ? 'Solicitud ya procesada' : 'Rechazar solicitud de grupo'}
             >
               {processing ? (
                 <span className={styles.spinner} aria-hidden="true" />
