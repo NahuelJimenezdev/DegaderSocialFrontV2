@@ -18,7 +18,7 @@ import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { logger } from '../../../shared/utils/logger';
 
 const UserInfoPage = () => {
-    const { userId } = useParams();
+    const { nombreapellido } = useParams();
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -26,15 +26,18 @@ const UserInfoPage = () => {
 
     useEffect(() => {
         loadUserInfo();
-    }, [userId]);
+    }, [nombreapellido]);
 
     const loadUserInfo = async () => {
         try {
             setLoading(true);
-            const response = await userService.getUserById(userId);
+            // Buscar usuario por nombre completo
+            const response = await userService.searchUsers(nombreapellido);
 
-            if (response.success) {
-                setUserInfo(response.data);
+            if (response.success && response.data && response.data.length > 0) {
+                // Tomar el primer resultado que coincida
+                const user = response.data[0];
+                setUserInfo(user);
             } else {
                 setError('No se pudo cargar la información del usuario');
             }
@@ -172,20 +175,18 @@ const UserInfoPage = () => {
                         iconColor="text-purple-500"
                         bgColor="bg-purple-50 dark:bg-purple-900/20"
                     >
-                        {userInfo.cumpleaños && (
-                            <InfoItem
-                                icon={Cake}
-                                label="Cumpleaños"
-                                value={formatDate(userInfo.cumpleaños)}
-                            />
-                        )}
-                        {(userInfo.pais || userInfo.ciudad) && (
-                            <InfoItem
-                                icon={MapPin}
-                                label="Ubicación"
-                                value={[userInfo.ciudad, userInfo.pais].filter(Boolean).join(', ') || 'No especificada'}
-                            />
-                        )}
+                        <InfoItem
+                            icon={Cake}
+                            label="Cumpleaños"
+                            value={userInfo.cumpleaños ? formatDate(userInfo.cumpleaños) : null}
+                            notConfirmed={!userInfo.cumpleaños}
+                        />
+                        <InfoItem
+                            icon={MapPin}
+                            label="Ubicación"
+                            value={(userInfo.ciudad || userInfo.pais) ? [userInfo.ciudad, userInfo.pais].filter(Boolean).join(', ') : null}
+                            notConfirmed={!userInfo.ciudad && !userInfo.pais}
+                        />
                     </InfoCard>
 
                     {/* Cargo en Iglesia */}
@@ -259,7 +260,7 @@ const InfoCard = ({ icon: Icon, title, iconColor, bgColor, children }) => {
 };
 
 // Componente Item de Información
-const InfoItem = ({ icon: Icon, label, value, subtitle }) => {
+const InfoItem = ({ icon: Icon, label, value, subtitle, notConfirmed }) => {
     return (
         <div className="flex items-start gap-3">
             <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0" />
@@ -267,9 +268,15 @@ const InfoItem = ({ icon: Icon, label, value, subtitle }) => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                     {label}
                 </p>
-                <p className="text-base font-medium text-gray-900 dark:text-white break-words">
-                    {value || 'No disponible'}
-                </p>
+                {notConfirmed ? (
+                    <p className="text-base font-bold text-gray-600 dark:text-gray-400 break-words">
+                        Sin confirmar
+                    </p>
+                ) : (
+                    <p className="text-base font-medium text-gray-900 dark:text-white break-words">
+                        {value || 'No disponible'}
+                    </p>
+                )}
                 {subtitle && (
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                         {subtitle}

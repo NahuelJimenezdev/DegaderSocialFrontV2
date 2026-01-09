@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
       { path: '/Mis_carpetas/:id', element: <FolderDetailAdvanced /> },
       { path: '/Mi_perfil', element: <ProfilePage /> },
       { path: '/perfil/:id', element: <PerfilVisitantePage /> },
-      { path: '/informacionUsuario/:userId', element: <UserInfoPage /> },
+      { path: '/informacionUsuario/:nombreapellido', element: <UserInfoPage /> },
       { path: '/publicacion/:id', element: <PostPage /> },
       { path: '/notificaciones', element: <NotificationsPage /> },
       // Advertising routes
