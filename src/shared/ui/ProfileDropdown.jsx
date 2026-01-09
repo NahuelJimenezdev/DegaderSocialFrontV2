@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone } from 'lucide-react';
+import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star } from 'lucide-react';
 import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
@@ -51,6 +51,7 @@ const ProfileDropdown = () => {
   const sidebarItems = [
     { icon: Home, label: 'Inicio', path: '/' },
     { icon: Users, label: 'Amigos', path: '/amigos' },
+    { icon: Star, label: 'Favoritos', path: '/favoritos' },
     { icon: MessageCircle, label: 'Mensajes', path: '/mensajes' },
     { icon: Video, label: 'Mis Reuniones', path: '/Mis_reuniones' },
     { icon: Building2, label: 'Grupos', path: '/Mis_grupos' },
