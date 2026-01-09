@@ -62,10 +62,11 @@ const UserInfoPage = () => {
     const formatDate = (date) => {
         if (!date) return 'No disponible';
         try {
-            const d = new Date(date);
-            // Usar UTC para evitar problemas de zona horaria
-            const utcDate = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-            return format(utcDate, "d 'de' MMMM 'de' yyyy", { locale: es });
+            // Extraer solo la parte de fecha (YYYY-MM-DD) para evitar problemas de zona horaria
+            const dateStr = typeof date === 'string' ? date.split('T')[0] : date.toISOString().split('T')[0];
+            const [year, month, day] = dateStr.split('-').map(Number);
+            const localDate = new Date(year, month - 1, day);
+            return format(localDate, "d 'de' MMMM 'de' yyyy", { locale: es });
         } catch {
             return 'Fecha inválida';
         }
