@@ -351,7 +351,7 @@ const PostCard = ({
     return (
         <>
             {/* Post Card Container con animación de fade-out */}
-            <div className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-4 overflow-hidden transition-all ${isUnfollowed ? 'post-fade-out' : ''} ${post.grupo ? 'border-t-4 border-t-indigo-500' : ''}`}
+            <div className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-4 transition-all ${isUnfollowed ? 'post-fade-out' : ''} ${post.grupo ? 'border-t-4 border-t-indigo-500' : ''}`}
                 onAnimationEnd={() => {
                     if (isUnfollowed) {
                         // Ocultar completamente después de la animación

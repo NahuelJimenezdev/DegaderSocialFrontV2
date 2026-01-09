@@ -85,9 +85,31 @@ export default function PostOptionsMenu({
         // Aquí se podría navegar: navigate(`/perfil/${postUserId}`)
     };
 
-    const handleCopyLinkClick = () => {
-        logger.log('🔗 [MENU] Copiar enlace:', post._id);
-        // TODO: Implementar copia al portapapeles
+    const handleCopyLinkClick = async () => {
+        try {
+            const postUrl = `${window.location.origin}/publicacion/${post._id}`;
+            await navigator.clipboard.writeText(postUrl);
+            logger.log('🔗 [MENU] Enlace copiado:', postUrl);
+
+            // Mostrar feedback visual (puedes agregar un toast aquí si tienes uno)
+            alert('✅ Enlace copiado al portapapeles');
+        } catch (error) {
+            logger.error('❌ [MENU] Error al copiar enlace:', error);
+            // Fallback para navegadores que no soportan clipboard API
+            const textArea = document.createElement('textarea');
+            textArea.value = `${window.location.origin}/publicacion/${post._id}`;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('✅ Enlace copiado al portapapeles');
+            } catch (err) {
+                alert('❌ No se pudo copiar el enlace');
+            }
+            document.body.removeChild(textArea);
+        }
         onClose();
     };
 
@@ -149,10 +171,10 @@ export default function PostOptionsMenu({
                 <User size={20} className="text-gray-600 dark:text-gray-400" />
                 <div className="flex-1">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Ver perfil
+                        Sobre esta cuenta
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Visitar el perfil del autor
+                        Conocé más sobre este usuario <br />y su recorrido en la plataforma
                     </p>
                 </div>
             </button>
