@@ -31,8 +31,8 @@ const UserInfoPage = () => {
     const loadUserInfo = async () => {
         try {
             setLoading(true);
-            // El nombreapellido es en realidad el userId que viene de la navegación
-            const response = await userService.getUserById(nombreapellido);
+            // Buscar usuario por username
+            const response = await userService.getUserByUsername(nombreapellido);
 
             if (response.success) {
                 setUserInfo(response.data);
@@ -103,12 +103,14 @@ const UserInfoPage = () => {
     }
 
     const avatar = getUserAvatar(userInfo);
-    const fullName = `${userInfo.nombre} ${userInfo.apellido}`;
+    const fullName = userInfo.nombre && userInfo.apellido
+        ? `${userInfo.nombre} ${userInfo.apellido}`
+        : userInfo.nombreCompleto || 'Usuario';
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <div className="max-w-4xl mx-auto px-4 py-4">
                     <button
                         onClick={() => navigate(-1)}

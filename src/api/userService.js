@@ -33,6 +33,16 @@ const userService = {
   },
 
   /**
+   * Get user by username
+   * @param {string} username - Username
+   * @returns {Promise<Object>} User data
+   */
+  getUserByUsername: async (username) => {
+    const response = await api.get(`/usuarios/username/${username}`);
+    return response.data;
+  },
+
+  /**
    * Update user profile
    * @param {Object} profileData - Profile data to update
    * @returns {Promise<Object>} Updated user data

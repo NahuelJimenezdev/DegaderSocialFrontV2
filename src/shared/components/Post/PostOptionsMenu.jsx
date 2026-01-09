@@ -84,11 +84,14 @@ export default function PostOptionsMenu({
     };
 
     const handleViewProfileClick = () => {
+        const username = post.usuario?.username;
         const userId = post.usuario?._id || post.usuario;
-        logger.log('👤 [MENU] Ver información del usuario:', userId);
+
+        logger.log('👤 [MENU] Ver información del usuario:', username || userId);
         onClose();
-        // Usar userId en la URL por ahora, luego se puede cambiar a nombre
-        navigate(`/informacionUsuario/${userId}`);
+
+        // Usar username si está disponible, sino usar ID
+        navigate(`/informacionUsuario/${username || userId}`);
     };
 
     const handleCopyLinkClick = async () => {
