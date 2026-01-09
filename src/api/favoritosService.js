@@ -1,4 +1,4 @@
-import api from './axiosConfig';
+import api from './config';
 
 const favoritosService = {
     /**

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, List, Star, User } from 'lucide-react';
-import { logger } from '../../../utils/logger';
+import { logger } from '../../../shared/utils/logger';
 import favoritosService from '../../../api/favoritosService';
 import FavoriteUserCard from '../components/FavoriteUserCard';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
@@ -69,8 +69,8 @@ const FavoritosPage = () => {
                     <button
                         onClick={() => setViewMode('grid')}
                         className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
-                                ? 'bg-white dark:bg-gray-700 text-purple-500 shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                            ? 'bg-white dark:bg-gray-700 text-purple-500 shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                             }`}
                     >
                         <Grid size={20} />
@@ -78,8 +78,8 @@ const FavoritosPage = () => {
                     <button
                         onClick={() => setViewMode('list')}
                         className={`p-2 rounded-md transition-colors ${viewMode === 'list'
-                                ? 'bg-white dark:bg-gray-700 text-purple-500 shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                            ? 'bg-white dark:bg-gray-700 text-purple-500 shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                             }`}
                     >
                         <List size={20} />

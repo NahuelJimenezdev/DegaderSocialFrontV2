@@ -153,6 +153,34 @@ export default function PostOptionsMenu({
                 </button>
             )}
 
+            {/* Agregar a Favoritos (Solo si no es mi propio post) */}
+            {!isOwnPost && (
+                <button
+                    onClick={async () => {
+                        try {
+                            const userId = post.usuario?._id || post.usuario;
+                            await import('../../../api/favoritosService').then(module => module.default.toggleFavoriteUser(userId));
+                            toast.success('Favoritos actualizados');
+                            onClose();
+                        } catch (error) {
+                            console.error('Error al agregar a favoritos:', error);
+                            toast.error('Error al actualizar favoritos');
+                        }
+                    }}
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                >
+                    <Star size={20} className="text-yellow-500" />
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            Favorito
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Agregar/Quitar de favoritos
+                        </p>
+                    </div>
+                </button>
+            )}
+
             {/* Dejar de seguir - Solo si NO es el propio post */}
             {!isOwnPost && (
                 <button
@@ -203,33 +231,7 @@ export default function PostOptionsMenu({
                 </div>
             </button>
 
-            {/* Agregar a Favoritos (Solo si no es mi propio post) */}
-            {!isOwnPost && (
-                <button
-                    onClick={async () => {
-                        try {
-                            const userId = post.usuario?._id || post.usuario;
-                            await import('../../api/favoritosService').then(module => module.default.toggleFavoriteUser(userId));
-                            toast.success('Favoritos actualizados');
-                            onClose();
-                        } catch (error) {
-                            console.error('Error al agregar a favoritos:', error);
-                            toast.error('Error al actualizar favoritos');
-                        }
-                    }}
-                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                >
-                    <Star size={20} className="text-yellow-500" />
-                    <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            Favorito
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Agregar/Quitar de favoritos
-                        </p>
-                    </div>
-                </button>
-            )}
+
 
             {/* Compartir */}
             <button
