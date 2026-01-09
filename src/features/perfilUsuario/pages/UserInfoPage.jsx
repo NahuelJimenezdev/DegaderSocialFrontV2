@@ -190,14 +190,16 @@ const UserInfoPage = () => {
                         <InfoItem
                             icon={Cake}
                             label="Cumpleaños"
-                            value={userInfo.cumpleaños ? formatDate(userInfo.cumpleaños) : null}
-                            notConfirmed={!userInfo.cumpleaños}
+                            value={userInfo.personal?.fechaNacimiento ? formatDate(userInfo.personal.fechaNacimiento) : null}
+                            notConfirmed={!userInfo.personal?.fechaNacimiento}
                         />
                         <InfoItem
                             icon={MapPin}
                             label="Ubicación"
-                            value={(userInfo.ciudad || userInfo.pais) ? [userInfo.ciudad, userInfo.pais].filter(Boolean).join(', ') : null}
-                            notConfirmed={!userInfo.ciudad && !userInfo.pais}
+                            value={(userInfo.personal?.ubicacion?.ciudad || userInfo.personal?.ubicacion?.pais)
+                                ? [userInfo.personal.ubicacion.ciudad, userInfo.personal.ubicacion.pais].filter(Boolean).join(', ')
+                                : null}
+                            notConfirmed={!userInfo.personal?.ubicacion?.ciudad && !userInfo.personal?.ubicacion?.pais}
                         />
                     </InfoCard>
 
