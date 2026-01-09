@@ -23,6 +23,7 @@ import PostOptionsMenu from './PostOptionsMenu';
 import { AlertDialog } from '../AlertDialog/AlertDialog';
 import { userService, friendshipService } from '../../../api';
 import { logger } from '../../utils/logger';
+import { useToast } from '../Toast/ToastProvider';
 
 const PostCard = ({
     post,
@@ -43,6 +44,7 @@ const PostCard = ({
     const [isUnfollowed, setIsUnfollowed] = useState(false); // Estado para animación de fade-out
 
     const navigate = useNavigate();
+    const toast = useToast();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -149,10 +151,28 @@ const PostCard = ({
         }
     };
 
-    const handleSaveClick = () => {
-        // Llamar directamente sin confirmación, el toast mostrará el feedback
-        context.handleSavePost?.(post._id);
+    const handleSaveClick = async () => {
+        try {
+            const response = await userService.toggleSavePost(post._id);
+
+            if (response.success) {
+                setIsSaved(!isSaved);
+                const message = isSaved ? 'Publicación eliminada de guardados' : 'Publicación guardada exitosamente';
+                toast.success(message);
+
+                // Si estamos en modo perfil, también actualizar el contexto
+                if (!isFeedMode && context.handleSavePost) {
+                    context.handleSavePost(post._id);
+                }
+            }
+        } catch (error) {
+            logger.error('Error al guardar post:', error);
+            toast.error('No se pudo guardar la publicación');
+        }
     };
+
+    // Alias para PostOptionsMenu
+    const handleSavePost = handleSaveClick;
 
     const handleAddCommentWrapper = async (postId, content, parentId, image) => {
         if (isFeedMode) {
@@ -162,48 +182,7 @@ const PostCard = ({
         }
     };
 
-    // Handler: Guardar publicación
-    const handleSavePost = async () => {
-        try {
-            logger.log('💾 [SAVE] Intentando guardar publicación:', {
-                postId: post._id,
-                postAuthorId: post.usuario?._id || post.usuario,
-                currentUserId: currentUser?._id,
-                isOwnPost: (post.usuario?._id || post.usuario) === currentUser?._id
-            });
 
-            const response = await userService.toggleSavePost(post._id);
-
-            logger.log('💾 [SAVE] Respuesta del servidor:', response);
-
-            if (response.success) {
-                setIsSaved(!isSaved);
-                setAlertConfig({
-                    isOpen: true,
-                    variant: 'success',
-                    message: isSaved ? '❌ Publicación eliminada de guardados' : '✅ Publicación guardada correctamente'
-                });
-            } else {
-                logger.error('💾 [SAVE] Respuesta no exitosa:', response);
-                setAlertConfig({
-                    isOpen: true,
-                    variant: 'error',
-                    message: response.message || 'No se pudo guardar la publicación'
-                });
-            }
-        } catch (error) {
-            logger.error('💾 [SAVE] Error completo:', {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
-            setAlertConfig({
-                isOpen: true,
-                variant: 'error',
-                message: error.response?.data?.message || 'No se pudo guardar la publicación'
-            });
-        }
-    };
 
     // Handler: Dejar de seguir
     const handleUnfollow = async () => {
@@ -405,7 +384,7 @@ const PostCard = ({
                         currentUser={currentUser}
                         isOpen={showOptionsMenu}
                         onClose={() => setShowOptionsMenu(false)}
-                        onSave={handleSavePost}
+                        onSave={handleSaveClick}
                         onUnfollow={handleUnfollow}
                         onReport={handleReport}
                         isSaved={isSaved}
