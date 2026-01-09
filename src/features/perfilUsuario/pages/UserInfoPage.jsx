@@ -62,7 +62,10 @@ const UserInfoPage = () => {
     const formatDate = (date) => {
         if (!date) return 'No disponible';
         try {
-            return format(new Date(date), "d 'de' MMMM 'de' yyyy", { locale: es });
+            const d = new Date(date);
+            // Usar UTC para evitar problemas de zona horaria
+            const utcDate = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+            return format(utcDate, "d 'de' MMMM 'de' yyyy", { locale: es });
         } catch {
             return 'Fecha inválida';
         }
