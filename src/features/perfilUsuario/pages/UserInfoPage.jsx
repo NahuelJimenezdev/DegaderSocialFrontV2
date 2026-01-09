@@ -31,8 +31,20 @@ const UserInfoPage = () => {
     const loadUserInfo = async () => {
         try {
             setLoading(true);
-            // Buscar usuario por username
-            const response = await userService.getUserByUsername(nombreapellido);
+
+            // Detectar si nombreapellido es un ID (24 caracteres hexadecimales) o un username
+            const isMongoId = /^[a-f0-9]{24}$/i.test(nombreapellido);
+
+            let response;
+            if (isMongoId) {
+                // Si es un ID, usar getUserById
+                logger.log('🔍 Buscando por ID:', nombreapellido);
+                response = await userService.getUserById(nombreapellido);
+            } else {
+                // Si es un username, usar getUserByUsername
+                logger.log('🔍 Buscando por username:', nombreapellido);
+                response = await userService.getUserByUsername(nombreapellido);
+            }
 
             if (response.success) {
                 setUserInfo(response.data);
