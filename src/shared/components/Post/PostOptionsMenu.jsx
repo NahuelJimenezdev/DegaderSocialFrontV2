@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Bookmark, UserMinus, Flag, Link, User, Share2 } from 'lucide-react';
 import { logger } from '../../utils/logger';
 import { useToast } from '../Toast/ToastProvider';
@@ -28,6 +29,7 @@ export default function PostOptionsMenu({
 }) {
     const menuRef = useRef(null);
     const toast = useToast();
+    const navigate = useNavigate();
 
     // Cerrar al hacer click fuera
     useEffect(() => {
@@ -82,9 +84,10 @@ export default function PostOptionsMenu({
     };
 
     const handleViewProfileClick = () => {
-        logger.log('👤 [MENU] Ver perfil:', postUserId);
+        const userId = post.usuario?._id || post.usuario;
+        logger.log('👤 [MENU] Ver información del usuario:', userId);
         onClose();
-        // Aquí se podría navegar: navigate(`/perfil/${postUserId}`)
+        navigate(`/informacionUsuario/${userId}`);
     };
 
     const handleCopyLinkClick = async () => {
