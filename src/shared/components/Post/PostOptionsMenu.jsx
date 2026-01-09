@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Bookmark, UserMinus, Flag, Link, User, Share2 } from 'lucide-react';
 import { logger } from '../../utils/logger';
+import { useToast } from '../Toast/ToastProvider';
 
 /**
  * Menú de opciones para publicaciones
@@ -26,6 +27,7 @@ export default function PostOptionsMenu({
     showSaveAction = true
 }) {
     const menuRef = useRef(null);
+    const toast = useToast();
 
     // Cerrar al hacer click fuera
     useEffect(() => {
@@ -91,8 +93,7 @@ export default function PostOptionsMenu({
             await navigator.clipboard.writeText(postUrl);
             logger.log('🔗 [MENU] Enlace copiado:', postUrl);
 
-            // Mostrar feedback visual (puedes agregar un toast aquí si tienes uno)
-            alert('✅ Enlace copiado al portapapeles');
+            toast.success('Enlace copiado al portapapeles');
         } catch (error) {
             logger.error('❌ [MENU] Error al copiar enlace:', error);
             // Fallback para navegadores que no soportan clipboard API
@@ -104,9 +105,9 @@ export default function PostOptionsMenu({
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert('✅ Enlace copiado al portapapeles');
+                toast.success('Enlace copiado al portapapeles');
             } catch (err) {
-                alert('❌ No se pudo copiar el enlace');
+                toast.error('No se pudo copiar el enlace');
             }
             document.body.removeChild(textArea);
         }
