@@ -12,6 +12,7 @@ import { logger } from '../../utils/logger';
  * @param {Function} onUnfollow - Dejar de seguir
  * @param {Function} onReport - Reportar (temporal)
  * @param {boolean} isSaved - Si el post ya está guardado
+ * @param {boolean} showSaveAction - Si se debe mostrar la opción de guardar
  */
 export default function PostOptionsMenu({
     post,
@@ -78,6 +79,24 @@ export default function PostOptionsMenu({
         onClose();
     };
 
+    const handleViewProfileClick = () => {
+        logger.log('👤 [MENU] Ver perfil:', postUserId);
+        onClose();
+        // Aquí se podría navegar: navigate(`/perfil/${postUserId}`)
+    };
+
+    const handleCopyLinkClick = () => {
+        logger.log('🔗 [MENU] Copiar enlace:', post._id);
+        // TODO: Implementar copia al portapapeles
+        onClose();
+    };
+
+    const handleShareClick = () => {
+        logger.log('📤 [MENU] Compartir:', post._id);
+        // TODO: Implementar compartir
+        onClose();
+    };
+
     return (
         <div
             ref={menuRef}
@@ -124,11 +143,7 @@ export default function PostOptionsMenu({
 
             {/* Ver Perfil */}
             <button
-                onClick={() => {
-                    logger.log('👤 [MENU] Ver perfil:', postUserId);
-                    onClose();
-                    // Aquí se podría navegar: navigate(`/perfil/${postUserId}`)
-                }}
+                onClick={handleViewProfileClick}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
             >
                 <User size={20} className="text-gray-600 dark:text-gray-400" />
@@ -144,10 +159,7 @@ export default function PostOptionsMenu({
 
             {/* Copiar Enlace */}
             <button
-                onClick={() => {
-                    logger.log('🔗 [MENU] Copiar enlace:', post._id);
-                    onClose();
-                }}
+                onClick={handleCopyLinkClick}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
             >
                 <Link size={20} className="text-gray-600 dark:text-gray-400" />
@@ -163,10 +175,7 @@ export default function PostOptionsMenu({
 
             {/* Compartir */}
             <button
-                onClick={() => {
-                    logger.log('📤 [MENU] Compartir:', post._id);
-                    onClose();
-                }}
+                onClick={handleShareClick}
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
             >
                 <Share2 size={20} className="text-gray-600 dark:text-gray-400" />
