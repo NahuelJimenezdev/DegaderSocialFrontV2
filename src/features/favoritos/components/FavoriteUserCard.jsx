@@ -24,7 +24,7 @@ const FavoriteUserCard = ({ user, onRemove }) => {
     return (
         <div
             onClick={handleCardClick}
-            className="group relative p-4 rounded-md bg-[#181818] hover:bg-[#282828] transition-all duration-300 cursor-pointer flex flex-col gap-4 shadow-sm hover:shadow-lg w-full"
+            className="w-full flex flex-col gap-4 p-4 rounded-lg transition-all duration-300 cursor-pointer group relative bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800 shadow-sm hover:shadow-lg border border-gray-300 dark:border-gray-700 shadow-[0_10px_30px_-10px_rgba(129,140,248,0.45)] "
         >
             {/* Botón de eliminar (visible en hover) */}
             <button
@@ -36,7 +36,7 @@ const FavoriteUserCard = ({ user, onRemove }) => {
             </button>
 
             {/* Imagen Cuadrada Estilo Álbum */}
-            <div className="relative w-full aspect-square rounded-md overflow-hidden shadow-md group-hover:shadow-xl transition-shadow bg-[#333]">
+            <div className="relative w-full aspect-square rounded-md overflow-hidden shadow-md group-hover:shadow-xl transition-shadow bg-gray-100 dark:bg-[#333]">
                 {avatar ? (
                     <img
                         src={avatar}
@@ -54,7 +54,7 @@ const FavoriteUserCard = ({ user, onRemove }) => {
 
             {/* Info */}
             <div className="flex flex-col gap-1 w-full">
-                <h3 className="font-bold text-white text-base truncate w-full" title={fullName}>
+                <h3 className="font-bold text-gray-900 dark:text-white text-base truncate w-full" title={fullName}>
                     {fullName}
                 </h3>
                 <p className="text-gray-400 text-sm truncate">
