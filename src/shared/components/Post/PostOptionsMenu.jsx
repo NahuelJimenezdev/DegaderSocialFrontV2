@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Bookmark, UserMinus, Flag } from 'lucide-react';
+import { Bookmark, UserMinus, Flag, Link, User, Share2 } from 'lucide-react';
 import { logger } from '../../utils/logger';
 
 /**
@@ -121,6 +121,64 @@ export default function PostOptionsMenu({
                     </div>
                 </button>
             )}
+
+            {/* Ver Perfil */}
+            <button
+                onClick={() => {
+                    logger.log('👤 [MENU] Ver perfil:', postUserId);
+                    onClose();
+                    // Aquí se podría navegar: navigate(`/perfil/${postUserId}`)
+                }}
+                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            >
+                <User size={20} className="text-gray-600 dark:text-gray-400" />
+                <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        Ver perfil
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Visitar el perfil del autor
+                    </p>
+                </div>
+            </button>
+
+            {/* Copiar Enlace */}
+            <button
+                onClick={() => {
+                    logger.log('🔗 [MENU] Copiar enlace:', post._id);
+                    onClose();
+                }}
+                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            >
+                <Link size={20} className="text-gray-600 dark:text-gray-400" />
+                <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        Copiar enlace
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Copiar enlace de publicación
+                    </p>
+                </div>
+            </button>
+
+            {/* Compartir */}
+            <button
+                onClick={() => {
+                    logger.log('📤 [MENU] Compartir:', post._id);
+                    onClose();
+                }}
+                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            >
+                <Share2 size={20} className="text-gray-600 dark:text-gray-400" />
+                <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        Compartir
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Compartir esta publicación
+                    </p>
+                </div>
+            </button>
 
             {/* Divisor */}
             <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
