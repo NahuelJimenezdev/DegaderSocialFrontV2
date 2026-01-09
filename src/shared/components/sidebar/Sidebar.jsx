@@ -1,4 +1,4 @@
-import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video } from "lucide-react";
+import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star } from "lucide-react";
 import NavItem from "../navItem/NavItem";
 import { useAuth } from '../../../context/AuthContext';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
@@ -19,6 +19,9 @@ const Sidebar = () => {
           </div>
           <div className="sidebar-items">
             <NavItem to="/amigos" icon={Users} label="Amigos" />
+          </div>
+          <div className="sidebar-items">
+            <NavItem to="/favoritos" icon={Star} label="Favoritos" />
           </div>
           <div className="sidebar-items">
             <NavItem to="/mensajes" icon={MessageCircle} label="Mensajes" badge={pendingCount} />
