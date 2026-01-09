@@ -63,23 +63,31 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
    */
   const handleSavePost = async (postId) => {
     try {
-      const isSaved = savedPosts.includes(postId);
+      // Detectar si savedPosts contiene objetos o IDs
+      const isSaved = savedPosts.some(p => (p._id || p) === postId);
 
       // Actualización optimista
       if (isSaved) {
-        setSavedPosts(savedPosts.filter(id => id !== postId));
+        // Si quitamos, filtramos manteniendo el formato original (objetos o IDs)
+        setSavedPosts(prev => prev.filter(p => (p._id || p) !== postId));
       } else {
-        setSavedPosts([...savedPosts, postId]);
+        // Si agregamos, intentamos buscar el post completo en la lista actual 'posts'
+        // Si no está, agregamos solo el ID (el componente deberá manejar esto o recargar)
+        const postToAdd = posts.find(p => p._id === postId) || postId;
+        setSavedPosts(prev => [...prev, postToAdd]);
       }
 
       const response = await userService.toggleSavePost(postId);
 
       if (response.success) {
-        setSavedPosts(response.data.savedPosts);
+        // NO sobrescribir savedPosts con response.data.savedPosts porque son solo IDs
+        // y rompería la vista de guardados si esperaba objetos.
+        // Mantenemos la actualización optimista que ya hicimos.
         logger.log(isSaved ? '✅ Post eliminado de guardados' : '✅ Post guardado exitosamente');
       }
     } catch (error) {
       logger.error('Error al guardar post:', error);
+      // En caso de error, recargar todo para asegurar consistencia
       loadSavedPosts();
     }
   };

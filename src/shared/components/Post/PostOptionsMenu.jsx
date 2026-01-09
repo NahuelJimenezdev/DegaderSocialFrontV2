@@ -21,7 +21,8 @@ export default function PostOptionsMenu({
     onSave,
     onUnfollow,
     onReport,
-    isSaved = false
+    isSaved = false,
+    showSaveAction = true
 }) {
     const menuRef = useRef(null);
 
@@ -83,23 +84,25 @@ export default function PostOptionsMenu({
             className="absolute top-8 right-3 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 min-w-[220px] z-50 animate-in fade-in zoom-in-95 duration-200"
         >
             {/* Guardar publicación */}
-            <button
-                onClick={handleSaveClick}
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-            >
-                <Bookmark
-                    size={20}
-                    className={`${isSaved ? 'fill-blue-500 text-blue-500' : 'text-gray-600 dark:text-gray-400'}`}
-                />
-                <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        {isSaved ? 'Quitar de guardados' : 'Guardar publicación'}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {isSaved ? 'Eliminar de tu colección' : 'Guardar para ver más tarde'}
-                    </p>
-                </div>
-            </button>
+            {showSaveAction && (
+                <button
+                    onClick={handleSaveClick}
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                >
+                    <Bookmark
+                        size={20}
+                        className={`${isSaved ? 'fill-blue-500 text-blue-500' : 'text-gray-600 dark:text-gray-400'}`}
+                    />
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            {isSaved ? 'Quitar de guardados' : 'Guardar publicación'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {isSaved ? 'Eliminar de tu colección' : 'Guardar para ver más tarde'}
+                        </p>
+                    </div>
+                </button>
+            )}
 
             {/* Dejar de seguir - Solo si NO es el propio post */}
             {!isOwnPost && (

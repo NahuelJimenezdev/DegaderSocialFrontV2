@@ -63,6 +63,19 @@ const PostCard = ({
     const isFeedMode = variant === 'feed';
     const context = profileContext || {};
 
+    // Inicializar isSaved desde el backend
+    useEffect(() => {
+        if (isFeedMode && currentUser?.savedPosts) {
+            setIsSaved(currentUser.savedPosts.includes(post._id));
+        } else if (!isFeedMode && profileContext?.savedPosts) {
+            // En modo perfil, savedPosts puede ser array de IDs o array de objetos
+            const savedPostIds = Array.isArray(profileContext.savedPosts)
+                ? profileContext.savedPosts.map(p => typeof p === 'string' ? p : p._id)
+                : [];
+            setIsSaved(savedPostIds.includes(post._id));
+        }
+    }, [post._id, currentUser?.savedPosts, profileContext?.savedPosts, isFeedMode]);
+
     // ✅ SIEMPRE usar el autor del post (post.usuario) para el header
     // No importa si estamos en feed o perfil, el autor del post debe mostrarse
     const user = post.usuario;
@@ -83,8 +96,8 @@ const PostCard = ({
     };
 
     const isLiked = isFeedMode
-        ? post.likes.includes(currentUser?._id)
-        : post.likes.includes(context.user?._id);
+        ? post.likes?.includes(currentUser?._id)
+        : post.likes?.includes(context.user?._id);
 
     const handleCommentClick = () => {
         if (isFeedMode) {
@@ -138,7 +151,27 @@ const PostCard = ({
 
     const handleSaveClick = () => {
         if (!isFeedMode) {
-            context.handleSavePost?.(post._id);
+            // Si ya está guardado (que debería estarlo en esta vista), confirmar antes de quitar
+            if (isSaved) {
+                setAlertConfig({
+                    isOpen: true,
+                    title: '¿Quitar de guardados?',
+                    message: '¿Estás seguro de que deseas eliminar esta publicación de tu colección de guardados?',
+                    showCancelButton: true,
+                    confirmText: 'Sí, quitar',
+                    cancelText: 'Cancelar',
+                    variant: 'warning',
+                    onConfirm: async () => {
+                        // Usar el handler del contexto o el local si es necesario, 
+                        // pero necesitamos asegurar que se actualice el estado.
+                        // El context.handleSavePost debería manejar la actualización del contexto.
+                        await context.handleSavePost?.(post._id);
+                    }
+                });
+            } else {
+                // Si por alguna razón no está guardado (ej. error de sync), intentar guardar directo
+                context.handleSavePost?.(post._id);
+            }
         }
     };
 
@@ -364,9 +397,13 @@ const PostCard = ({
                                     </div>
                                 )}
 
-                                {/* Line 2: Time + Privacy Icon */}
                                 <div className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 leading-tight">
-                                    <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: es })}</span>
+                                    <span>
+                                        {post.createdAt && !isNaN(new Date(post.createdAt).getTime())
+                                            ? formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: es })
+                                            : 'Fecha desconocida'
+                                        }
+                                    </span>
                                     <span className="flex-shrink-0">
                                         {post.privacidad === 'publico' ? <Globe size={12} /> : post.privacidad === 'amigos' ? <Users size={12} /> : <Lock size={12} />}
                                     </span>
@@ -393,6 +430,7 @@ const PostCard = ({
                         onUnfollow={handleUnfollow}
                         onReport={handleReport}
                         isSaved={isSaved}
+                        showSaveAction={isFeedMode} // Ocultar opción de guardar en modo 'Guardados'
                     />
                 </div>
 
@@ -466,7 +504,7 @@ const PostCard = ({
                                 }`}
                         >
                             <Heart size={20} className={isLiked ? "fill-current" : ""} />
-                            <span className="text-sm font-medium">{post.likes.length}</span>
+                            <span className="text-sm font-medium">{post.likes?.length || 0}</span>
                         </button>
 
                         {/* Comment */}
@@ -493,12 +531,12 @@ const PostCard = ({
                         {!isFeedMode && (
                             <button
                                 onClick={handleSaveClick}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${context.savedPosts?.includes(post._id)
+                                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isSaved
                                     ? 'text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                                     }`}
                             >
-                                <Bookmark size={20} className={context.savedPosts?.includes(post._id) ? "fill-current" : ""} />
+                                <Bookmark size={20} className={isSaved ? "fill-current" : ""} />
                             </button>
                         )}
                     </div>
