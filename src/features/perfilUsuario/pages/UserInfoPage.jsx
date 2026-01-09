@@ -31,13 +31,11 @@ const UserInfoPage = () => {
     const loadUserInfo = async () => {
         try {
             setLoading(true);
-            // Buscar usuario por nombre completo
-            const response = await userService.searchUsers(nombreapellido);
+            // El nombreapellido es en realidad el userId que viene de la navegación
+            const response = await userService.getUserById(nombreapellido);
 
-            if (response.success && response.data && response.data.length > 0) {
-                // Tomar el primer resultado que coincida
-                const user = response.data[0];
-                setUserInfo(user);
+            if (response.success) {
+                setUserInfo(response.data);
             } else {
                 setError('No se pudo cargar la información del usuario');
             }
