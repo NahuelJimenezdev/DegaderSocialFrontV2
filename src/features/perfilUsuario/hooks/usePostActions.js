@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { logger } from '../../../shared/utils/logger';
 import { postService, userService } from '../../../api';
+import { useToast } from '../../../shared/components/Toast/ToastProvider';
 
 /**
  * Hook para manejar las acciones sobre posts (like, save, comment)
@@ -16,6 +17,7 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
   const [showComments, setShowComments] = useState({});
   const [commentText, setCommentText] = useState({});
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+  const toast = useToast();
 
   /**
    * Maneja el like de un post con actualización optimista
@@ -83,6 +85,8 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
         // NO sobrescribir savedPosts con response.data.savedPosts porque son solo IDs
         // y rompería la vista de guardados si esperaba objetos.
         // Mantenemos la actualización optimista que ya hicimos.
+        const message = isSaved ? 'Publicación eliminada de guardados' : 'Publicación guardada exitosamente';
+        toast.success(message);
         logger.log(isSaved ? '✅ Post eliminado de guardados' : '✅ Post guardado exitosamente');
       }
     } catch (error) {

@@ -150,29 +150,8 @@ const PostCard = ({
     };
 
     const handleSaveClick = () => {
-        if (!isFeedMode) {
-            // Si ya está guardado (que debería estarlo en esta vista), confirmar antes de quitar
-            if (isSaved) {
-                setAlertConfig({
-                    isOpen: true,
-                    title: '¿Quitar de guardados?',
-                    message: '¿Estás seguro de que deseas eliminar esta publicación de tu colección de guardados?',
-                    showCancelButton: true,
-                    confirmText: 'Sí, quitar',
-                    cancelText: 'Cancelar',
-                    variant: 'warning',
-                    onConfirm: async () => {
-                        // Usar el handler del contexto o el local si es necesario, 
-                        // pero necesitamos asegurar que se actualice el estado.
-                        // El context.handleSavePost debería manejar la actualización del contexto.
-                        await context.handleSavePost?.(post._id);
-                    }
-                });
-            } else {
-                // Si por alguna razón no está guardado (ej. error de sync), intentar guardar directo
-                context.handleSavePost?.(post._id);
-            }
-        }
+        // Llamar directamente sin confirmación, el toast mostrará el feedback
+        context.handleSavePost?.(post._id);
     };
 
     const handleAddCommentWrapper = async (postId, content, parentId, image) => {
