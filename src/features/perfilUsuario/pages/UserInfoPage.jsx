@@ -31,8 +31,7 @@ const UserInfoPage = () => {
     const loadUserInfo = async () => {
         try {
             setLoading(true);
-            // TODO: Reemplazar con endpoint real cuando esté disponible
-            const response = await userService.getUserProfile(userId);
+            const response = await userService.getUserById(userId);
 
             if (response.success) {
                 setUserInfo(response.data);
