@@ -58,10 +58,10 @@ const Toast = ({ id, message, type, onClose }) => {
   const config = {
     success: {
       icon: CheckCircle,
-      bg: 'bg-purple-50 dark:bg-purple-900/20',
-      border: 'border-purple-200 dark:border-purple-800',
-      text: 'text-purple-800 dark:text-purple-200',
-      iconColor: 'text-purple-600 dark:text-purple-400'
+      bg: 'bg-blue-50 dark:bg-blue-900/20',
+      border: 'border-blue-200 dark:border-blue-800',
+      text: 'text-blue-800 dark:text-blue-200',
+      iconColor: 'text-blue-500 dark:text-blue-400'
     },
     error: {
       icon: AlertCircle,
