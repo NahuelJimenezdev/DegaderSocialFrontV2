@@ -12,7 +12,7 @@ export const useUserRole = () => {
      * Verifica si el usuario es Founder
      */
     const isFounder = () => {
-        return user?.seguridad?.rolSistema === 'Founder';
+        return user?.seguridad?.rolSistema === 'Founder' || user?.email === 'founderdegader@degader.org';
     };
 
     /**

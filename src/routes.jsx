@@ -30,6 +30,10 @@ import ModeratorDashboard from './features/moderacion/pages/ModeratorDashboard'
 import ModeratorRoute from './features/moderacion/components/ModeratorRoute'
 import SuspendedUsersPage from './features/admin/pages/SuspendedUsersPage'
 import TicketsManagementPage from './features/admin/pages/TicketsManagementPage'
+import FounderRoute from './shared/components/FounderRoute';
+import FounderUsersPage from './features/founder/pages/FounderUsersPage';
+import TicketDetailPage from './features/tickets/pages/TicketDetailPage';
+import AuditLogsPage from './features/admin/pages/AuditLogsPage';
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -69,15 +73,23 @@ export const router = createBrowserRouter([
       { path: '/notificaciones', element: <NotificationsPage /> },
       { path: '/Sistema/:id', element: <SystemNotificationPage /> },
       { path: '/favoritos', element: <FavoritosPage /> },
+      { path: '/favoritos', element: <FavoritosPage /> },
+      // Ticket System Routes
+      { path: '/tickets/:id', element: <TicketDetailPage /> }, // Vista usuario
       // Advertising routes
       { path: '/publicidad', element: <ClientAdsDashboard /> },
       { path: '/admin/publicidad', element: <FounderAdsDashboard /> },
       { path: '/publicidad/analytics/:campaignId', element: <CampaignAnalyticsPage /> },
       // Moderator Panel
       { path: '/moderador', element: <ModeratorRoute><ModeratorDashboard /></ModeratorRoute> },
-      // Admin Panel (Nuevo)
+      // Admin Panel
       { path: '/admin/suspendidos', element: <ModeratorRoute><SuspendedUsersPage /></ModeratorRoute> },
-      { path: '/admin/tickets', element: <ModeratorRoute><TicketsManagementPage /></ModeratorRoute> }
+      { path: '/admin/suspendidos', element: <ModeratorRoute><SuspendedUsersPage /></ModeratorRoute> },
+      { path: '/admin/tickets', element: <ModeratorRoute><TicketsManagementPage /></ModeratorRoute> },
+      { path: '/admin/tickets/:id', element: <ModeratorRoute><TicketDetailPage /></ModeratorRoute> }, // Vista admin
+      // Founder Panel
+      { path: '/admin/logs', element: <FounderRoute><AuditLogsPage /></FounderRoute> }, // Solo Founder/Audit
+      { path: '/founder/users', element: <FounderRoute><FounderUsersPage /></FounderRoute> }
     ],
   },
 

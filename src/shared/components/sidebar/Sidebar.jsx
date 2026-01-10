@@ -1,13 +1,15 @@
-import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star } from "lucide-react";
+import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert } from "lucide-react";
 import NavItem from "../navItem/NavItem";
 import { useAuth } from '../../../context/AuthContext';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
+import { useUserRole } from "../../hooks/useUserRole";
 import styles from './styles/Sidebar.module.css';
 import '../../../shared/styles/sidebar.style.css';
 
 const Sidebar = () => {
   const { user } = useAuth();
   const pendingCount = usePendingMessageCounter(user?._id || user?.id);
+  const { canModerate, isFounder } = useUserRole();
 
   return (
     <>
@@ -41,8 +43,18 @@ const Sidebar = () => {
           <div className="sidebar-items">
             <NavItem to="/Mi_perfil" icon={User} label="Perfil" />
           </div>
-          {/* <div className="sidebar-items">
-          </div> */}
+          {/* Paneles de Administración */}
+          {canModerate && (
+            <div className="sidebar-items">
+              <NavItem to="/moderador" icon={Shield} label="Moderación" />
+            </div>
+          )}
+
+          {isFounder() && (
+            <div className="sidebar-items">
+              <NavItem to="/founder/users" icon={ShieldAlert} label="Gestión Usuarios" />
+            </div>
+          )}
 
 
           {/* Toggle tema oscuro */}

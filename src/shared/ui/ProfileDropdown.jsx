@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star } from 'lucide-react';
+import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star, Shield, ShieldAlert } from 'lucide-react';
+import { useUserRole } from '../hooks/useUserRole';
 import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
@@ -10,6 +11,7 @@ import './ProfileDropdown.css';
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { canModerate, isFounder } = useUserRole();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -59,6 +61,15 @@ const ProfileDropdown = () => {
     { icon: Folder, label: 'Mis Carpetas', path: '/Mis_carpetas' },
     { icon: User, label: 'Perfil', path: '/Mi_perfil' }
   ];
+
+  // Agregar links de administración para móvil
+  if (canModerate) {
+    sidebarItems.push({ icon: Shield, label: 'Moderación', path: '/moderador' });
+  }
+
+  if (isFounder()) {
+    sidebarItems.push({ icon: ShieldAlert, label: 'Gestión Usuarios', path: '/founder/users' });
+  }
 
   const menuItems = [
     {
