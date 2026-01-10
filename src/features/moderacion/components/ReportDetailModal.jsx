@@ -264,12 +264,18 @@ const ReportDetailModal = ({ reportId, isOpen, onClose }) => {
                                 onClose={() => setShowActions(false)}
                             />
                         ) : (
-                            <button
-                                onClick={() => setShowActions(true)}
-                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors"
-                            >
-                                Tomar Acción
-                            </button>
+                            !['valido', 'no_valido'].includes(report.status) ? (
+                                <button
+                                    onClick={() => setShowActions(true)}
+                                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors"
+                                >
+                                    Tomar Acción
+                                </button>
+                            ) : (
+                                <div className="w-full py-3 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium rounded-xl text-center border border-gray-200 dark:border-gray-700">
+                                    Reporte cerrado ({report.status.replace('_', ' ')})
+                                </div>
+                            )
                         )}
                     </div>
                 )}
