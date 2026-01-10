@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, UserPlus, Shield, Ban, Search } from 'lucide-react';
+import { Users, UserPlus, Shield, Ban, Search, Edit2, Trash2 } from 'lucide-react';
 import { useFounderUsers } from '../../../shared/hooks/useFounderUsers';
 import RoleBadge from '../components/RoleBadge';
 import CreateUserModal from '../components/CreateUserModal';
