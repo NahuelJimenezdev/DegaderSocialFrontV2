@@ -15,8 +15,8 @@
     right: 0;
     z-index: 40;
     height: 60px;
-    background-color: white;
-    border-top: 1px solid #e5e7eb;
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-primary);
     align-items: center;
     justify-content: space-around;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);

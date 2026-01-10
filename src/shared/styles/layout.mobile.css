@@ -13,11 +13,8 @@
     .main-content {
         margin-left: 0 !important;
         margin-right: 0 !important;
-        padding-top: calc(var(--navbar-height) + 0.5rem) !important;
-        padding-bottom: calc(var(--bottom-navbar-height) + 1rem) !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        height: calc(100vh - var(--navbar-height)) !important;
+        padding: 0 !important;
+        height: 100% !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
     }
@@ -35,6 +32,8 @@
     /* Aumentar padding interno del contenedor principal de páginas */
     .page-container {
         padding: 1rem !important;
+        min-height: 100% !important;
+        padding-bottom: 70px !important;
     }
 
     /* Excepción para la página de mensajes */
@@ -42,10 +41,14 @@
         padding: 0 !important;
     }
 
-    /* Último elemento debe tener espacio antes del bottom navbar */
-    .main-content>*:last-child {
-        margin-bottom: 4px;
+    .mt-mobile-10 {
+        margin-top: 10px !important;
     }
+
+    .mb-mobile-30 {
+        margin-bottom: 30px !important;
+    }
+
 }
 
 /* Para pantallas muy pequeñas */
@@ -55,9 +58,9 @@
         --bottom-navbar-height: 60px;
     }
 
-    .main-content {
-        padding-top: calc(var(--navbar-height) + 1rem) !important;
-        padding-bottom: calc(var(--bottom-navbar-height) + 0.75rem) !important;
+    .page-container {
+        padding-top: 1rem !important;
+        padding-bottom: 65px !important;
     }
 }
 
@@ -67,6 +70,7 @@
 
 /* Tablets y pantallas medianas (2 columnas) */
 @media (max-width: 768px) {
+
     /* Forzar grid a 2 columnas en móvil */
     .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] {
         grid-template-columns: repeat(2, 1fr) !important;
@@ -76,44 +80,45 @@
 
 /* Móviles pequeños como Moto G (2 columnas compactas) */
 @media (max-width: 480px) {
+
     /* Grid de 2 columnas más compacto */
     .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.5rem !important;
     }
-    
+
     /* Ajustar padding de las cards */
-    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div {
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\]>div {
         padding: 0.75rem !important;
     }
-    
+
     /* Imagen más pequeña y menos gap */
-    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div > div:first-of-type {
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\]>div>div:first-of-type {
         margin-bottom: 0.5rem !important;
     }
-    
+
     /* Reducir gap en la info */
-    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div > div:last-of-type {
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\]>div>div:last-of-type {
         gap: 0.25rem !important;
     }
-    
+
     /* Nombre más pequeño */
     .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] h3 {
         font-size: 0.875rem !important;
         line-height: 1.25rem !important;
     }
-    
+
     /* Username más pequeño */
     .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] p {
         font-size: 0.75rem !important;
     }
-    
+
     /* Última fila (estado y contador) más compacta */
-    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div > div:last-of-type > div:last-of-type {
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\]>div>div:last-of-type>div:last-of-type {
         margin-top: 0.25rem !important;
         font-size: 0.7rem !important;
     }
-    
+
     /* Iconos más pequeños en móvil */
     .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] svg {
         width: 10px !important;

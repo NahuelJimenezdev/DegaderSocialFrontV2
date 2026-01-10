@@ -184,7 +184,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
 
     // ... (return)
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-900 p-4 mb-6 relative">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-900 p-4 mb-6 relative mt-mobile-10">
             {!isExpanded && !alwaysExpanded ? (
                 // ... (collapsed view same)
                 <div className="flex gap-3">

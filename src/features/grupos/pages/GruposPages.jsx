@@ -8,6 +8,7 @@ import { getAvatarUrl } from "../../../shared/utils/avatarUtils";
 import { getSocket } from "../../../shared/lib/socket";
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import '../../../shared/styles/headers.style.css';
+import '../../../shared/styles/layout.mobile.css';
 
 const GruposPages = () => {
   const navigate = useNavigate();
@@ -341,7 +342,7 @@ const GruposPages = () => {
 
   return (
     <div className="page-container">
-      <div className="w-full mx-auto flex flex-col gap-6">
+      <div className="w-full mx-auto flex flex-col gap-6 mb-mobile-30">
         {/* Header */}
         <div className="section-header">
           {/* Icono en caja con fondo */}

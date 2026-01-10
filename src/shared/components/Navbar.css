@@ -78,10 +78,7 @@
     color: #818cf8;
   }
 
-  /* Add padding to body to prevent content being hidden by bottom navbar */
-  body {
-    padding-bottom: 60px;
-  }
+
 }
 
 /* Tablet (medium screens) - Keep everything visible */

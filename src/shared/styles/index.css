@@ -231,6 +231,12 @@ body {
     margin-top: 0 !important;
     height: 100vh !important;
   }
+
+  /* Cambiar navbar de fixed a relative para que ocupe espacio natural */
+  nav.fixed {
+    position: relative !important;
+    top: auto !important;
+  }
 }
 
 /* ===== SIDEBAR ===== */
@@ -308,7 +314,6 @@ body {
 @media (max-width: 768px) {
   .page-container {
     border-radius: 0;
-    padding: 0 1rem 1rem 1rem;
     box-shadow: none;
   }
 }

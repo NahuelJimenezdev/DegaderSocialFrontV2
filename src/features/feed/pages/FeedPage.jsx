@@ -38,7 +38,7 @@ const FeedPage = () => {
   // I'll update the hook in next step if needed, but for now let's just render the list.
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-2xl mx-auto mb-mobile-30 py-8 px-4">
       {/* Create Post Widget */}
       <CreatePostCard currentUser={user} onPostCreated={handleCreatePost} />
 

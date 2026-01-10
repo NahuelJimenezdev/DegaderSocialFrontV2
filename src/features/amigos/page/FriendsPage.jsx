@@ -48,38 +48,40 @@ export default function FriendsPage() {
     fetchBirthdaysToday()
   }, []);
   return (
-    <div className="page-container">
-      {/* Header */}
-      <div className="section-header">
-        {/* Icono en caja con fondo */}
-        <div className="section-header__icon-box">
-          <span className="material-symbols-outlined section-header__icon">
-            <Users className="section-header__icon" />
-          </span>
+    <div className="page-container ">
+      <div className="mt-mobile-10">
+        {/* Header */}
+        <div className="section-header">
+          {/* Icono en caja con fondo */}
+          <div className="section-header__icon-box">
+            <span className="material-symbols-outlined section-header__icon">
+              <Users className="section-header__icon" />
+            </span>
+          </div>
+
+          {/* Contenido: Título + Subtítulo */}
+          <div className="section-header__content">
+            <h1 className="section-header__title section-header__title--heavy">
+              Mis Amigos
+            </h1>
+            <p className="section-header__subtitle">
+              Conecta, comparte y mantente al día con tus amigos
+            </p>
+          </div>
         </div>
 
-        {/* Contenido: Título + Subtítulo */}
-        <div className="section-header__content">
-          <h1 className="section-header__title section-header__title--heavy">
-            Mis Amigos
-          </h1>
-          <p className="section-header__subtitle">
-            Conecta, comparte y mantente al día con tus amigos
-          </p>
+        {/* Barra de búsqueda funcional */}
+        <FriendsSearch />
+
+        {/* Tabs */}
+        <FriendsTabs birthdaysTodayCount={birthdayCount} onChange={handleTabChange} />
+
+        {/* Contenido según tab activo */}
+        <div className={styles.content}>
+          {activeTab === 'friends' && <div><FriendsList /></div>}
+          {activeTab === 'birthdays' && <div><Birthday /></div>}
+          {activeTab === 'city' && <div><CityFriends /></div>}
         </div>
-      </div>
-
-      {/* Barra de búsqueda funcional */}
-      <FriendsSearch />
-
-      {/* Tabs */}
-      <FriendsTabs birthdaysTodayCount={birthdayCount} onChange={handleTabChange} />
-
-      {/* Contenido según tab activo */}
-      <div className={styles.content}>
-        {activeTab === 'friends' && <div><FriendsList /></div>}
-        {activeTab === 'birthdays' && <div><Birthday /></div>}
-        {activeTab === 'city' && <div><CityFriends /></div>}
       </div>
     </div>
   )
