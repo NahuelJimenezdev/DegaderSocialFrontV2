@@ -37,11 +37,21 @@ export function useAuditLogs(filters = {}) {
         fetchLogs();
     }, [fetchLogs]);
 
+    const changePage = (page) => {
+        // Esta función podría actualizar un estado interno de página si el hook manejara el estado completo
+        // Pero como el componente maneja los filtros, esto es solo un placeholder o helper
+        // En este caso, el componente padre (AuditLogsPage) debería actualizar su estado 'filters.page'
+        // El hook actual reacciona a cambios en 'filters', así que no necesitamos una función interna changePage
+        // expuesta, PERO el componente la espera.
+        // Opción B: Exponer una función helper para consistencia, aunque la lógica real esté en el componente.
+    };
+
     return {
         logs,
         loading,
         error,
         pagination,
         refresh: fetchLogs
+        // changePage se elimina o se implementa si movemos la lógica de estado aquí
     };
 }

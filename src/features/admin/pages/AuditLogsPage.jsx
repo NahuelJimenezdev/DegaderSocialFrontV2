@@ -12,9 +12,19 @@ export default function AuditLogsPage() {
 
     const { logs, loading, pagination, changePage } = useAuditLogs(filters);
 
+    // En lugar de llamar a changePage (que no existe en el hook),
+    // actualizamos el filtro 'page' directamente aquí.
     const handleFilterChange = (key, value) => {
-        setFilters(prev => ({ ...prev, [key]: value }));
-        changePage(1); // Reset a primera página al filtrar
+        setFilters(prev => ({
+            ...prev,
+            [key]: value,
+            page: 1 // Resetear a página 1 al cambiar filtros
+        }));
+    };
+
+    // Función para navegación de paginación
+    const handlePageChange = (newPage) => {
+        setFilters(prev => ({ ...prev, page: newPage }));
     };
 
     const getActionBadge = (action) => {
@@ -130,23 +140,25 @@ export default function AuditLogsPage() {
 
                 {/* Paginación simple */}
                 <div className="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6 flex items-center justify-between">
-                    <button
-                        onClick={() => changePage(pagination.page - 1)}
-                        disabled={!pagination.hasPrevPage}
-                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                    >
-                        Anterior
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => handlePageChange(pagination.page - 1)}
+                            disabled={pagination.page === 1}
+                            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            onClick={() => handlePageChange(pagination.page + 1)}
+                            disabled={pagination.page === pagination.totalPages}
+                            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
                     <span className="text-sm text-gray-700 dark:text-gray-300">
                         Página {pagination.page} de {pagination.totalPages}
                     </span>
-                    <button
-                        onClick={() => changePage(pagination.page + 1)}
-                        disabled={!pagination.hasNextPage}
-                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                    >
-                        Siguiente
-                    </button>
                 </div>
             </div>
         </div>
