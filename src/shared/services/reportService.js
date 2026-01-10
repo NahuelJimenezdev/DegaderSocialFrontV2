@@ -88,6 +88,9 @@ export const assignReport = async (reportId) => {
     }
 };
 
+// Alias para compatibilidad
+export const assignReportToSelf = assignReport;
+
 /**
  * Actualizar estado del reporte
  * @param {string} reportId - ID del reporte
@@ -109,17 +112,14 @@ export const updateReportStatus = async (reportId, status, justification) => {
 /**
  * Aplicar acción de moderación
  * @param {string} reportId - ID del reporte
- * @param {string} action - Acción a aplicar
- * @param {boolean} isValid - Si el reporte es válido
- * @param {string} justification - Justificación de la acción
+ * @param {Object} actionData - Datos de la acción
+ * @param {string} actionData.action - Acción a aplicar
+ * @param {boolean} actionData.isValid - Si el reporte es válido
+ * @param {string} actionData.justification - Justificación de la acción
  */
-export const takeModeratorAction = async (reportId, action, isValid, justification) => {
+export const takeModeratorAction = async (reportId, actionData) => {
     try {
-        const response = await api.post(`/reports/moderator/${reportId}/action`, {
-            action,
-            isValid,
-            justification
-        });
+        const response = await api.post(`/reports/moderator/${reportId}/action`, actionData);
         return response.data;
     } catch (error) {
         throw error.response?.data || { message: 'Error al aplicar la acción' };
@@ -180,6 +180,7 @@ export default {
     getAllReports,
     getReportById,
     assignReport,
+    assignReportToSelf,
     updateReportStatus,
     takeModeratorAction,
     getModeratorStats,
