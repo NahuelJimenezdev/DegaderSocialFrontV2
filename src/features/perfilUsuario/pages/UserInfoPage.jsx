@@ -16,6 +16,8 @@ import { es } from 'date-fns/locale';
 import { userService } from '../../../api';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { logger } from '../../../shared/utils/logger';
+import '../../../shared/styles/layout.mobile.css';
+
 
 const UserInfoPage = () => {
     const { nombreapellido } = useParams();
@@ -139,119 +141,121 @@ const UserInfoPage = () => {
             </div>
 
             {/* Content */}
-            <div className="max-w-4xl mx-auto px-4 py-8">
-                {/* User Header */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
-                    <div className="flex items-center gap-4">
-                        <img
-                            src={avatar}
-                            alt={fullName}
-                            className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-500/20"
-                        />
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {fullName}
-                            </h1>
-                            <p className="text-gray-500 dark:text-gray-400">
-                                Información de la cuenta
-                            </p>
+            <div className='mt-mobile-10 mb-mobile-67'>
+                <div className="max-w-4xl mx-auto px-4 py-8">
+                    {/* User Header */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+                        <div className="flex items-center gap-4">
+                            <img
+                                src={avatar}
+                                alt={fullName}
+                                className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-500/20"
+                            />
+                            <div>
+                                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {fullName}
+                                </h1>
+                                <p className="text-gray-500 dark:text-gray-400">
+                                    Información de la cuenta
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Info Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Información de Cuenta */}
-                    <InfoCard
-                        icon={Calendar}
-                        title="Información de Cuenta"
-                        iconColor="text-blue-500"
-                        bgColor="bg-blue-50 dark:bg-blue-900/20"
-                    >
-                        <InfoItem
-                            icon={Clock}
-                            label="Miembro desde"
-                            value={formatDate(userInfo.fechaRegistro || userInfo.createdAt)}
-                            subtitle={`Hace ${calculateTimeSince(userInfo.fechaRegistro || userInfo.createdAt)}`}
-                        />
-                        {userInfo.fechaAmistad && (
+                    {/* Info Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Información de Cuenta */}
+                        <InfoCard
+                            icon={Calendar}
+                            title="Información de Cuenta"
+                            iconColor="text-blue-500"
+                            bgColor="bg-blue-50 dark:bg-blue-900/20"
+                        >
                             <InfoItem
-                                icon={Heart}
-                                label="Amigos desde"
-                                value={formatDate(userInfo.fechaAmistad)}
-                                subtitle={`Hace ${calculateTimeSince(userInfo.fechaAmistad)}`}
+                                icon={Clock}
+                                label="Miembro desde"
+                                value={formatDate(userInfo.fechaRegistro || userInfo.createdAt)}
+                                subtitle={`Hace ${calculateTimeSince(userInfo.fechaRegistro || userInfo.createdAt)}`}
                             />
-                        )}
-                    </InfoCard>
+                            {userInfo.fechaAmistad && (
+                                <InfoItem
+                                    icon={Heart}
+                                    label="Amigos desde"
+                                    value={formatDate(userInfo.fechaAmistad)}
+                                    subtitle={`Hace ${calculateTimeSince(userInfo.fechaAmistad)}`}
+                                />
+                            )}
+                        </InfoCard>
 
-                    {/* Información Personal */}
-                    <InfoCard
-                        icon={Cake}
-                        title="Información Personal"
-                        iconColor="text-purple-500"
-                        bgColor="bg-purple-50 dark:bg-purple-900/20"
-                    >
-                        <InfoItem
+                        {/* Información Personal */}
+                        <InfoCard
                             icon={Cake}
-                            label="Cumpleaños"
-                            value={userInfo.personal?.fechaNacimiento ? formatDate(userInfo.personal.fechaNacimiento) : null}
-                            notConfirmed={!userInfo.personal?.fechaNacimiento}
-                        />
-                        <InfoItem
-                            icon={MapPin}
-                            label="Ubicación"
-                            value={(userInfo.personal?.ubicacion?.ciudad || userInfo.personal?.ubicacion?.pais)
-                                ? [userInfo.personal.ubicacion.ciudad, userInfo.personal.ubicacion.pais].filter(Boolean).join(', ')
-                                : null}
-                            notConfirmed={!userInfo.personal?.ubicacion?.ciudad && !userInfo.personal?.ubicacion?.pais}
-                        />
-                    </InfoCard>
-
-                    {/* Cargo en Iglesia */}
-                    {userInfo.cargoIglesia && (
-                        <InfoCard
-                            icon={Building2}
-                            title="Cargo en Iglesia"
-                            iconColor="text-indigo-500"
-                            bgColor="bg-indigo-50 dark:bg-indigo-900/20"
+                            title="Información Personal"
+                            iconColor="text-purple-500"
+                            bgColor="bg-purple-50 dark:bg-purple-900/20"
                         >
                             <InfoItem
-                                icon={Briefcase}
-                                label="Cargo"
-                                value={userInfo.cargoIglesia.nombre || 'No especificado'}
+                                icon={Cake}
+                                label="Cumpleaños"
+                                value={userInfo.personal?.fechaNacimiento ? formatDate(userInfo.personal.fechaNacimiento) : null}
+                                notConfirmed={!userInfo.personal?.fechaNacimiento}
                             />
-                            {userInfo.cargoIglesia.iglesia && (
-                                <InfoItem
-                                    icon={Building2}
-                                    label="Iglesia"
-                                    value={userInfo.cargoIglesia.iglesia}
-                                />
-                            )}
-                        </InfoCard>
-                    )}
-
-                    {/* Cargo en Fundación */}
-                    {userInfo.cargoFundacion && (
-                        <InfoCard
-                            icon={Users}
-                            title="Cargo en Fundación"
-                            iconColor="text-green-500"
-                            bgColor="bg-green-50 dark:bg-green-900/20"
-                        >
                             <InfoItem
-                                icon={Briefcase}
-                                label="Cargo"
-                                value={userInfo.cargoFundacion.nombre || 'No especificado'}
+                                icon={MapPin}
+                                label="Ubicación"
+                                value={(userInfo.personal?.ubicacion?.ciudad || userInfo.personal?.ubicacion?.pais)
+                                    ? [userInfo.personal.ubicacion.ciudad, userInfo.personal.ubicacion.pais].filter(Boolean).join(', ')
+                                    : null}
+                                notConfirmed={!userInfo.personal?.ubicacion?.ciudad && !userInfo.personal?.ubicacion?.pais}
                             />
-                            {userInfo.cargoFundacion.area && (
-                                <InfoItem
-                                    icon={Users}
-                                    label="Área"
-                                    value={userInfo.cargoFundacion.area}
-                                />
-                            )}
                         </InfoCard>
-                    )}
+
+                        {/* Cargo en Iglesia */}
+                        {userInfo.cargoIglesia && (
+                            <InfoCard
+                                icon={Building2}
+                                title="Cargo en Iglesia"
+                                iconColor="text-indigo-500"
+                                bgColor="bg-indigo-50 dark:bg-indigo-900/20"
+                            >
+                                <InfoItem
+                                    icon={Briefcase}
+                                    label="Cargo"
+                                    value={userInfo.cargoIglesia.nombre || 'No especificado'}
+                                />
+                                {userInfo.cargoIglesia.iglesia && (
+                                    <InfoItem
+                                        icon={Building2}
+                                        label="Iglesia"
+                                        value={userInfo.cargoIglesia.iglesia}
+                                    />
+                                )}
+                            </InfoCard>
+                        )}
+
+                        {/* Cargo en Fundación */}
+                        {userInfo.cargoFundacion && (
+                            <InfoCard
+                                icon={Users}
+                                title="Cargo en Fundación"
+                                iconColor="text-green-500"
+                                bgColor="bg-green-50 dark:bg-green-900/20"
+                            >
+                                <InfoItem
+                                    icon={Briefcase}
+                                    label="Cargo"
+                                    value={userInfo.cargoFundacion.nombre || 'No especificado'}
+                                />
+                                {userInfo.cargoFundacion.area && (
+                                    <InfoItem
+                                        icon={Users}
+                                        label="Área"
+                                        value={userInfo.cargoFundacion.area}
+                                    />
+                                )}
+                            </InfoCard>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

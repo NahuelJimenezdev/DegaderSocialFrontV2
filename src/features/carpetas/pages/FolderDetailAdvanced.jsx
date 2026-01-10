@@ -163,7 +163,7 @@ const FolderDetailAdvanced = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto mb-mobile-67">
 
         {/* Header */}
         <FolderHeader

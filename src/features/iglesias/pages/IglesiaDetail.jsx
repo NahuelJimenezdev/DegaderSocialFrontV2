@@ -31,9 +31,9 @@ const IglesiaDetail = () => {
   const { iglesiaData, loading, refetch } = useIglesiaData(id);
 
   // Verificar si el usuario es miembro o pastor
-  const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id || 
-                   iglesiaData?.pastorPrincipal === user?._id;
-  
+  const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id ||
+    iglesiaData?.pastorPrincipal === user?._id;
+
   const isMember = iglesiaData?.miembros?.some(m => {
     const memberId = m._id || m;
     return memberId.toString() === user?._id?.toString();
@@ -126,7 +126,7 @@ const IglesiaDetail = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin">
+      <div className="w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin mb-mobile-67">
         {activeSection === 'info' && <IglesiaHeader iglesia={iglesiaData} user={user} />}
         <div className="p-4 md:p-8 pt-0">
           {renderSection()}
