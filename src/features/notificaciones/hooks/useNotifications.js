@@ -75,11 +75,7 @@ export const useNotifications = (user) => {
         const socket = getSocket();
         if (!socket) return;
 
-        const suscribirseANotificaciones = () => {
-            if (socket.connected) {
-                socket.emit('subscribeNotifications', { userId });
-            }
-        };
+
 
         const handleNotification = (noti) => {
             // 🆕 VALIDAR QUE LA NOTIFICACIÓN NO SEA NULL
@@ -150,13 +146,23 @@ export const useNotifications = (user) => {
             });
         };
 
-        const handleConnect = () => suscribirseANotificaciones();
+        const suscribirseANotificaciones = () => {
+            if (socket.connected && socket.isAuthenticated) {
+                socket.emit('subscribeNotifications', { userId });
+                logger.log('📬 Enviando suscripción a notificaciones para:', userId);
+            }
+        };
 
-        if (socket.connected) {
+        const handleAuth = () => suscribirseANotificaciones();
+
+        // Intentar suscribirse si ya está autenticado
+        if (socket.connected && socket.isAuthenticated) {
             suscribirseANotificaciones();
-        } else {
-            socket.on('connect', handleConnect);
         }
+
+        // Escuchar evento de autenticación (custom event desde socket.js)
+        const onAuthenticated = () => handleAuth();
+        window.addEventListener('socket:authenticated', onAuthenticated);
 
         socket.on('newNotification', handleNotification);
         socket.on('solicitudIglesiaProcesada', (data) => {
@@ -176,7 +182,7 @@ export const useNotifications = (user) => {
             socket.off('newNotification', handleNotification);
             socket.off('solicitudIglesiaProcesada');
             socket.off('notificationDeleted');
-            socket.off('connect', handleConnect);
+            window.removeEventListener('socket:authenticated', onAuthenticated);
         };
     }, [userId]);
 

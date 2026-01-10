@@ -143,6 +143,12 @@ export default function NotificationsDropdown() {
     console.log('🔔 [CLICK] Tipo:', notificacion.tipo);
     console.log('🔔 [CLICK] Referencia:', notificacion.referencia);
 
+    if (notificacion.tipo === 'sistema') {
+      navigate(`/Sistema/${notificacion._id}`);
+      setOpen(false);
+      return;
+    }
+
     if (notificacion.tipo === 'nuevo_anuncio') {
       navigate('/admin/publicidad');
       setOpen(false);
@@ -285,6 +291,11 @@ export default function NotificationsDropdown() {
                   if (n.tipo === 'nuevo_anuncio') {
                     displayName = 'Nuevo Anuncio';
                     displayAvatar = null;
+                  }
+
+                  if (n.tipo === 'sistema') {
+                    displayName = 'Sistema';
+                    displayAvatar = 'https://ui-avatars.com/api/?name=System&background=000&color=fff'; // Icono temporal o usar logo
                   }
 
                   return (

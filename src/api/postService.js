@@ -11,16 +11,22 @@ const postService = {
    * @returns {Promise<Object>} Created post
    */
   createPost: async (postData) => {
-    const formData = new FormData();
-    formData.append('contenido', postData.contenido);
-    if (postData.privacidad) {
-      formData.append('privacidad', postData.privacidad);
-    }
-    if (postData.imagen) {
-      formData.append('imagen', postData.imagen);
-    }
-    if (postData.documento) {
-      formData.append('documento', postData.documento);
+    let formData;
+
+    if (postData instanceof FormData) {
+      formData = postData;
+    } else {
+      formData = new FormData();
+      formData.append('contenido', postData.contenido);
+      if (postData.privacidad) {
+        formData.append('privacidad', postData.privacidad);
+      }
+      if (postData.imagen) {
+        formData.append('imagen', postData.imagen);
+      }
+      if (postData.documento) {
+        formData.append('documento', postData.documento);
+      }
     }
 
     const response = await api.post('/publicaciones', formData, {

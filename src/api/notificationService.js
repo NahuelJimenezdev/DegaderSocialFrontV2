@@ -29,6 +29,16 @@ const notificationService = {
   },
 
   /**
+   * Get notification by ID
+   * @param {string} notificationId - Notification ID
+   * @returns {Promise<Object>} Notification data
+   */
+  getNotificationById: async (notificationId) => {
+    const response = await api.get(`/notificaciones/${notificationId}`);
+    return response.data;
+  },
+
+  /**
    * Mark notification as read
    * @param {string} notificationId - Notification ID
    * @returns {Promise<Object>} Response data

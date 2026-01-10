@@ -39,12 +39,15 @@ export const initSocket = (token) => {
     transports: ['websocket', 'polling']
   });
 
+  socket.isAuthenticated = false;
+
   // Eventos globales de conexión
   socket.on('connect', () => {
     logger.log('🔌 Socket conectado:', socket.id, 'connected:', socket.connected);
 
     // Autenticar después de conectar
     if (token) {
+      socket.isAuthenticated = false; // Reset on connect
       socket.emit('authenticate', { token });
     }
   });
@@ -52,6 +55,8 @@ export const initSocket = (token) => {
   // Evento de autenticación exitosa
   socket.on('authenticated', (data) => {
     logger.log('✅ Socket autenticado:', data);
+    socket.isAuthenticated = true;
+    window.dispatchEvent(new CustomEvent('socket:authenticated', { detail: data }));
   });
 
   socket.on('connect_error', (err) => {

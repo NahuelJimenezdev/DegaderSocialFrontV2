@@ -1,8 +1,11 @@
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Flag } from 'lucide-react';
+import { useState } from 'react';
 import AmistadButton from '../../amistades/components/AmistadButton';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import ReportModal from '../../../shared/components/Report/ReportModal';
 
 const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const fotoPerfil = getUserAvatar(usuario);
   const bannerUrl = usuario?.social?.fotoBanner || '/avatars/default-banner.svg';
 
@@ -37,14 +40,34 @@ const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
           <div className="flex items-center gap-2 pb-2">
             <AmistadButton estado={estadoAmistad} onAccion={onAccionAmistad} />
             <button
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
               onClick={() => onAccionAmistad('mensaje')}
+              title="Enviar mensaje"
             >
               <MessageSquare size={20} />
+            </button>
+            <button
+              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+              onClick={() => setIsReportModalOpen(true)}
+              title="Reportar perfil"
+            >
+              <Flag size={20} className="text-red-500" />
             </button>
           </div>
         </div>
       </div>
+
+      {/* Modal de reporte */}
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        contentType="profile"
+        contentId={usuario?._id}
+        onReportSuccess={() => {
+          setIsReportModalOpen(false);
+          // Opcional: mostrar toast de éxito
+        }}
+      />
     </div>
   );
 };
