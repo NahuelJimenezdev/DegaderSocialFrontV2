@@ -100,7 +100,7 @@ export default function TicketCard({ ticket, onResolve }) {
             </div>
 
             {showResolveForm && (
-                <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700 w-full">
                     <textarea
                         value={motivo}
                         onChange={(e) => setMotivo(e.target.value)}
@@ -112,11 +112,12 @@ export default function TicketCard({ ticket, onResolve }) {
                         disabled={loading}
                     />
 
-                    <div className="flex items-center gap-2">
+                    {/* Botones en columna full-width en mobile, fila en desktop */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <button
                             onClick={() => handleResolve(true)}
                             disabled={loading || !motivo.trim()}
-                            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white 
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white 
                        text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
                         >
                             <CheckCircle className="w-4 h-4" />
@@ -126,7 +127,7 @@ export default function TicketCard({ ticket, onResolve }) {
                         <button
                             onClick={() => handleResolve(false)}
                             disabled={loading || !motivo.trim()}
-                            className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white 
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white 
                        text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
                         >
                             <XCircle className="w-4 h-4" />
@@ -136,7 +137,7 @@ export default function TicketCard({ ticket, onResolve }) {
                         <button
                             onClick={() => setShowResolveForm(false)}
                             className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 
-                       text-sm font-medium rounded-lg transition-colors"
+                       text-sm font-medium rounded-lg transition-colors text-center"
                         >
                             Cancelar
                         </button>
