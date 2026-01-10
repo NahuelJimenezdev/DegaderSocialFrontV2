@@ -237,7 +237,7 @@ export default function FounderUsersPage() {
                                                             <option value="admin">Admin</option>
                                                         </select>
                                                         <button
-                                                            onClick={() => handleEditUser(user)}
+                                                            onClick={() => handleDeleteUser(user._id)}
                                                             disabled={user.seguridad.estadoCuenta === 'eliminado'}
                                                             className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 disabled:opacity-30 disabled:cursor-not-allowed"
                                                             title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta eliminada' : 'Editar usuario'}
@@ -245,7 +245,7 @@ export default function FounderUsersPage() {
                                                             <Edit2 className="w-5 h-5" />
                                                         </button>
                                                         <button
-                                                            onClick={() => handleDeleteUser(user)}
+                                                            onClick={() => handleDeleteUser(user._id)}
                                                             disabled={user.seguridad.estadoCuenta === 'eliminado'}
                                                             className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 disabled:opacity-30 disabled:cursor-not-allowed"
                                                             title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta ya eliminada' : 'Eliminar usuario'}
