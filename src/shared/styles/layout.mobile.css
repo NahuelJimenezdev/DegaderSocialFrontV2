@@ -60,3 +60,63 @@
         padding-bottom: calc(var(--bottom-navbar-height) + 0.75rem) !important;
     }
 }
+
+/* ============================================
+   FAVORITOS - Layout Móvil Optimizado
+   ============================================ */
+
+/* Tablets y pantallas medianas (2 columnas) */
+@media (max-width: 768px) {
+    /* Forzar grid a 2 columnas en móvil */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
+    }
+}
+
+/* Móviles pequeños como Moto G (2 columnas compactas) */
+@media (max-width: 480px) {
+    /* Grid de 2 columnas más compacto */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+    
+    /* Ajustar padding de las cards */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div {
+        padding: 0.75rem !important;
+    }
+    
+    /* Imagen más pequeña y menos gap */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div > div:first-of-type {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Reducir gap en la info */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div > div:last-of-type {
+        gap: 0.25rem !important;
+    }
+    
+    /* Nombre más pequeño */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] h3 {
+        font-size: 0.875rem !important;
+        line-height: 1.25rem !important;
+    }
+    
+    /* Username más pequeño */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] p {
+        font-size: 0.75rem !important;
+    }
+    
+    /* Última fila (estado y contador) más compacta */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] > div > div:last-of-type > div:last-of-type {
+        margin-top: 0.25rem !important;
+        font-size: 0.7rem !important;
+    }
+    
+    /* Iconos más pequeños en móvil */
+    .grid.grid-cols-\[repeat\(auto-fill\,minmax\(160px\,1fr\)\)\] svg {
+        width: 10px !important;
+        height: 10px !important;
+    }
+}
