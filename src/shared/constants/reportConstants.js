@@ -188,16 +188,17 @@ export const PRIORITY_LEVELS = {
     }
 };
 
-// Acciones de moderación
-export const MODERATOR_ACTIONS = {
-    ocultar_contenido: 'Ocultar contenido',
-    eliminar_contenido: 'Eliminar contenido',
-    advertir_usuario: 'Advertir usuario',
-    suspension_1_dia: 'Suspensión 1 día',
-    suspension_3_dias: 'Suspensión 3 días',
-    suspension_7_dias: 'Suspensión 7 días',
-    suspension_30_dias: 'Suspensión 30 días',
-    suspension_permanente: 'Suspensión permanente',
-    escalar_founder: 'Escalar al Founder',
-    ninguna_accion: 'Ninguna acción'
-};
+// Acciones de moderación (array para poder usar filter, map, etc.)
+export const MODERATOR_ACTIONS = [
+    'ocultar_contenido',
+    'eliminar_contenido',
+    'advertir_usuario',
+    'suspension_1_dia',
+    'suspension_3_dias',
+    'suspension_7_dias',
+    'suspension_30_dias',
+    'suspension_permanente',
+    'escalar_founder',
+    'ninguna_accion'
+];
+
