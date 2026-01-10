@@ -77,6 +77,12 @@ export const initSocket = (token) => {
     window.dispatchEvent(new CustomEvent('socket:post:updated', { detail: post }));
   });
 
+  // Evento de eliminación de post
+  socket.on('post_deleted', (postId) => {
+    logger.log('🗑️ [SOCKET] Post eliminado:', postId);
+    window.dispatchEvent(new CustomEvent('socket:post:deleted', { detail: postId }));
+  });
+
   // Eventos de comentarios
   socket.on('comment:added', ({ postId, comment }) => {
     window.dispatchEvent(new CustomEvent('socket:comment:added', { detail: { postId, comment } }));

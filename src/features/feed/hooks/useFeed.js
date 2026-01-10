@@ -44,13 +44,11 @@ const useFeed = (userId = null, currentUser) => {
     const handlePostUpdate = (event) => {
       const updatedPost = event.detail;
       setPosts(prevPosts => {
-        // Si el post ya existe, actualizarlo
+        // ... (lógica existente)
         const exists = prevPosts.some(p => p._id === updatedPost._id);
         if (exists) {
           return prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p);
         }
-        // Si es un post nuevo (y estamos en la primera página), agregarlo al principio
-        // Opcional: solo si es de un amigo o público
         if (page === 1) {
           return [updatedPost, ...prevPosts];
         }
@@ -58,9 +56,17 @@ const useFeed = (userId = null, currentUser) => {
       });
     };
 
+    const handlePostDelete = (event) => {
+      const deletedPostId = event.detail;
+      setPosts(prevPosts => prevPosts.filter(p => p._id !== deletedPostId && (typeof deletedPostId === 'string' ? p._id !== deletedPostId : true))); // Robustez extra
+    };
+
     window.addEventListener('socket:post:updated', handlePostUpdate);
+    window.addEventListener('socket:post:deleted', handlePostDelete);
+
     return () => {
       window.removeEventListener('socket:post:updated', handlePostUpdate);
+      window.removeEventListener('socket:post:deleted', handlePostDelete);
     };
   }, [page]);
 
