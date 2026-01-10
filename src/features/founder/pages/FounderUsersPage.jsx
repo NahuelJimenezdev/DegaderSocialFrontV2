@@ -218,8 +218,8 @@ export default function FounderUsersPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${user.seguridad?.estadoCuenta === 'activo'
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                                     }`}>
                                                     {user.seguridad?.estadoCuenta}
                                                 </span>
@@ -237,10 +237,20 @@ export default function FounderUsersPage() {
                                                             <option value="admin">Admin</option>
                                                         </select>
                                                         <button
-                                                            onClick={() => handleDeleteUser(user._id)}
-                                                            className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                                                            onClick={() => handleEditUser(user)}
+                                                            disabled={user.seguridad.estadoCuenta === 'eliminado'}
+                                                            className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                            title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta eliminada' : 'Editar usuario'}
                                                         >
-                                                            Eliminar
+                                                            <Edit2 className="w-5 h-5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteUser(user)}
+                                                            disabled={user.seguridad.estadoCuenta === 'eliminado'}
+                                                            className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                            title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta ya eliminada' : 'Eliminar usuario'}
+                                                        >
+                                                            <Trash2 className="w-5 h-5" />
                                                         </button>
                                                     </div>
                                                 )}
