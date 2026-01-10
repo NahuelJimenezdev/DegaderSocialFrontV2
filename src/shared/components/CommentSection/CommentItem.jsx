@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getUserAvatar } from '../../utils/avatarUtils';
-import { Image as ImageIcon, X, Heart } from 'lucide-react';
+import { Image as ImageIcon, X, Heart, MoreHorizontal, Flag, Trash2 } from 'lucide-react';
 import postService from '../../../features/feed/services/postService';
+import ReportModal from '../Report/ReportModal';
+import { useToast } from '../Toast/ToastProvider';
 
 const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMobileFormat = false, level = 0, highlightCommentId }) => {
     const [isReplying, setIsReplying] = useState(false);
@@ -11,6 +13,22 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
 
     const [isLiked, setIsLiked] = useState(comment.likes?.includes(currentUser?._id) || false);
     const [likesCount, setLikesCount] = useState(comment.likes?.length || 0);
+    const [showMenu, setShowMenu] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
+    const { toast } = useToast();
+
+    const menuRef = useRef(null);
+
+    // Cerrar menú al hacer click fuera
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setShowMenu(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const [replyImage, setReplyImage] = useState(null);
     const replyFileInputRef = useRef(null);
@@ -124,19 +142,47 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                                 </span>
                             </div>
 
-                            {/* Heart Icon with Counter (Top Right) */}
-                            <div className="flex flex-col items-center gap-0.5">
-                                <button
-                                    onClick={toggleLike}
-                                    className={`flex items-center gap-1 ${isLiked ? 'text-red-500' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
-                                >
-                                    <Heart size={14} className={isLiked ? "fill-current" : ""} />
-                                </button>
-                                {likesCount > 0 && (
-                                    <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">
-                                        {likesCount}
-                                    </span>
-                                )}
+                            {/* Right Actions: Heart + Menu */}
+                            <div className="flex items-start gap-2">
+                                {/* Heart Icon with Counter */}
+                                <div className="flex flex-col items-center gap-0.5">
+                                    <button
+                                        onClick={toggleLike}
+                                        className={`flex items-center gap-1 ${isLiked ? 'text-red-500' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
+                                    >
+                                        <Heart size={14} className={isLiked ? "fill-current" : ""} />
+                                    </button>
+                                    {likesCount > 0 && (
+                                        <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400">
+                                            {likesCount}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Options Menu */}
+                                <div className="relative" ref={menuRef}>
+                                    <button
+                                        onClick={() => setShowMenu(!showMenu)}
+                                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <MoreHorizontal size={14} />
+                                    </button>
+
+                                    {showMenu && (
+                                        <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-10">
+                                            <button
+                                                onClick={() => {
+                                                    setShowMenu(false);
+                                                    setShowReportModal(true);
+                                                }}
+                                                className="w-full px-4 py-2 text-left text-xs flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                            >
+                                                <Flag size={12} />
+                                                Reportar
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
@@ -268,7 +314,7 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                 )
             }
 
-            {/* Nested Replies - Rendered OUTSIDE the flex container to reset "Right" edge context */}
+            {/* Nested Replies */}
             {
                 comment.replies && comment.replies.length > 0 && (
                     <div className="space-y-0 mt-3">
@@ -288,7 +334,15 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                     </div>
                 )
             }
-        </div >
+
+            <ReportModal
+                isOpen={showReportModal}
+                onClose={() => setShowReportModal(false)}
+                contentType="comment"
+                contentId={comment._id}
+                onReportSuccess={() => toast.success('Comentario reportado')}
+            />
+        </div>
     );
 };
 

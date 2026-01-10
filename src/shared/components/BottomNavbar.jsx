@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Search, Building2, Folder } from 'lucide-react';
 import './BottomNavbar.css';
 
+
 const BottomNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,10 +16,10 @@ const BottomNavbar = () => {
     {
       icon: Search,
       label: 'Buscar',
-      path: '/Amigos' // Cambiado de /buscar a /Amigos
+      path: '/Amigos'
     },
     {
-      icon: Building2,
+      icon: () => <span className="material-symbols-outlined">groups</span>,
       label: 'Grupos',
       path: '/Mis_grupos'
     },

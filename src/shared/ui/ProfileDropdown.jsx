@@ -56,12 +56,11 @@ const ProfileDropdown = () => {
     { icon: Star, label: 'Favoritos', path: '/favoritos' },
     { icon: MessageCircle, label: 'Mensajes', path: '/mensajes' },
     { icon: Video, label: 'Mis Reuniones', path: '/Mis_reuniones' },
-    { icon: Building2, label: 'Grupos', path: '/Mis_grupos' },
+    { icon: () => <span className="material-symbols-outlined">groups</span>, label: 'Grupos', path: '/Mis_grupos' },
     { icon: Building2, label: 'Institución', path: '/Mi_iglesia' },
     { icon: Folder, label: 'Mis Carpetas', path: '/Mis_carpetas' },
     { icon: User, label: 'Perfil', path: '/Mi_perfil' }
   ];
-
   // Agregar links de administración para móvil
   if (canModerate) {
     sidebarItems.push({ icon: Shield, label: 'Moderación', path: '/moderador' });

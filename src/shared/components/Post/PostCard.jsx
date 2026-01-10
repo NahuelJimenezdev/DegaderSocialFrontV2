@@ -24,6 +24,7 @@ import { AlertDialog } from '../AlertDialog/AlertDialog';
 import { userService, friendshipService } from '../../../api';
 import { logger } from '../../utils/logger';
 import { useToast } from '../Toast/ToastProvider';
+import ReportModal from '../Report/ReportModal';
 
 const PostCard = ({
     post,
@@ -42,6 +43,7 @@ const PostCard = ({
     const [isSaved, setIsSaved] = useState(false);
     const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
     const [isUnfollowed, setIsUnfollowed] = useState(false); // Estado para animación de fade-out
+    const [showReportModal, setShowReportModal] = useState(false); // Nuevo estado para ReportModal
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -267,14 +269,12 @@ const PostCard = ({
         }
     };
 
-    // Handler: Reportar (temporal)
+    // Handler: Reportar
     const handleReport = () => {
-        setAlertConfig({
-            isOpen: true,
-            variant: 'info',
-            message: '🚧 Sistema de reportes en desarrollo.\nPróximamente podrás reportar contenido inapropiado.'
-        });
+        setShowReportModal(true);
+        setShowOptionsMenu(false); // Cerrar menú de opciones
     };
+
 
     // Mobile Modal Component
     const MobileCommentModal = () => (
@@ -523,6 +523,17 @@ const PostCard = ({
             <AlertDialog
                 {...alertConfig}
                 onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+            />
+
+            {/* Report Modal */}
+            <ReportModal
+                isOpen={showReportModal}
+                onClose={() => setShowReportModal(false)}
+                contentType="post"
+                contentId={post._id}
+                onReportSuccess={() => {
+                    toast.success('Reporte enviado correctamente');
+                }}
             />
         </>
     );

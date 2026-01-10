@@ -1,4 +1,4 @@
-import { MessageSquare, UserPlus, UserMinus, UserCheck, Clock } from 'lucide-react';
+import { MessageSquare, UserPlus, UserMinus, UserCheck, Clock, MoreHorizontal, Flag } from 'lucide-react';
 
 const ProfileActions = ({ estadoAmistad, onAccion }) => {
   const renderBotonPrincipal = () => {
@@ -13,7 +13,7 @@ const ProfileActions = ({ estadoAmistad, onAccion }) => {
             Agregar a amigos
           </button>
         );
-      
+
       case 'enviada':
         return (
           <button
@@ -24,7 +24,7 @@ const ProfileActions = ({ estadoAmistad, onAccion }) => {
             Solicitud pendiente
           </button>
         );
-      
+
       case 'recibida':
         return (
           <div className="flex gap-2">
@@ -44,7 +44,7 @@ const ProfileActions = ({ estadoAmistad, onAccion }) => {
             </button>
           </div>
         );
-      
+
       case 'aceptado':
         return (
           <button
@@ -55,7 +55,7 @@ const ProfileActions = ({ estadoAmistad, onAccion }) => {
             Amigos
           </button>
         );
-      
+
       default:
         return null;
     }
@@ -71,6 +71,23 @@ const ProfileActions = ({ estadoAmistad, onAccion }) => {
       >
         <MessageSquare size={20} />
       </button>
+
+      {/* Menú de opciones adicionales */}
+      <div className="relative group">
+        <button className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+          <MoreHorizontal size={20} />
+        </button>
+
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 py-1 hidden group-hover:block z-10">
+          <button
+            onClick={() => onAccion('reportar')}
+            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+          >
+            <Flag size={16} />
+            Reportar usuario
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

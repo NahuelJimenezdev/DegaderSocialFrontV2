@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, ArrowLeft, Check, AlertCircle } from 'lucide-react';
-import { REPORT_REASONS, REPORT_SUBREASONS } from '../../constants/reportConstants';
-import { createReport } from '../../services/reportService';
+import { REPORT_REASONS, REPORT_SUBREASONS, createReport } from '../../../api/reportService';
 
 /**
  * Modal mobile-first para reportar contenido
