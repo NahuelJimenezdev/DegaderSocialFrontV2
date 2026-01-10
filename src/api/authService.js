@@ -121,6 +121,15 @@ const authService = {
   },
 
   /**
+   * Get suspension info for current user
+   * @returns {Promise<Object>} Suspension information
+   */
+  getSuspensionInfo: async () => {
+    const response = await api.get('/auth/suspension-info');
+    return response.data;
+  },
+
+  /**
    * Check if user is authenticated
    * @returns {boolean} True if authenticated
    */

@@ -28,6 +28,8 @@ import UserInfoPage from './features/perfilUsuario/pages/UserInfoPage'
 import FavoritosPage from './features/favoritos/pages/FavoritosPage'
 import ModeratorDashboard from './features/moderacion/pages/ModeratorDashboard'
 import ModeratorRoute from './features/moderacion/components/ModeratorRoute'
+import SuspendedUsersPage from './features/admin/pages/SuspendedUsersPage'
+import TicketsManagementPage from './features/admin/pages/TicketsManagementPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -71,15 +73,11 @@ export const router = createBrowserRouter([
       { path: '/publicidad', element: <ClientAdsDashboard /> },
       { path: '/admin/publicidad', element: <FounderAdsDashboard /> },
       { path: '/publicidad/analytics/:campaignId', element: <CampaignAnalyticsPage /> },
-      // Moderation routes (protected)
-      {
-        path: '/moderacion',
-        element: (
-          <ModeratorRoute>
-            <ModeratorDashboard />
-          </ModeratorRoute>
-        )
-      }
+      // Moderator Panel
+      { path: '/moderador', element: <ModeratorRoute><ModeratorDashboard /></ModeratorRoute> },
+      // Admin Panel (Nuevo)
+      { path: '/admin/suspendidos', element: <ModeratorRoute><SuspendedUsersPage /></ModeratorRoute> },
+      { path: '/admin/tickets', element: <ModeratorRoute><TicketsManagementPage /></ModeratorRoute> }
     ],
   },
 
