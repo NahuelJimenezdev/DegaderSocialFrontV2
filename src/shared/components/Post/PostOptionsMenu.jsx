@@ -137,147 +137,149 @@ export default function PostOptionsMenu({
     };
 
     return (
-        <div
-            ref={menuRef}
-            className="absolute top-8 right-3 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 min-w-[220px] z-50 animate-in fade-in zoom-in-95 duration-200"
-        >
-            {/* Guardar publicación */}
-            {showSaveAction && (
+        <>
+            <div
+                ref={menuRef}
+                className="absolute top-8 right-3 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 min-w-[220px] z-50 animate-in fade-in zoom-in-95 duration-200"
+            >
+                {/* Guardar publicación */}
+                {showSaveAction && (
+                    <button
+                        onClick={handleSaveClick}
+                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                    >
+                        <Bookmark
+                            size={20}
+                            className={`${isSaved ? 'fill-blue-500 text-blue-500' : 'text-gray-600 dark:text-gray-400'}`}
+                        />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                {isSaved ? 'Quitar de guardados' : 'Guardar publicación'}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {isSaved ? 'Eliminar de tu colección' : 'Guardar para ver más tarde'}
+                            </p>
+                        </div>
+                    </button>
+                )}
+
+                {/* Agregar a Favoritos (Solo si no es mi propio post) */}
+                {!isOwnPost && (
+                    <button
+                        onClick={async () => {
+                            try {
+                                const userId = post.usuario?._id || post.usuario;
+                                await import('../../../api/favoritosService').then(module => module.default.toggleFavoriteUser(userId));
+                                toast.success('Favoritos actualizados');
+                                onClose();
+                            } catch (error) {
+                                console.error('Error al agregar a favoritos:', error);
+                                toast.error('Error al actualizar favoritos');
+                            }
+                        }}
+                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                    >
+                        <Star size={20} className="text-yellow-500" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                Favorito
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Agregar/Quitar de favoritos
+                            </p>
+                        </div>
+                    </button>
+                )}
+
+                {/* Dejar de seguir - Solo si NO es el propio post */}
+                {!isOwnPost && (
+                    <button
+                        onClick={handleUnfollowClick}
+                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                    >
+                        <UserMinus size={20} className="text-red-500" />
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                Dejar de seguir
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Eliminar amistad
+                            </p>
+                        </div>
+                    </button>
+                )}
+
+                {/* Ver Perfil */}
                 <button
-                    onClick={handleSaveClick}
+                    onClick={handleViewProfileClick}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
                 >
-                    <Bookmark
-                        size={20}
-                        className={`${isSaved ? 'fill-blue-500 text-blue-500' : 'text-gray-600 dark:text-gray-400'}`}
-                    />
+                    <User size={20} className="text-gray-600 dark:text-gray-400" />
                     <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {isSaved ? 'Quitar de guardados' : 'Guardar publicación'}
+                            Sobre esta cuenta
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {isSaved ? 'Eliminar de tu colección' : 'Guardar para ver más tarde'}
+                            Conocé más sobre este usuario <br />y su recorrido en la plataforma
                         </p>
                     </div>
                 </button>
-            )}
 
-            {/* Agregar a Favoritos (Solo si no es mi propio post) */}
-            {!isOwnPost && (
+                {/* Copiar Enlace */}
                 <button
-                    onClick={async () => {
-                        try {
-                            const userId = post.usuario?._id || post.usuario;
-                            await import('../../../api/favoritosService').then(module => module.default.toggleFavoriteUser(userId));
-                            toast.success('Favoritos actualizados');
-                            onClose();
-                        } catch (error) {
-                            console.error('Error al agregar a favoritos:', error);
-                            toast.error('Error al actualizar favoritos');
-                        }
-                    }}
+                    onClick={handleCopyLinkClick}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
                 >
-                    <Star size={20} className="text-yellow-500" />
+                    <Link size={20} className="text-gray-600 dark:text-gray-400" />
                     <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            Favorito
+                            Copiar enlace
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Agregar/Quitar de favoritos
+                            Copiar enlace de publicación
                         </p>
                     </div>
                 </button>
-            )}
 
-            {/* Dejar de seguir - Solo si NO es el propio post */}
-            {!isOwnPost && (
+
+
+                {/* Compartir */}
                 <button
-                    onClick={handleUnfollowClick}
+                    onClick={handleShareClick}
                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
                 >
-                    <UserMinus size={20} className="text-red-500" />
+                    <Share2 size={20} className="text-gray-600 dark:text-gray-400" />
                     <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            Dejar de seguir
+                            Compartir
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Eliminar amistad
+                            Compartir esta publicación
                         </p>
                     </div>
                 </button>
-            )}
 
-            {/* Ver Perfil */}
-            <button
-                onClick={handleViewProfileClick}
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-            >
-                <User size={20} className="text-gray-600 dark:text-gray-400" />
-                <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Sobre esta cuenta
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Conocé más sobre este usuario <br />y su recorrido en la plataforma
-                    </p>
-                </div>
-            </button>
+                {/* Divisor */}
+                <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
 
-            {/* Copiar Enlace */}
-            <button
-                onClick={handleCopyLinkClick}
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-            >
-                <Link size={20} className="text-gray-600 dark:text-gray-400" />
-                <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Copiar enlace
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Copiar enlace de publicación
-                    </p>
-                </div>
-            </button>
+                {/* Reportar - Temporal */}
+                <button
+                    onClick={handleReportClick}
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                >
+                    <Flag size={20} className="text-gray-600 dark:text-gray-400" />
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            Reportar
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Reportar contenido inapropiado
+                        </p>
+                    </div>
+                </button>
+            </div>
 
-
-
-            {/* Compartir */}
-            <button
-                onClick={handleShareClick}
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-            >
-                <Share2 size={20} className="text-gray-600 dark:text-gray-400" />
-                <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Compartir
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Compartir esta publicación
-                    </p>
-                </div>
-            </button>
-
-            {/* Divisor */}
-            <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-
-            {/* Reportar - Temporal */}
-            <button
-                onClick={handleReportClick}
-                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-            >
-                <Flag size={20} className="text-gray-600 dark:text-gray-400" />
-                <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Reportar
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Reportar contenido inapropiado
-                    </p>
-                </div>
-            </button>
-
-            {/* Modal de Reportes */}
+            {/* Modal de Reportes - Fuera del menú para evitar conflictos de z-index */}
             <ReportModal
                 isOpen={isReportModalOpen}
                 onClose={() => setIsReportModalOpen(false)}
@@ -285,6 +287,6 @@ export default function PostOptionsMenu({
                 contentId={post._id}
                 onReportSuccess={handleReportSuccess}
             />
-        </div>
+        </>
     );
 }
