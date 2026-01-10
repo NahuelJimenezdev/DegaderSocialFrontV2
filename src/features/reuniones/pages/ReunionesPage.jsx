@@ -230,28 +230,30 @@ export function ReunionesPage() {
 
   return (
     <div className="page-container">
-      {/* 1. Encabezado y CTA: onNewMeeting abre el modal */}
-      <MeetingHeader onNewMeeting={() => setIsModalOpen(true)} />
+      <div className='mb-mobile-30'>
+        {/* 1. Encabezado y CTA: onNewMeeting abre el modal */}
+        <MeetingHeader onNewMeeting={() => setIsModalOpen(true)} />
 
-      <hr className="border-gray-100 mb-4" />
+        <hr className="border-gray-100 mb-4" />
 
-      {/* 2. Selector de Vista (Lista / Calendario) */}
-      <MeetingViewToggle
-        view={view}
-        onViewChange={setView}
-        currentMonth={currentMonth}
-        onMonthChange={setCurrentMonth}
-      />
+        {/* 2. Selector de Vista (Lista / Calendario) */}
+        <MeetingViewToggle
+          view={view}
+          onViewChange={setView}
+          currentMonth={currentMonth}
+          onMonthChange={setCurrentMonth}
+        />
 
-      {/* 3. Contenido Principal */}
-      {renderContent()}
+        {/* 3. Contenido Principal */}
+        {renderContent()}
 
-      {/* Modal: Controlado por el estado isModalOpen */}
-      <CreateMeetingModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onCreate={handleCreateMeeting}
-      />
+        {/* Modal: Controlado por el estado isModalOpen */}
+        <CreateMeetingModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onCreate={handleCreateMeeting}
+        />
+      </div>
     </div>
   );
 }

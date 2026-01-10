@@ -533,88 +533,91 @@ export default function IglesiaPage() {
 
   return (
     <div className="page-container">
-      {/* Header unificado con clases BEM globales */}
-      <div className="section-header">
-        <div className="section-header__icon-box">
-          <Building2 className="section-header__icon" strokeWidth={2} />
-        </div>
-        <div className="section-header__content">
-          <h1 className="section-header__title section-header__title--heavy">
-            Instituciones
-          </h1>
-          <p className="section-header__subtitle">
-            Conecta con comunidades de fe en tu región
-          </p>
-        </div>
-      </div>
-
-      {/* Tabs Navigation */}
-      <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-8">
-        <button
-          onClick={() => setActiveTab('iglesias')}
-          className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'iglesias'
-            ? 'text-indigo-600 dark:text-indigo-400'
-            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-            }`}
-        >
-          <div className="flex items-center gap-2">
-            <Building2 size={18} />
-            Iglesias
+      <div className="mb-mobile-30">
+        {/* Header unificado con clases BEM globales */}
+        <div className="section-header">
+          <div className="section-header__icon-box">
+            <Building2 className="section-header__icon" strokeWidth={2} />
           </div>
-          {activeTab === 'iglesias' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
-          )}
-        </button>
-
-        <button
-          onClick={() => setActiveTab('fundacion')}
-          className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'fundacion'
-            ? 'text-indigo-600 dark:text-indigo-400'
-            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-            }`}
-        >
-          <div className="flex items-center gap-2">
-            <Heart size={18} />
-            Fundación
+          <div className="section-header__content">
+            <h1 className="section-header__title section-header__title--heavy">
+              Instituciones
+            </h1>
+            <p className="section-header__subtitle">
+              Conecta con comunidades de fe en tu región
+            </p>
           </div>
-          {activeTab === 'fundacion' && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
-          )}
-        </button>
+        </div>
 
-        {/* Pestaña de Monitoreo Global - Solo Founder */}
-        {user?.seguridad?.rolSistema === 'Founder' && (
+        {/* Tabs Navigation */}
+        <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-8">
           <button
-            onClick={() => setActiveTab('monitoreo')}
-            className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'monitoreo'
+            onClick={() => setActiveTab('iglesias')}
+            className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'iglesias'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
               }`}
           >
             <div className="flex items-center gap-2">
-              📊 Monitoreo Global
+              <Building2 size={18} />
+              Iglesias
             </div>
-            {activeTab === 'monitoreo' && (
+            {activeTab === 'iglesias' && (
               <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
             )}
           </button>
-        )}
-      </div>
 
-      {/* Content */}
-      <div className="min-h-[400px]">
-        {activeTab === 'iglesias' ? renderIglesiasTab() :
-          activeTab === 'fundacion' ? renderFundacionTab() :
-            renderMonitoreoTab()}
-      </div>
+          <button
+            onClick={() => setActiveTab('fundacion')}
+            className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'fundacion'
+              ? 'text-indigo-600 dark:text-indigo-400'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+              }`}
+          >
+            <div className="flex items-center gap-2">
+              <Heart size={18} />
+              Fundación
+            </div>
+            {activeTab === 'fundacion' && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </button>
 
-      {/* AlertDialog Component */}
-      <AlertDialog
-        isOpen={alertConfig.isOpen}
-        onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
-        variant={alertConfig.variant}
-        message={alertConfig.message}
-      />
+          {/* Pestaña de Monitoreo Global - Solo Founder */}
+          {user?.seguridad?.rolSistema === 'Founder' && (
+            <button
+              onClick={() => setActiveTab('monitoreo')}
+              className={`pb-4 px-2 text-sm font-medium transition-colors relative ${activeTab === 'monitoreo'
+                ? 'text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                📊 Monitoreo Global
+              </div>
+              {activeTab === 'monitoreo' && (
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400" />
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="min-h-[400px]">
+          {activeTab === 'iglesias' ? renderIglesiasTab() :
+            activeTab === 'fundacion' ? renderFundacionTab() :
+              renderMonitoreoTab()}
+        </div>
+
+        {/* AlertDialog Component */}
+        <AlertDialog
+          isOpen={alertConfig.isOpen}
+          onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+          variant={alertConfig.variant}
+          message={alertConfig.message}
+        />
+
+      </div>
     </div>
   );
 }

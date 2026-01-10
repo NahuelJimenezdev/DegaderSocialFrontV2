@@ -154,10 +154,10 @@ const GroupDetail = () => {
       case 'feed':
         return <GroupFeed groupData={groupData} />
       case 'chat':
-        return <GroupChat 
-          groupData={groupData} 
-          user={user} 
-          targetMessageId={targetMessageId} 
+        return <GroupChat
+          groupData={groupData}
+          user={user}
+          targetMessageId={targetMessageId}
           onClearTargetMessage={() => setTargetMessageId(null)}
         />
       case 'detail':
@@ -180,8 +180,8 @@ const GroupDetail = () => {
       case 'events':
         return <GroupEvents groupData={groupData} onGoToMessage={handleGoToMessage} />
       case 'settings':
-        return <GroupSettings 
-          groupData={groupData} 
+        return <GroupSettings
+          groupData={groupData}
           refetch={refetch}
           user={user}
           userRole={userRole}
@@ -204,59 +204,62 @@ const GroupDetail = () => {
 
   return (
     <div className="flex h-full overflow-hidden overflow-x-hidden bg-gray-50 dark:bg-gray-900 relative">
-      {/* Botón hamburguesa - Visible en mobile y tablet */}
-      {isMobile && (
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-20 right-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-12 h-12 flex items-center justify-center"
-        >
-          <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
-            {sidebarOpen ? 'close' : 'menu'}
-          </span>
-        </button>
-      )}
+      <div className='mb-mobile-67'>
 
-      {/* Overlay para cerrar sidebar en mobile/tablet */}
-      {sidebarOpen && (
+        {/* Botón hamburguesa - Visible en mobile y tablet */}
+        {isMobile && (
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="fixed top-20 right-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-12 h-12 flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
+              {sidebarOpen ? 'close' : 'menu'}
+            </span>
+          </button>
+        )}
+
+        {/* Overlay para cerrar sidebar en mobile/tablet */}
+        {sidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Sidebar del grupo */}
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar del grupo */}
-      <div
-        className={`
+          className={`
           w-64 flex-shrink-0 bg-white dark:bg-gray-800
           lg:relative lg:!translate-x-0 lg:h-full lg:border-r
           fixed top-16 z-40 h-[calc(100vh-64px)]
           transition-transform duration-300 ease-in-out lg:transition-none
           ${isMobile ? 'right-0 border-l' : 'left-0 border-r'}
           ${isMobile
-            ? (sidebarOpen ? 'translate-x-0' : 'translate-x-full')
-            : (sidebarOpen ? 'translate-x-0' : '-translate-x-full')
-          }
+              ? (sidebarOpen ? 'translate-x-0' : 'translate-x-full')
+              : (sidebarOpen ? 'translate-x-0' : '-translate-x-full')
+            }
           lg:translate-x-0 border-gray-200 dark:border-gray-700
         `}
-      >
-        <SidebarGroup
-          groupData={groupData}
-          navigate={navigate}
-          activeSection={activeSection}
-          setActiveSection={(section) => {
-            setActiveSection(section)
-            setSidebarOpen(false) // Cerrar sidebar al seleccionar una sección en mobile
-          }}
-          menuItems={menuItems}
-        />
-      </div>
-
-      {/* Contenido principal - Ocupa el resto del espacio */}
-      <main className="flex-1 h-full overflow-hidden overflow-x-hidden">
-        <div className="w-full h-full overflow-x-hidden">
-          {renderSection()}
+        >
+          <SidebarGroup
+            groupData={groupData}
+            navigate={navigate}
+            activeSection={activeSection}
+            setActiveSection={(section) => {
+              setActiveSection(section)
+              setSidebarOpen(false) // Cerrar sidebar al seleccionar una sección en mobile
+            }}
+            menuItems={menuItems}
+          />
         </div>
-      </main>
+
+        {/* Contenido principal - Ocupa el resto del espacio */}
+        <main className="flex-1 h-full overflow-hidden overflow-x-hidden">
+          <div className="w-full h-full overflow-x-hidden">
+            {renderSection()}
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

@@ -47,43 +47,46 @@ const ProfilePageContent = () => {
 
       {/* Resto del contenido dentro del page-container */}
       <div className="page-container">
-        {/* Info del usuario + Stats */}
-        <ProfileInfo user={user} stats={userStats} />
+        <div className='mb-mobile-30'>
 
-        {/* Tabs */}
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          {/* Info del usuario + Stats */}
+          <ProfileInfo user={user} stats={userStats} />
 
-        {/* Contenido */}
-        <div className="max-w-3xl mx-auto px-4 mt-6 space-y-6">
-          {/* Composer para crear publicación - REPLACED */}
-          <CreatePostCard
-            currentUser={user}
-            onPostCreated={createPost}
-            alwaysExpanded={true}
-            error={postError}
-            showAvatar={false}
+          {/* Tabs */}
+          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+
+          {/* Contenido */}
+          <div className="max-w-3xl mx-auto px-4 mt-6 space-y-6">
+            {/* Composer para crear publicación - REPLACED */}
+            <CreatePostCard
+              currentUser={user}
+              onPostCreated={createPost}
+              alwaysExpanded={true}
+              error={postError}
+              showAvatar={false}
+            />
+
+            {/* Lista de publicaciones */}
+            <PostList activeTab={activeTab} />
+          </div>
+
+          {/* Modal de edición de perfil */}
+          <EditProfileModal
+            isOpen={showEditModal}
+            onClose={() => setShowEditModal(false)}
+            user={user}
+            onUpdate={handleProfileUpdate}
+            className="z-1000"
           />
 
-          {/* Lista de publicaciones */}
-          <PostList activeTab={activeTab} />
+          {/* AlertDialog para mensajes de error/éxito */}
+          <AlertDialog
+            isOpen={alertConfig.isOpen}
+            variant={alertConfig.variant}
+            message={alertConfig.message}
+            onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+          />
         </div>
-
-        {/* Modal de edición de perfil */}
-        <EditProfileModal
-          isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
-          user={user}
-          onUpdate={handleProfileUpdate}
-          className="z-1000"
-        />
-
-        {/* AlertDialog para mensajes de error/éxito */}
-        <AlertDialog
-          isOpen={alertConfig.isOpen}
-          variant={alertConfig.variant}
-          message={alertConfig.message}
-          onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
-        />
       </div>
     </>
   );
