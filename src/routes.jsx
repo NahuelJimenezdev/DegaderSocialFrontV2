@@ -26,6 +26,7 @@ import NotificationsPage from './features/notificaciones/pages/NotificationsPage
 import UserInfoPage from './features/perfilUsuario/pages/UserInfoPage'
 import FavoritosPage from './features/favoritos/pages/FavoritosPage'
 import ModeratorDashboard from './features/moderacion/pages/ModeratorDashboard'
+import ModeratorRoute from './features/moderacion/components/ModeratorRoute'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -68,8 +69,15 @@ export const router = createBrowserRouter([
       { path: '/publicidad', element: <ClientAdsDashboard /> },
       { path: '/admin/publicidad', element: <FounderAdsDashboard /> },
       { path: '/publicidad/analytics/:campaignId', element: <CampaignAnalyticsPage /> },
-      // Moderation routes
-      { path: '/moderacion', element: <ModeratorDashboard /> }
+      // Moderation routes (protected)
+      {
+        path: '/moderacion',
+        element: (
+          <ModeratorRoute>
+            <ModeratorDashboard />
+          </ModeratorRoute>
+        )
+      }
     ],
   },
 

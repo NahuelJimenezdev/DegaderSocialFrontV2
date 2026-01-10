@@ -1,15 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import { Mail } from 'lucide-react';
+import { Mail, Shield } from 'lucide-react';
 import SearchBar from '../../features/buscador/components/SearchBar';
 import NotificationsDropdown from '../../features/notificaciones/components/NotificationsDropdown';
 import ProfileDropdown from '../ui/ProfileDropdown';
 import { useAuth } from '../../context/AuthContext';
 import { useMessageCounter } from '../../hooks/useMessageCounter';
+import { useUserRole } from '../hooks/useUserRole';
 import './Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { canModerate } = useUserRole();
   const unreadMessages = useMessageCounter(user?._id || user?.id);
 
   return (
@@ -36,6 +38,18 @@ const Navbar = () => {
           <div className="flex items-center gap-2">
             {/* Notifications */}
             <NotificationsDropdown />
+
+            {/* Moderation (only for moderators) */}
+            {canModerate && (
+              <button
+                onClick={() => navigate('/moderacion')}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
+                aria-label="Moderación"
+                title="Panel de Moderación"
+              >
+                <Shield size={20} />
+              </button>
+            )}
 
             {/* Messages */}
             <button
