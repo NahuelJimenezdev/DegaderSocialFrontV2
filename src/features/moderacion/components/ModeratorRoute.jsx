@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUserRole } from '../../shared/hooks/useUserRole';
+import { useUserRole } from '../../../shared/hooks/useUserRole';
 
 /**
  * Componente para proteger rutas que requieren rol de moderador

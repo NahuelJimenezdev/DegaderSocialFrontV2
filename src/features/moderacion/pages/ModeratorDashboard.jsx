@@ -5,6 +5,7 @@ import { PRIORITY_LEVELS, REPORT_STATUSES } from '../../../shared/constants/repo
 import ReportListItem from '../components/ReportListItem';
 import ReportFilters from '../components/ReportFilters';
 import ModeratorStats from '../components/ModeratorStats';
+import ReportDetailModal from '../components/ReportDetailModal';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 
 /**
@@ -17,6 +18,7 @@ const ModeratorDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showFilters, setShowFilters] = useState(false);
+    const [selectedReportId, setSelectedReportId] = useState(null);
 
     // Filtros
     const [filters, setFilters] = useState({
@@ -65,8 +67,14 @@ const ModeratorDashboard = () => {
     };
 
     const handleReportClick = (reportId) => {
-        // TODO: Abrir modal de detalle o navegar a página de detalle
-        console.log('Ver reporte:', reportId);
+        setSelectedReportId(reportId);
+    };
+
+    const handleCloseDetail = () => {
+        setSelectedReportId(null);
+        // Refrescar datos cuando se cierra el modal
+        loadReports();
+        loadStats();
     };
 
     return (
@@ -207,6 +215,13 @@ const ModeratorDashboard = () => {
                     </div>
                 )}
             </div>
+
+            {/* Modal de detalle */}
+            <ReportDetailModal
+                reportId={selectedReportId}
+                isOpen={!!selectedReportId}
+                onClose={handleCloseDetail}
+            />
         </div>
     );
 };
