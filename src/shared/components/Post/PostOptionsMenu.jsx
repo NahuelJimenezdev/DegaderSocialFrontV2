@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bookmark, UserMinus, Flag, Link, User, Share2, Star } from 'lucide-react';
 import { logger } from '../../utils/logger';
 import { useToast } from '../Toast/ToastProvider';
+import ReportModal from '../Report/ReportModal';
 
 /**
  * Menú de opciones para publicaciones
@@ -30,6 +31,9 @@ export default function PostOptionsMenu({
     const menuRef = useRef(null);
     const toast = useToast();
     const navigate = useNavigate();
+
+    // Estado del modal de reportes
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     // Cerrar al hacer click fuera
     useEffect(() => {
@@ -78,9 +82,14 @@ export default function PostOptionsMenu({
     };
 
     const handleReportClick = () => {
-        logger.log('🚨 [MENU] Reportar publicación:', post._id);
-        onReport();
-        onClose();
+        logger.log('🚨 [MENU] Abrir modal de reporte:', post._id);
+        setIsReportModalOpen(true);
+        onClose(); // Cerrar el menú de opciones
+    };
+
+    const handleReportSuccess = (reportData) => {
+        logger.log('✅ [REPORT] Reporte creado exitosamente:', reportData);
+        toast.success('Reporte enviado correctamente');
     };
 
     const handleViewProfileClick = () => {
@@ -267,6 +276,15 @@ export default function PostOptionsMenu({
                     </p>
                 </div>
             </button>
+
+            {/* Modal de Reportes */}
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                contentType="post"
+                contentId={post._id}
+                onReportSuccess={handleReportSuccess}
+            />
         </div>
     );
 }
