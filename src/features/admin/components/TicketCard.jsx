@@ -41,48 +41,62 @@ export default function TicketCard({ ticket, onResolve }) {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-            <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-bold text-gray-900 dark:text-white">{ticket.asunto}</h3>
-                        {getTipoBadge(ticket.tipo)}
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
+                <div className="flex-1 w-full">
+                    {/* Header Card: Título + Badge */}
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-bold text-gray-900 dark:text-white text-base md:text-lg">
+                            {ticket.asunto}
+                        </h3>
+                        <div className="ml-2 shrikn-0">
+                            {getTipoBadge(ticket.tipo)}
+                        </div>
                     </div>
 
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    {/* Descripción */}
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 break-words">
                         {ticket.descripcion}
                     </p>
 
-                    <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                    {/* Info Usuario y Fecha (Una línea) */}
+                    <div className="flex items-center flex-wrap gap-3 text-xs text-gray-500 dark:text-gray-400">
                         <div className="flex items-center gap-1">
                             <User className="w-3 h-3" />
-                            <span>@{ticket.usuario?.username}</span>
+                            <span className="font-medium text-gray-700 dark:text-gray-300">
+                                @{ticket.usuario?.username}
+                            </span>
                         </div>
                         <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             <span>{new Date(ticket.createdAt).toLocaleDateString()}</span>
                         </div>
                         {ticket.numeroRespuestas > 0 && (
-                            <span>{ticket.numeroRespuestas} respuesta(s)</span>
+                            <span className="text-blue-500">
+                                {ticket.numeroRespuestas} respuesta(s)
+                            </span>
                         )}
                     </div>
                 </div>
 
-                {ticket.estado === 'abierto' || ticket.estado === 'en_revision' ? (
-                    <button
-                        onClick={() => setShowResolveForm(!showResolveForm)}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium 
-                     rounded-lg transition-colors"
-                    >
-                        Resolver
-                    </button>
-                ) : (
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium
-                          ${ticket.estado === 'resuelto'
-                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                            : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'}`}>
-                        {ticket.estado === 'resuelto' ? 'Resuelto' : 'Rechazado'}
-                    </span>
-                )}
+                {/* Botón Acción (Abajo derecha en mobile) */}
+                <div className="flex justify-end w-full md:w-auto md:mt-0">
+                    {ticket.estado === 'abierto' || ticket.estado === 'en_revision' ? (
+                        <button
+                            onClick={() => setShowResolveForm(!showResolveForm)}
+                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium 
+                         rounded-lg transition-colors shadow-sm"
+                        >
+                            Resolver
+                        </button>
+                    ) : (
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium border border-opacity-50
+                              ${ticket.estado === 'resuelto'
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200'
+                                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200'}`}>
+                            {ticket.estado === 'resuelto' ? 'Resuelto' : 'Rechazado'}
+                        </span>
+                    )}
+                </div>
             </div>
 
             {showResolveForm && (
