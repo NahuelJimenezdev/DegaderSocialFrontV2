@@ -2,13 +2,13 @@ import React from 'react';
 
 const StepBasicInfo = ({ formData, updateField, errors }) => {
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ffffff', marginBottom: '1.5rem' }}>
+        <div className="max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                 Información Básica del Anuncio
             </h3>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Nombre del Cliente/Empresa *
                 </label>
                 <input
@@ -16,25 +16,18 @@ const StepBasicInfo = ({ formData, updateField, errors }) => {
                     value={formData.nombreCliente}
                     onChange={(e) => updateField('nombreCliente', e.target.value)}
                     placeholder="Ej: Librería Cristiana Esperanza"
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: `1px solid ${errors.nombreCliente ? '#ef4444' : '#374151'}`,
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className={`w-full px-3 py-3 bg-white dark:bg-gray-800 border ${errors.nombreCliente ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                        } rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
                 {errors.nombreCliente && (
-                    <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                    <p className="text-red-500 text-xs mt-1">
                         {errors.nombreCliente}
                     </p>
                 )}
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Call to Action (Texto del Botón) *
                 </label>
                 <input
@@ -43,30 +36,23 @@ const StepBasicInfo = ({ formData, updateField, errors }) => {
                     onChange={(e) => updateField('callToAction', e.target.value)}
                     placeholder="Ej: ¡Compra Ahora!"
                     maxLength={30}
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: `1px solid ${errors.callToAction ? '#ef4444' : '#374151'}`,
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className={`w-full px-3 py-3 bg-white dark:bg-gray-800 border ${errors.callToAction ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                        } rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem' }}>
+                <div className="flex justify-between mt-1">
                     {errors.callToAction && (
-                        <p style={{ color: '#ef4444', fontSize: '0.75rem' }}>
+                        <p className="text-red-500 text-xs">
                             {errors.callToAction}
                         </p>
                     )}
-                    <p style={{ color: '#6b7280', fontSize: '0.75rem', marginLeft: 'auto' }}>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs ml-auto">
                         {formData.callToAction.length}/30
                     </p>
                 </div>
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Link de Destino *
                 </label>
                 <input
@@ -74,25 +60,18 @@ const StepBasicInfo = ({ formData, updateField, errors }) => {
                     value={formData.linkDestino}
                     onChange={(e) => updateField('linkDestino', e.target.value)}
                     placeholder="https://ejemplo.com/producto"
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: `1px solid ${errors.linkDestino ? '#ef4444' : '#374151'}`,
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className={`w-full px-3 py-3 bg-white dark:bg-gray-800 border ${errors.linkDestino ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                        } rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
                 {errors.linkDestino && (
-                    <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                    <p className="text-red-500 text-xs mt-1">
                         {errors.linkDestino}
                     </p>
                 )}
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Texto Alternativo (Opcional)
                 </label>
                 <input
@@ -100,15 +79,7 @@ const StepBasicInfo = ({ formData, updateField, errors }) => {
                     value={formData.textoAlternativo}
                     onChange={(e) => updateField('textoAlternativo', e.target.value)}
                     placeholder="Descripción de la imagen para accesibilidad"
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: '1px solid #374151',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className="w-full px-3 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
             </div>
         </div>

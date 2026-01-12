@@ -191,50 +191,16 @@ const CreateCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance }) => 
   if (!isOpen) return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 9999,
-      padding: '1rem'
-    }}>
-      <div style={{
-        backgroundColor: '#0f1229',
-        border: '1px solid #1a1f3a',
-        borderRadius: '16px',
-        maxWidth: '900px',
-        width: '100%',
-        maxHeight: '90vh',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-4">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Header */}
-        <div style={{
-          padding: '1.5rem',
-          borderBottom: '1px solid #1a1f3a',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white m-0">
             Crear Nueva Campaña
           </h2>
           <button
             onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#9ca3af',
-              cursor: 'pointer',
-              padding: '0.5rem'
-            }}
+            className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
           >
             <X size={24} />
           </button>
@@ -244,11 +210,7 @@ const CreateCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance }) => 
         <CampaignWizardStepper steps={steps} currentStep={currentStep} />
 
         {/* Content */}
-        <div style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '2rem'
-        }}>
+        <div className="flex-1 overflow-y-auto p-8">
           {currentStep === 1 && (
             <StepBasicInfo
               formData={formData}
@@ -294,46 +256,21 @@ const CreateCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance }) => 
 
         {/* Footer (Navegación) - Oculto en el último paso que tiene su propio botón de confirmar */}
         {currentStep < 5 && (
-          <div style={{
-            padding: '1.5rem',
-            borderTop: '1px solid #1a1f3a',
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}>
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
             <button
               onClick={handleBack}
               disabled={currentStep === 1}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: 'none',
-                border: '1px solid #374151',
-                color: currentStep === 1 ? '#4b5563' : '#ffffff',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '8px',
-                cursor: currentStep === 1 ? 'not-allowed' : 'pointer',
-                fontSize: '0.875rem'
-              }}
+              className={`flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm transition-colors ${currentStep === 1
+                  ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                }`}
             >
               <ChevronLeft size={20} />
               Anterior
             </button>
             <button
               onClick={handleNext}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                backgroundColor: '#6366f1',
-                color: '#ffffff',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '0.875rem',
-                fontWeight: '600'
-              }}
+              className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
             >
               Siguiente
               <ChevronRight size={20} />

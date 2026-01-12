@@ -3,58 +3,29 @@ import { Check } from 'lucide-react';
 
 const CampaignWizardStepper = ({ steps, currentStep }) => {
     return (
-        <div style={{
-            padding: '1.5rem',
-            borderBottom: '1px solid #1a1f3a',
-            overflowX: 'auto'
-        }}>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                minWidth: '600px'
-            }}>
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+            <div className="flex items-center justify-between min-w-[600px]">
                 {steps.map((step, index) => (
                     <React.Fragment key={step.number}>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            flex: 1
-                        }}>
-                            <div style={{
-                                width: '48px',
-                                height: '48px',
-                                borderRadius: '50%',
-                                backgroundColor: currentStep >= step.number ? '#6366f1' : '#1a1f3a',
-                                color: '#ffffff',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '1.25rem',
-                                fontWeight: 'bold',
-                                marginBottom: '0.5rem',
-                                transition: 'all 0.3s'
-                            }}>
+                        <div className="flex flex-col items-center flex-1">
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mb-2 transition-all duration-300 ${currentStep >= step.number
+                                    ? 'bg-indigo-600 text-white'
+                                    : 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                                }`}>
                                 {currentStep > step.number ? <Check size={24} /> : step.icon}
                             </div>
-                            <span style={{
-                                fontSize: '0.75rem',
-                                color: currentStep >= step.number ? '#ffffff' : '#6b7280',
-                                textAlign: 'center',
-                                fontWeight: currentStep === step.number ? '600' : '400'
-                            }}>
+                            <span className={`text-xs text-center transition-all ${currentStep >= step.number
+                                    ? 'text-gray-900 dark:text-white font-semibold'
+                                    : 'text-gray-500 dark:text-gray-400'
+                                }`}>
                                 {step.title}
                             </span>
                         </div>
                         {index < steps.length - 1 && (
-                            <div style={{
-                                flex: 1,
-                                height: '2px',
-                                backgroundColor: currentStep > step.number ? '#6366f1' : '#1a1f3a',
-                                margin: '0 0.5rem 1.5rem',
-                                transition: 'all 0.3s'
-                            }} />
+                            <div className={`flex-1 h-0.5 mx-2 mb-6 transition-all duration-300 ${currentStep > step.number
+                                    ? 'bg-indigo-600'
+                                    : 'bg-gray-200 dark:bg-gray-800'
+                                }`} />
                         )}
                     </React.Fragment>
                 ))}

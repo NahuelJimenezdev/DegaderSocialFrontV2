@@ -2,52 +2,37 @@ import React from 'react';
 
 const StepBudget = ({ formData, updateField, errors, currentBalance }) => {
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ffffff', marginBottom: '1.5rem' }}>
+        <div className="max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                 Configuración de Campaña
             </h3>
 
             {/* Fechas */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                    <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                    <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                         Fecha de Inicio *
                     </label>
                     <input
                         type="date"
                         value={formData.fechaInicio}
                         onChange={(e) => updateField('fechaInicio', e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            backgroundColor: '#1a1f3a',
-                            border: '1px solid #374151',
-                            borderRadius: '8px',
-                            color: '#ffffff',
-                            fontSize: '1rem'
-                        }}
+                        className="w-full px-3 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
                 </div>
                 <div>
-                    <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                    <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                         Fecha de Fin *
                     </label>
                     <input
                         type="date"
                         value={formData.fechaFin}
                         onChange={(e) => updateField('fechaFin', e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            backgroundColor: '#1a1f3a',
-                            border: `1px solid ${errors.fechaFin ? '#ef4444' : '#374151'}`,
-                            borderRadius: '8px',
-                            color: '#ffffff',
-                            fontSize: '1rem'
-                        }}
+                        className={`w-full px-3 py-3 bg-white dark:bg-gray-800 border ${errors.fechaFin ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                            } rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                     />
                     {errors.fechaFin && (
-                        <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                        <p className="text-red-500 text-xs mt-1">
                             {errors.fechaFin}
                         </p>
                     )}
@@ -55,8 +40,8 @@ const StepBudget = ({ formData, updateField, errors, currentBalance }) => {
             </div>
 
             {/* Presupuesto */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Presupuesto (DegaCoins) *
                 </label>
                 <input
@@ -64,31 +49,24 @@ const StepBudget = ({ formData, updateField, errors, currentBalance }) => {
                     min="1"
                     value={formData.presupuesto}
                     onChange={(e) => updateField('presupuesto', parseInt(e.target.value))}
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: `1px solid ${errors.presupuesto ? '#ef4444' : '#374151'}`,
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className={`w-full px-3 py-3 bg-white dark:bg-gray-800 border ${errors.presupuesto ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                        } rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem' }}>
+                <div className="flex justify-between mt-1">
                     {errors.presupuesto && (
-                        <p style={{ color: '#ef4444', fontSize: '0.75rem' }}>
+                        <p className="text-red-500 text-xs">
                             {errors.presupuesto}
                         </p>
                     )}
-                    <p style={{ color: '#6b7280', fontSize: '0.75rem', marginLeft: 'auto' }}>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs ml-auto">
                         Balance disponible: {currentBalance} DegaCoins
                     </p>
                 </div>
             </div>
 
             {/* Máximo de impresiones por usuario */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Máximo de Impresiones por Usuario
                 </label>
                 <input
@@ -97,38 +75,22 @@ const StepBudget = ({ formData, updateField, errors, currentBalance }) => {
                     max="100"
                     value={formData.maxImpresionesUsuario}
                     onChange={(e) => updateField('maxImpresionesUsuario', parseInt(e.target.value))}
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: '1px solid #374151',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className="w-full px-3 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
-                <p style={{ color: '#6b7280', fontSize: '0.75rem', marginTop: '0.5rem' }}>
+                <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
                     Recomendado: 3 (evita saturar a los usuarios)
                 </p>
             </div>
 
             {/* Prioridad */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Prioridad
                 </label>
                 <select
                     value={formData.prioridad}
                     onChange={(e) => updateField('prioridad', e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        backgroundColor: '#1a1f3a',
-                        border: '1px solid #374151',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '1rem'
-                    }}
+                    className="w-full px-3 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 >
                     <option value="basica">Básica</option>
                     <option value="premium">Premium</option>

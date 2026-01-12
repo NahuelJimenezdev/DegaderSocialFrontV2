@@ -2,81 +2,66 @@ import React from 'react';
 
 const StepTargeting = ({ formData, updateSegmentation, errors }) => {
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ffffff', marginBottom: '1.5rem' }}>
+        <div className="max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                 Segmentación de Audiencia
             </h3>
 
             {/* Rango de Edad */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Rango de Edad
                 </label>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
+                <div className="flex gap-4 items-center">
+                    <div className="flex-1">
                         <input
                             type="number"
                             min="13"
                             max="100"
                             value={formData.segmentacion.edadMin}
                             onChange={(e) => updateSegmentation('edadMin', parseInt(e.target.value))}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem',
-                                backgroundColor: '#1a1f3a',
-                                border: `1px solid ${errors.edadMin ? '#ef4444' : '#374151'}`,
-                                borderRadius: '8px',
-                                color: '#ffffff',
-                                fontSize: '1rem'
-                            }}
+                            className={`w-full px-3 py-3 bg-white dark:bg-gray-800 border ${errors.edadMin ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                                } rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                         />
-                        <p style={{ color: '#6b7280', fontSize: '0.75rem', marginTop: '0.25rem' }}>Mínima</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Mínima</p>
                     </div>
-                    <span style={{ color: '#6b7280' }}>-</span>
-                    <div style={{ flex: 1 }}>
+                    <span className="text-gray-500 dark:text-gray-400">-</span>
+                    <div className="flex-1">
                         <input
                             type="number"
                             min="13"
                             max="100"
                             value={formData.segmentacion.edadMax}
                             onChange={(e) => updateSegmentation('edadMax', parseInt(e.target.value))}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem',
-                                backgroundColor: '#1a1f3a',
-                                border: '1px solid #374151',
-                                borderRadius: '8px',
-                                color: '#ffffff',
-                                fontSize: '1rem'
-                            }}
+                            className="w-full px-3 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         />
-                        <p style={{ color: '#6b7280', fontSize: '0.75rem', marginTop: '0.25rem' }}>Máxima</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Máxima</p>
                     </div>
                 </div>
                 {errors.edadMin && (
-                    <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.5rem' }}>
+                    <p className="text-red-500 text-xs mt-2">
                         {errors.edadMin}
                     </p>
                 )}
             </div>
 
             {/* Género */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Género
                 </label>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    {['todos', 'masculino', 'femenino'].map((genero) => (
-                        <label key={genero} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                <div className="flex gap-4">
+                    {['todos', 'masculino', 'femenino', 'otro'].map((genero) => (
+                        <label key={genero} className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"
                                 name="genero"
                                 value={genero}
                                 checked={formData.segmentacion.genero === genero}
                                 onChange={(e) => updateSegmentation('genero', e.target.value)}
-                                style={{ cursor: 'pointer' }}
+                                className="w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                             />
-                            <span style={{ color: '#ffffff', fontSize: '0.875rem', textTransform: 'capitalize' }}>
+                            <span className="text-gray-900 dark:text-white text-sm capitalize">
                                 {genero}
                             </span>
                         </label>
@@ -85,13 +70,13 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
             </div>
 
             {/* Intereses */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div className="mb-6">
+                <label className="block text-gray-600 dark:text-gray-400 text-sm mb-2">
                     Intereses (Opcional)
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
+                <div className="grid grid-cols-2 gap-2">
                     {['religión', 'deportes', 'tecnología', 'música', 'arte', 'educación'].map((interes) => (
-                        <label key={interes} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <label key={interes} className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="checkbox"
                                 checked={formData.segmentacion.intereses.includes(interes)}
@@ -101,9 +86,9 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
                                         : formData.segmentacion.intereses.filter(i => i !== interes);
                                     updateSegmentation('intereses', newIntereses);
                                 }}
-                                style={{ cursor: 'pointer' }}
+                                className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer"
                             />
-                            <span style={{ color: '#ffffff', fontSize: '0.875rem', textTransform: 'capitalize' }}>
+                            <span className="text-gray-900 dark:text-white text-sm capitalize">
                                 {interes}
                             </span>
                         </label>
@@ -112,8 +97,8 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
             </div>
 
             {/* Ubicación Global */}
-            <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+            <div className="mb-6">
+                <label className="flex items-center gap-2 cursor-pointer">
                     <input
                         type="checkbox"
                         checked={formData.segmentacion.ubicacion.esGlobal}
@@ -121,9 +106,9 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
                             ...formData.segmentacion.ubicacion,
                             esGlobal: e.target.checked
                         })}
-                        style={{ cursor: 'pointer' }}
+                        className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer"
                     />
-                    <span style={{ color: '#ffffff', fontSize: '0.875rem' }}>
+                    <span className="text-gray-900 dark:text-white text-sm">
                         Mostrar a nivel global (sin restricciones geográficas)
                     </span>
                 </label>
