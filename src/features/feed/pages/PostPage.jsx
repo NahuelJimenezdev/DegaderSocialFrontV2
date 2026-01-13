@@ -43,7 +43,30 @@ const PostPage = () => {
         const handleSocketPostUpdate = (event) => {
             const updatedPost = event.detail;
             if (updatedPost._id === post._id) {
-                setPost(updatedPost); // Reemplazo completo - incluye comentarios con likes actualizados
+                // Merge inteligente: mantener estructura existente y actualizar solo campos específicos
+                setPost(prevPost => {
+                    // Validar que los datos del socket estén completos
+                    if (!updatedPost || typeof updatedPost !== 'object') {
+                        console.warn('Socket update data is invalid, skipping update');
+                        return prevPost;
+                    }
+
+                    // Merge selectivo: actualizar solo campos que sabemos que vienen completos
+                    return {
+                        ...prevPost,
+                        // Actualizar contadores y arrays si vienen en el update
+                        ...(updatedPost.likes && { likes: updatedPost.likes }),
+                        ...(updatedPost.comentarios && { comentarios: updatedPost.comentarios }),
+                        ...(updatedPost.compartidos && { compartidos: updatedPost.compartidos }),
+                        // Actualizar otros campos si existen
+                        ...(updatedPost.contenido && { contenido: updatedPost.contenido }),
+                        ...(updatedPost.imagen && { imagen: updatedPost.imagen }),
+                        // Mantener campos críticos del post original si no vienen en el update
+                        usuario: updatedPost.usuario || prevPost.usuario,
+                        createdAt: updatedPost.createdAt || prevPost.createdAt,
+                        updatedAt: updatedPost.updatedAt || prevPost.updatedAt
+                    };
+                });
             }
         };
 
