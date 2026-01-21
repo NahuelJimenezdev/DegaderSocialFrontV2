@@ -188,11 +188,12 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
 
                         {/* 2. Mensaje Escrito (Content Row) */}
                         <div className="text-[14px] leading-5 text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words pl-8">
-                            {/* Mention Highlighting: Match @word and wrap in colored span.
-                                 Using simple split/map to avoid dangerous HTML or complex parsing.
-                                 Regex matches @ followed by word characters. 
+                            {/* Mention Highlighting: Match @username with dots, hyphens, underscores
+                                 Using split/map to wrap mentions in colored span.
+                                 Regex matches @ followed by alphanumeric + dots + hyphens + underscores + accented chars
+                                 ✅ CORREGIDO: Ahora captura puntos (.), guiones (-) y guiones bajos (_)
                              */}
-                            {comment.contenido.split(/(@[\w\u00C0-\u00FF]+)/g).map((part, index) =>
+                            {comment.contenido.split(/(@[a-zA-Z0-9._\-\u00C0-\u00FF]+)/g).map((part, index) =>
                                 part.startsWith('@') ? (
                                     <span key={index} className="text-violet-600 dark:text-violet-400 font-medium">
                                         {part}
