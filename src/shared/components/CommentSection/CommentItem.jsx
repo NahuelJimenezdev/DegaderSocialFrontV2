@@ -193,7 +193,7 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                                  Regex matches @ followed by alphanumeric + dots + hyphens + underscores + accented chars
                                  ✅ CORREGIDO: Ahora captura puntos (.), guiones (-) y guiones bajos (_)
                              */}
-                            {comment.contenido.split(/(@[a-zA-Z0-9._\-\u00C0-\u00FF]+)/g).map((part, index) =>
+                            {(comment.contenido || '').split(/(@[a-zA-Z0-9._\-\u00C0-\u00FF]+)/g).map((part, index) =>
                                 part.startsWith('@') ? (
                                     <span key={index} className="text-violet-600 dark:text-violet-400 font-medium">
                                         {part}
