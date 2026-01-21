@@ -57,12 +57,17 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
 
   // Aprobar solicitud
   const handleApproveRequest = async (userId) => {
+    console.log('🔵 handleApproveRequest - userId:', userId);
+    console.log('🔵 handleApproveRequest - iglesiaId:', iglesiaData._id);
+    console.log('🔵 handleApproveRequest - acción:', 'aprobar');
     try {
       setLoading(true);
       await iglesiaService.manageRequest(iglesiaData._id, userId, 'aprobar');
       await refetch();
+      setAlertConfig({ isOpen: true, variant: 'success', message: 'Solicitud aprobada exitosamente' });
     } catch (err) {
       logger.error('Error approving request:', err);
+      console.error('❌ Error completo:', err.response?.data || err);
       setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al aprobar la solicitud' });
     } finally {
       setLoading(false);
@@ -71,12 +76,17 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
 
   // Rechazar solicitud
   const handleRejectRequest = async (userId) => {
+    console.log('🔴 handleRejectRequest - userId:', userId);
+    console.log('🔴 handleRejectRequest - iglesiaId:', iglesiaData._id);
+    console.log('🔴 handleRejectRequest - acción:', 'rechazar');
     try {
       setLoading(true);
       await iglesiaService.manageRequest(iglesiaData._id, userId, 'rechazar');
       await refetch();
+      setAlertConfig({ isOpen: true, variant: 'success', message: 'Solicitud rechazada' });
     } catch (err) {
       logger.error('Error rejecting request:', err);
+      console.error('❌ Error completo:', err.response?.data || err);
       setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al rechazar la solicitud' });
     } finally {
       setLoading(false);
@@ -119,8 +129,8 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'grid'
-                      ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                    ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                     }`}
                   title="Vista Cuadrícula"
                 >
@@ -129,8 +139,8 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'list'
-                      ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                    ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                     }`}
                   title="Vista Lista"
                 >
@@ -151,11 +161,20 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
             <div className="space-y-3">
               {solicitudes.map((solicitud) => {
                 const usuario = solicitud.usuario;
+                // ✅ Extraer ID de forma segura (maneja ObjectId y objetos poblados)
+                const usuarioId = usuario?._id || usuario;
                 const fullName = `${usuario?.nombres?.primero || ''} ${usuario?.apellidos?.primero || ''}`.trim() || 'Usuario';
+
+                console.log('🔍 Solicitud:', {
+                  solicitudId: solicitud._id,
+                  usuario: usuario,
+                  usuarioId: usuarioId,
+                  fullName: fullName
+                });
 
                 return (
                   <div
-                    key={solicitud._id || usuario?._id}
+                    key={solicitud._id || usuarioId}
                     className={`${churchColors.cardBg} rounded-lg p-4 flex items-center justify-between gap-4 shadow-sm border ${churchColors.borderLight}`}
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -176,7 +195,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <button
-                        onClick={() => handleApproveRequest(usuario._id)}
+                        onClick={() => handleApproveRequest(usuarioId)}
                         disabled={loading}
                         className="flex items-center gap-1.5 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 text-sm font-medium shadow-sm"
                         title="Aceptar solicitud"
@@ -185,7 +204,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                         <span className="hidden sm:inline">Aceptar</span>
                       </button>
                       <button
-                        onClick={() => handleRejectRequest(usuario._id)}
+                        onClick={() => handleRejectRequest(usuarioId)}
                         disabled={loading}
                         className="flex items-center gap-1.5 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 text-sm font-medium shadow-sm"
                         title="Rechazar solicitud"

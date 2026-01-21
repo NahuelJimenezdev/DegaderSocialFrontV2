@@ -26,6 +26,11 @@ const iglesiaService = {
     return response.data;
   },
 
+  cancelRequest: async (id) => {
+    const response = await api.delete(`/iglesias/${id}/join`);
+    return response.data;
+  },
+
   // Chat Methods
   getMessages: async (id) => {
     const response = await api.get(`/iglesias/${id}/messages`);

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Users, Award, Check, Briefcase, Calendar } from 'lucide-react';
+import { MapPin, Users, Award, Check, Briefcase, Calendar, X } from 'lucide-react';
 import { getUserAvatar, getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
 import { getSocket } from '../../../shared/lib/socket';
+import iglesiaService from '../../../api/iglesiaService';
 
 const ChurchCard = ({ iglesia, user, onJoin }) => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
 
   const pastorId = localIglesia.pastorPrincipal?._id || localIglesia.pastorPrincipal;
   const isPastor = pastorId && user?._id && pastorId.toString() === user._id.toString();
-  
+
   const isMember = !isPastor && localIglesia.miembros?.some(m => {
     const memberId = m._id || m;
     return memberId.toString() === user?._id?.toString();
@@ -92,13 +93,32 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
     }
   };
 
+  const handleCancelClick = async () => {
+    setIsJoining(true);
+    try {
+      await iglesiaService.cancelRequest(localIglesia._id);
+      // Actualización optimista: remover solicitud inmediatamente
+      setLocalIglesia(prev => ({
+        ...prev,
+        solicitudes: (prev.solicitudes || []).filter(s => {
+          const userId = s.usuario?._id || s.usuario || s;
+          return userId.toString() !== user._id.toString();
+        })
+      }));
+    } catch (error) {
+      logger.error('Error al cancelar solicitud:', error);
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
       {/* Cover Image/Gradient */}
       <div className="h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 relative">
         {iglesia.portada ? (
-          <img 
-            src={getBannerUrl(iglesia.portada)} 
+          <img
+            src={getBannerUrl(iglesia.portada)}
             alt={iglesia.nombre}
             className="w-full h-full object-cover opacity-80"
           />
@@ -107,14 +127,14 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
               <defs>
                 <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
+                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
                 </pattern>
               </defs>
               <rect width="100" height="100" fill="url(#grid)" />
             </svg>
           </div>
         )}
-        
+
         {/* Activity Indicator */}
         <div className="absolute top-2 right-2">
           <div className="flex items-center gap-1 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
@@ -128,8 +148,8 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
       <div className="absolute top-20 left-4">
         <div className="w-20 h-20 rounded-full border-4 border-white dark:border-gray-800 shadow-lg bg-white dark:bg-gray-700 overflow-hidden">
           {iglesia.logo ? (
-            <img 
-              src={getAvatarUrl(iglesia.logo)} 
+            <img
+              src={getAvatarUrl(iglesia.logo)}
               alt={iglesia.nombre}
               className="w-full h-full object-cover"
             />
@@ -168,12 +188,12 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
           <div className="flex items-center gap-3 mb-4">
             <div className="flex -space-x-2">
               {memberPreviews.map((member, index) => (
-                <div 
+                <div
                   key={member._id || index}
                   className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 overflow-hidden bg-gray-200 dark:bg-gray-700"
                 >
-                  <img 
-                    src={getUserAvatar(member)} 
+                  <img
+                    src={getUserAvatar(member)}
                     alt="Member"
                     className="w-full h-full object-cover"
                     onError={(e) => e.target.src = '/avatars/default-avatar.png'}
@@ -237,10 +257,21 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
           )}
 
           {hasPending && (
-            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 w-full justify-center">
-              <Briefcase size={14} className="mr-1" />
-              Solicitud Pendiente
-            </span>
+            <>
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 flex-1 justify-center">
+                <Briefcase size={14} className="mr-1" />
+                Solicitud Pendiente
+              </span>
+              <button
+                onClick={handleCancelClick}
+                disabled={isJoining}
+                className="px-4 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 border border-red-600 dark:border-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                title="Cancelar solicitud"
+              >
+                <X size={16} />
+                {isJoining ? 'Cancelando...' : 'Cancelar'}
+              </button>
+            </>
           )}
 
           {!isPastor && !isMember && !hasPending && (
