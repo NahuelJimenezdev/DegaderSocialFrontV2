@@ -53,6 +53,14 @@ export default function SuspendedUsersPage() {
 
                         const diasRestantes = calcularDiasRestantes(fechaFin);
 
+                        // Validación de fecha inicio
+                        const fechaInicioObj = fechaInicio ? new Date(fechaInicio) : null;
+                        const esFechaValida = fechaInicioObj && !isNaN(fechaInicioObj.getTime());
+
+                        const diasTranscurridos = esFechaValida
+                            ? Math.floor((new Date() - fechaInicioObj) / (1000 * 60 * 60 * 24))
+                            : 0;
+
                         return (
                             <div
                                 key={user._id}
@@ -60,33 +68,25 @@ export default function SuspendedUsersPage() {
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start gap-4">
+                                        {/* Avatar Logic */}
                                         {avatar ? (
-                                            <img
-                                                src={avatar}
-                                                alt={nombre}
-                                                className="w-12 h-12 rounded-full object-cover"
-                                            />
+                                            <img src={avatar} alt={nombre} className="w-12 h-12 rounded-full object-cover" />
                                         ) : (
                                             <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                                                <span className="text-lg font-bold text-gray-600 dark:text-gray-300">
-                                                    {nombre[0]?.toUpperCase()}
-                                                </span>
+                                                <span className="text-lg font-bold text-gray-600 dark:text-gray-300">{nombre[0]?.toUpperCase()}</span>
                                             </div>
                                         )}
 
                                         <div className="flex-1">
-                                            <h3 className="font-bold text-gray-900 dark:text-white">
-                                                {nombre}
-                                            </h3>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                @{user.username}
-                                            </p>
+                                            <h3 className="font-bold text-gray-900 dark:text-white">{nombre}</h3>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">@{user.username}</p>
 
                                             <div className="mt-3 space-y-1 text-sm">
                                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                                     <Calendar className="w-4 h-4" />
                                                     <span>
-                                                        Suspendido: {new Date(fechaInicio).toLocaleDateString()}
+                                                        Suspendido: {esFechaValida ? fechaInicioObj.toLocaleDateString() : 'Fecha desconocida'}
+                                                        {esFechaValida && <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">({diasTranscurridos} días)</span>}
                                                     </span>
                                                 </div>
 
