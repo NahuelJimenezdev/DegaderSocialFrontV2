@@ -28,6 +28,12 @@ const MentionAutocomplete = ({
 
                 // Mapear amigos primero para asegurar tener un username
                 // Mapear amigos primero para asegurar tener un username
+                if (!Array.isArray(friends)) {
+                    console.warn('Friends response is not an array:', friends);
+                    setUsers([]);
+                    return;
+                }
+
                 const mappedFriends = friends.map(friend => {
                     // Prioridad: 1. Username root, 2. Social username, 3. Generado
                     let username = friend.username || friend.social?.username;
