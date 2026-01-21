@@ -153,7 +153,7 @@ export default function IglesiaPage() {
       />
 
       {loadingIglesias ? (
-        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
           <Skeleton variant="card" count={4} />
         </div>
       ) : filteredIglesias.length === 0 ? (
@@ -165,7 +165,7 @@ export default function IglesiaPage() {
           actionLabel="Crear Iglesia"
         />
       ) : (
-        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
           {filteredIglesias.map((iglesia) => (
             <ChurchCard
               key={iglesia._id}

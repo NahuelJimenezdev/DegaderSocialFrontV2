@@ -1,27 +1,28 @@
 import React from 'react';
 import { Filter, ArrowUpDown, LayoutGrid, List } from 'lucide-react';
 
-const FilterBar = ({ 
-  filters, 
-  onFilterChange, 
-  sort, 
-  onSortChange, 
-  viewMode, 
-  onViewModeChange 
+const FilterBar = ({
+  filters,
+  onFilterChange,
+  sort,
+  onSortChange,
+  viewMode,
+  onViewModeChange
 }) => {
   return (
     <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
       {/* Filters */}
-      <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mr-2">
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mr-2 flex-shrink-0">
           <Filter size={18} />
           <span className="text-sm font-medium">Filtrar:</span>
         </div>
-        
+
         <select
           value={filters.denominacion}
           onChange={(e) => onFilterChange('denominacion', e.target.value)}
-          className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+          className="flex-1 sm:flex-none w-full sm:w-48 px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none"
         >
           <option value="">Todas las denominaciones</option>
           <option value="Bautista">Bautista</option>
@@ -35,7 +36,7 @@ const FilterBar = ({
         <select
           value={filters.ubicacion}
           onChange={(e) => onFilterChange('ubicacion', e.target.value)}
-          className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none"
+          className="flex-1 sm:flex-none w-full sm:w-48 px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none"
         >
           <option value="">Todas las ubicaciones</option>
           {/* This would ideally be populated dynamically */}
@@ -67,22 +68,20 @@ const FilterBar = ({
         <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
           <button
             onClick={() => onViewModeChange('grid')}
-            className={`p-1.5 rounded-md transition-all ${
-              viewMode === 'grid' 
-                ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm' 
+            className={`p-1.5 rounded-md transition-all ${viewMode === 'grid'
+                ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
-            }`}
+              }`}
             title="Vista Cuadrícula"
           >
             <LayoutGrid size={18} />
           </button>
           <button
             onClick={() => onViewModeChange('list')}
-            className={`p-1.5 rounded-md transition-all ${
-              viewMode === 'list' 
-                ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm' 
+            className={`p-1.5 rounded-md transition-all ${viewMode === 'list'
+                ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
-            }`}
+              }`}
             title="Vista Lista"
           >
             <List size={18} />
