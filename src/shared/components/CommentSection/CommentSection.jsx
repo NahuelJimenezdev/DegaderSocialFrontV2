@@ -49,18 +49,30 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('🚀 [CommentSection] handleSubmit triggered', { newComment, replyingTo, hasImage: !!selectedImage });
+
         if (!newComment.trim() && !selectedImage) return;
 
         setIsSubmitting(true);
         try {
             // Include parentId if we are replying
             const parentId = replyingTo ? replyingTo.id : null;
+            console.log('📦 [CommentSection] Calling onAddComment with:', { postId, parentId });
+
+            if (typeof onAddComment !== 'function') {
+                console.error('❌ [CommentSection] CRITICAL: onAddComment is NOT a function!', onAddComment);
+                throw new Error('onAddComment prop is missing or invalid');
+            }
+
             await onAddComment(postId, newComment, parentId, selectedImage);
 
             setNewComment('');
             setSelectedImage(null);
             setImagePreview(null);
             setReplyingTo(null); // Reset reply state
+            console.log('✅ [CommentSection] Comment submitted successfully');
+        } catch (error) {
+            console.error('❌ [CommentSection] Error submitting comment:', error);
         } finally {
             setIsSubmitting(false);
         }
@@ -82,7 +94,17 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
 
     // Helper for direct submission from CommentItem (Desktop nested forms)
     const handleNestedReplySubmit = async (parentCommentId, content, image) => {
-        await onAddComment(postId, content, parentCommentId, image);
+        console.log('🚀 [CommentSection] handleNestedReplySubmit triggered', { parentCommentId, content });
+        try {
+            if (typeof onAddComment !== 'function') {
+                console.error('❌ [CommentSection] CRITICAL: onAddComment is NOT a function in nested reply!');
+                return;
+            }
+            await onAddComment(postId, content, parentCommentId, image);
+            console.log('✅ [CommentSection] Nested reply submitted successfully');
+        } catch (error) {
+            console.error('❌ [CommentSection] Error in nested reply submit:', error);
+        }
     };
 
     const handleEmojiSelect = (emoji) => {

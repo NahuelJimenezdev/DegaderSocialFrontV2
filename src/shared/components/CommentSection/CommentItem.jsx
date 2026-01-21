@@ -52,20 +52,24 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
 
     const handleSubmitReply = (e) => {
         e.preventDefault();
-        if (replyContent.trim() || replyImage) {
-            const targetParentId = comment.parentComment || comment._id;
+        console.log('🚀 [CommentItem] handleSubmitReply triggered');
 
-            // If we are already at level >= 1, we must reply to the ORIGINAL parent comment, not this reply.
-            // The backend likely enforces max 2 levels (root + reply), so replying to a reply (level 1)
-            // should target the ROOT comment (level 0) but maybe tag the user? 
-            // OR the backend logic "parentComment.parentComment" suggests strictly 1 level of nesting.
-            // Let's ensure targetParentId is always the root comment ID if we are deep.
+        if (replyContent.trim() || replyImage) {
+            console.log('📝 [CommentItem] Valid content to reply');
 
             let finalTargetId = comment._id;
             const parentReference = comment.parentComment;
+
+            console.log('🔍 [CommentItem] Resolving parent ID:', {
+                commentId: comment._id,
+                parentReference: parentReference
+            });
+
             if (parentReference) {
                 finalTargetId = (typeof parentReference === 'object') ? parentReference._id : parentReference;
             }
+
+            console.log('🎯 [CommentItem] Final Target ID:', finalTargetId);
 
             // Ensure mention is added for desktop reply
             const mentionName = user.nombres?.primero || user.username || 'Usuario';
@@ -74,13 +78,28 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                 finalContent = `@${mentionName} ${finalContent}`;
             }
 
-            onReply(finalTargetId, finalContent, replyImage);
+            console.log('📦 [CommentItem] Calling onReply with:', {
+                finalTargetId,
+                finalContent,
+                hasImage: !!replyImage
+            });
 
+            if (typeof onReply !== 'function') {
+                console.error('❌ [CommentItem] CRITICAL: onReply is NOT a function!', onReply);
+                return;
+            }
 
+            try {
+                onReply(finalTargetId, finalContent, replyImage);
+            } catch (err) {
+                console.error('❌ [CommentItem] Error calling onReply:', err);
+            }
 
             setReplyContent('');
             setReplyImage(null);
             setIsReplying(false);
+        } else {
+            console.warn('⚠️ [CommentItem] Empty content, ignoring submit');
         }
     };
 

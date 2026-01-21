@@ -177,10 +177,25 @@ const PostCard = ({
     const handleSavePost = handleSaveClick;
 
     const handleAddCommentWrapper = async (postId, content, parentId, image) => {
-        if (isFeedMode) {
-            await onAddComment(postId, content, parentId, image);
-        } else {
-            await context.handleAddComment?.(postId, content, parentId, image);
+        console.log('🚀 [PostCard] handleAddCommentWrapper triggered', { postId, parentId, hasImage: !!image });
+        try {
+            if (isFeedMode) {
+                console.log('📦 [PostCard] Calling onAddComment (Feed Mode)');
+                if (typeof onAddComment !== 'function') {
+                    console.error('❌ [PostCard] CRITICAL: onAddComment is NOT a function in Feed Mode!');
+                    return;
+                }
+                await onAddComment(postId, content, parentId, image);
+            } else {
+                console.log('📦 [PostCard] Calling context.handleAddComment (Profile Mode)');
+                if (typeof context.handleAddComment !== 'function') {
+                    console.error('❌ [PostCard] CRITICAL: context.handleAddComment is NOT a function!');
+                    return;
+                }
+                await context.handleAddComment?.(postId, content, parentId, image);
+            }
+        } catch (error) {
+            console.error('❌ [PostCard] Error in wrapper:', error);
         }
     };
 
