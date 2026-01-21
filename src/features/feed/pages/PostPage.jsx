@@ -85,6 +85,36 @@ const PostPage = () => {
         navigate('/'); // Go back to feed if deleted
     };
 
+    const handleLike = async (postId) => {
+        try {
+            const response = await postService.toggleLike(postId);
+            if (response.success) {
+                // Refetch para tener data fresca
+                const updatedPostRes = await postService.getPostById(postId);
+                if (updatedPostRes.success) {
+                    setPost(updatedPostRes.data);
+                }
+            }
+        } catch (err) {
+            console.error('Error liking post in PostPage:', err);
+        }
+    };
+
+    const handleAddComment = async (postId, content, parentId, image) => {
+        try {
+            const response = await postService.addComment(postId, content, parentId, image);
+            if (response.success) {
+                // Refetch para tener data fresca
+                const updatedPostRes = await postService.getPostById(postId);
+                if (updatedPostRes.success) {
+                    setPost(updatedPostRes.data);
+                }
+            }
+        } catch (err) {
+            console.error('Error adding comment in PostPage:', err);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen pt-20">
@@ -124,6 +154,8 @@ const PostPage = () => {
                 onPostUpdate={handlePostUpdate}
                 onPostDelete={handlePostDelete}
                 highlightCommentId={new URLSearchParams(location.search).get('commentId')}
+                onLike={handleLike}
+                onAddComment={handleAddComment}
             />
         </div>
     );
