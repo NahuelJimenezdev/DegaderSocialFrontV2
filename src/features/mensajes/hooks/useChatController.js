@@ -347,7 +347,7 @@ export const useChatController = () => {
             if (archivoSeleccionado) {
                 const formData = new FormData();
                 formData.append('contenido', mensaje || 'Archivo adjunto');
-                formData.append('archivo', archivoSeleccionado);
+                formData.append('attachments', archivoSeleccionado);
                 const token = localStorage.getItem('token');
                 const response = await api.post(`/conversaciones/${conversacionActual._id}/message`, formData, {
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
