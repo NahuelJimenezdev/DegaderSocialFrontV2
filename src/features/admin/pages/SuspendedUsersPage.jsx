@@ -41,7 +41,17 @@ export default function SuspendedUsersPage() {
             ) : (
                 <div className="grid gap-4">
                     {users.map((user) => {
-                        const diasRestantes = calcularDiasRestantes(user.seguridad?.fechaFinSuspension);
+                        // Helpers de visualización (seguros contra null/undefined)
+                        const nombre = user.nombreCompleto ||
+                            (user.nombres?.primero && user.apellidos?.primero ? `${user.nombres.primero} ${user.apellidos.primero}` : 'Usuario');
+
+                        const avatar = user.social?.fotoPerfil || user.avatar;
+
+                        // Lógica de fechas (Fallback para suspensiones antiguas usando updatedAt)
+                        const fechaInicio = user.seguridad?.fechaSuspension || user.updatedAt;
+                        const fechaFin = user.seguridad?.suspensionFin; // Nombre corregido según modelo
+
+                        const diasRestantes = calcularDiasRestantes(fechaFin);
 
                         return (
                             <div
@@ -50,23 +60,23 @@ export default function SuspendedUsersPage() {
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start gap-4">
-                                        {user.avatar ? (
+                                        {avatar ? (
                                             <img
-                                                src={user.avatar}
-                                                alt={user.nombreCompleto}
-                                                className="w-12 h-12 rounded-full"
+                                                src={avatar}
+                                                alt={nombre}
+                                                className="w-12 h-12 rounded-full object-cover"
                                             />
                                         ) : (
                                             <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                                 <span className="text-lg font-bold text-gray-600 dark:text-gray-300">
-                                                    {user.nombreCompleto?.[0]?.toUpperCase()}
+                                                    {nombre[0]?.toUpperCase()}
                                                 </span>
                                             </div>
                                         )}
 
                                         <div className="flex-1">
                                             <h3 className="font-bold text-gray-900 dark:text-white">
-                                                {user.nombreCompleto}
+                                                {nombre}
                                             </h3>
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                 @{user.username}
@@ -76,14 +86,14 @@ export default function SuspendedUsersPage() {
                                                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                                                     <Calendar className="w-4 h-4" />
                                                     <span>
-                                                        Suspendido: {new Date(user.seguridad?.fechaSuspension).toLocaleDateString()}
+                                                        Suspendido: {new Date(fechaInicio).toLocaleDateString()}
                                                     </span>
                                                 </div>
 
                                                 {diasRestantes !== null ? (
                                                     <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
                                                         <AlertTriangle className="w-4 h-4" />
-                                                        <span>Días restantes: {diasRestantes}</span>
+                                                        <span>Días restantes: {diasRestantes > 0 ? diasRestantes : 'Finaliza hoy'}</span>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
