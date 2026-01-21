@@ -103,8 +103,8 @@ const MensajesPage = () => {
       handlers={handlers}
       helpers={helpers}
     >
-      <div className="page-container messages-page">
-        <div className="flex h-screen overflow-hidden dark:bg-gray-900">
+      <div className="page-container messages-page !p-0 !h-full flex flex-col">
+        <div className="flex-1 flex overflow-hidden dark:bg-gray-900">
           <div className="container mx-auto h-full max-w-7xl">
             <div className="flex h-full border-l border-r border-gray-200 dark:border-gray-700">
               <ChatListSidebar
