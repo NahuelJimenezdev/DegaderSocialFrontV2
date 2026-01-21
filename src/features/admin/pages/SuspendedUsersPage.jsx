@@ -86,7 +86,7 @@ export default function SuspendedUsersPage() {
                                                     <Calendar className="w-4 h-4" />
                                                     <span>
                                                         Suspendido: {esFechaValida ? fechaInicioObj.toLocaleDateString() : 'Fecha desconocida'}
-                                                        {esFechaValida && <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">({diasTranscurridos} días)</span>}
+                                                        {esFechaValida && <span className="font-semibold text-gray-800 dark:text-gray-200 ml-1">({diasTranscurridos} días transcurridos)</span>}
                                                     </span>
                                                 </div>
 
