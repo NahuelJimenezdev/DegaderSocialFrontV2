@@ -172,6 +172,7 @@ export default function IglesiaPage() {
               iglesia={iglesia}
               user={user}
               onJoin={handleUnirseIglesia}
+              viewMode={viewMode}
             />
           ))}
         </div>

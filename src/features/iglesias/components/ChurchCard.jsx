@@ -6,7 +6,7 @@ import { getUserAvatar, getAvatarUrl, getBannerUrl } from '../../../shared/utils
 import { getSocket } from '../../../shared/lib/socket';
 import iglesiaService from '../../../api/iglesiaService';
 
-const ChurchCard = ({ iglesia, user, onJoin }) => {
+const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
   const navigate = useNavigate();
   const [localIglesia, setLocalIglesia] = useState(iglesia);
   const [isJoining, setIsJoining] = useState(false);
@@ -112,6 +112,156 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
     }
   };
 
+  // Render de Botones (Reutilizable para ambos modos)
+  const renderActionButtons = () => (
+    <div className="flex gap-2 mt-4">
+      {isPastor && (
+        <>
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300 flex-1 justify-center">
+            <Award size={14} className="mr-1" />
+            Tu Iglesia (Pastor)
+          </span>
+          <button
+            onClick={() => navigate(`/Mi_iglesia/${iglesia._id}`)}
+            className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
+          >
+            Ingresar
+          </button>
+        </>
+      )}
+
+      {isMember && (
+        <>
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 flex-1 justify-center">
+            <Check size={14} className="mr-1" />
+            Miembro
+          </span>
+          <button
+            onClick={() => navigate(`/Mi_iglesia/${iglesia._id}`)}
+            className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
+          >
+            Ingresar
+          </button>
+        </>
+      )}
+
+      {hasPending && (
+        <>
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 flex-1 justify-center">
+            <Briefcase size={14} className="mr-1" />
+            Solicitud Pendiente
+          </span>
+          <button
+            onClick={handleCancelClick}
+            disabled={isJoining}
+            className="px-4 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 border border-red-600 dark:border-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+            title="Cancelar solicitud"
+          >
+            <X size={16} />
+            {isJoining ? 'Cancelando...' : 'Cancelar'}
+          </button>
+        </>
+      )}
+
+      {!isPastor && !isMember && !hasPending && (
+        <>
+          <button
+            onClick={handleJoinClick}
+            disabled={isJoining}
+            className="flex-1 px-4 py-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isJoining ? 'Enviando...' : 'Unirme'}
+          </button>
+          <button
+            onClick={() => navigate(`/Mi_iglesia/${iglesia._id}`)}
+            className="flex-1 px-4 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-700 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          >
+            Ver Detalle
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  // MODO LISTA
+  if (viewMode === 'list') {
+    return (
+      <div className="group bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col md:flex-row">
+        {/* Portada Horizontal */}
+        <div className="w-full md:w-64 h-48 md:h-auto relative flex-shrink-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+          {iglesia.portada ? (
+            <img
+              src={getBannerUrl(iglesia.portada)}
+              alt={iglesia.nombre}
+              className="w-full h-full object-cover opacity-90"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center opacity-30">
+              <Building2 className="text-white w-16 h-16" />
+            </div>
+          )}
+
+          {/* Logo Superpuesto */}
+          <div className="absolute top-4 left-4 w-16 h-16 rounded-full border-2 border-white dark:border-gray-800 shadow-md bg-white dark:bg-gray-700 overflow-hidden">
+            {iglesia.logo ? (
+              <img src={getAvatarUrl(iglesia.logo)} alt={iglesia.nombre} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/30">
+                <span className="material-symbols-outlined text-xl text-indigo-600 dark:text-indigo-400">church</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Contenido Horizontal */}
+        <div className="flex-1 p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate max-w-md">
+                  {iglesia.nombre}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {iglesia.denominacion}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-full text-xs text-green-700 dark:text-green-300">
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                Activo
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <div className="flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                <span>{iglesia.ubicacion?.ciudad}, {iglesia.ubicacion?.pais}</span>
+              </div>
+              {memberCount > 0 && (
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>{memberCount} miembros</span>
+                </div>
+              )}
+            </div>
+
+            {/* Próximo evento si existe */}
+            {iglesia.reuniones && iglesia.reuniones.length > 0 && (
+              <div className="inline-flex items-center gap-2 text-xs text-gray-500 bg-gray-100 dark:bg-gray-700/50 px-2 py-1 rounded">
+                <Calendar className="w-3 h-3" />
+                {iglesia.reuniones[0].nombre} - {iglesia.reuniones[0].dia}
+              </div>
+            )}
+          </div>
+
+          {/* Botones */}
+          {renderActionButtons()}
+        </div>
+      </div>
+    );
+  }
+
+  // MODO GRILLA (Original)
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
       {/* Cover Image/Gradient */}
@@ -225,73 +375,7 @@ const ChurchCard = ({ iglesia, user, onJoin }) => {
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-2 mt-4">
-          {isPastor && (
-            <>
-              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300 flex-1 justify-center">
-                <Award size={14} className="mr-1" />
-                Tu Iglesia (Pastor)
-              </span>
-              <button
-                onClick={() => navigate(`/Mi_iglesia/${iglesia._id}`)}
-                className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
-              >
-                Ingresar
-              </button>
-            </>
-          )}
-
-          {isMember && (
-            <>
-              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 flex-1 justify-center">
-                <Check size={14} className="mr-1" />
-                Miembro
-              </span>
-              <button
-                onClick={() => navigate(`/Mi_iglesia/${iglesia._id}`)}
-                className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
-              >
-                Ingresar
-              </button>
-            </>
-          )}
-
-          {hasPending && (
-            <>
-              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 flex-1 justify-center">
-                <Briefcase size={14} className="mr-1" />
-                Solicitud Pendiente
-              </span>
-              <button
-                onClick={handleCancelClick}
-                disabled={isJoining}
-                className="px-4 py-1.5 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 border border-red-600 dark:border-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                title="Cancelar solicitud"
-              >
-                <X size={16} />
-                {isJoining ? 'Cancelando...' : 'Cancelar'}
-              </button>
-            </>
-          )}
-
-          {!isPastor && !isMember && !hasPending && (
-            <>
-              <button
-                onClick={handleJoinClick}
-                disabled={isJoining}
-                className="flex-1 px-4 py-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isJoining ? 'Enviando...' : 'Unirme'}
-              </button>
-              <button
-                onClick={() => navigate(`/Mi_iglesia/${iglesia._id}`)}
-                className="flex-1 px-4 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-700 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-              >
-                Ver Detalle
-              </button>
-            </>
-          )}
-        </div>
+        {renderActionButtons()}
       </div>
     </div>
   );
