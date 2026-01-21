@@ -25,16 +25,23 @@ const MessageBubble = ({ msg, currentUserId }) => {
     const esImagen = msg.tipo === 'imagen' || msg.archivo?.tipo?.startsWith('image');
     const esVideo = msg.tipo === 'video' || msg.archivo?.tipo?.startsWith('video');
 
+    const getMediaUrl = (url) => {
+        // Si la URL ya es absoluta (comienza con http), usarla directamente
+        if (url?.startsWith('http')) {
+            return url;
+        }
+        // Si es relativa, concatenar con baseURL
+        return `${api.defaults.baseURL.replace('/api', '')}/${url}`;
+    };
+
     const handleImageClick = () => {
         if (msg.archivo?.url) {
-            const url = `${api.defaults.baseURL.replace('/api', '')}/${msg.archivo.url}`;
-            window.open(url, '_blank');
+            window.open(getMediaUrl(msg.archivo.url), '_blank');
         }
     };
 
-    const getMediaUrl = (url) => {
-        return `${api.defaults.baseURL.replace('/api', '')}/${url}`;
-    };
+    const esAudio = msg.tipo === 'audio' || msg.archivo?.tipo?.startsWith('audio');
+    const esArchivo = msg.tipo === 'archivo' || (!esImagen && !esVideo && !esAudio && tieneArchivo);
 
     return (
         <div className={`flex ${esMio ? 'justify-end' : 'justify-start'}`}>
@@ -53,6 +60,10 @@ const MessageBubble = ({ msg, currentUserId }) => {
                                 alt={msg.archivo.nombre || 'Imagen'}
                                 className="max-w-full rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                                 onClick={handleImageClick}
+                                onError={(e) => {
+                                    console.error('Error cargando imagen:', msg.archivo.url);
+                                    e.target.style.display = 'none';
+                                }}
                             />
                         ) : esVideo ? (
                             <video
@@ -60,6 +71,31 @@ const MessageBubble = ({ msg, currentUserId }) => {
                                 controls
                                 className="max-w-full rounded-lg"
                             />
+                        ) : esAudio ? (
+                            <audio
+                                src={getMediaUrl(msg.archivo.url)}
+                                controls
+                                className="w-full"
+                            />
+                        ) : esArchivo ? (
+                            <a
+                                href={getMediaUrl(msg.archivo.url)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`flex items-center gap-2 p-2 rounded-lg ${esMio ? 'bg-indigo-700 hover:bg-indigo-800' : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'} transition-colors`}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium truncate">{msg.archivo.nombre || 'Archivo'}</p>
+                                    {msg.archivo.tamaño && (
+                                        <p className={`text-xs ${esMio ? 'text-indigo-200' : 'text-gray-500 dark:text-gray-400'}`}>
+                                            {(msg.archivo.tamaño / 1024 / 1024).toFixed(2)} MB
+                                        </p>
+                                    )}
+                                </div>
+                            </a>
                         ) : null}
                     </div>
                 )}

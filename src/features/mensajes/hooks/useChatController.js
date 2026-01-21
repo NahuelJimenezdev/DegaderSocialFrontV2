@@ -305,9 +305,29 @@ export const useChatController = () => {
             return;
         }
 
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/avi', 'video/mov', 'video/wmv'];
+        const allowedTypes = [
+            // Imágenes
+            'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+            // Videos
+            'video/mp4', 'video/avi', 'video/mov', 'video/wmv', 'video/quicktime',
+            // Audio
+            'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a',
+            // PDF
+            'application/pdf',
+            // Word
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            // Excel
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            // PowerPoint
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            // Texto
+            'text/plain', 'text/csv'
+        ];
         if (!allowedTypes.includes(file.type)) {
-            setAlertConfig({ isOpen: true, variant: 'warning', message: 'Tipo de archivo no permitido. Solo imágenes y videos' });
+            setAlertConfig({ isOpen: true, variant: 'warning', message: 'Tipo de archivo no permitido. Se permiten: imágenes, videos, audio, PDF, Word, Excel, PowerPoint y archivos de texto' });
             return;
         }
 
