@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Users, Award, Check, Briefcase, Calendar, X } from 'lucide-react';
+import { MapPin, Users, Award, Check, Briefcase, Calendar, X, Building2 } from 'lucide-react';
 import { getUserAvatar, getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
 import { getSocket } from '../../../shared/lib/socket';
 import iglesiaService from '../../../api/iglesiaService';
