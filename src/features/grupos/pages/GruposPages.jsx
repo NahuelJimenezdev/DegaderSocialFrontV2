@@ -7,6 +7,7 @@ import CreateGroupModal from "../components/CreateGroupModal";
 import { getAvatarUrl } from "../../../shared/utils/avatarUtils";
 import { getSocket } from "../../../shared/lib/socket";
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import GruposPageSkeleton from '../skeleton/GruposPageSkeleton';
 import '../../../shared/styles/headers.style.css';
 import '../../../shared/styles/layout.mobile.css';
 
@@ -109,7 +110,7 @@ const GruposPages = () => {
   });
 
   const joinableGroups = (Array.isArray(allGroups) ? allGroups : []).filter((group) => {
-    if (!user || !user._id) return true; // Mostrar todos si no hay usuario
+    if (!user || !user._id) return false; // No mostrar grupos si no hay usuario autenticado
     // Grupos en los que NO es miembro
     const miembros = group.miembros || group.members || [];
     const isMember = miembros.some(
@@ -340,6 +341,15 @@ const GruposPages = () => {
     }
   };
 
+  // Guard: No renderizar hasta que user esté cargado
+  if (!user || !user._id) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-container">
       <div className="w-full mx-auto flex flex-col gap-6 mb-mobile-30">
@@ -436,11 +446,7 @@ const GruposPages = () => {
         </div>
 
         {/* Loading State */}
-        {loading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        )}
+        {loading && <GruposPageSkeleton />}
 
         {/* Error State */}
         {error && (
