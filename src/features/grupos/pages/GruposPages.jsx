@@ -374,25 +374,65 @@ const GruposPages = () => {
           </button>
         </div>
 
-        {/* Pestañas Grid/List Global */}
-        <div className="flex justify-end">
-          <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-1">
+        {/* Toolbar unificada */}
+        <div className="flex items-center justify-between gap-4 bg-white dark:bg-gray-800 p-2 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+
+          {/* Izquierda: Pestañas */}
+          <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl overflow-x-auto scrollbar-hide">
+            <button
+              onClick={() => setSection("Mis grupos")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Mis grupos"
+                  ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                }`}
+            >
+              <span className="material-symbols-outlined text-lg">groups</span>
+              <span>Mis Grupos</span>
+              <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Mis grupos"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-500"
+                }`}>
+                {filteredMyGroups.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setSection("Grupos para unirse")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Grupos para unirse"
+                  ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                }`}
+            >
+              <span className="material-symbols-outlined text-lg">group_add</span>
+              <span>Explorar</span>
+              <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Grupos para unirse"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-500"
+                }`}>
+                {filteredJoinGroups.length}
+              </span>
+            </button>
+          </div>
+
+          {/* Derecha: Vista Grid/List */}
+          <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl">
             {["Grid", "List"].map((label) => (
               <button
                 key={label}
                 onClick={() => setView(label)}
-                className={`flex items-center justify-center gap-2 px-4 h-10 rounded-md text-sm font-medium transition-all ${view === label
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all ${view === label
+                    ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   }`}
+                title={`Vista ${label}`}
               >
-                <span className="material-symbols-outlined text-lg">
+                <span className="material-symbols-outlined text-xl">
                   {label === "Grid" ? "grid_view" : "view_list"}
                 </span>
-                {!isMobile && <span>{label}</span>}
               </button>
             ))}
           </div>
+
         </div>
 
         {/* Loading State */}
@@ -412,104 +452,90 @@ const GruposPages = () => {
           </div>
         )}
 
-        {/* Dos Secciones Lado a Lado (PC) o Una Debajo de Otra (Mobile) */}
+        {/* Contenido por Pestaña */}
         {!loading && !error && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* SECCIÓN 1: Mis Grupos */}
-            <div className="flex flex-col gap-4">
-              {/* Header de la sección */}
-              <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                <span className="material-symbols-outlined text-2xl text-primary">groups</span>
-                <div className="flex-1">
-                  <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Mis Grupos</h2>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Comunidades en las que participas</p>
-                </div>
-                <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-bold rounded-full">{filteredMyGroups.length}</span>
-              </div>
+          <div className="w-full">
+            {section === "Mis grupos" ? (
+              /* SECCIÓN 1: Mis Grupos */
+              <div className="flex flex-col gap-6">
+                {/* Header de la sección (Opcional, ya está en tabs, pero el usuario pidió "debajo los datos de cada uno") */}
 
-              {/* Buscador */}
-              <div className="relative">
-                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
-                <input
-                  value={searchTermMyGroups}
-                  onChange={(e) => setSearchTermMyGroups(e.target.value)}
-                  className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Buscar mis grupos..."
-                />
-                {searchTermMyGroups && (
-                  <button
-                    onClick={() => setSearchTermMyGroups('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-                    title="Limpiar búsqueda"
-                  >
-                    <span className="material-symbols-outlined text-xl">close</span>
-                  </button>
+                {/* Buscador Mis Grupos */}
+                <div className="relative">
+                  <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
+                  <input
+                    value={searchTermMyGroups}
+                    onChange={(e) => setSearchTermMyGroups(e.target.value)}
+                    className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
+                    placeholder="Buscar en mis grupos..."
+                  />
+                  {searchTermMyGroups && (
+                    <button
+                      onClick={() => setSearchTermMyGroups('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                      title="Limpiar búsqueda"
+                    >
+                      <span className="material-symbols-outlined text-xl">close</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Lista Mis Grupos */}
+                {filteredMyGroups.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 gap-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+                    <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600">groups</span>
+                    <div className="text-center">
+                      <p className="text-lg font-medium text-gray-700 dark:text-gray-300">No perteneces a ningún grupo aún</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Ve a la pestaña <span className="font-bold text-primary cursor-pointer" onClick={() => setSection("Grupos para unirse")}>Explorar</span> para unirte a uno.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={view === "Grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-3"}>
+                    {filteredMyGroups.map((group) => renderGroupCard(group, false))}
+                  </div>
                 )}
               </div>
+            ) : (
+              /* SECCIÓN 2: Grupos para Unirse */
+              <div className="flex flex-col gap-6">
+                {/* Buscador Explorar */}
+                <div className="relative">
+                  <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
+                  <input
+                    value={searchTermJoinGroups}
+                    onChange={(e) => setSearchTermJoinGroups(e.target.value)}
+                    className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
+                    placeholder="Explorar nuevos grupos..."
+                  />
+                  {searchTermJoinGroups && (
+                    <button
+                      onClick={() => setSearchTermJoinGroups('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                      title="Limpiar búsqueda"
+                    >
+                      <span className="material-symbols-outlined text-xl">close</span>
+                    </button>
+                  )}
+                </div>
 
-              {/* Lista de grupos */}
-              {filteredMyGroups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">groups</span>
-                  <div className="text-center">
-                    <p className="text-lg font-medium text-gray-700 dark:text-gray-300">No perteneces a ningún grupo aún</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Explora grupos para unirte</p>
+                {/* Lista Explorar */}
+                {filteredJoinGroups.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 gap-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+                    <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600">travel_explore</span>
+                    <div className="text-center">
+                      <p className="text-lg font-medium text-gray-700 dark:text-gray-300">No hay grupos nuevos disponibles</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Ya eres miembro de todos los grupos existentes</p>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className={view === "Grid" ? gridClasses : listClasses}>
-                  {filteredMyGroups.map((group) => renderGroupCard(group, false))}
-                </div>
-              )}
-            </div>
-
-            {/* SECCIÓN 2: Grupos para Unirse */}
-            <div className="flex flex-col gap-4">
-              {/* Header de la sección */}
-              <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                <span className="material-symbols-outlined text-2xl text-primary">group_add</span>
-                <div className="flex-1">
-                  <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Grupos para Unirse</h2>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Explora y únete a nuevos grupos</p>
-                </div>
-                <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-bold rounded-full">{filteredJoinGroups.length}</span>
-              </div>
-
-              {/* Buscador */}
-              <div className="relative">
-                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
-                <input
-                  value={searchTermJoinGroups}
-                  onChange={(e) => setSearchTermJoinGroups(e.target.value)}
-                  className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Buscar grupos..."
-                />
-                {searchTermJoinGroups && (
-                  <button
-                    onClick={() => setSearchTermJoinGroups('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-                    title="Limpiar búsqueda"
-                  >
-                    <span className="material-symbols-outlined text-xl">close</span>
-                  </button>
+                ) : (
+                  <div className={view === "Grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-3"}>
+                    {filteredJoinGroups.map((group) => renderGroupCard(group, true))}
+                  </div>
                 )}
               </div>
-
-              {/* Lista de grupos */}
-              {filteredJoinGroups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">group_add</span>
-                  <div className="text-center">
-                    <p className="text-lg font-medium text-gray-700 dark:text-gray-300">No hay grupos disponibles</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Ya eres miembro de todos los grupos</p>
-                  </div>
-                </div>
-              ) : (
-                <div className={view === "Grid" ? gridClasses : listClasses}>
-                  {filteredJoinGroups.map((group) => renderGroupCard(group, true))}
-                </div>
-              )}
-            </div>
+            )}
           </div>
         )}
       </div>
