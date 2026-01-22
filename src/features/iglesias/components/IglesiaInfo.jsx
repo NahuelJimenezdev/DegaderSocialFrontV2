@@ -17,34 +17,37 @@ const IglesiaInfo = ({ iglesiaData }) => {
   return (
     <div className="h-full overflow-y-auto p-4 md:p-8 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
       <div className="max-w-6xl mx-auto space-y-10">
-        
+
         {/* About Section */}
         <section className={`${churchColors.cardBg} rounded-2xl shadow-xl p-6 md:p-8 border-t-4 ${churchColors.primaryBorder}`}>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Sobre Nosotros</h2>
           <p className={`text-xl font-semibold italic ${churchColors.accent} mb-4`}>
             "{iglesiaData?.denominacion || 'Sirviendo con amor, Creciendo en fe'}"
           </p>
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg text-justify text-justify-inter-word">
             {iglesiaData?.descripcion || 'Una comunidad unida por el amor de Cristo, dedicada a servir al prójimo y expandir el Reino de Dios en nuestra ciudad.'}
           </p>
         </section>
 
         {/* Mission, Vision, Values */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <InfoCard 
-            icon={Target} 
-            title="Misión" 
-            content={iglesiaData?.mision || "Alcanzar a los perdidos y edificar a los creyentes para que impacten al mundo."} 
+          <InfoCard
+            className="text-justify text-justify-inter-word"
+            icon={Target}
+            title="Misión"
+            content={iglesiaData?.mision || "Alcanzar a los perdidos y edificar a los creyentes para que impacten al mundo."}
           />
-          <InfoCard 
-            icon={Zap} 
-            title="Visión" 
-            content={iglesiaData?.vision || "Ser una iglesia relevante, apasionada y multiplicadora que refleja el amor de Dios."} 
+          <InfoCard
+            className="text-justify text-justify-inter-word"
+            icon={Zap}
+            title="Visión"
+            content={iglesiaData?.vision || "Ser una iglesia relevante, apasionada y multiplicadora que refleja el amor de Dios."}
           />
-          <InfoCard 
-            icon={Sparkles} 
-            title="Valores" 
-            content={iglesiaData?.valores || "La fe que transforma, la gracia que sostiene, el amor que une."} 
+          <InfoCard
+            className="text-justify text-justify-inter-word"
+            icon={Sparkles}
+            title="Valores"
+            content={iglesiaData?.valores || "La fe que transforma, la gracia que sostiene, el amor que une."}
             accent={true}
           />
         </section>
@@ -58,32 +61,32 @@ const IglesiaInfo = ({ iglesiaData }) => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-64 md:h-80">
             {/* Main large image */}
             <div className="col-span-2 row-span-2 rounded-xl overflow-hidden shadow-lg relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                alt="Church Interior" 
+              <img
+                src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                alt="Church Interior"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
             </div>
             {/* Smaller images */}
             <div className="rounded-xl overflow-hidden shadow-md relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1510936111840-65e151ad71bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                alt="Worship" 
+              <img
+                src="https://images.unsplash.com/photo-1510936111840-65e151ad71bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                alt="Worship"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
             <div className="rounded-xl overflow-hidden shadow-md relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                alt="Community" 
+              <img
+                src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                alt="Community"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
             <div className="rounded-xl overflow-hidden shadow-md relative group">
-              <img 
-                src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                alt="Event" 
+              <img
+                src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                alt="Event"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
@@ -128,11 +131,11 @@ const IglesiaInfo = ({ iglesiaData }) => {
 
         {/* Service Times & Location */}
         <section className={`${churchColors.cardBg} rounded-2xl shadow-xl p-6 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8`}>
-          
+
           {/* Service Times */}
           <div>
             <h3 className={`text-2xl font-bold mb-4 flex items-center ${churchColors.primary}`}>
-              <Clock className="w-6 h-6 mr-3" /> 
+              <Clock className="w-6 h-6 mr-3" />
               Horarios de Reunión
             </h3>
             {iglesiaData?.horarios && iglesiaData.horarios.length > 0 ? (
@@ -142,7 +145,7 @@ const IglesiaInfo = ({ iglesiaData }) => {
                   return diasOrden.indexOf(a.dia) - diasOrden.indexOf(b.dia);
                 });
                 return horariosOrdenados.map((horario, index) => (
-                  <ServiceTime 
+                  <ServiceTime
                     key={index}
                     day={horario.dia}
                     time={horario.hora}
@@ -152,15 +155,15 @@ const IglesiaInfo = ({ iglesiaData }) => {
               })()
             ) : (
               <>
-                <ServiceTime 
-                  day="Domingo" 
-                  time="10:00 AM" 
-                  description="Servicio Principal" 
+                <ServiceTime
+                  day="Domingo"
+                  time="10:00 AM"
+                  description="Servicio Principal"
                 />
-                <ServiceTime 
-                  day="Miércoles" 
-                  time="7:30 PM" 
-                  description="Estudio Bíblico" 
+                <ServiceTime
+                  day="Miércoles"
+                  time="7:30 PM"
+                  description="Estudio Bíblico"
                 />
               </>
             )}
@@ -169,10 +172,10 @@ const IglesiaInfo = ({ iglesiaData }) => {
           {/* Location & Contact */}
           <div className="lg:col-span-2">
             <h3 className={`text-2xl font-bold mb-4 flex items-center ${churchColors.primary}`}>
-              <MapPin className="w-6 h-6 mr-3" /> 
+              <MapPin className="w-6 h-6 mr-3" />
               Ubicación y Contacto
             </h3>
-            
+
             {/* Address */}
             <div className="mb-4">
               <p className="text-gray-700 dark:text-gray-300 flex items-start gap-2">
@@ -213,12 +216,18 @@ const IglesiaInfo = ({ iglesiaData }) => {
               </div>
             )}
 
-            {/* Map Placeholder */}
-            <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden flex items-center justify-center text-gray-500 dark:text-gray-400">
-              <div className="text-center">
-                <MapPin className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Mapa de ubicación</p>
-              </div>
+            {/* Google Maps */}
+            <div className="h-64 md:h-96 rounded-xl overflow-hidden shadow-lg">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3279.0899473167383!2d-58.56242532492178!3d-34.72812706407799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcc5f4abbd384b%3A0x38980bcbc1567b5a!2sLas%20Camelias%2035%2C%20B1778JBB%20Cdad.%20Evita%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1769093691552!5m2!1ses-419!2sar"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación de la iglesia"
+              />
             </div>
           </div>
         </section>

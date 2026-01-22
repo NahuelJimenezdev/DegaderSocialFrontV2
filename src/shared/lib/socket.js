@@ -148,6 +148,12 @@ export const initSocket = (token) => {
     window.dispatchEvent(new CustomEvent('socket:message:new', { detail: message }));
   });
 
+  // Evento de cambio de estado de usuario (suspensión levantada)
+  socket.on('user:status_changed', (data) => {
+    logger.log('👤 Estado de usuario cambiado:', data);
+    window.dispatchEvent(new CustomEvent('socket:user:status_changed', { detail: data }));
+  });
+
   // Seguridad cliente: evitar que sockets no autenticados emitan eventos sensibles
   try {
     const originalEmit = socket.emit.bind(socket);

@@ -45,6 +45,31 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
+  // Listener para cambio de estado de usuario (suspensión levantada)
+  useEffect(() => {
+    const handleStatusChanged = async (event) => {
+      const { userId } = event.detail;
+
+      // Solo recargar si es el usuario actual
+      if (user && userId === user._id?.toString()) {
+        logger.log('👤 [AuthContext] Estado de usuario cambiado, recargando perfil...');
+        try {
+          const response = await authService.getProfile();
+          setUser(response.data || response.user);
+          logger.log('✅ [AuthContext] Perfil recargado exitosamente');
+        } catch (err) {
+          logger.error('❌ [AuthContext] Error al recargar perfil:', err);
+        }
+      }
+    };
+
+    window.addEventListener('socket:user:status_changed', handleStatusChanged);
+
+    return () => {
+      window.removeEventListener('socket:user:status_changed', handleStatusChanged);
+    };
+  }, [user]);
+
   const login = async (email, password) => {
     try {
       setError(null);

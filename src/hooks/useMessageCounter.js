@@ -43,8 +43,14 @@ export const useMessageCounter = (userId) => {
 
     const handleMessageRead = (data) => {
       logger.log('👁️ [useMessageCounter] Conversación leída:', data);
-      // Recargar contador desde el servidor para estar sincronizado
-      fetchCount();
+      // Decremento optimista: restar el contador de esa conversación
+      // Si no tenemos el dato exacto, refrescar desde servidor
+      if (data.unreadCount !== undefined) {
+        setUnreadCount(prev => Math.max(0, prev - data.unreadCount));
+      } else {
+        // Fallback: recargar desde servidor si no viene el dato
+        fetchCount();
+      }
     };
 
     socket.on('newMessage', handleNewMessage);
