@@ -128,4 +128,68 @@
         width: 10px !important;
         height: 10px !important;
     }
+
+    .groups-toolbar__tabs .pestañasTabs {
+        padding: 10px !important;
+    }
+}
+
+/* groups-toolbar.css */
+.groups-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    background-color: var(--bg-card, white);
+    padding: 0.2rem;
+    border-radius: 1rem;
+}
+
+:global(.dark) .groups-toolbar {
+    background-color: #1f2937;
+}
+
+.groups-toolbar__tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.groups-toolbar__view {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    width: 100%;
+}
+
+/* Mobile */
+/* Mobile & Tablet (hasta 1024px para asegurar layout vertical si es necesario) */
+@media (max-width: 1024px) {
+    .groups-toolbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        height: auto !important;
+    }
+
+    .groups-toolbar__tabs {
+        justify-content: flex-start !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Asegurar que el contenido interno de las tabs ocupe todo el ancho si es necesario */
+    .groups-toolbar__tabs>div {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .groups-toolbar__view {
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
 }

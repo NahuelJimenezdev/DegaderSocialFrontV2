@@ -384,65 +384,68 @@ const GruposPages = () => {
           </button>
         </div>
 
-        {/* Toolbar unificada */}
-        <div className="flex items-center justify-between gap-4 bg-white dark:bg-gray-800 p-2 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+        {/* Toolbar unificada con clases BEM (definidas en layout.mobile.css) */}
+        <div className="groups-toolbar shadow-sm border border-gray-200 dark:border-gray-700">
 
-          {/* Izquierda: Pestañas */}
-          <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl overflow-x-auto scrollbar-hide">
-            <button
-              onClick={() => setSection("Grupos para unirse")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Grupos para unirse"
-                ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                }`}
-            >
-              <span className="material-symbols-outlined text-lg">group_add</span>
-              <span>Explorar</span>
-              <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Grupos para unirse"
-                ? "bg-primary/10 text-primary"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500"
-                }`}>
-                {filteredJoinGroups.length}
-              </span>
-            </button>
-            <button
-              onClick={() => setSection("Mis grupos")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Mis grupos"
-                ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
-                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                }`}
-            >
-              <span className="material-symbols-outlined text-lg">groups</span>
-              <span>Mis Grupos</span>
-              <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Mis grupos"
-                ? "bg-primary/10 text-primary"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500"
-                }`}>
-                {filteredMyGroups.length}
-              </span>
-            </button>
-
-          </div>
-
-          {/* Derecha: Vista Grid/List */}
-          <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl">
-            {["Grid", "List"].map((label) => (
+          {/* Pestañas de Sección (groups-toolbar__tabs) */}
+          <div className="groups-toolbar__tabs">
+            <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl overflow-x-auto scrollbar-hide">
               <button
-                key={label}
-                onClick={() => setView(label)}
-                className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all ${view === label
+                onClick={() => setSection("Grupos para unirse")}
+                className={`flex items-center gap-2 pestañasTabs px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Grupos para unirse"
                   ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   }`}
-                title={`Vista ${label}`}
               >
-                <span className="material-symbols-outlined text-xl">
-                  {label === "Grid" ? "grid_view" : "view_list"}
+                <span className="material-symbols-outlined text-lg">group_add</span>
+                <span>Explorar</span>
+                <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Grupos para unirse"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-500"
+                  }`}>
+                  {filteredJoinGroups.length}
                 </span>
               </button>
-            ))}
+              <button
+                onClick={() => setSection("Mis grupos")}
+                className={`flex items-center gap-4 pestañasTabs px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Mis grupos"
+                  ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  }`}
+              >
+                <span className="material-symbols-outlined text-lg">groups</span>
+                <span>Mis Grupos</span>
+                <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Mis grupos"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-500"
+                  }`}>
+                  {filteredMyGroups.length}
+                </span>
+              </button>
+
+            </div>
           </div>
 
+          {/* Toggle Grid/List (groups-toolbar__view) */}
+          <div className="groups-toolbar__view">
+            <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl">
+              {["Grid", "List"].map((label) => (
+                <button
+                  key={label}
+                  onClick={() => setView(label)}
+                  className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all ${view === label
+                    ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    }`}
+                  title={`Vista ${label}`}
+                >
+                  <span className="material-symbols-outlined text-xl">
+                    {label === "Grid" ? "grid_view" : "view_list"}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Loading State */}
