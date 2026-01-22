@@ -13,7 +13,7 @@ import '../../../shared/styles/layout.mobile.css';
 const GruposPages = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [section, setSection] = useState("Mis grupos");
+  const [section, setSection] = useState("Grupos para unirse");
   const [view, setView] = useState("Grid");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermMyGroups, setSearchTermMyGroups] = useState("");
@@ -380,38 +380,38 @@ const GruposPages = () => {
           {/* Izquierda: Pestañas */}
           <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-900/50 rounded-xl overflow-x-auto scrollbar-hide">
             <button
-              onClick={() => setSection("Mis grupos")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Mis grupos"
-                  ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                }`}
-            >
-              <span className="material-symbols-outlined text-lg">groups</span>
-              <span>Mis Grupos</span>
-              <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Mis grupos"
-                  ? "bg-primary/10 text-primary"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-500"
-                }`}>
-                {filteredMyGroups.length}
-              </span>
-            </button>
-
-            <button
               onClick={() => setSection("Grupos para unirse")}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Grupos para unirse"
-                  ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                 }`}
             >
               <span className="material-symbols-outlined text-lg">group_add</span>
               <span>Explorar</span>
               <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Grupos para unirse"
-                  ? "bg-primary/10 text-primary"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-500"
+                ? "bg-primary/10 text-primary"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-500"
                 }`}>
                 {filteredJoinGroups.length}
               </span>
             </button>
+            <button
+              onClick={() => setSection("Mis grupos")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${section === "Mis grupos"
+                ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                }`}
+            >
+              <span className="material-symbols-outlined text-lg">groups</span>
+              <span>Mis Grupos</span>
+              <span className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full ${section === "Mis grupos"
+                ? "bg-primary/10 text-primary"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-500"
+                }`}>
+                {filteredMyGroups.length}
+              </span>
+            </button>
+
           </div>
 
           {/* Derecha: Vista Grid/List */}
@@ -421,8 +421,8 @@ const GruposPages = () => {
                 key={label}
                 onClick={() => setView(label)}
                 className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all ${view === label
-                    ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  ? "bg-white dark:bg-gray-800 text-primary shadow-sm"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   }`}
                 title={`Vista ${label}`}
               >
@@ -461,13 +461,12 @@ const GruposPages = () => {
                 {/* Header de la sección (Opcional, ya está en tabs, pero el usuario pidió "debajo los datos de cada uno") */}
 
                 {/* Buscador Mis Grupos */}
-                <div className="relative">
-                  <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 text-xl">search</span>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined absolute left-3 text-xl text-gray-400">search</span>
                   <input
                     value={searchTermMyGroups}
                     onChange={(e) => setSearchTermMyGroups(e.target.value)}
-                    className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm"
-                    placeholder="Buscar en mis grupos..."
+                    className="w-full h-12 pl-12 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all shadow-sm" placeholder="Buscar en mis grupos..."
                   />
                   {searchTermMyGroups && (
                     <button
