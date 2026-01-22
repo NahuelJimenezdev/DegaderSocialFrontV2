@@ -116,6 +116,18 @@ export const useChatController = () => {
             const conv = response.data?.conversation || response.conversation || response.data;
             const msgs = conv?.mensajes || [];
             setMensajes(Array.isArray(msgs) ? msgs : []);
+
+            // Reset optimista del contador de no leídos (UX inmediata)
+            setConversaciones(prev => prev.map(c =>
+                c._id === conversationId
+                    ? {
+                        ...c, mensajesNoLeidos: c.mensajesNoLeidos?.map(m =>
+                            m.usuario?.toString() === userId?.toString() ? { ...m, cantidad: 0 } : m
+                        )
+                    }
+                    : c
+            ));
+
             await conversationService.markAsRead(conversationId);
             setTimeout(() => scrollToBottom(), 100);
         } catch (error) {
@@ -267,7 +279,24 @@ export const useChatController = () => {
             }
         };
 
+        const handleConversationRead = (data) => {
+            logger.log('🔍 [DEBUG] conversationRead recibido:', data);
+            const { conversationId } = data;
+
+            // Actualizar el contador de no leídos en el estado local
+            setConversaciones(prev => prev.map(c =>
+                c._id === conversationId
+                    ? {
+                        ...c, mensajesNoLeidos: c.mensajesNoLeidos?.map(m =>
+                            m.usuario?.toString() === userId?.toString() ? { ...m, cantidad: 0 } : m
+                        )
+                    }
+                    : c
+            ));
+        };
+
         socket.on('newMessage', handleNewMessage);
+        socket.on('conversationRead', handleConversationRead);
 
         // Subscribe to conversation room
         if (conversacionActual?._id) {
@@ -276,6 +305,7 @@ export const useChatController = () => {
 
         return () => {
             socket.off('newMessage', handleNewMessage);
+            socket.off('conversationRead', handleConversationRead);
             if (conversacionActual?._id) {
                 socket.emit('unsubscribeConversation', { conversationId: conversacionActual._id });
             }
@@ -300,8 +330,8 @@ export const useChatController = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (file.size > 10 * 1024 * 1024) {
-            setAlertConfig({ isOpen: true, variant: 'warning', message: 'El archivo es demasiado grande. Máximo 10MB' });
+        if (file.size > 50 * 1024 * 1024) {
+            setAlertConfig({ isOpen: true, variant: 'warning', message: 'El archivo es demasiado grande. Máximo 50MB' });
             return;
         }
 
@@ -372,11 +402,11 @@ export const useChatController = () => {
                 const response = await api.post(`/conversaciones/${conversacionActual._id}/message`, formData, {
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
                 });
-                sentMessage = response.data; // Capture response for file
+                sentMessage = response.data.data || response.data; // Capture response for file
                 handleCancelarArchivo();
             } else {
                 const response = await conversationService.sendMessage(conversacionActual._id, mensaje);
-                sentMessage = response.data || response; // Capture response for text
+                sentMessage = response.data.data || response.data || response; // Capture response for text
             }
 
             // Immediately update state with the sent message
