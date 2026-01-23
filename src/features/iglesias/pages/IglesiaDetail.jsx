@@ -94,8 +94,8 @@ const IglesiaDetail = () => {
 
   return (
     <>
-      {/* Mobile Toggle */}
-      {isMobile && (
+      {/* Mobile Toggle - Ocultar en chat para evitar duplicados */}
+      {isMobile && activeSection !== 'chat' && (
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="fixed top-20 left-4 z-[60] p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
@@ -126,10 +126,20 @@ const IglesiaDetail = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin mb-mobile-67">
+      <div className={`w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin ${activeSection === 'chat' ? '' : 'mb-mobile-67'}`}>
         {activeSection === 'info' && <IglesiaHeader iglesia={iglesiaData} user={user} />}
-        <div className="p-4 md:p-8 pt-0">
-          {renderSection()}
+        <div className={activeSection === 'chat' ? 'h-full' : 'p-4 md:p-8 pt-0'}>
+          {activeSection === 'chat' ? (
+            <IglesiaChat
+              iglesiaData={iglesiaData}
+              user={user}
+              setSidebarOpen={setSidebarOpen}
+              setActiveSection={setActiveSection}
+              isMobile={isMobile}
+            />
+          ) : (
+            renderSection()
+          )}
         </div>
       </div>
     </>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Image as ImageIcon, X, Paperclip, MoreVertical, Smile } from 'lucide-react';
-import { API_BASE_URL, SOCKET_URL } from '../../../shared/config/env';
+import { Send, Image as ImageIcon, X, Paperclip, Smile, ArrowLeft, Menu, MoreVertical } from 'lucide-react';
+import { API_BASE_URL } from '../../../shared/config/env';
 import { logger } from '../../../shared/utils/logger';
 import { io } from 'socket.io-client';
 import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { useAuth } from '../../../context/AuthContext';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { useNavigate } from 'react-router-dom';
 
 // Helper to format time
 const formatTime = (dateString) => {
@@ -25,8 +26,9 @@ const formatTime = (dateString) => {
   return `${Math.floor(hours / 24)}d`;
 };
 
-const IglesiaChat = ({ iglesiaData }) => {
+const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -119,35 +121,63 @@ const IglesiaChat = ({ iglesiaData }) => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800 shadow-sm z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-            <span className="material-symbols-outlined">forum</span>
+    <div className={`
+      flex flex-col bg-white dark:bg-gray-900 overflow-hidden
+      ${isMobile ? 'fixed inset-0 z-[100]' : 'h-full'}
+    `}>
+      {/* Header Estilo Mensajes - Altura fija para evitar saltos */}
+      <div className="h-[70px] border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 bg-white dark:bg-gray-900 shadow-sm shrink-0">
+        <div className="flex items-center gap-2">
+          {/* Botón Volver - Lleva a /Mi_iglesia como pidió el usuario */}
+          <button
+            onClick={() => navigate('/Mi_iglesia')}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors flex items-center justify-center"
+            aria-label="Volver a Iglesias"
+          >
+            <ArrowLeft size={24} className="text-gray-700 dark:text-gray-300" />
+          </button>
+
+          {/* Botón Menú Hamburguesa para Sidebar */}
+          {isMobile && (
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors flex items-center justify-center lg:hidden"
+              aria-label="Abrir menú de iglesia"
+            >
+              <Menu size={24} className="text-gray-700 dark:text-gray-300" />
+            </button>
+          )}
+
+          <div className="flex items-center gap-3 ml-1">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+              <span className="material-symbols-outlined">forum</span>
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-bold text-gray-900 dark:text-white text-sm md:text-base truncate max-w-[120px] xs:max-w-[180px] md:max-w-none">
+                {iglesiaData?.nombre || 'Chat General'}
+              </h3>
+              <p className="text-[10px] text-green-500 font-medium leading-none mt-0.5">En línea</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-gray-900 dark:text-white">Chat General</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{messages.length} mensajes</p>
-          </div>
+        </div>
+
+        <div className="flex items-center">
+          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+            <MoreVertical size={20} className="text-gray-500" />
+          </button>
         </div>
       </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
+      {/* Messages Area - Estilo Burbujas */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500">
-            <span className="material-symbols-outlined text-4xl mb-2 opacity-50">chat_bubble_outline</span>
-            <p>No hay mensajes aún. ¡Sé el primero en escribir!</p>
+          <div className="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-600 py-10">
+            <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-3xl opacity-30">chat_bubble_outline</span>
+            </div>
+            <p className="text-sm font-medium">No hay mensajes aún</p>
+            <p className="text-xs opacity-70">¡Sé el primero en escribir!</p>
           </div>
         ) : (
           messages.map((msg) => {
@@ -155,42 +185,44 @@ const IglesiaChat = ({ iglesiaData }) => {
             const authorName = msg.author ? `${msg.author.nombres?.primero} ${msg.author.apellidos?.primero}` : 'Usuario';
 
             return (
-              <div key={msg._id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : ''} group`}>
-                <div className="flex-shrink-0">
-                  <img
-                    src={getUserAvatar(msg.author)}
-                    alt={authorName}
-                    className="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800"
-                  />
-                </div>
-
-                <div className={`flex flex-col max-w-[75%] ${isMe ? 'items-end' : 'items-start'}`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
-                      {isMe ? 'Tú' : authorName}
-                    </span>
-                    <span className="text-[10px] text-gray-400">
-                      {formatTime(msg.createdAt)}
-                    </span>
+              <div key={msg._id} className={`flex gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'} group animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                {!isMe && (
+                  <div className="flex-shrink-0 self-end mb-1">
+                    <img
+                      src={getUserAvatar(msg.author)}
+                      alt={authorName}
+                      className="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800 shadow-sm cursor-pointer"
+                      onClick={() => navigate(`/perfil/${msg.author?._id}`)}
+                    />
                   </div>
+                )}
+
+                <div className={`flex flex-col max-w-[85%] md:max-w-[70%] ${isMe ? 'items-end' : 'items-start'}`}>
+                  {!isMe && (
+                    <span className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 ml-1 mb-0.5">
+                      {authorName}
+                    </span>
+                  )}
 
                   <div className={`
-                    px-4 py-2 rounded-2xl shadow-sm relative group-hover:shadow-md transition-shadow
+                    px-4 py-2 rounded-2xl shadow-sm relative transition-all duration-200
                     ${isMe
                       ? 'bg-indigo-600 text-white rounded-tr-none'
                       : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-gray-700'
                     }
                   `}>
                     <p className="text-sm whitespace-pre-wrap break-words">{msg.content}</p>
+                    <div className={`text-[9px] mt-1 text-right ${isMe ? 'text-indigo-200' : 'text-gray-400'}`}>
+                      {formatTime(msg.createdAt)}
+                    </div>
                   </div>
 
-                  {/* Actions (Delete) */}
                   {isMe && (
                     <button
                       onClick={() => handleDeleteMessage(msg._id)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity text-xs text-red-500 hover:text-red-600 mt-1 flex items-center gap-1"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] text-red-500 hover:text-red-600 mt-1 flex items-center gap-1 px-1"
                     >
-                      <span className="material-symbols-outlined text-[14px]">delete</span>
+                      <span className="material-symbols-outlined text-[12px]">delete</span>
                       Eliminar
                     </button>
                   )}
@@ -202,29 +234,49 @@ const IglesiaChat = ({ iglesiaData }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-        <form onSubmit={handleSendMessage} className="flex gap-2 items-end">
-          <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center px-4 py-2 focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all">
+      {/* Input Area Estilo Mensajes */}
+      <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shrink-0">
+        <form onSubmit={handleSendMessage} className="flex gap-2 items-center max-w-7xl mx-auto">
+          <div className="flex items-center gap-1 md:gap-2">
+            <button
+              type="button"
+              className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+            >
+              <Paperclip size={22} />
+            </button>
+            <button
+              type="button"
+              className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors hidden md:block"
+            >
+              <Smile size={22} />
+            </button>
+          </div>
+
+          <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center px-4 py-1.5 focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all border border-transparent">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Escribe un mensaje..."
-              className="w-full bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 text-sm py-2"
+              className="w-full bg-transparent border-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-500 text-sm py-1"
             />
           </div>
+
           <button
             type="submit"
             disabled={!newMessage.trim()}
-            className="p-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white rounded-full shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center"
+            className={`
+              p-3 rounded-full shadow-md transition-all transform active:scale-95 flex items-center justify-center
+              ${newMessage.trim()
+                ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'}
+            `}
           >
-            <span className="material-symbols-outlined">send</span>
+            <Send size={18} />
           </button>
         </form>
       </div>
 
-      {/* AlertDialog Component */}
       <AlertDialog
         isOpen={alertConfig.isOpen}
         onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
