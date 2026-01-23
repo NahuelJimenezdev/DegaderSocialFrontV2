@@ -98,7 +98,7 @@ const IglesiaDetail = () => {
       {isMobile && (
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-20 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg"
+          className="fixed top-20 left-4 z-[60] p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
         >
           <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
             {sidebarOpen ? 'close' : 'menu'}
@@ -109,9 +109,9 @@ const IglesiaDetail = () => {
       {/* Sidebar de Iglesia - Reemplaza al sidebar global */}
       <div
         className={`
-          sidebar bg-white dark:bg-gray-800
-          ${isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
+          fixed top-[65px] left-0 bottom-0 w-[280px] bg-white dark:bg-gray-800 z-40
           transition-transform duration-300 ease-in-out lg:transition-none
+          ${isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
         `}
       >
         <IglesiaSidebar
