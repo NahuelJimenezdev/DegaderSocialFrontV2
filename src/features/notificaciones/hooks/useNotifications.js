@@ -250,12 +250,33 @@ export const useNotifications = (user) => {
 
     const handleAcceptGroup = async (notificacion) => {
         try {
+            // 🔍 DEBUG: Inspeccionar estructura exacta de la notificación
+            logger.log('🔍 [handleAcceptGroup] Notificación recibida:', JSON.stringify(notificacion, null, 2));
+
             setProcessedNotifications(prev => new Set([...prev, notificacion._id]));
             if (!notificacion.leido) markAsRead(notificacion._id);
 
-            const requestUserId = notificacion.emisor?._id || notificacion.emisor;
-            const groupId = notificacion.referencia?.id;
-            if (!requestUserId || !groupId) throw new Error('IDs faltantes');
+            // Obtener userId de forma robusta
+            const requestUserId = notificacion.emisor?._id || notificacion.emisor || notificacion.remitenteId?._id || notificacion.remitenteId || notificacion.datos?.fromUserId;
+
+            // Obtener groupId de forma robusta
+            let groupId = null;
+            if (notificacion.referencia?.id) {
+                if (typeof notificacion.referencia.id === 'string') {
+                    groupId = notificacion.referencia.id;
+                } else if (typeof notificacion.referencia.id === 'object' && notificacion.referencia.id._id) {
+                    groupId = notificacion.referencia.id._id;
+                } else if (notificacion.referencia.id.id) {
+                    // Caso extremo: objeto dentro de objeto
+                    groupId = notificacion.referencia.id.id;
+                }
+            } else if (notificacion.metadata?.groupId) {
+                groupId = notificacion.metadata.groupId;
+            }
+
+            logger.log('✅ [handleAcceptGroup] IDs extraídos:', { requestUserId, groupId });
+
+            if (!requestUserId || !groupId) throw new Error(`IDs faltantes - UserId: ${requestUserId}, GroupId: ${groupId}`);
 
             await groupService.acceptJoinRequest(groupId, requestUserId);
             await notificationService.deleteNotification(notificacion._id);
@@ -273,12 +294,30 @@ export const useNotifications = (user) => {
 
     const handleRejectGroup = async (notificacion) => {
         try {
+            logger.log('🔍 [handleRejectGroup] Notificación recibida:', JSON.stringify(notificacion, null, 2));
+
             setProcessedNotifications(prev => new Set([...prev, notificacion._id]));
             if (!notificacion.leido) markAsRead(notificacion._id);
 
-            const requestUserId = notificacion.emisor?._id || notificacion.emisor;
-            const groupId = notificacion.referencia?.id;
-            if (!requestUserId || !groupId) throw new Error('IDs faltantes');
+            const requestUserId = notificacion.emisor?._id || notificacion.emisor || notificacion.remitenteId?._id || notificacion.remitenteId || notificacion.datos?.fromUserId;
+
+            // Obtener groupId de forma robusta
+            let groupId = null;
+            if (notificacion.referencia?.id) {
+                if (typeof notificacion.referencia.id === 'string') {
+                    groupId = notificacion.referencia.id;
+                } else if (typeof notificacion.referencia.id === 'object' && notificacion.referencia.id._id) {
+                    groupId = notificacion.referencia.id._id;
+                } else if (notificacion.referencia.id.id) {
+                    groupId = notificacion.referencia.id.id;
+                }
+            } else if (notificacion.metadata?.groupId) {
+                groupId = notificacion.metadata.groupId;
+            }
+
+            logger.log('✅ [handleRejectGroup] IDs extraídos:', { requestUserId, groupId });
+
+            if (!requestUserId || !groupId) throw new Error(`IDs faltantes - UserId: ${requestUserId}, GroupId: ${groupId}`);
 
             await groupService.rejectJoinRequest(groupId, requestUserId);
             await notificationService.deleteNotification(notificacion._id);

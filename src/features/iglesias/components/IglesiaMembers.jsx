@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { logger } from '../../../shared/utils/logger';
 import { ChevronRight, LayoutGrid, List } from 'lucide-react';
 import iglesiaService from '../../../api/iglesiaService';
@@ -9,6 +10,7 @@ import { getSocket } from '../../../shared/lib/socket';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 
 const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
@@ -304,7 +306,10 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                         {miembro.email || '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200">
+                        <button
+                          onClick={() => navigate(`/iglesias/${iglesiaData._id}/miembros/${miembro._id}`)}
+                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
+                        >
                           Ver más <ChevronRight className="w-4 h-4 inline-block ml-1" />
                         </button>
                       </td>

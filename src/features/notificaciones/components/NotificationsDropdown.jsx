@@ -308,7 +308,15 @@ export default function NotificationsDropdown() {
                       leido={n.leido}
                       fechaCreacion={n.fechaCreacion || n.createdAt}
                       remitenteId={n.remitenteId || n.emisor}
-                      onAccept={n.tipo === 'solicitud_grupo' ? () => handleAcceptGroup(n) : () => onAcceptFriendAction(n)}
+                      onAccept={n.tipo === 'solicitud_grupo' ? () => {
+                        console.log('🐞 [DEBUG DROPDOWN] Aceptando grupo:', {
+                          id: n._id,
+                          referencia: n.referencia,
+                          metadata: n.metadata,
+                          raw: n
+                        });
+                        handleAcceptGroup(n);
+                      } : () => onAcceptFriendAction(n)}
                       onReject={n.tipo === 'solicitud_grupo' ? () => handleRejectGroup(n) : () => onRejectFriendAction(n)}
                       onProfileClick={() => handleProfileClick(n)}
                       isProcessed={processedNotifications.has(n._id)}

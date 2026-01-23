@@ -107,13 +107,28 @@ const groupService = {
   },
 
   /**
+   * Helper para asegurar que el ID sea string
+   */
+  _sanitizeId: (id) => {
+    if (!id) return null;
+    if (typeof id === 'string') return id;
+    if (typeof id === 'object' && id._id) return id._id;
+    if (typeof id === 'object' && id.id) return id.id;
+    return String(id);
+  },
+
+  /**
    * Accept join request (admin/owner only)
    * @param {string} groupId - Group ID
    * @param {string} requestId - Request ID to accept
    * @returns {Promise<Object>} Response data
    */
   acceptJoinRequest: async (groupId, requestId) => {
-    const response = await api.post(`/grupos/${groupId}/join/${requestId}/approve`);
+    // Defensa en profundidad: Sanitizar IDs aquí también
+    const cleanGroupId = typeof groupId === 'object' ? (groupId._id || groupId.id || String(groupId)) : groupId;
+    const cleanRequestId = typeof requestId === 'object' ? (requestId._id || requestId.id || String(requestId)) : requestId;
+
+    const response = await api.post(`/grupos/${cleanGroupId}/join/${cleanRequestId}/approve`);
     return response.data;
   },
 
@@ -124,7 +139,10 @@ const groupService = {
    * @returns {Promise<Object>} Response data
    */
   rejectJoinRequest: async (groupId, requestId) => {
-    const response = await api.post(`/grupos/${groupId}/join/${requestId}/reject`);
+    const cleanGroupId = typeof groupId === 'object' ? (groupId._id || groupId.id || String(groupId)) : groupId;
+    const cleanRequestId = typeof requestId === 'object' ? (requestId._id || requestId.id || String(requestId)) : requestId;
+
+    const response = await api.post(`/grupos/${cleanGroupId}/join/${cleanRequestId}/reject`);
     return response.data;
   },
 

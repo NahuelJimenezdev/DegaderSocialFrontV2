@@ -1,13 +1,20 @@
 import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MoreVertical, Mail, User } from 'lucide-react';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
 const MemberCard = ({ member, isPastor, isCurrentUser }) => {
+  const navigate = useNavigate();
+  const { id: iglesiaId } = useParams();
   const fullName = `${member.nombres?.primero || ''} ${member.apellidos?.primero || ''}`.trim() || 'Usuario';
+
+  const handleVerMas = () => {
+    navigate(`/iglesias/${iglesiaId}/miembros/${member._id}`);
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow relative group">
-      
+
       {/* Badge de Rol */}
       <div className="absolute top-4 right-4">
         {isPastor ? (
@@ -40,19 +47,19 @@ const MemberCard = ({ member, isPastor, isCurrentUser }) => {
           </span>
         )}
       </h3>
-      
+
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-1">
         {member.email || 'Sin email público'}
       </p>
 
       {/* Actions */}
       <div className="flex items-center gap-2 w-full mt-auto">
-        <button className="flex-1 py-2 px-4 bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors">
-          Ver Perfil
+        <button
+          onClick={handleVerMas}
+          className="flex-1 py-2 px-4 bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
+        >
+          Ver más
         </button>
-        {/* <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-          <MoreVertical size={18} />
-        </button> */}
       </div>
     </div>
   );
