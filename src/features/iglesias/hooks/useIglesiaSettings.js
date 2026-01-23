@@ -44,6 +44,11 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
     const [logoFile, setLogoFile] = useState(null);
     const [bannerFile, setBannerFile] = useState(null);
 
+    // Galeria states
+    const [galeriaFiles, setGaleriaFiles] = useState([]);
+    const [galeriaPreviews, setGaleriaPreviews] = useState([]);
+    const [existingGaleria, setExistingGaleria] = useState(iglesiaData?.galeria || []);
+
     // Horario state
     const [newHorario, setNewHorario] = useState({ dia: '', hora: '', tipo: '' });
 
@@ -87,6 +92,32 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
         }
     };
 
+    // Handle galeria change
+    const handleGaleriaChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            setGaleriaFiles(prev => [...prev, ...files]);
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setGaleriaPreviews(prev => [...prev, reader.result]);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    };
+
+    // Handle remove image from galeria
+    const handleRemoveGaleriaImage = (index, isExisting = false) => {
+        if (isExisting) {
+            setExistingGaleria(prev => prev.filter((_, i) => i !== index));
+        } else {
+            setGaleriaFiles(prev => prev.filter((_, i) => i !== index));
+            setGaleriaPreviews(prev => prev.filter((_, i) => i !== index));
+        }
+    };
+
     // Handle add horario
     const handleAddHorario = () => {
         if (newHorario.dia && newHorario.hora && newHorario.tipo) {
@@ -123,6 +154,15 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
                 uploadData.append('portada', bannerFile);
             }
 
+            // Agregar archivos de galería
+            if (galeriaFiles.length > 0) {
+                logger.log(`📎 Appending ${galeriaFiles.length} galeria files`);
+                galeriaFiles.forEach(file => {
+                    logger.log('  - Adding file:', file.name);
+                    uploadData.append('galeria', file);
+                });
+            }
+
             // Agregar los demás datos del formulario
             Object.keys(formData).forEach(key => {
                 if (typeof formData[key] === 'object' && !Array.isArray(formData[key])) {
@@ -139,17 +179,27 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
                 }
             });
 
+            // Enviar la galería existente (URLs que permanecen)
+            const galeriaJson = JSON.stringify(existingGaleria);
+            logger.log('📝 Appending field galeria (existing):', galeriaJson);
+            uploadData.append('galeria', galeriaJson);
+
             logger.log('📤 Sending updateIglesia request...');
             const response = await iglesiaService.updateIglesia(iglesiaData._id, uploadData);
             logger.log('✅ Update response:', response);
 
             await refetch();
 
-            // Limpiar previews
+            // Limpiar previews y archivos temporales
             setLogoPreview(null);
             setBannerPreview(null);
             setLogoFile(null);
             setBannerFile(null);
+            setGaleriaFiles([]);
+            setGaleriaPreviews([]);
+            if (response.data) {
+                setExistingGaleria(response.data.galeria || []);
+            }
 
             setAlertConfig({ isOpen: true, variant: 'success', message: 'Cambios guardados exitosamente' });
         } catch (error) {
@@ -167,6 +217,8 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
         formData,
         logoPreview,
         bannerPreview,
+        galeriaPreviews,
+        existingGaleria,
         newHorario,
         alertConfig,
 
@@ -180,6 +232,8 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
         handleInputChange,
         handleLogoChange,
         handleBannerChange,
+        handleGaleriaChange,
+        handleRemoveGaleriaImage,
         handleAddHorario,
         handleRemoveHorario,
         handleSubmit
