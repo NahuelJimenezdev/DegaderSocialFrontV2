@@ -106,12 +106,22 @@ const IglesiaDetail = () => {
         </button>
       )}
 
+      {/* Backdrop para móvil */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[140]"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar de Iglesia - Reemplaza al sidebar global */}
       <div
         className={`
-          fixed top-[65px] left-0 bottom-0 w-[280px] bg-white dark:bg-gray-800 z-40
+          fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 
           transition-transform duration-300 ease-in-out lg:transition-none
-          ${isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
+          ${isMobile
+            ? `right-0 z-[150] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
+            : 'left-0 z-40 translate-x-0'}
         `}
       >
         <IglesiaSidebar
@@ -122,13 +132,14 @@ const IglesiaDetail = () => {
             setSidebarOpen(false);
           }}
           menuItems={menuItems}
+          isMobile={isMobile}
         />
       </div>
 
       {/* Main Content */}
       <div className={`w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin ${activeSection === 'chat' ? '' : 'mb-mobile-67'}`}>
         {activeSection === 'info' && <IglesiaHeader iglesia={iglesiaData} user={user} />}
-        <div className={activeSection === 'chat' ? 'h-full' : 'p-4 md:p-8 pt-0'}>
+        <div className={activeSection === 'chat' ? 'h-full relative z-[100]' : 'p-4 md:p-8 pt-0'}>
           {activeSection === 'chat' ? (
             <IglesiaChat
               iglesiaData={iglesiaData}

@@ -149,24 +149,16 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
             </button>
           )}
 
-          <div className="flex items-center gap-3 ml-1">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-              <span className="material-symbols-outlined">forum</span>
-            </div>
-            <div className="min-w-0">
-              <h3 className="font-bold text-gray-900 dark:text-white text-sm md:text-base truncate max-w-[120px] xs:max-w-[180px] md:max-w-none">
-                {iglesiaData?.nombre || 'Chat General'}
-              </h3>
-              <p className="text-[10px] text-green-500 font-medium leading-none mt-0.5">En línea</p>
-            </div>
+          <div className="flex flex-col ml-1 min-w-0">
+            <h3 className="font-bold text-gray-900 dark:text-white text-sm md:text-base truncate max-w-[150px] xs:max-w-[200px] md:max-w-none leading-tight">
+              {iglesiaData?.nombre || 'Chat General'}
+            </h3>
+            <p className="text-[10px] text-green-500 font-medium leading-none mt-1">En línea</p>
           </div>
         </div>
 
-        <div className="flex items-center">
-          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
-            <MoreVertical size={20} className="text-gray-500" />
-          </button>
-        </div>
+        {/* Espacio reservado para mantener el balance si fuera necesario, o simplemente vacío */}
+        <div className="w-10" />
       </div>
 
       {/* Messages Area - Estilo Burbujas */}

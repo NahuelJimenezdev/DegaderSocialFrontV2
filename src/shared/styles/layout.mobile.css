@@ -192,4 +192,15 @@
         justify-content: flex-end !important;
         width: 100% !important;
     }
+
+    /* Sidebar de Iglesia - Posición Derecha */
+    .sidebar-right-mobile {
+        right: 0 !important;
+        left: auto !important;
+        transform: translateX(100%) !important;
+    }
+
+    .sidebar-right-mobile.open {
+        transform: translateX(0) !important;
+    }
 }
