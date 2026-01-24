@@ -24,6 +24,9 @@ export const useIglesiaSettings = (iglesiaData, refetch) => {
         mision: iglesiaData?.mision || '',
         vision: iglesiaData?.vision || '',
         valores: iglesiaData?.valores || '',
+        infoPastor: {
+            mensaje: iglesiaData?.infoPastor?.mensaje || ''
+        },
         ubicacion: {
             direccion: iglesiaData?.ubicacion?.direccion || '',
             ciudad: iglesiaData?.ubicacion?.ciudad || '',

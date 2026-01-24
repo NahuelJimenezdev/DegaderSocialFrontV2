@@ -55,7 +55,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
     <div className="max-w-5xl mx-auto">
       {/* Tabs */}
       <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6 overflow-x-auto scrollbar-none">
-        {['general', 'ubicacion', 'contacto', 'galeria'].map((tab) => (
+        {['general', 'ubicacion', 'contacto', 'galeria', 'pastor'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -445,6 +445,40 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                   Puedes subir varias imágenes a la vez.
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab: Pastor */}
+        {activeTab === 'pastor' && (
+          <div className="space-y-6">
+            <div className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl flex gap-3 border border-indigo-100 dark:border-indigo-800 mb-6">
+              <span className="material-symbols-outlined text-indigo-500 mt-0.5">info</span>
+              <div>
+                <h4 className="text-sm font-bold text-indigo-900 dark:text-indigo-200">Personalización del Liderazgo</h4>
+                <p className="text-xs text-indigo-700 dark:text-indigo-300 leading-relaxed font-medium mt-1">
+                  Aquí puedes personalizar el mensaje que aparece junto a tu foto en la sección de información.
+                  Si lo dejas vacío, se mostrará el mensaje por defecto: "Llamado a pastorear esta casa con amor y la Palabra."
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Mensaje del Pastor
+              </label>
+              <textarea
+                name="infoPastor.mensaje"
+                value={formData.infoPastor?.mensaje || ''}
+                onChange={handleInputChange}
+                rows={4}
+                placeholder="Ej: Bienvenidos a nuestra casa, un lugar donde el amor de Dios transforma vidas..."
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                maxLength={500}
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                {(formData.infoPastor?.mensaje?.length || 0)}/500
+              </p>
             </div>
           </div>
         )}

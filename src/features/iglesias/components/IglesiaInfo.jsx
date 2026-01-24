@@ -313,24 +313,61 @@ const IglesiaInfo = ({ iglesiaData }) => {
         </section>
 
         {/* Pastor Section */}
-        <section className={`${churchColors.cardBg} rounded-2xl shadow-xl p-6 md:p-8`}>
-          <h3 className={`text-2xl font-bold mb-6 ${churchColors.primary}`}>
+        <section className={`${churchColors.cardBg} rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100 dark:border-gray-800`}>
+          <h3 className={`text-2xl font-bold mb-8 ${churchColors.primary} text-center md:text-left flex items-center gap-3 justify-center md:justify-start`}>
+            <span className="material-symbols-outlined text-3xl">verified_user</span>
             Liderazgo Pastoral
           </h3>
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-2xl flex-shrink-0">
-              {getPastorName().charAt(0)}
+
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            {/* Foto del Pastor */}
+            <div className="flex-shrink-0 relative group">
+              <div className="w-32 h-32 md:w-36 md:h-36 rounded-full p-1 bg-gradient-to-tr from-purple-500 to-indigo-500 shadow-lg">
+                <div className="w-full h-full rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                  {iglesiaData?.pastorPrincipal?.social?.fotoPerfil ? (
+                    <img
+                      src={getAvatarUrl(iglesiaData.pastorPrincipal.social.fotoPerfil)}
+                      alt="Pastor Principal"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <span className="text-4xl font-bold text-indigo-500">{getPastorName().charAt(0)}</span>
+                  )}
+                </div>
+              </div>
+              {/* Badge opcional de verificado o rol */}
+              <div className="absolute bottom-1 right-1 bg-white dark:bg-gray-800 rounded-full p-1 shadow-md border border-gray-100 dark:border-gray-700 text-indigo-500">
+                <span className="material-symbols-outlined text-xl">workspace_premium</span>
+              </div>
             </div>
-            <div>
-              <h4 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {getPastorName()}
-              </h4>
-              <p className={`text-lg font-semibold ${churchColors.spiritual}`}>
-                Pastor Principal
-              </p>
-              <p className="text-gray-600 dark:text-gray-400 mt-1 italic">
-                "Llamado a pastorear esta casa con amor y la Palabra."
-              </p>
+
+            {/* Información y Mensaje */}
+            <div className="flex-1 text-center md:text-left space-y-3">
+              <div>
+                <h4 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                  {getPastorName()}
+                </h4>
+                <p className={`text-lg font-medium ${churchColors.spiritual} flex items-center justify-center md:justify-start gap-2 mt-1`}>
+                  Pastor Principal
+                </p>
+              </div>
+
+              {/* Mensaje con estilo de cita elegante */}
+              <div className="relative mt-4">
+                <div className="hidden md:block absolute -left-4 top-0 bottom-0 w-1 bg-indigo-200 dark:bg-indigo-900/50 rounded-full" />
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg md:pl-2 italic">
+                  {iglesiaData?.infoPastor?.mensaje ? (
+                    <>"{iglesiaData.infoPastor.mensaje}"</>
+                  ) : (
+                    <>"Llamado a pastorear esta casa con amor, entrega y fidelidad a Su Palabra. Su ministerio se basa en el servicio y el cuidado espiritual de la congregación."</>
+                  )}
+                </p>
+              </div>
+
+              {/* Botón de contacto rápido o redes (Opcional, visualmente atractivo) */}
+              <div className="pt-2 flex justify-center md:justify-start gap-3 opacity-80 hover:opacity-100 transition-opacity">
+                {/* Aquí se podrían agregar iconos sociales del pastor en el futuro */}
+              </div>
             </div>
           </div>
         </section>
