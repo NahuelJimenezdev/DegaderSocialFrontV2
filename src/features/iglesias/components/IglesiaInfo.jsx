@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Target, Zap, Sparkles, Clock, MapPin, Mail, Phone, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { churchColors } from '../utils/colors';
 import InfoCard from './shared/InfoCard';
@@ -8,6 +8,22 @@ import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
 const IglesiaInfo = ({ iglesiaData }) => {
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [testimonios, setTestimonios] = useState([]);
+
+  useEffect(() => {
+    const loadTestimonios = async () => {
+      try {
+        const { getTestimonios } = (await import('../../../api/iglesiaService')).default;
+        if (iglesiaData?._id) {
+          const data = await getTestimonios(iglesiaData._id);
+          setTestimonios(data || []);
+        }
+      } catch (error) {
+        console.error('Error loading testimonios:', error);
+      }
+    };
+    loadTestimonios();
+  }, [iglesiaData]);
 
   const getPastorName = () => {
     const pastor = iglesiaData?.pastorPrincipal;
@@ -16,6 +32,30 @@ const IglesiaInfo = ({ iglesiaData }) => {
       return `${pastor.nombres.primero} ${pastor.apellidos.primero}`;
     }
     return 'ID: ' + pastor;
+  };
+
+  const getRoleLabel = (usuario) => {
+    if (usuario.eclesiastico?.rolPrincipal) {
+      const roleMap = {
+        'pastor_principal': 'Pastor Principal',
+        'pastor_asociado': 'Pastor Asociado',
+        'lider': 'Líder',
+        'adminIglesia': 'Administrador',
+        'anciano': 'Anciano',
+        'diacono': 'Diácono',
+        'maestro': 'Maestro',
+        'coordinador': 'Coordinador',
+        'miembro': 'Miembro',
+        'servidor': 'Servidor'
+      };
+      return roleMap[usuario.eclesiastico.rolPrincipal] ||
+        usuario.eclesiastico.rolPrincipal.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+    // Fallback: Si coincide con ID del pastor principal
+    if (usuario._id === (iglesiaData.pastorPrincipal._id || iglesiaData.pastorPrincipal)) {
+      return 'Pastor Principal';
+    }
+    return 'Miembro';
   };
 
   const galeria = iglesiaData?.galeria || [];
@@ -178,36 +218,46 @@ const IglesiaInfo = ({ iglesiaData }) => {
           </div>
         )}
 
+        {/* Testimonials (Solo si hay datos) */}
+        {testimonios.length > 0 && (
+          <section className="bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl p-8 border border-indigo-100 dark:border-indigo-900/30">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+              Lo que dice nuestra comunidad
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testimonios.map((testimonio) => {
+                const userRole = getRoleLabel(testimonio.usuario);
+                const isPastorOrLeader = ['Pastor Principal', 'Pastor Asociado', 'Líder', 'Anciano'].includes(userRole);
 
-        {/* Testimonials */}
-        <section className="bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl p-8 border border-indigo-100 dark:border-indigo-900/30">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Lo que dice nuestra comunidad
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: "María González", role: "Miembro desde 2018", text: "Encontré una familia que me acogió con amor desde el primer día. Aquí he crecido espiritualmente." },
-              { name: "Juan Pérez", role: "Líder de Jóvenes", text: "Un lugar donde los jóvenes pueden desarrollar su potencial y servir a Dios con pasión." },
-              { name: "Ana Martínez", role: "Voluntaria", text: "Servir en esta iglesia ha sido la mayor bendición para mi vida y la de mi familia." }
-            ].map((testimonial, idx) => (
-              <div key={idx} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm relative">
-                <span className="absolute top-4 right-4 text-4xl text-indigo-200 dark:text-indigo-900 font-serif">"</span>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 relative z-10 italic">
-                  {testimonial.text}
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-700 flex items-center justify-center text-indigo-600 dark:text-indigo-200 font-bold">
-                    {testimonial.name.charAt(0)}
+                return (
+                  <div key={testimonio._id} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm relative h-full flex flex-col">
+                    <span className="absolute top-4 right-4 text-4xl text-indigo-200 dark:text-indigo-900 font-serif">"</span>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 relative z-10 italic flex-grow">
+                      {testimonio.mensaje}
+                    </p>
+                    <div className="flex items-center gap-3 mt-auto">
+                      <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        {testimonio.usuario.social?.fotoPerfil ? (
+                          <img src={getAvatarUrl(testimonio.usuario.social.fotoPerfil)} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-indigo-600 dark:text-indigo-200 font-bold">{testimonio.usuario.nombres.primero.charAt(0)}</span>
+                        )}
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-gray-900 dark:text-white text-sm">
+                          {testimonio.usuario.nombres.primero} {testimonio.usuario.apellidos.primero}
+                        </h5>
+                        <p className={`text-xs font-medium ${isPastorOrLeader ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500 dark:text-gray-400'}`}>
+                          {userRole}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="font-bold text-gray-900 dark:text-white text-sm">{testimonial.name}</h5>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{testimonial.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Service Times & Location */}
         <section className={`${churchColors.cardBg} rounded-2xl shadow-xl p-6 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8`}>

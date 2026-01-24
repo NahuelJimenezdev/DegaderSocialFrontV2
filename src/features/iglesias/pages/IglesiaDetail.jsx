@@ -11,6 +11,7 @@ import IglesiaEvents from '../components/IglesiaEvents';
 import IglesiaMultimedia from '../components/IglesiaMultimedia';
 import IglesiaHeader from '../components/IglesiaHeader';
 import IglesiaSettings from '../components/IglesiaSettings';
+import IglesiaComentarios from '../components/IglesiaComentarios';
 
 const IglesiaDetail = () => {
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ const IglesiaDetail = () => {
   // Menú completo para miembros y pastor
   const allMenuItems = [
     { id: 'info', icon: 'info', label: 'Información' },
+    { id: 'comentarios', icon: 'forum', label: 'Comentarios' },
     { id: 'members', icon: 'group', label: 'Miembros' },
     { id: 'chat', icon: 'chat', label: 'Chat' },
     { id: 'events', icon: 'event', label: 'Reuniones' },
@@ -51,16 +53,19 @@ const IglesiaDetail = () => {
     { id: 'settings', icon: 'settings', label: 'Configuración' },
   ];
 
-  // Menú limitado para visitantes (solo información)
+  // Menú limitado para visitantes (solo información y comentarios para leer)
   const visitorMenuItems = [
     { id: 'info', icon: 'info', label: 'Información' },
+    { id: 'comentarios', icon: 'forum', label: 'Comentarios' },
   ];
 
   const menuItems = hasAccess ? allMenuItems : visitorMenuItems;
 
-  // Si no tiene acceso y intenta ver otra sección, redirigir a info
+  // Si no tiene acceso y intenta ver otra sección restringida, redirigir a info
   useEffect(() => {
-    if (!hasAccess && activeSection !== 'info') {
+    // Permitir acceso a info y comentarios para visitantes
+    const publicSections = ['info', 'comentarios'];
+    if (!hasAccess && !publicSections.includes(activeSection)) {
       setActiveSection('info');
     }
   }, [hasAccess, activeSection]);
@@ -69,6 +74,8 @@ const IglesiaDetail = () => {
     switch (activeSection) {
       case 'info':
         return <IglesiaInfo iglesiaData={iglesiaData} />;
+      case 'comentarios':
+        return <IglesiaComentarios iglesiaData={iglesiaData} />;
       case 'members':
         return <IglesiaMembers iglesiaData={iglesiaData} refetch={refetch} user={user} />;
       case 'chat':

@@ -62,6 +62,27 @@ const iglesiaService = {
     };
     const response = await api.put(`/iglesias/${id}`, data, config);
     return response.data;
+  },
+
+  // Testimonios Methods
+  getTestimonios: async (id) => {
+    const response = await api.get(`/iglesias/${id}/testimonios`);
+    return response.data.data;
+  },
+
+  createTestimonio: async (id, mensaje) => {
+    const response = await api.post(`/iglesias/${id}/testimonios`, { mensaje });
+    return response.data;
+  },
+
+  updateTestimonio: async (id, testimonioId, mensaje) => {
+    const response = await api.put(`/iglesias/${id}/testimonios/${testimonioId}`, { mensaje });
+    return response.data;
+  },
+
+  deleteTestimonio: async (id, testimonioId) => {
+    const response = await api.delete(`/iglesias/${id}/testimonios/${testimonioId}`);
+    return response.data;
   }
 };
 
