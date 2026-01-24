@@ -12,7 +12,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "release": "standard-version"
   },
   "dependencies": {
     "axios": "^1.13.1",
@@ -52,6 +53,7 @@
     "jsdom": "^27.3.0",
     "postcss": "^8.5.6",
     "prop-types": "^15.8.1",
+    "standard-version": "^9.5.0",
     "storybook": "^10.0.5",
     "tailwindcss": "^4.1.16",
     "vite": "^7.1.7",

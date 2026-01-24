@@ -24,7 +24,39 @@ const IglesiaInfo = ({ iglesiaData }) => {
     <div className="h-full overflow-y-auto p-4 md:p-8 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
       <div className="max-w-6xl mx-auto space-y-10">
 
-        {/* ... (About Section and InfoCards maintained) ... */}
+        {/* About Section */}
+        <section className={`${churchColors.cardBg} rounded-2xl shadow-xl p-6 md:p-8 border-t-4 ${churchColors.primaryBorder}`}>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Sobre Nosotros</h2>
+          <p className={`text-xl font-semibold italic ${churchColors.accent} mb-4`}>
+            "{iglesiaData?.denominacion || 'Sirviendo con amor, Creciendo en fe'}"
+          </p>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg text-justify text-justify-inter-word">
+            {iglesiaData?.descripcion || 'Una comunidad unida por el amor de Cristo, dedicada a servir al prójimo y expandir el Reino de Dios en nuestra ciudad.'}
+          </p>
+        </section>
+
+        {/* Mission, Vision, Values */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <InfoCard
+            className="text-justify text-justify-inter-word"
+            icon={Target}
+            title="Misión"
+            content={iglesiaData?.mision || "Alcanzar a los perdidos y edificar a los creyentes para que impacten al mundo."}
+          />
+          <InfoCard
+            className="text-justify text-justify-inter-word"
+            icon={Zap}
+            title="Visión"
+            content={iglesiaData?.vision || "Ser una iglesia relevante, apasionada y multiplicadora que refleja el amor de Dios."}
+          />
+          <InfoCard
+            className="text-justify text-justify-inter-word"
+            icon={Sparkles}
+            title="Valores"
+            content={iglesiaData?.valores || "La fe que transforma, la gracia que sostiene, el amor que une."}
+            accent={true}
+          />
+        </section>
 
         {/* Photo Gallery (Preview) */}
         <section>
