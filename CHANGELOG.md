@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.1.0...v1.2.0) (2026-01-24)
+
+
+### Features
+
+* agregar automatización de releases con GitHub Actions ([e96951e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e96951eba6da4d99748fa0c189d72d867b380765))
+* **ci:** agregar GitHub Releases automáticos con notas ([3bae604](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3bae604f003d6dc3dc0c4fce715918a55389972b))
+
+
+### Bug Fixes
+
+* actualización de la sección pastor en configuración de la iglesia ([ee0e7db](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ee0e7dbe5bd0e81f9856ef476fc4a7f0e8bcbb68))
+* **ci:** ajustar workflow de release manual y permisos ([ba90836](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ba90836e1fba70ce6c92ee66e22e78d605d53eac))
+* **ci:** configurar identidad git para releases automáticos ([6861b4f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6861b4ff3ba724b64ce4750df9a356a68c063c33))
+
 ## 1.1.0 (2026-01-24)
 
 
