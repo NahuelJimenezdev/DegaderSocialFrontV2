@@ -1,79 +1,170 @@
-import React from 'react';
-import { Clock, MapPin, Calendar, Video, Share2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, MapPin, Calendar, Share2, Bell, CheckCircle, XCircle, BarChart2 } from 'lucide-react';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
+import { interactWithEvent, getEventStats } from '../services/churchEventService';
+import EventStatsModal from './EventStatsModal';
+import { useAuth } from '../../../context/AuthContext';
 
-const EventCard = ({ event, isOnline }) => {
+const EventCard = ({ event, isOnline, onDismiss, onEdit, onCancel }) => {
   const toast = useToast();
+  const { user } = useAuth();
+  const [interactionState, setInteractionState] = useState(null); // 'attend' | 'remind' | null
+  const [showStats, setShowStats] = useState(false);
+  const [stats, setStats] = useState(null);
 
-  const handleAddToCalendar = () => {
-    // Mock functionality for now
-    toast.success('Evento añadido al calendario (Simulado)');
+  // Check initial state
+  React.useEffect(() => {
+    if (event.attendees?.some(a => a.user === user?._id)) setInteractionState('attend');
+    else if (event.reminders?.some(r => r.user === user?._id)) setInteractionState('remind');
+  }, [event, user]);
+
+  const handleInteract = async (action) => {
+    // Optimistic Update
+    const prevState = interactionState;
+    if (action === 'dismiss') {
+      onDismiss(event._id);
+    } else {
+      setInteractionState(action);
+    }
+
+    const result = await interactWithEvent(event._id, action);
+    if (result.success) {
+      if (action !== 'dismiss') toast.success(action === 'attend' ? 'Asistencia confirmada' : 'Recordatorio activado');
+    } else {
+      setInteractionState(prevState); // Revert
+      toast.error('Error al actualizar');
+    }
   };
+
+  const handleShowStats = async () => {
+    const data = await getEventStats(event._id);
+    if (data) {
+      setStats(data);
+      setShowStats(true);
+    }
+  };
+
+  const isCreator = user?._id === event.creator?._id || user?._id === event.creator;
 
   const handleShare = () => {
-    navigator.clipboard.writeText(`${event.nombre} - ${event.dia} a las ${event.hora}`);
-    toast.success('Información del evento copiada');
+    navigator.clipboard.writeText(`${event.title} - ${event.dates[0] ? new Date(event.dates[0]).toLocaleDateString() : ''}`);
+    toast.success('Información copiada');
   };
 
+  const dateObject = event.dates && event.dates[0] ? new Date(event.dates[0]) : new Date();
+  const dayName = dateObject.toLocaleDateString('es-ES', { weekday: 'short' });
+  const dayNumber = dateObject.getDate();
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all group">
-      {/* Date Badge (Left Side) */}
-      <div className="flex">
-        <div className="w-24 bg-indigo-50 dark:bg-indigo-900/20 flex flex-col items-center justify-center p-4 border-r border-gray-100 dark:border-gray-700">
-          <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400 uppercase">
-            {event.dia.substring(0, 3)}
-          </span>
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">
-            {/* Mock date number since we only have day name */}
-            --
-          </span>
-        </div>
+    <>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all group relative">
 
-        {/* Content */}
-        <div className="flex-1 p-5">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-              {event.nombre}
-            </h3>
-            {isOnline && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                <Video size={12} />
-                Online
-              </span>
-            )}
+        {isCreator && (
+          <button
+            onClick={handleShowStats}
+            className="absolute top-2 right-2 p-2 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-sm text-indigo-600 hover:bg-gray-100 z-10"
+            title="Ver estadísticas"
+          >
+            <BarChart2 size={18} />
+          </button>
+        )}
+
+        <div className="flex h-full">
+          {/* Date Badge */}
+          <div className="w-24 bg-indigo-50 dark:bg-indigo-900/20 flex flex-col items-center justify-center p-4 border-r border-gray-100 dark:border-gray-700">
+            <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400 uppercase">
+              {dayName}
+            </span>
+            <span className="text-3xl font-bold text-gray-900 dark:text-white">
+              {dayNumber}
+            </span>
           </div>
 
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <Clock size={16} className="mr-2 text-gray-400" />
-              {event.hora}
-            </div>
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <MapPin size={16} className="mr-2 text-gray-400" />
-              {isOnline ? 'Transmisión en vivo' : 'Auditorio Principal'}
-            </div>
-          </div>
+          {/* Content */}
+          <div className="flex-1 p-5 flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-2 pr-8">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+                  {event.title || event.nombre}
+                </h3>
+              </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2 pt-4 border-t border-gray-100 dark:border-gray-700">
-            <button 
-              onClick={handleAddToCalendar}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-gray-50 dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg text-sm font-medium transition-colors"
-            >
-              <Calendar size={16} />
-              Agendar
-            </button>
-            <button 
-              onClick={handleShare}
-              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              title="Compartir"
-            >
-              <Share2 size={18} />
-            </button>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                  <Clock size={16} className="mr-2 text-gray-400" />
+                  {event.time || event.hora}
+                </div>
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                  <MapPin size={16} className="mr-2 text-gray-400" />
+                  {event.location?.ciudad ? `${event.location.ciudad}, ${event.location.provincia}` : (event.ubicacion || 'Ubicación a confirmar')}
+                </div>
+                {event.guest && (
+                  <div className="flex items-center text-sm text-purple-600 dark:text-purple-400 font-medium">
+                    <Users size={16} className="mr-2" />
+                    {event.guest}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className={`grid ${isCreator ? 'grid-cols-2' : 'grid-cols-3'} gap-2 pt-4 border-t border-gray-100 dark:border-gray-700`}>
+              {isCreator ? (
+                <>
+                  <button
+                    onClick={onEdit}
+                    className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-xs font-medium bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-lg">edit</span>
+                    Editar
+                  </button>
+                  <button
+                    onClick={onCancel}
+                    className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-xs font-medium bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition-colors"
+                  >
+                    <XCircle size={18} />
+                    Cancelar
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => handleInteract('remind')}
+                    className={`flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-xs font-medium transition-colors ${interactionState === 'remind' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500'}`}
+                  >
+                    <Bell size={18} className={interactionState === 'remind' ? 'fill-current' : ''} />
+                    Recordar
+                  </button>
+
+                  <button
+                    onClick={() => handleInteract('attend')}
+                    className={`flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-xs font-medium transition-colors ${interactionState === 'attend' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500'}`}
+                  >
+                    <CheckCircle size={18} className={interactionState === 'attend' ? 'fill-current' : ''} />
+                    Asistiré
+                  </button>
+
+                  <button
+                    onClick={() => handleInteract('dismiss')}
+                    className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg text-xs font-medium transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600"
+                  >
+                    <XCircle size={18} />
+                    No interesa
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <EventStatsModal
+        isOpen={showStats}
+        onClose={() => setShowStats(false)}
+        stats={stats}
+        eventTitle={event.title}
+      />
+    </>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const IglesiaMultimedia = ({ iglesiaData }) => {
   const [activeTab, setActiveTab] = useState('photos'); // photos, videos
+  const fileInputRef = React.useRef(null);
 
   // Mock data for now
   const photos = [
@@ -12,6 +13,19 @@ const IglesiaMultimedia = ({ iglesiaData }) => {
     { id: 5, url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80', caption: 'Concierto de Alabanza' },
     { id: 6, url: 'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80', caption: 'Retiro Espiritual' },
   ];
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('Selected file:', file);
+      // Here you would implement the upload logic
+      // e.g., uploadService.upload(file, activeTab === 'photos' ? 'image' : 'video');
+    }
+  };
 
   return (
     <div className="h-full bg-gray-50 dark:bg-gray-900 p-6 overflow-y-auto">
@@ -28,9 +42,24 @@ const IglesiaMultimedia = ({ iglesiaData }) => {
             </p>
           </div>
           
-          <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors shadow-sm">
-            <span className="material-symbols-outlined text-[20px]">add_a_photo</span>
-            <span>Subir Foto</span>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept={activeTab === 'photos' ? "image/*" : "video/*"}
+            onChange={handleFileSelect}
+          />
+
+          <button 
+            onClick={handleButtonClick}
+            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              {activeTab === 'photos' ? 'add_a_photo' : 'videocam'}
+            </span>
+            <span>
+              {activeTab === 'photos' ? 'Subir Foto' : 'Subir Video'}
+            </span>
           </button>
         </div>
 
