@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
-import { Share2, Bookmark, MoreVertical, MapPin, Users, Calendar, Image as ImageIcon, ArrowLeft } from 'lucide-react';
+import { Share2, MapPin, Users, Calendar, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import { getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
+import { getChurchEvents } from '../services/churchEventService';
+import meetingService from '../../reuniones/services/meetingService';
 
-const IglesiaHeader = ({ iglesia, user, onJoin }) => {
+const IglesiaHeader = ({ iglesia, user, onJoin, setActiveSection }) => {
   const navigate = useNavigate();
   const toast = useToast();
+  const [eventCount, setEventCount] = useState(0);
 
   logger.log('🖼️ IglesiaHeader render - Data:', {
     id: iglesia?._id,
@@ -15,20 +18,51 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
     portada: iglesia?.portada
   });
 
+  useEffect(() => {
+    const fetchCounts = async () => {
+      if (!iglesia?._id) return;
+      try {
+        const [events, meetings] = await Promise.all([
+          getChurchEvents(iglesia._id),
+          meetingService.getChurchMeetings(iglesia._id)
+        ]);
+
+        const activeEvents = (events || []).filter(e =>
+          new Date(e.dates[0]) >= new Date().setHours(0, 0, 0, 0) // Future events
+        ).length;
+
+        const activeMeetings = (meetings || []).filter(m =>
+          ['upcoming', 'in-progress'].includes(m.status)
+        ).length;
+
+        setEventCount(activeEvents + activeMeetings);
+      } catch (error) {
+        console.error('Error fetching event counts:', error);
+      }
+    };
+
+    fetchCounts();
+  }, [iglesia?._id]);
+
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     toast.success('Enlace copiado al portapapeles');
   };
 
-  /* Filtrar eventos activos o próximos */
-  const activeEventsCount = iglesia.reuniones?.filter(r =>
-    ['upcoming', 'in-progress'].includes(r.status)
-  ).length || 0;
+  const handleStatClick = (stat) => {
+    if (stat.label === 'Eventos' && setActiveSection) {
+      setActiveSection('events');
+      // Scroll to content if needed, but switching section usually handles it
+    }
+    if (stat.label === 'Multimedia' && setActiveSection) {
+      setActiveSection('multimedia');
+    }
+  };
 
   const stats = [
     { icon: Users, label: 'Miembros', value: iglesia.miembros?.length || 0 },
-    { icon: Calendar, label: 'Eventos', value: activeEventsCount },
-    { icon: ImageIcon, label: 'Multimedia', value: iglesia.multimedia?.length || 0 },
+    { icon: Calendar, label: 'Eventos', value: eventCount, clickable: true },
+    { icon: ImageIcon, label: 'Multimedia', value: iglesia.multimedia?.length || 0, clickable: true },
   ];
 
   return (
@@ -102,9 +136,13 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
           <div className="flex flex-col items-end gap-4 w-full md:w-auto">
             <div className="flex gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-900 dark:text-white font-bold text-lg">
-                    <stat.icon size={18} className="text-gray-400" />
+                <div
+                  key={index}
+                  className={`text-center ${stat.clickable ? 'cursor-pointer group' : ''}`}
+                  onClick={() => stat.clickable && handleStatClick(stat)}
+                >
+                  <div className={`flex items-center justify-center gap-1 font-bold text-lg ${stat.clickable ? 'text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors' : 'text-gray-900 dark:text-white'}`}>
+                    <stat.icon size={18} className="text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
                     {stat.value}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">

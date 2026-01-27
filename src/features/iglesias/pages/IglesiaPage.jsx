@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, Heart, Plus, Info } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import userService from '../../../api/userService';
+import iglesiaService from '../../../api/iglesiaService';
 import ChurchCard from '../components/ChurchCard';
 import HeroSection from '../components/HeroSection';
 import FilterBar from '../components/FilterBar';
@@ -14,6 +15,7 @@ import SolicitudesList from '../components/SolicitudesList';
 import FounderMonitoringPanel from '../components/FounderMonitoringPanel';
 import { useIglesias } from '../hooks/useIglesias';
 import { useFundacion } from '../hooks/useFundacion';
+import IglesiaDetail from './IglesiaDetail';
 import '../../../shared/styles/headers.style.css';
 
 export default function IglesiaPage() {
@@ -68,9 +70,22 @@ export default function IglesiaPage() {
     handleGestionarSolicitud
   } = useFundacion(user, updateUser);
 
-  // Cargar iglesias al montar
+  const [globalStats, setGlobalStats] = useState({ churches: 0, members: 0, events: 0 });
+
+  // Cargar iglesias y estadísticas globales al montar
   useEffect(() => {
     cargarIglesias();
+    const loadGlobalStats = async () => {
+      try {
+        const response = await iglesiaService.getGlobalStats(); // Asumiendo que iglesiaService está importado como 'iglesiaApi' o similar en useIglesias, pero aquí lo importamos directo
+        if (response.data) {
+          setGlobalStats(response.data);
+        }
+      } catch (error) {
+        console.error('Error loading global stats:', error);
+      }
+    };
+    loadGlobalStats();
   }, []);
 
   // Wrapper para crear iglesia con actualización de usuario
@@ -85,6 +100,7 @@ export default function IglesiaPage() {
   const [isMobile, setIsMobile] = useState(false);
 
   // Detectar si es mobile o desktop (JS fallback para mayor seguridad)
+  // Detectar si es mobile o desktop (JS fallback para mayor seguridad)
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -94,91 +110,103 @@ export default function IglesiaPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const renderIglesiasTab = () => (
-    <div className="space-y-6">
-      {isMobile ? (
-        /* Versión MÓBIL (< 768px) */
-        <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            ¡Busca tu Iglesia, <br /> o crea una!
-          </h3>
-          <button
-            onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
-          >
-            <Plus size={18} />
-          </button>
-        </div>
-      ) : (
-        /* Versión DESKTOP (>= 768px) */
-        <div className="flex justify-between items-center">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Building2 className="text-indigo-600" />
-            Encuentra tu Iglesia
-          </h3>
-          <button
-            onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
-          >
-            <Plus size={18} />
-            Registrar mi Iglesia
-          </button>
-        </div>
-      )}
+  // VISTA PARA MIEMBROS: Mostrar directamente el detalle de su iglesia
+  // if (user?.esMiembroIglesia && user?.eclesiastico?.iglesia && !loadingIglesias) {
+  //   return <IglesiaDetail churchId={user.eclesiastico.iglesia} />;
+  // }
 
-      <CreateIglesiaForm
-        mostrarForm={mostrarFormIglesia}
-        setMostrarForm={setMostrarFormIglesia}
-        formIglesia={formIglesia}
-        setFormIglesia={setFormIglesia}
-        onSubmit={handleCrearIglesiaWrapper}
-      />
+  const renderIglesiasTab = () => {
+    // Si es miembro, mostramos el detalle de su iglesia DENTRO del tab
+    if (user?.esMiembroIglesia && user?.eclesiastico?.iglesia) {
+      return <IglesiaDetail churchId={user.eclesiastico.iglesia} />;
+    }
 
-      <HeroSection
-        searchQuery={busquedaIglesia}
-        onSearchChange={(val) => {
-          setBusquedaIglesia(val);
-          cargarIglesias();
-        }}
-        stats={stats}
-      />
+    return (
+      <div className="space-y-6">
+        {isMobile ? (
+          /* Versión MÓBIL (< 768px) */
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              ¡Busca tu Iglesia, <br /> o crea una!
+            </h3>
+            <button
+              onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
+            >
+              <Plus size={18} />
+            </button>
+          </div>
+        ) : (
+          /* Versión DESKTOP (>= 768px) */
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <Building2 className="text-indigo-600" />
+              Encuentra tu Iglesia
+            </h3>
+            <button
+              onClick={() => setMostrarFormIglesia(!mostrarFormIglesia)}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-700"
+            >
+              <Plus size={18} />
+              Registrar mi Iglesia
+            </button>
+          </div>
+        )}
 
-      <FilterBar
-        filters={filters}
-        onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
-        sort={sort}
-        onSortChange={setSort}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-      />
-
-      {loadingIglesias ? (
-        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
-          <Skeleton variant="card" count={4} />
-        </div>
-      ) : filteredIglesias.length === 0 ? (
-        <EmptyState
-          icon={Building2}
-          title="No se encontraron iglesias"
-          description={busquedaIglesia || filters.denominacion || filters.ubicacion ? "Intenta ajustar tus filtros de búsqueda" : "Sé el primero en crear una iglesia en tu comunidad"}
-          action={!busquedaIglesia && !filters.denominacion && !filters.ubicacion ? () => setMostrarFormIglesia(true) : null}
-          actionLabel="Crear Iglesia"
+        <CreateIglesiaForm
+          mostrarForm={mostrarFormIglesia}
+          setMostrarForm={setMostrarFormIglesia}
+          formIglesia={formIglesia}
+          setFormIglesia={setFormIglesia}
+          onSubmit={handleCrearIglesiaWrapper}
         />
-      ) : (
-        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
-          {filteredIglesias.map((iglesia) => (
-            <ChurchCard
-              key={iglesia._id}
-              iglesia={iglesia}
-              user={user}
-              onJoin={handleUnirseIglesia}
-              viewMode={viewMode}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+
+        <HeroSection
+          searchQuery={busquedaIglesia}
+          onSearchChange={(val) => {
+            setBusquedaIglesia(val);
+            cargarIglesias();
+          }}
+          stats={globalStats}
+        />
+
+        <FilterBar
+          filters={filters}
+          onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
+          sort={sort}
+          onSortChange={setSort}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+        />
+
+        {loadingIglesias ? (
+          <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
+            <Skeleton variant="card" count={4} />
+          </div>
+        ) : filteredIglesias.length === 0 ? (
+          <EmptyState
+            icon={Building2}
+            title="No se encontraron iglesias"
+            description={busquedaIglesia || filters.denominacion || filters.ubicacion ? "Intenta ajustar tus filtros de búsqueda" : "Sé el primero en crear una iglesia en tu comunidad"}
+            action={!busquedaIglesia && !filters.denominacion && !filters.ubicacion ? () => setMostrarFormIglesia(true) : null}
+            actionLabel="Crear Iglesia"
+          />
+        ) : (
+          <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
+            {filteredIglesias.map((iglesia) => (
+              <ChurchCard
+                key={iglesia._id}
+                iglesia={iglesia}
+                user={user}
+                onJoin={handleUnirseIglesia}
+                viewMode={viewMode}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const renderMonitoreoTab = () => (
     <div className="space-y-6">

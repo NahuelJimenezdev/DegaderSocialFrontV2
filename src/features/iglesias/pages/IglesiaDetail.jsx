@@ -13,9 +13,10 @@ import IglesiaHeader from '../components/IglesiaHeader';
 import IglesiaSettings from '../components/IglesiaSettings';
 import IglesiaComentarios from '../components/IglesiaComentarios';
 
-const IglesiaDetail = () => {
+const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: paramId } = useParams();
+  const id = churchId || paramId;
   const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('info');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -145,7 +146,7 @@ const IglesiaDetail = () => {
 
       {/* Main Content */}
       <div className={`w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin ${activeSection === 'chat' ? '' : 'mb-mobile-67'}`}>
-        {activeSection === 'info' && <IglesiaHeader iglesia={iglesiaData} user={user} />}
+        {activeSection === 'info' && <IglesiaHeader iglesia={iglesiaData} user={user} setActiveSection={setActiveSection} />}
         <div className={activeSection === 'chat' ? 'h-full relative z-[100]' : 'p-4 md:p-8 pt-0'}>
           {activeSection === 'chat' ? (
             <IglesiaChat

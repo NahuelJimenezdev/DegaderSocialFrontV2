@@ -16,8 +16,18 @@ const iglesiaService = {
     return response.data;
   },
 
+  getGlobalStats: async () => {
+    const response = await api.get('/iglesias/stats/global');
+    return response.data;
+  },
+
   join: async (id, message) => {
     const response = await api.post(`/iglesias/${id}/join`, { message });
+    return response.data;
+  },
+
+  leave: async (id, data) => {
+    const response = await api.post(`/iglesias/${id}/leave`, data);
     return response.data;
   },
 

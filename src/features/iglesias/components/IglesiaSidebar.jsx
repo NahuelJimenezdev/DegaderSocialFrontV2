@@ -23,7 +23,7 @@ const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItem
         <div className="flex items-center gap-2 mb-4">
           {!isMobile && (
             <button
-              onClick={() => navigate('/Mi_iglesia')}
+              onClick={() => navigate('/')}
               className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
               title="Volver a Iglesias"
             >

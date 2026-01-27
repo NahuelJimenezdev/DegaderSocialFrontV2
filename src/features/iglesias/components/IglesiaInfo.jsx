@@ -347,17 +347,48 @@ const IglesiaInfo = ({ iglesiaData }) => {
             )}
 
             {/* Google Maps */}
-            <div className="h-64 md:h-96 rounded-xl overflow-hidden shadow-lg">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3279.0899473167383!2d-58.56242532492178!3d-34.72812706407799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcc5f4abbd384b%3A0x38980bcbc1567b5a!2sLas%20Camelias%2035%2C%20B1778JBB%20Cdad.%20Evita%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1769093691552!5m2!1ses-419!2sar"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicación de la iglesia"
-              />
+            {/* Google Maps o Botón GPS */}
+            <div className="h-64 md:h-96 rounded-xl overflow-hidden shadow-lg bg-gray-100 dark:bg-gray-800 relative">
+              {iglesiaData?.ubicacion?.googleMapsLink ? (
+                <>
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                    <a
+                      href={iglesiaData.ubicacion.googleMapsLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex flex-col items-center gap-3 px-6 py-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:scale-105 transition-transform text-indigo-600 dark:text-indigo-400"
+                    >
+                      <MapPin size={40} className="text-red-500" />
+                      <span className="font-bold text-lg">Abrir ubicación en Google Maps</span>
+                      <span className="text-xs text-gray-500">Haz clic para ver la ruta GPS</span>
+                    </a>
+                  </div>
+                  {/* Intentamos mostrar iframe si el link parece un embed, si no, mostramos solo el botón arriba */}
+                  {iglesiaData.ubicacion.googleMapsLink.includes('embed') && (
+                    <iframe
+                      src={iglesiaData.ubicacion.googleMapsLink}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, position: 'relative', zIndex: 10 }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Ubicación de la iglesia"
+                    />
+                  )}
+                </>
+              ) : (
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3279.0899473167383!2d-58.56242532492178!3d-34.72812706407799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcc5f4abbd384b%3A0x38980bcbc1567b5a!2sLas%20Camelias%2035%2C%20B1778JBB%20Cdad.%20Evita%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1769093691552!5m2!1ses-419!2sar"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación de la iglesia"
+                />
+              )}
             </div>
           </div>
         </section>

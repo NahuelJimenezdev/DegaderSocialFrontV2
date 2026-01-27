@@ -51,6 +51,19 @@ const meetingService = {
     }
   },
 
+  /**
+   * Llama al GET /api/reuniones/iglesia/:id para obtener reuniones de una iglesia
+   */
+  getChurchMeetings: async (iglesiaId) => {
+    try {
+      const response = await api.get(`/reuniones/iglesia/${iglesiaId}`);
+      return response.data.data;
+    } catch (error) {
+      logger.error('Error al obtener reuniones de iglesia:', error);
+      return [];
+    }
+  },
+
   // Aquí se añadirían otras funciones de API (ej: joinMeeting, deleteMeeting)
 };
 
