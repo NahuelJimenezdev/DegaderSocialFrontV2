@@ -185,7 +185,7 @@ const IglesiaEvents = ({ iglesiaData }) => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid gap-6" style={{ gridTemplateColumns: '1fr' }}>
             {upcomingItems.map((item) => (
               item.type === 'event' ? (
                 <EventCard
