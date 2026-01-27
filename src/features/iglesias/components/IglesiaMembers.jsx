@@ -64,7 +64,8 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
     console.log('🔵 handleApproveRequest - acción:', 'aprobar');
     try {
       setLoading(true);
-      await iglesiaService.manageRequest(iglesiaData._id, userId, 'aprobar');
+      const iglesiaId = String(iglesiaData._id);
+      await iglesiaService.manageRequest(iglesiaId, userId, 'aprobar');
       await refetch();
       setAlertConfig({ isOpen: true, variant: 'success', message: 'Solicitud aprobada exitosamente' });
     } catch (err) {
@@ -83,7 +84,9 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
     console.log('🔴 handleRejectRequest - acción:', 'rechazar');
     try {
       setLoading(true);
-      await iglesiaService.manageRequest(iglesiaData._id, userId, 'rechazar');
+      setLoading(true);
+      const iglesiaId = String(iglesiaData._id);
+      await iglesiaService.manageRequest(iglesiaId, userId, 'rechazar');
       await refetch();
       setAlertConfig({ isOpen: true, variant: 'success', message: 'Solicitud rechazada' });
     } catch (err) {

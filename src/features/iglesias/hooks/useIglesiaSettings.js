@@ -8,9 +8,10 @@ import iglesiaService from '../../../api/iglesiaService';
  * @param {Function} refetch - Función para recargar datos
  * @returns {Object} Estado y funciones para configuración
  */
-export const useIglesiaSettings = (iglesiaData, refetch) => {
+export const useIglesiaSettings = (iglesiaData, refetch, isPastor = true) => {
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('general');
+    // Si NO es pastor, la única pestaña es 'cuenta'
+    const [activeTab, setActiveTab] = useState(isPastor ? 'general' : 'cuenta');
     const [alertConfig, setAlertConfig] = useState({
         isOpen: false,
         variant: 'info',

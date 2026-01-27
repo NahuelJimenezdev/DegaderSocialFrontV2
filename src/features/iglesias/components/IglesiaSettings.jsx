@@ -50,7 +50,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
     handleAddHorario,
     handleRemoveHorario,
     handleSubmit
-  } = useIglesiaSettings(iglesiaData, refetch);
+  } = useIglesiaSettings(iglesiaData, refetch, isPastor);
 
   if (!isPastor && iglesiaData?.miembros?.some(m => m._id === user?._id || m === user?._id)) {
     // Si NO es pastor pero ES miembro, permitimos acceso limitado (para salir)
