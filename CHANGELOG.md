@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.5.0...v1.6.0) (2026-01-27)
+
+
+### Features
+
+* **multimedia:** navegación en modal y soporte para videos ([c1053b0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c1053b0cf942087caae8ffebfa1af8d5cb1387ee))
+
 ## [1.5.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.4.0...v1.5.0) (2026-01-27)
 
 
