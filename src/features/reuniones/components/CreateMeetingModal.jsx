@@ -2,20 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { X, Calendar, Clock, Users, Link, Video, Tag, Check, Send, Plus } from 'lucide-react';
 import { useUserSearch } from '../hooks/useUserSearch';
 
-// Datos para opciones
-const meetingTypes = [
-  { value: 'administrative', label: 'Administrativa', color: 'text-purple-600' },
-  { value: 'training', label: 'Capacitación', color: 'text-blue-600' },
-  { value: 'community', label: 'Comunitaria', color: 'text-green-600' },
+// Opciones para contexto de IGLESIA
+const churchMeetingTypes = [
+  { value: 'oracion', label: 'Oración', color: 'text-purple-600' },
+  { value: 'estudio_biblico', label: 'Estudio de la Palabra', color: 'text-blue-600' },
+  { value: 'culto', label: 'Culto General', color: 'text-indigo-600' },
+  { value: 'escuela_dominical', label: 'Escuela Dominical', color: 'text-orange-600' },
+  { value: 'capacitacion', label: 'Capacitación', color: 'text-teal-600' },
+  { value: 'grupal', label: 'Grupal', color: 'text-pink-600' },
+];
+
+// Opciones para contexto GLOBAL (Mis Reuniones)
+const globalMeetingTypes = [
   { value: 'personal', label: 'Personal', color: 'text-gray-600' },
+  { value: 'capacitacion', label: 'Capacitación', color: 'text-teal-600' },
+  { value: 'grupal', label: 'Grupal', color: 'text-pink-600' },
+  { value: 'comercial', label: 'Comercial', color: 'text-emerald-600' },
 ];
 
 const meetingDurations = [
   '30 minutos', '1 hora', '1.5 horas', '2 horas', '3 horas', 'Más de 3 horas'
 ];
 
-export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
+export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext = false }) {
   if (!isOpen) return null;
+
+  // Determinar qué tipos usar
+  const availableTypes = isChurchContext ? churchMeetingTypes : globalMeetingTypes;
 
   const [formData, setFormData] = useState({
     title: '',
@@ -23,10 +36,20 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
     date: '',
     time: '10:00',
     duration: meetingDurations[1],
-    type: meetingTypes[0].value,
+    type: availableTypes[0].value,
     meetLink: 'https://meet.google.com/',
     attendees: [],
   });
+
+  // Resetear el tipo cuando cambia el contexto o se abre el modal
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(prev => ({
+        ...prev,
+        type: availableTypes[0].value
+      }));
+    }
+  }, [isOpen, isChurchContext]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [submitError, setSubmitError] = useState(null);
@@ -110,7 +133,32 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
   };
 
 
-  const selectedTypeColor = meetingTypes.find(t => t.value === formData.type)?.color || 'text-gray-600';
+
+
+  const selectedTypeColor = availableTypes.find(t => t.value === formData.type)?.color || 'text-gray-600';
+
+  // Lista de ministerios definidos en el sistema
+  const MINISTERIOS = [
+    "musica", "caballeros", "damas", "escuela_dominical", "evangelismo",
+    "limpieza", "cocina", "medios", "juventud", "intercesion",
+    "consejeria", "visitacion", "seguridad", "protocolo"
+  ];
+
+  /* 
+   * Formatear nombre del ministerio para mostrar
+   * musica -> Música
+   * escuela_dominical -> Escuela Dominical
+   */
+  const formatMinistryName = (name) => {
+    return name
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+      .replace('Musica', 'Música')
+      .replace('Intercesion', 'Intercesión')
+      .replace('Consejeria', 'Consejería')
+      .replace('Visitacion', 'Visitación');
+  };
 
   return (
     <div className="fixed inset-0 z-[10000] bg-black bg-opacity-40 flex items-center justify-center p-4 text-gray-700" style={{ margin: 0, padding: '1rem' }}>
@@ -120,7 +168,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
         <div className="flex items-center justify-between p-5 border-b border-gray-100 flex-shrink-0 bg-white">
           <h2 className="text-xl font-bold text-gray-900 flex items-center space-x-2">
             <Video className="w-5 h-5 text-blue-600" />
-            <span>Programar Nueva Reunión</span>
+            <span>Programar Nueva Reunión {isChurchContext ? '(Eclesiástica)' : ''}</span>
           </h2>
           <button
             onClick={onClose}
@@ -221,12 +269,42 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate }) {
                 onChange={handleChange}
                 className={`w-full border rounded-lg p-3 ${selectedTypeColor}`}
               >
-                {meetingTypes.map(t => (
+                {availableTypes.map(t => (
                   <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
               </select>
             </div>
           </div>
+
+          {/* Selector de Ministerio (SOLO SI HAY IGLESIA) */}
+          {/* Asumimos que parentId o similar indica contexto de Iglesia, o pasamos prop isChurchContext */}
+          {/* Voy a agregar un campo "targetMinistry" al formData siempre, pero visible solo si se requiere */}
+
+          {isChurchContext && (
+            <div className="space-y-1">
+              <label className="text-sm font-medium flex items-center gap-1">
+                <Users className="w-4" /> Dirigido A:
+              </label>
+              <select
+                name="targetMinistry"
+                value={formData.targetMinistry || 'todos'}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 bg-blue-50 border-blue-200 text-blue-800 font-medium"
+              >
+                <option value="todos">Todos los Miembros</option>
+                <optgroup label="Ministerios">
+                  {MINISTERIOS.map(m => (
+                    <option key={m} value={m}>{formatMinistryName(m)}</option>
+                  ))}
+                </optgroup>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                {formData.targetMinistry && formData.targetMinistry !== 'todos'
+                  ? `Se notificará solo a los miembros del ministerio de ${formatMinistryName(formData.targetMinistry)}.`
+                  : 'Se notificará a toda la congregación.'}
+              </p>
+            </div>
+          )}
 
           {/* Participantes */}
           <div className="space-y-3 p-4 bg-gray-50 rounded-lg border">

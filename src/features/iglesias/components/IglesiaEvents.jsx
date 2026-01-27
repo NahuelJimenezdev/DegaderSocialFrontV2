@@ -267,6 +267,7 @@ const IglesiaEvents = ({ iglesiaData }) => {
         isOpen={showMeetingModal}
         onClose={() => setShowMeetingModal(false)}
         onCreate={handleCreateMeeting}
+        isChurchContext={true}
       />
 
       <CreateChurchEventModal

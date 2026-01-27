@@ -1,29 +1,73 @@
 import React, { useState } from 'react';
+import iglesiaService from '../../../api/iglesiaService';
+import { logger } from '../../../shared/utils/logger';
+import { useAuth } from '../../../context/AuthContext';
 
-const IglesiaMultimedia = ({ iglesiaData }) => {
+const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('photos'); // photos, videos
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = React.useRef(null);
 
-  // Mock data for now
-  const photos = [
-    { id: 1, url: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&q=80', caption: 'Culto Dominical' },
-    { id: 2, url: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=800&q=80', caption: 'Grupo de Jóvenes' },
-    { id: 3, url: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80', caption: 'Cena Navideña' },
-    { id: 4, url: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=80', caption: 'Bautismos' },
-    { id: 5, url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80', caption: 'Concierto de Alabanza' },
-    { id: 6, url: 'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80', caption: 'Retiro Espiritual' },
-  ];
+  // Verificar Permisos
+  const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id || iglesiaData?.pastorPrincipal === user?._id;
+  const allowedRoles = ['lider', 'pastor_asociado', 'adminIglesia', 'coordinador', 'director', 'anciano', 'diacono'];
+  const userRole = user?.eclesiastico?.rolPrincipal;
+  const canUpload = isPastor || (user?.eclesiastico?.activo && allowedRoles.includes(userRole));
+
+  const multimedia = iglesiaData?.multimedia || [];
+
+  const photos = multimedia.filter(m => m.tipo === 'image').map((m, index) => ({
+    id: m._id || index,
+    url: m.url,
+    caption: m.caption || 'Foto',
+    date: m.fecha
+  })).reverse();
+
+  const videos = multimedia.filter(m => m.tipo === 'video').map((m, index) => ({
+    id: m._id || index,
+    url: m.url,
+    caption: m.caption || 'Video',
+    date: m.fecha
+  })).reverse();
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileSelect = (event) => {
+  const handleFileSelect = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      console.log('Selected file:', file);
-      // Here you would implement the upload logic
-      // e.g., uploadService.upload(file, activeTab === 'photos' ? 'image' : 'video');
+    if (!file) return;
+
+    if (activeTab === 'photos' && !file.type.startsWith('image/')) {
+      alert('Por favor selecciona un archivo de imagen válido');
+      return;
+    }
+
+    if (activeTab === 'videos' && !file.type.startsWith('video/')) {
+      alert('Por favor selecciona un archivo de video válido (mp4, webm)');
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+      logger.log('📤 Subiendo archivo Multimedia:', file.name);
+
+      const formData = new FormData();
+      formData.append('multimedia', file);
+      formData.append('multimediaCaption', `Publicado por ${user.nombres.primero}`);
+
+      await iglesiaService.updateIglesia(iglesiaData._id, formData);
+
+      logger.log('✅ Archivo subido exitosamente');
+      if (refetch) await refetch();
+
+    } catch (error) {
+      logger.error('❌ Error uploading file:', error);
+      alert('Error al subir el archivo. Intenta nuevamente.');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -41,37 +85,45 @@ const IglesiaMultimedia = ({ iglesiaData }) => {
               Momentos capturados de nuestra comunidad
             </p>
           </div>
-          
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept={activeTab === 'photos' ? "image/*" : "video/*"}
-            onChange={handleFileSelect}
-          />
 
-          <button 
-            onClick={handleButtonClick}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors shadow-sm"
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              {activeTab === 'photos' ? 'add_a_photo' : 'videocam'}
-            </span>
-            <span>
-              {activeTab === 'photos' ? 'Subir Foto' : 'Subir Video'}
-            </span>
-          </button>
+          {canUpload && (
+            <div className="flex items-center gap-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept={activeTab === 'photos' ? "image/*" : "video/*"}
+                onChange={handleFileSelect}
+              />
+
+              <button
+                onClick={handleButtonClick}
+                disabled={isUploading}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isUploading ? (
+                  <span className="material-symbols-outlined animate-spin text-[20px]">refresh</span>
+                ) : (
+                  <span className="material-symbols-outlined text-[20px]">
+                    {activeTab === 'photos' ? 'add_a_photo' : 'videocam'}
+                  </span>
+                )}
+                <span>
+                  {isUploading ? 'Subiendo...' : (activeTab === 'photos' ? 'Subir Foto' : 'Subir Video')}
+                </span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Tabs */}
         <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6">
           <button
             onClick={() => setActiveTab('photos')}
-            className={`pb-3 px-1 text-sm font-medium transition-colors relative ${
-              activeTab === 'photos'
+            className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'photos'
                 ? 'text-purple-600 dark:text-purple-400'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             Fotos
             {activeTab === 'photos' && (
@@ -80,11 +132,10 @@ const IglesiaMultimedia = ({ iglesiaData }) => {
           </button>
           <button
             onClick={() => setActiveTab('videos')}
-            className={`pb-3 px-1 text-sm font-medium transition-colors relative ${
-              activeTab === 'videos'
+            className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'videos'
                 ? 'text-purple-600 dark:text-purple-400'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-            }`}
+              }`}
           >
             Videos
             {activeTab === 'videos' && (
@@ -95,34 +146,64 @@ const IglesiaMultimedia = ({ iglesiaData }) => {
 
         {/* Content */}
         {activeTab === 'photos' ? (
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-            {photos.map((photo) => (
-              <div key={photo.id} className="break-inside-avoid relative group rounded-xl overflow-hidden cursor-pointer">
-                <img
-                  src={photo.url}
-                  alt={photo.caption}
-                  className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <p className="text-white font-medium text-sm">{photo.caption}</p>
+          photos.length > 0 ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
+              {photos.map((photo, index) => (
+                <div key={photo.id || index} className="relative group rounded-xl overflow-hidden cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800">
+                  <img
+                    src={photo.url}
+                    alt={photo.caption || 'Foto de galería'}
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                    <p className="text-white font-medium text-sm truncate w-full">{photo.caption}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
-            <div className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4">
-              <span className="material-symbols-outlined text-3xl text-purple-600 dark:text-purple-400">
-                videocam_off
-              </span>
+              ))}
             </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
-              No hay videos aún
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400 max-w-sm">
-              La galería de videos estará disponible pronto. ¡Mantente atento!
-            </p>
-          </div>
+          ) : (
+            <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+              <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
+                <span className="material-symbols-outlined text-gray-400 text-3xl">image</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Sin fotos aún</h3>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">Sube la primera foto para comenzar la galería.</p>
+            </div>
+          )
+        ) : (
+          videos.length > 0 ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
+              {videos.map((video, index) => (
+                <div key={video.id || index} className="bg-black rounded-xl overflow-hidden shadow-lg group">
+                  <video
+                    controls
+                    className="w-full aspect-video object-cover"
+                    src={video.url}
+                  >
+                    Tu navegador no soporta el tag de video.
+                  </video>
+                  <div className="p-3 bg-gray-900">
+                    <p className="text-gray-200 text-sm truncate">{video.caption}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+              <div className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-3xl text-purple-600 dark:text-purple-400">
+                  videocam_off
+                </span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                No hay videos aún
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+                La galería de videos está vacía. {canUpload ? '¡Sube el primer video!' : ''}
+              </p>
+            </div>
+          )
         )}
       </div>
     </div>
@@ -130,5 +211,3 @@ const IglesiaMultimedia = ({ iglesiaData }) => {
 };
 
 export default IglesiaMultimedia;
-
-

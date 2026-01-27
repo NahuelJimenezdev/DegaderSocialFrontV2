@@ -159,6 +159,29 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
     setShowComments(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
 
+  /**
+   * Elimina un post
+   */
+  const handleDeletePost = async (postId) => {
+    try {
+      // 1. Llamar al servicio
+      const response = await postService.deletePost(postId);
+
+      // 2. Si es exitoso, actualizar estado local
+      if (response && response.success) {
+        setPosts(prev => prev.filter(p => p._id !== postId));
+        toast.success(response.message || 'Publicación eliminada correctamente');
+        logger.log('✅ Post eliminado:', postId);
+      } else {
+        throw new Error(response.message || 'Error al eliminar');
+      }
+    } catch (error) {
+      logger.error('Error al eliminar post:', error);
+      toast.error(error.message || 'No se pudo eliminar la publicación');
+      throw error; // Re-lanzar para que el componente sepa
+    }
+  };
+
   return {
     showComments,
     commentText,
@@ -167,6 +190,7 @@ export const usePostActions = (user, posts, setPosts, savedPosts, setSavedPosts,
     handleSavePost,
     handleCommentLike,
     handleAddComment,
+    handleDeletePost, // Exportar nueva función
     toggleComments,
     alertConfig,
     setAlertConfig

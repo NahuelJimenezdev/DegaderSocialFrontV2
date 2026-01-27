@@ -7,6 +7,7 @@ import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { useAuth } from '../../../context/AuthContext';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { ConfirmDialog } from '../../../shared/components/ConfirmDialog/ConfirmDialog';
 import { useNavigate } from 'react-router-dom';
 
 // Helper to format time
@@ -33,6 +34,8 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+  const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', variant: 'warning', onConfirm: null });
+  const [messageToDelete, setMessageToDelete] = useState(null);
   const messagesEndRef = useRef(null);
   const socketRef = useRef(null);
 
@@ -112,13 +115,29 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
     }
   };
 
-  const handleDeleteMessage = async (messageId) => {
-    if (!window.confirm('¿Eliminar mensaje?')) return;
+  const executeDeleteMessage = async () => {
+    setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+    if (!messageToDelete) return;
+
     try {
-      await iglesiaService.deleteMessage(iglesiaData._id, messageId);
+      await iglesiaService.deleteMessage(iglesiaData._id, messageToDelete);
     } catch (error) {
       logger.error('Error deleting message:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar mensaje' });
+    } finally {
+      setMessageToDelete(null);
     }
+  };
+
+  const handleDeleteMessage = (messageId) => {
+    setMessageToDelete(messageId);
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Eliminar mensaje',
+      message: '¿Estás seguro de que deseas eliminar este mensaje?',
+      variant: 'danger',
+      onConfirm: executeDeleteMessage
+    });
   };
 
   return (
@@ -274,6 +293,15 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
         onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
         variant={alertConfig.variant}
         message={alertConfig.message}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmConfig.isOpen}
+        onClose={() => setConfirmConfig({ ...confirmConfig, isOpen: false })}
+        onConfirm={confirmConfig.onConfirm}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        variant={confirmConfig.variant}
       />
     </div>
   );

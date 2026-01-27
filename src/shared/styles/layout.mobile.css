@@ -200,7 +200,44 @@
         transform: translateX(100%) !important;
     }
 
+
     .sidebar-right-mobile.open {
         transform: translateX(0) !important;
     }
+}
+
+/* ============================================
+   ANIMACIONES - Post Delete Fade Out
+   ============================================ */
+@keyframes fadeOutDelete {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        max-height: 1000px; /* Suficiente para el post */
+        margin-bottom: 1rem;
+    }
+    
+    50% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+        max-height: 0;
+        margin-bottom: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+    }
+}
+
+.post-fade-out {
+    animation: fadeOutDelete 0.5s ease-out forwards;
+    pointer-events: none; /* Evitar clics durante la animación */
+}
+
+.post-hidden {
+    display: none !important;
 }

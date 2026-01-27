@@ -83,7 +83,7 @@ const IglesiaDetail = () => {
       case 'events':
         return <IglesiaEvents iglesiaData={iglesiaData} />;
       case 'multimedia':
-        return <IglesiaMultimedia iglesiaData={iglesiaData} />;
+        return <IglesiaMultimedia iglesiaData={iglesiaData} refetch={refetch} />;
       case 'settings':
         return <IglesiaSettings iglesiaData={iglesiaData} refetch={refetch} />;
       default:

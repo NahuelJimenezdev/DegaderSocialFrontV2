@@ -100,6 +100,12 @@ const postService = {
   deletePost: async (postId) => {
     const response = await api.delete(`/publicaciones/${postId}`);
     return response.data;
+  },
+
+  // Actualizar publicación
+  updatePost: async (postId, contenido) => {
+    const response = await api.put(`/publicaciones/${postId}`, { contenido });
+    return response.data;
   }
 };
 

@@ -158,7 +158,8 @@ export default function NotificationsDropdown() {
     // Navegación a Publicación (Post)
     // Tipos: like_post, comentario_post, respuesta_comentario, like_comentario, compartir_post
     // Navegación a Publicación (Post)
-    const postTypes = ['like_post', 'comentario_post', 'respuesta_comentario', 'like_comentario', 'compartir_post', 'mencion'];
+    // Navegación a Publicación (Post)
+    const postTypes = ['like_post', 'comentario_post', 'respuesta_comentario', 'like_comentario', 'compartir_post', 'mencion', 'post_editado'];
     if (postTypes.includes(notificacion.tipo)) {
       let postId = null;
 

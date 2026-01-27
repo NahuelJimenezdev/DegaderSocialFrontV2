@@ -3,6 +3,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
 import iglesiaService from '../../../api/iglesiaService';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { ConfirmDialog } from '../../../shared/components/ConfirmDialog/ConfirmDialog';
 
 const IglesiaComentarios = ({ iglesiaData }) => {
     const { user } = useAuth();
@@ -12,6 +13,7 @@ const IglesiaComentarios = ({ iglesiaData }) => {
     const [modoEdicion, setModoEdicion] = useState(false);
     const [nuevoMensaje, setNuevoMensaje] = useState('');
     const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+    const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', variant: 'warning', onConfirm: null });
 
     // Verificar si es miembro
     const esMiembro = iglesiaData?.miembros?.some(m => {
@@ -65,9 +67,9 @@ const IglesiaComentarios = ({ iglesiaData }) => {
         }
     };
 
-    const handleDelete = async () => {
+    const executeDelete = async () => {
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
         if (!comentarioPropio) return;
-        if (!confirm('¿Estás seguro de eliminar tu comentario?')) return;
 
         try {
             await iglesiaService.deleteTestimonio(iglesiaData._id, comentarioPropio._id);
@@ -80,6 +82,20 @@ const IglesiaComentarios = ({ iglesiaData }) => {
             setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar comentario' });
         }
     };
+
+    const handleDelete = () => {
+        if (!comentarioPropio) return;
+
+        setConfirmConfig({
+            isOpen: true,
+            title: 'Eliminar comentario',
+            message: '¿Estás seguro de que deseas eliminar tu comentario? Esta acción no se puede deshacer.',
+            variant: 'danger',
+            onConfirm: executeDelete
+        });
+    };
+
+
 
     const getRolUsuario = (usuario) => {
         if (usuario._id === (iglesiaData.pastorPrincipal._id || iglesiaData.pastorPrincipal)) return 'Pastor Principal';
@@ -215,6 +231,15 @@ const IglesiaComentarios = ({ iglesiaData }) => {
                 onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
                 variant={alertConfig.variant}
                 message={alertConfig.message}
+            />
+
+            <ConfirmDialog
+                isOpen={confirmConfig.isOpen}
+                onClose={() => setConfirmConfig({ ...confirmConfig, isOpen: false })}
+                onConfirm={confirmConfig.onConfirm}
+                title={confirmConfig.title}
+                message={confirmConfig.message}
+                variant={confirmConfig.variant}
             />
         </div>
     );

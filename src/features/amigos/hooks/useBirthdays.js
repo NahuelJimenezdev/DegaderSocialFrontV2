@@ -68,8 +68,8 @@ export const useBirthdays = (monthOffset = 0) => {
     if (monthOffset === 0) {
       const dThisYear = new Date(Date.UTC(today.getFullYear(), u.date.getUTCMonth(), u.date.getUTCDate()))
       const diff = diffDays(dThisYear, today)
-      // Solo mostrar cumpleaños futuros (diff < 0 significa que el cumpleaños ya pasó)
-      return diff < 0
+      // Solo mostrar cumpleaños futuros (diff > 0 significa que el cumpleaños es en el futuro)
+      return diff > 0
     }
 
     // Para otros meses, mostrar todos

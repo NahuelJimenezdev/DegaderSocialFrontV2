@@ -25,6 +25,7 @@ import { userService, friendshipService } from '../../../api';
 import { logger } from '../../utils/logger';
 import { useToast } from '../Toast/ToastProvider';
 import ReportModal from '../Report/ReportModal';
+import EditPostModal from './EditPostModal';
 
 const PostCard = ({
     post,
@@ -45,6 +46,10 @@ const PostCard = ({
     const [isUnfollowed, setIsUnfollowed] = useState(false); // Estado para animación de fade-out
     const [showReportModal, setShowReportModal] = useState(false); // Nuevo estado para ReportModal
 
+    // Estado para edición
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [displayContent, setDisplayContent] = useState(post.contenido);
+
     const navigate = useNavigate();
     const toast = useToast();
 
@@ -53,6 +58,11 @@ const PostCard = ({
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Sincronizar contenido si cambia el prop (ej. recarga padre)
+    useEffect(() => {
+        setDisplayContent(post.contenido);
+    }, [post.contenido]);
 
     // Auto-open comments if deep linked
     useEffect(() => {
@@ -67,18 +77,23 @@ const PostCard = ({
     const isFeedMode = variant === 'feed';
     const context = profileContext || {};
 
-    // Inicializar isSaved desde el backend
+    // Inicializar isSaved comprobando si currentUser (autenticado) ha guardado el post
     useEffect(() => {
-        if (isFeedMode && currentUser?.savedPosts) {
-            setIsSaved(currentUser.savedPosts.includes(post._id));
-        } else if (!isFeedMode && profileContext?.savedPosts) {
-            // En modo perfil, savedPosts puede ser array de IDs o array de objetos
+        // Priorizar siempre currentUser (usuario autenticado) para verificar si está guardado
+        if (currentUser?.savedPosts) {
+            // savedPosts puede ser array de strings (IDs) o poblados
+            const savedIds = currentUser.savedPosts.map(p => typeof p === 'string' ? p : p._id);
+            setIsSaved(savedIds.includes(post._id));
+        } else if (isFeedMode && !currentUser) {
+            setIsSaved(false);
+        } else if (!isFeedMode && profileContext?.savedPosts && currentUser?._id === context.user?._id) {
+            // Fallback para modo perfil PROPIO si currentUser no estuviera actualizado (raro)
             const savedPostIds = Array.isArray(profileContext.savedPosts)
                 ? profileContext.savedPosts.map(p => typeof p === 'string' ? p : p._id)
                 : [];
             setIsSaved(savedPostIds.includes(post._id));
         }
-    }, [post._id, currentUser?.savedPosts, profileContext?.savedPosts, isFeedMode]);
+    }, [post._id, currentUser, profileContext?.savedPosts, isFeedMode, context.user]);
 
     // ✅ SIEMPRE usar el autor del post (post.usuario) para el header
     // No importa si estamos en feed o perfil, el autor del post debe mostrarse
@@ -99,9 +114,8 @@ const PostCard = ({
         return `${firstName} ${lastNameInitial}.`;
     };
 
-    const isLiked = isFeedMode
-        ? post.likes?.includes(currentUser?._id)
-        : post.likes?.includes(context.user?._id);
+    // Verificar like usando siempre currentUser (usuario autenticado)
+    const isLiked = post.likes?.includes(currentUser?._id);
 
     const handleCommentClick = () => {
         if (isFeedMode) {
@@ -126,7 +140,7 @@ const PostCard = ({
     // Handler: Navegar al perfil del usuario
     const handleProfileClick = () => {
         const userId = user?._id;
-        const currentUserId = isFeedMode ? currentUser?._id : context.user?._id;
+        const currentUserId = currentUser?._id; // Usar currentUser para comparar
 
         if (!userId) return;
 
@@ -162,8 +176,9 @@ const PostCard = ({
                 const message = isSaved ? 'Publicación eliminada de guardados' : 'Publicación guardada exitosamente';
                 toast.success(message);
 
-                // Si estamos en modo perfil, también actualizar el contexto
-                if (!isFeedMode && context.handleSavePost) {
+                // Si estamos en modo perfil y es MI perfil, actualizar contexto
+                // Si visito a otro, NO debo tocar el contexto del otro
+                if (!isFeedMode && context.user?._id === currentUser?._id && context.handleSavePost) {
                     context.handleSavePost(post._id);
                 }
             }
@@ -175,6 +190,33 @@ const PostCard = ({
 
     // Alias para PostOptionsMenu
     const handleSavePost = handleSaveClick;
+
+    // Handler: Guardar edición
+    const handleSaveEdit = async (newContent) => {
+        try {
+            // Importar dinámicamente el servicio
+            const { default: postService } = await import('../../../features/feed/services/postService');
+
+            const response = await postService.updatePost(post._id, newContent);
+
+            if (response && response.success) {
+                // Actualizar UI inmediatamente
+                setDisplayContent(newContent);
+                toast.success('Publicación actualizada');
+
+                // Sincronizar con contexto si es necesario (opcional)
+                if (!isFeedMode && context.handleProfileUpdate) {
+                    // Futura implementación si se requiere refetch completo
+                }
+            } else {
+                throw new Error(response?.message || 'Error al actualizar');
+            }
+        } catch (error) {
+            console.error('Error updating post:', error);
+            toast.error('No se pudo actualizar la publicación');
+            throw error;
+        }
+    };
 
     const handleAddCommentWrapper = async (postId, content, parentId, image) => {
         console.log('🚀 [PostCard] handleAddCommentWrapper triggered', { postId, parentId, hasImage: !!image });
@@ -313,7 +355,7 @@ const PostCard = ({
                     comments={post.comentarios}
                     postId={post._id}
                     onAddComment={handleAddCommentWrapper}
-                    currentUser={isFeedMode ? currentUser : context.user}
+                    currentUser={currentUser} // SIEMPRE usar currentUser (autenticado)
                     isMobileFormat={true} // Prop flag for CommentSection
                     highlightCommentId={highlightCommentId}
                 />
@@ -394,6 +436,7 @@ const PostCard = ({
                     </button>
 
                     {/* Options Menu */}
+                    {/* Options Menu */}
                     <PostOptionsMenu
                         post={post}
                         currentUser={currentUser}
@@ -404,14 +447,61 @@ const PostCard = ({
                         onReport={handleReport}
                         isSaved={isSaved}
                         showSaveAction={isFeedMode} // Ocultar opción de guardar en modo 'Guardados'
+                        // Handlers para post propio
+                        onDelete={() => {
+                            setAlertConfig({
+                                isOpen: true,
+                                variant: 'danger', // O 'warning', pero 'danger' suele sugerir acción destructiva
+                                title: '¿Eliminar publicación?',
+                                message: '¿Estás seguro de que quieres eliminar esta publicación? Esta acción no se puede deshacer.',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancelar',
+                                buttonText: 'Eliminar',
+                                onConfirm: async () => {
+                                    setAlertConfig({ isOpen: false }); // Cerrar el modal
+
+                                    try {
+                                        // 1. Activar animación de fade-out
+                                        setIsUnfollowed(true);
+
+                                        // 2. Esperar a que termine la animación
+                                        setTimeout(async () => {
+                                            try {
+                                                if (context.handleDeletePost) {
+                                                    await context.handleDeletePost(post._id);
+                                                } else {
+                                                    const { default: postService } = await import('../../../features/feed/services/postService');
+                                                    const response = await postService.deletePost(post._id);
+                                                    if (response.success) {
+                                                        toast.success('Publicación eliminada');
+                                                    }
+                                                }
+                                            } catch (error) {
+                                                console.error('Error deleting post:', error);
+                                                toast.error('No se pudo eliminar la publicación');
+                                                setIsUnfollowed(false);
+                                            }
+                                        }, 500);
+
+                                    } catch (error) {
+                                        console.error('Error in delete flow:', error);
+                                        toast.error('Error al iniciar eliminación');
+                                    }
+                                }
+                            });
+                        }}
+                        onEdit={() => {
+                            logger.log('✏️ Edit post requested:', post._id);
+                            setShowEditModal(true);
+                        }}
                     />
                 </div>
 
                 {/* Content - Improved Spacing */}
-                {post.contenido && (
+                {displayContent && (
                     <div className="px-4 pb-3 pt-1">
                         <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-[1.6]">
-                            {post.contenido.split(/(@[a-zA-Z0-9._-]+)/g).map((part, index) => {
+                            {displayContent.split(/(@[a-zA-Z0-9._-]+)/g).map((part, index) => {
                                 if (part.match(/^@[a-zA-Z0-9._-]+$/)) {
                                     return (
                                         <span key={index} className="text-indigo-600 dark:text-indigo-400 font-semibold cursor-pointer hover:underline">
@@ -549,6 +639,14 @@ const PostCard = ({
                 onReportSuccess={() => {
                     toast.success('Reporte enviado correctamente');
                 }}
+            />
+
+            {/* Edit Post Modal */}
+            <EditPostModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                post={{ ...post, contenido: displayContent }} // Pass current display content to avoid revert
+                onSave={handleSaveEdit}
             />
         </>
     );

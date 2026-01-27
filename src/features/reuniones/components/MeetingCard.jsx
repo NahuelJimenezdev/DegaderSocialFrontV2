@@ -65,12 +65,21 @@ export function MeetingCard({ meeting, onCancel, currentUserId }) {
   };
 
   const renderType = (t) => {
-    const text =
-      t === "administrative"
-        ? "Administrativa"
-        : t === "training"
-          ? "Capacitación"
-          : "Comunitaria";
+    const typeLabels = {
+      'oracion': 'Oración',
+      'estudio_biblico': 'Estudio de la Palabra',
+      'culto': 'Culto General',
+      'escuela_dominical': 'Escuela Dominical',
+      'capacitacion': 'Capacitación',
+      'grupal': 'Grupal',
+      'comercial': 'Comercial',
+      'administrative': 'Administrativa',
+      'training': 'Capacitación',
+      'community': 'Comunitaria',
+      'personal': 'Personal'
+    };
+
+    const text = typeLabels[t] || 'Reunión';
 
     return (
       <span

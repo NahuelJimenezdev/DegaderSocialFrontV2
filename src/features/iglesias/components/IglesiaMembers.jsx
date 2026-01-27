@@ -114,9 +114,11 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
             <div className="flex items-center gap-4 flex-1 md:justify-end">
               {/* Search Bar */}
               <div className="relative flex-1 max-w-md">
-                <span className="material-symbols-outlined text-gray-400 absolute left-3 top-1/2 -translate-y-1/2">
-                  search
-                </span>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="material-symbols-outlined text-gray-400">
+                    search
+                  </span>
+                </div>
                 <input
                   type="text"
                   value={searchTerm}

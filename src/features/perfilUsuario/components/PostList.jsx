@@ -1,12 +1,14 @@
 import React from 'react';
 import PostCard from '../../../shared/components/Post/PostCard';
 import { useProfileContext } from '../context/ProfileContext';
+import { useAuth } from '../../../context/AuthContext';
 
 /**
  * Componente para listar las publicaciones del usuario
  */
 const PostList = ({ activeTab }) => {
   const context = useProfileContext();
+  const { user: authUser } = useAuth(); // Obtener usuario autenticado
   const { posts, savedPosts } = context;
 
   // Filtrar posts según la pestaña activa
@@ -53,6 +55,7 @@ const PostList = ({ activeTab }) => {
           key={post._id}
           variant="profile"
           post={post}
+          currentUser={authUser} // Usar el usuario autenticado real
           profileContext={context}
         />
       ))}
