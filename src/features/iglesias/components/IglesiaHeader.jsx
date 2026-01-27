@@ -20,9 +20,14 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
     toast.success('Enlace copiado al portapapeles');
   };
 
+  /* Filtrar eventos activos o próximos */
+  const activeEventsCount = iglesia.reuniones?.filter(r =>
+    ['upcoming', 'in-progress'].includes(r.status)
+  ).length || 0;
+
   const stats = [
     { icon: Users, label: 'Miembros', value: iglesia.miembros?.length || 0 },
-    { icon: Calendar, label: 'Eventos', value: iglesia.reuniones?.length || 0 },
+    { icon: Calendar, label: 'Eventos', value: activeEventsCount },
     { icon: ImageIcon, label: 'Multimedia', value: iglesia.multimedia?.length || 0 },
   ];
 
@@ -31,17 +36,17 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
       {/* Cover Photo */}
       <div className="h-48 md:h-64 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
         {iglesia.portada ? (
-          <img 
-            src={getBannerUrl(iglesia.portada)} 
-            alt="Cover" 
+          <img
+            src={getBannerUrl(iglesia.portada)}
+            alt="Cover"
             className="w-full h-full object-cover opacity-90"
           />
         ) : (
           <div className="absolute inset-0 opacity-20">
-             <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
               <defs>
                 <pattern id="grid-header" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" strokeWidth="1"/>
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" strokeWidth="1" />
                 </pattern>
               </defs>
               <rect width="100" height="100" fill="url(#grid-header)" />
@@ -51,7 +56,7 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
 
         {/* Top Actions - Only Share button */}
         <div className="absolute top-4 right-4 flex gap-2">
-          <button 
+          <button
             onClick={handleShare}
             className="p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-sm transition-colors"
             title="Compartir"
@@ -95,7 +100,7 @@ const IglesiaHeader = ({ iglesia, user, onJoin }) => {
 
           {/* Stats & Actions */}
           <div className="flex flex-col items-end gap-4 w-full md:w-auto">
-             <div className="flex gap-6">
+            <div className="flex gap-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <div className="flex items-center justify-center gap-1 text-gray-900 dark:text-white font-bold text-lg">
