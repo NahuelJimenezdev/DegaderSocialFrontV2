@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.7.0...v1.8.0) (2026-01-27)
+
+
+### Features
+
+* Implementar funcionalidad Abandonar Iglesia con endpoint leave, notificación al pastor, vista personalizada para miembros, pestaña Cuenta con Zona de Peligro, soporte para Google Maps, correcciones de navegación y fixes de UI/UX ([4875120](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4875120c450bb74b8a548c32f7a71597c6c9626c))
+
 ## [1.7.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.6.1...v1.7.0) (2026-01-27)
 
 
