@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.6.1...v1.7.0) (2026-01-27)
+
+
+### Features
+
+* se corrige visualización de grillas de reuniones y eventos ([b273343](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b273343c017d5a739bf8b213cfbb7737dd426705))
+
 ### [1.6.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.6.0...v1.6.1) (2026-01-27)
 
 
