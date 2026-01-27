@@ -9,6 +9,33 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = React.useRef(null);
 
+  // Modal State
+  const [selectedMedia, setSelectedMedia] = useState(null);
+
+  const openMedia = (media) => {
+    setSelectedMedia(media);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeMedia = () => {
+    setSelectedMedia(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  const navigateMedia = (direction) => {
+    const currentList = activeTab === 'photos' ? photos : videos;
+    const currentIndex = currentList.findIndex(m => m.id === selectedMedia.id);
+
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % currentList.length;
+    } else {
+      newIndex = (currentIndex - 1 + currentList.length) % currentList.length;
+    }
+
+    setSelectedMedia(currentList[newIndex]);
+  };
+
   // Verificar Permisos
   const isPastor = iglesiaData?.pastorPrincipal?._id === user?._id || iglesiaData?.pastorPrincipal === user?._id;
   const allowedRoles = ['lider', 'pastor_asociado', 'adminIglesia', 'coordinador', 'director', 'anciano', 'diacono'];
@@ -121,8 +148,8 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
           <button
             onClick={() => setActiveTab('photos')}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'photos'
-                ? 'text-purple-600 dark:text-purple-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
           >
             Fotos
@@ -133,8 +160,8 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
           <button
             onClick={() => setActiveTab('videos')}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeTab === 'videos'
-                ? 'text-purple-600 dark:text-purple-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
           >
             Videos
@@ -147,9 +174,13 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
         {/* Content */}
         {activeTab === 'photos' ? (
           photos.length > 0 ? (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
+            <div className="multimedia-gallery-grid">
               {photos.map((photo, index) => (
-                <div key={photo.id || index} className="relative group rounded-xl overflow-hidden cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800">
+                <div
+                  key={photo.id || index}
+                  onClick={() => openMedia(photo)}
+                  className="relative group rounded-xl overflow-hidden cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800"
+                >
                   <img
                     src={photo.url}
                     alt={photo.caption || 'Foto de galería'}
@@ -173,17 +204,27 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
           )
         ) : (
           videos.length > 0 ? (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
+            <div className="multimedia-gallery-grid">
               {videos.map((video, index) => (
-                <div key={video.id || index} className="bg-black rounded-xl overflow-hidden shadow-lg group">
+                <div
+                  key={video.id || index}
+                  onClick={() => openMedia(video)}
+                  className="relative group rounded-xl overflow-hidden shadow-lg cursor-pointer bg-black aspect-square"
+                >
                   <video
-                    controls
-                    className="w-full aspect-video object-cover"
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
                     src={video.url}
+                    preload="metadata"
                   >
                     Tu navegador no soporta el tag de video.
                   </video>
-                  <div className="p-3 bg-gray-900">
+                  {/* Play Icon Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined text-white text-3xl">play_arrow</span>
+                    </div>
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
                     <p className="text-gray-200 text-sm truncate">{video.caption}</p>
                   </div>
                 </div>
@@ -206,6 +247,72 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
           )
         )}
       </div>
+
+      {/* Media Modal */}
+      {selectedMedia && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={closeMedia}
+        >
+          <button
+            onClick={closeMedia}
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[101]"
+          >
+            <span className="material-symbols-outlined text-2xl">close</span>
+          </button>
+
+          {/* Navigation Buttons */}
+          {(activeTab === 'photos' ? photos.length : videos.length) > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); navigateMedia('prev'); }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[101]"
+              >
+                <span className="material-symbols-outlined text-3xl">chevron_left</span>
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); navigateMedia('next'); }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[101]"
+              >
+                <span className="material-symbols-outlined text-3xl">chevron_right</span>
+              </button>
+            </>
+          )}
+
+          <div
+            className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {activeTab === 'photos' ? (
+              <img
+                src={selectedMedia.url}
+                alt={selectedMedia.caption || 'Imagen ampliada'}
+                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+              />
+            ) : (
+              <video
+                controls
+                autoPlay
+                className="max-w-full max-h-[80vh] rounded-lg shadow-2xl"
+                src={selectedMedia.url}
+              >
+                Tu navegador no soporta el tag de video.
+              </video>
+            )}
+
+            {selectedMedia.caption && (
+              <div className="mt-4 text-center">
+                <p className="text-white/90 text-lg font-medium">{selectedMedia.caption}</p>
+                {selectedMedia.date && (
+                  <p className="text-white/60 text-sm mt-1">
+                    {new Date(selectedMedia.date).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -241,3 +241,44 @@
 .post-hidden {
     display: none !important;
 }
+
+/* ============================================
+   IGLESIA - MULTIMEDIA GALLERY GRID
+   ============================================ */
+.multimedia-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Desktop Large >= 1440px */
+    gap: 1.5rem; /* 24px default gap */
+    width: 100%;
+}
+
+/* Desktop Normal (1200px – 1439px) -> 4 columnas */
+@media (max-width: 1439px) {
+    .multimedia-gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Tablet / Notebook Chica (900px – 1199px) -> 3 columnas */
+@media (max-width: 1199px) {
+    .multimedia-gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+}
+
+/* Mobile Grande (480px – 899px) -> 2 columnas */
+@media (max-width: 899px) {
+    .multimedia-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+/* Mobile Chico (<= 399px) -> 1 columna */
+@media (max-width: 399px) {
+    .multimedia-gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
