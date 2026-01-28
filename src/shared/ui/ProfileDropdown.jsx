@@ -44,8 +44,8 @@ const ProfileDropdown = () => {
     setIsOpen(false);
   };
 
-  const handleMenuClick = (path) => {
-    navigate(path);
+  const handleMenuClick = (path, state = null) => {
+    navigate(path, { state });
     setIsOpen(false);
   };
 
@@ -57,8 +57,9 @@ const ProfileDropdown = () => {
     { icon: MessageCircle, label: 'Mensajes', path: '/mensajes' },
     { icon: Video, label: 'Mis Reuniones', path: '/Mis_reuniones' },
     { icon: () => <span className="material-symbols-outlined">groups</span>, label: 'Grupos', path: '/Mis_grupos' },
-    { icon: Building2, label: 'Institución', path: '/Mi_iglesia' },
     { icon: Folder, label: 'Mis Carpetas', path: '/Mis_carpetas' },
+    { icon: Building2, label: 'Iglesias', path: '/Mi_iglesia' },
+    { icon: () => <span className="material-symbols-outlined">volunteer_activism</span>, label: 'Fundación', path: '/fundacion' },
     { icon: User, label: 'Perfil', path: '/Mi_perfil' }
   ];
   // Agregar links de administración para móvil
@@ -163,7 +164,7 @@ const ProfileDropdown = () => {
                 return (
                   <button
                     key={index}
-                    onClick={() => handleMenuClick(item.path)}
+                    onClick={() => handleMenuClick(item.path, item.state)}
                     className="mobile-sidebar-nav-item dark:text-white dark:hover:bg-gray-700"
                   >
                     <Icon size={18} />

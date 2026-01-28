@@ -1,11 +1,11 @@
 import { Link, useLocation } from 'react-router-dom'
 import styles from './styles/NavItem.module.css'
 
-const NavItem = ({ to, icon: Icon, label, badge }) => {
+const NavItem = ({ to, icon: Icon, label, badge, state }) => {
   const { pathname } = useLocation();
   const active = pathname === to;
   return (
-    <Link to={to} className={`${styles.navLink} ${active ? styles.active : ''}`}>
+    <Link to={to} state={state} className={`${styles.navLink} ${active ? styles.active : ''}`}>
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <Icon size={18} />
         {badge > 0 && (

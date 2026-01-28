@@ -15,7 +15,6 @@ const Sidebar = () => {
     <>
       <aside className="sidebar">
         <div className="sidebar-content">
-          {/* Menú principal */}
           <div className="sidebar-items">
             <NavItem to="/" icon={Home} label="Inicio" />
           </div>
@@ -35,14 +34,20 @@ const Sidebar = () => {
             <NavItem to="/Mis_grupos" icon={() => <span className="material-symbols-outlined">groups</span>} label="Grupos" />
           </div>
           <div className="sidebar-items">
-            <NavItem to="/Mi_iglesia" icon={Building2} label="Institución" />
-          </div>
-          <div className="sidebar-items">
             <NavItem to="/Mis_carpetas" icon={Folder} label="Mis Carpetas" />
           </div>
+
+          <div className="sidebar-items">
+            <NavItem to="/Mi_iglesia" icon={Building2} label="Iglesias" />
+          </div>
+          <div className="sidebar-items">
+            <NavItem to="/fundacion" icon={() => <span className="material-symbols-outlined">volunteer_activism</span>} label="Fundación" />
+          </div>
+
           <div className="sidebar-items">
             <NavItem to="/Mi_perfil" icon={User} label="Perfil" />
           </div>
+
           {/* Paneles de Administración */}
           {canModerate && (
             <div className="sidebar-items">
@@ -56,13 +61,11 @@ const Sidebar = () => {
             </div>
           )}
 
+          {/* Separador arriba de Configuración */}
+          <div className="border-t border-gray-200 dark:border-gray-700 mx-4 my-4"></div>
 
-          {/* Toggle tema oscuro */}
-          <div className="sidebar-footer">
-            <button className="theme-toggle">
-              <NavItem to="/settings" icon={Settings} label="Configuración" />
-              {/* <span>Dark</span> */}
-            </button>
+          <div className="sidebar-items">
+            <NavItem to="/configuracion" icon={Settings} label="Configuración" />
           </div>
         </div>
       </aside>
@@ -72,4 +75,3 @@ const Sidebar = () => {
 
 
 export default Sidebar;
-

@@ -21,15 +21,15 @@ const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItem
       {/* Header del Sidebar */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-2 mb-4">
-          {!isMobile && (
-            <button
-              onClick={() => navigate('/')}
-              className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-              title="Volver a Iglesias"
-            >
-              <span className="material-symbols-outlined text-2xl">arrow_back</span>
-            </button>
-          )}
+          {/* Botón para volver al inicio */}
+          <button
+            onClick={() => navigate('/')}
+            className="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            title="Volver al Inicio"
+          >
+            <span className="material-symbols-outlined text-2xl">arrow_back</span>
+          </button>
+
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 flex-shrink-0">
               {iglesiaData?.logo ? (

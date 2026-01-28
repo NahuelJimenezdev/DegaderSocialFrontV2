@@ -7,11 +7,11 @@ import IglesiaInfo from '../components/IglesiaInfo';
 import IglesiaMembers from '../components/IglesiaMembers';
 import IglesiaChat from '../components/IglesiaChat';
 import IglesiaEvents from '../components/IglesiaEvents';
-
 import IglesiaMultimedia from '../components/IglesiaMultimedia';
 import IglesiaHeader from '../components/IglesiaHeader';
 import IglesiaSettings from '../components/IglesiaSettings';
 import IglesiaComentarios from '../components/IglesiaComentarios';
+import ChurchDetailSkeleton from '../components/ChurchDetailSkeleton';
 
 const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
@@ -114,11 +114,7 @@ const IglesiaDetail = ({ churchId }) => {
   }, [activeSection, id, navigate]);
 
   if (loading || !iglesiaData) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="text-xl text-gray-500">Cargando iglesia...</p>
-      </div>
-    );
+    return <ChurchDetailSkeleton />;
   }
 
   return (
