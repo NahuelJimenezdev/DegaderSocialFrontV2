@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.8.2...v1.9.0) (2026-01-28)
+
+
+### Features
+
+* **iglesia:** visualización historial salidas y correcciones navegación ([60978a2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/60978a20e1596b28108e402a4086b3427c130b9a))
+
 ### [1.8.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.8.1...v1.8.2) (2026-01-28)
 
 
