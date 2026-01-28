@@ -39,6 +39,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
     type: availableTypes[0].value,
     meetLink: 'https://meet.google.com/',
     attendees: [],
+    targetMinistry: 'todos', // Default para iglesias
   });
 
   // Resetear el tipo cuando cambia el contexto o se abre el modal
@@ -291,7 +292,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
                 onChange={handleChange}
                 className="w-full border rounded-lg p-3 bg-blue-50 border-blue-200 text-blue-800 font-medium"
               >
-                <option value="todos">Todos los Miembros</option>
+                <option value="todos">Todos</option>
                 <optgroup label="Ministerios">
                   {MINISTERIOS.map(m => (
                     <option key={m} value={m}>{formatMinistryName(m)}</option>

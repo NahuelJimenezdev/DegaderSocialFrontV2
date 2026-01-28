@@ -1,11 +1,10 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MoreVertical, Mail, User } from 'lucide-react';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
-const MemberCard = ({ member, isPastor, isCurrentUser }) => {
+const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
   const navigate = useNavigate();
-  const { id: iglesiaId } = useParams();
   const fullName = `${member.nombres?.primero || ''} ${member.apellidos?.primero || ''}`.trim() || 'Usuario';
 
   const handleVerMas = () => {

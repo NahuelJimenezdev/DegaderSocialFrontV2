@@ -243,6 +243,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
               <MemberCard
                 key={miembro._id}
                 member={miembro}
+                iglesiaId={iglesiaData._id}
                 isPastor={miembro._id?.toString() === pastorId?.toString()}
                 isCurrentUser={miembro._id?.toString() === user?._id?.toString()}
               />

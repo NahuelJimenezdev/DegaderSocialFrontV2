@@ -25,7 +25,9 @@ const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser }) =
 
     // Verificar permisos
     const tienePermisos = () => {
-        if (!currentUser.eclesiastico?.iglesia) return false;
+        if (!currentUser.eclesiastico?.iglesia) {
+            return false;
+        }
 
         const esPastor = currentUser.eclesiastico.iglesia.toString() === iglesiaId &&
             currentUser.eclesiastico?.rolPrincipal === 'pastor_principal';
@@ -35,7 +37,9 @@ const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser }) =
         return esPastor || esAdmin;
     };
 
-    if (!tienePermisos()) {
+    const permisos = tienePermisos();
+
+    if (!permisos) {
         return null; // No renderizar nada si no tiene permisos
     }
 

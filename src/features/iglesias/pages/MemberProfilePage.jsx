@@ -8,7 +8,8 @@ import { ArrowLeft, Calendar, Cake, MapPin, Heart, Clock, Mail, Phone } from 'lu
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import SeccionAdministrativaMinisterios from '../components/SeccionAdministrativaMinisterios';
-import '../../../shared/styles/layout.mobile.css';
+import IglesiaSidebar from '../components/IglesiaSidebar';
+import { useIglesiaData } from '../hooks/useIglesiaData';
 
 const MemberProfilePage = () => {
     const { iglesiaId, userId } = useParams();
@@ -17,6 +18,54 @@ const MemberProfilePage = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Sidebar States
+    const [isMobile, setIsMobile] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { iglesiaData } = useIglesiaData(iglesiaId);
+
+    // Detect mobile
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    const handleBackToChurch = (section = 'members') => {
+        navigate(`/Mi_iglesia/${iglesiaId}`, { state: { section } });
+    };
+
+    // Calculate permissions for sidebar
+    const isPastor = iglesiaData?.pastorPrincipal?._id === currentUser?._id ||
+        iglesiaData?.pastorPrincipal === currentUser?._id;
+
+    // Verificar si el usuario es miembro (lógica copiada de IglesiaDetail)
+    const isMember = iglesiaData?.miembros?.some(m => {
+        const memberId = m._id || m;
+        return memberId.toString() === currentUser?._id?.toString();
+    });
+
+    const hasAccess = isPastor || isMember;
+
+    // Menú completo para miembros y pastor
+    const allMenuItems = [
+        { id: 'info', icon: 'info', label: 'Información' },
+        { id: 'comentarios', icon: 'forum', label: 'Comentarios' },
+        { id: 'members', icon: 'group', label: 'Miembros' },
+        { id: 'chat', icon: 'chat', label: 'Chat' },
+        { id: 'events', icon: 'event', label: 'Reuniones' },
+        { id: 'multimedia', icon: 'collections', label: 'Multimedia' },
+        { id: 'settings', icon: 'settings', label: 'Configuración' },
+    ];
+
+    // Menú limitado para visitantes
+    const visitorMenuItems = [
+        { id: 'info', icon: 'info', label: 'Información' },
+        { id: 'comentarios', icon: 'forum', label: 'Comentarios' },
+    ];
+
+    const menuItems = hasAccess ? allMenuItems : visitorMenuItems;
 
     useEffect(() => {
         loadUserInfo();
@@ -102,119 +151,154 @@ const MemberProfilePage = () => {
     const fullName = `${userInfo.nombres?.primero || ''} ${userInfo.apellidos?.primero || ''}`.trim() || 'Usuario';
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            {/* Header */}
-            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <div className="max-w-4xl mx-auto px-4 py-4">
-                    <button
-                        onClick={() => navigate(`/Mi_iglesia/${iglesiaId}`)}
-                        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                    >
-                        <ArrowLeft size={20} />
-                        <span className="font-medium">Volver a la iglesia</span>
-                    </button>
-                </div>
+        <>
+            {/* Mobile Toggle */}
+            {isMobile && (
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="fixed top-20 left-4 z-[60] p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                >
+                    <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
+                        {sidebarOpen ? 'close' : 'menu'}
+                    </span>
+                </button>
+            )}
+
+            {/* Backdrop para móvil */}
+            {isMobile && sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-[140]"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
+            {/* Sidebar de Iglesia */}
+            <div
+                className={`
+          fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 
+          transition-transform duration-300 ease-in-out lg:transition-none
+          ${isMobile
+                        ? `right-0 z-[150] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
+                        : 'left-0 z-40 translate-x-0'}
+        `}
+            >
+                <IglesiaSidebar
+                    iglesiaData={iglesiaData}
+                    activeSection="members"
+                    setActiveSection={(section) => {
+                        handleBackToChurch(section);
+                        setSidebarOpen(false);
+                    }}
+                    menuItems={menuItems}
+                    isMobile={isMobile}
+                />
             </div>
 
-            {/* Content */}
-            <div className="mt-mobile-10 mb-mobile-67">
-                <div className="max-w-4xl mx-auto px-4 py-8">
-                    {/* User Header */}
-                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
-                        <div className="flex items-center gap-4">
-                            <img
-                                src={avatar}
-                                alt={fullName}
-                                className="w-20 h-20 rounded-full object-cover ring-4 ring-indigo-500/20"
-                            />
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                    {fullName}
-                                </h1>
-                                <p className="text-gray-500 dark:text-gray-400">
-                                    {userInfo.eclesiastico?.rolPrincipal === 'pastor_principal' ? 'Pastor Principal' :
-                                        userInfo.eclesiastico?.rolPrincipal === 'adminIglesia' ? 'Administrador de Iglesia' :
-                                            'Miembro de la iglesia'}
-                                </p>
+            {/* Main Content con padding igual al sidebar width en desktop */}
+            <div className={`w-full h-full lg:pl-[280px]`}>
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                    {/* Content - Sin Header de Volver */}
+                    <div className="mt-mobile-10 mb-mobile-67 pt-8">
+                        <div className="max-w-4xl mx-auto px-4">
+                            {/* User Header */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
+                                <div className="flex items-center gap-4">
+                                    <img
+                                        src={avatar}
+                                        alt={fullName}
+                                        className="w-20 h-20 rounded-full object-cover ring-4 ring-indigo-500/20"
+                                    />
+                                    <div>
+                                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                            {fullName}
+                                        </h1>
+                                        <p className="text-gray-500 dark:text-gray-400">
+                                            {userInfo.eclesiastico?.rolPrincipal === 'pastor_principal' ? 'Pastor Principal' :
+                                                userInfo.eclesiastico?.rolPrincipal === 'adminIglesia' ? 'Administrador de Iglesia' :
+                                                    'Miembro de la iglesia'}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* Info Cards Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                {/* Información de Cuenta */}
+                                <InfoCard
+                                    icon={Calendar}
+                                    title="Información de Cuenta"
+                                    iconColor="text-blue-500"
+                                    bgColor="bg-blue-50 dark:bg-blue-900/20"
+                                >
+                                    <InfoItem
+                                        icon={Clock}
+                                        label="Miembro desde"
+                                        value={formatDate(userInfo.fechaRegistro || userInfo.createdAt)}
+                                        subtitle={`Hace ${calculateTimeSince(userInfo.fechaRegistro || userInfo.createdAt)}`}
+                                    />
+                                    {userInfo.eclesiastico?.fechaBautismo && (
+                                        <InfoItem
+                                            icon={Calendar}
+                                            label="Fecha de bautismo"
+                                            value={formatDate(userInfo.eclesiastico.fechaBautismo)}
+                                            subtitle={`Hace ${calculateTimeSince(userInfo.eclesiastico.fechaBautismo)}`}
+                                        />
+                                    )}
+                                    {userInfo.fechaAmistad && (
+                                        <InfoItem
+                                            icon={Heart}
+                                            label="Amigos desde"
+                                            value={formatDate(userInfo.fechaAmistad)}
+                                            subtitle={`Hace ${calculateTimeSince(userInfo.fechaAmistad)}`}
+                                        />
+                                    )}
+                                </InfoCard>
+
+                                {/* Información Personal */}
+                                <InfoCard
+                                    icon={Cake}
+                                    title="Información Personal"
+                                    iconColor="text-purple-500"
+                                    bgColor="bg-purple-50 dark:bg-purple-900/20"
+                                >
+                                    <InfoItem
+                                        icon={Cake}
+                                        label="Cumpleaños"
+                                        value={userInfo.personal?.fechaNacimiento ? formatDate(userInfo.personal.fechaNacimiento) : null}
+                                        notConfirmed={!userInfo.personal?.fechaNacimiento}
+                                    />
+                                    <InfoItem
+                                        icon={MapPin}
+                                        label="Ubicación"
+                                        value={(userInfo.personal?.ubicacion?.ciudad || userInfo.personal?.ubicacion?.pais)
+                                            ? [userInfo.personal.ubicacion.ciudad, userInfo.personal.ubicacion.pais].filter(Boolean).join(', ')
+                                            : null}
+                                        notConfirmed={!userInfo.personal?.ubicacion?.ciudad && !userInfo.personal?.ubicacion?.pais}
+                                    />
+                                    {userInfo.personal?.celular && (
+                                        <InfoItem
+                                            icon={Phone}
+                                            label="Celular"
+                                            value={userInfo.personal.celular}
+                                        />
+                                    )}
+                                </InfoCard>
+                            </div>
+
+                            {/* Sección Administrativa de Ministerios */}
+                            {currentUser && iglesiaId && (
+                                <SeccionAdministrativaMinisterios
+                                    usuario={userInfo}
+                                    iglesiaId={iglesiaId}
+                                    currentUser={currentUser}
+                                    isPastor={isPastor}
+                                />
+                            )}
                         </div>
                     </div>
-
-                    {/* Info Cards Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        {/* Información de Cuenta */}
-                        <InfoCard
-                            icon={Calendar}
-                            title="Información de Cuenta"
-                            iconColor="text-blue-500"
-                            bgColor="bg-blue-50 dark:bg-blue-900/20"
-                        >
-                            <InfoItem
-                                icon={Clock}
-                                label="Miembro desde"
-                                value={formatDate(userInfo.fechaRegistro || userInfo.createdAt)}
-                                subtitle={`Hace ${calculateTimeSince(userInfo.fechaRegistro || userInfo.createdAt)}`}
-                            />
-                            {userInfo.eclesiastico?.fechaBautismo && (
-                                <InfoItem
-                                    icon={Calendar}
-                                    label="Fecha de bautismo"
-                                    value={formatDate(userInfo.eclesiastico.fechaBautismo)}
-                                    subtitle={`Hace ${calculateTimeSince(userInfo.eclesiastico.fechaBautismo)}`}
-                                />
-                            )}
-                            {userInfo.fechaAmistad && (
-                                <InfoItem
-                                    icon={Heart}
-                                    label="Amigos desde"
-                                    value={formatDate(userInfo.fechaAmistad)}
-                                    subtitle={`Hace ${calculateTimeSince(userInfo.fechaAmistad)}`}
-                                />
-                            )}
-                        </InfoCard>
-
-                        {/* Información Personal */}
-                        <InfoCard
-                            icon={Cake}
-                            title="Información Personal"
-                            iconColor="text-purple-500"
-                            bgColor="bg-purple-50 dark:bg-purple-900/20"
-                        >
-                            <InfoItem
-                                icon={Cake}
-                                label="Cumpleaños"
-                                value={userInfo.personal?.fechaNacimiento ? formatDate(userInfo.personal.fechaNacimiento) : null}
-                                notConfirmed={!userInfo.personal?.fechaNacimiento}
-                            />
-                            <InfoItem
-                                icon={MapPin}
-                                label="Ubicación"
-                                value={(userInfo.personal?.ubicacion?.ciudad || userInfo.personal?.ubicacion?.pais)
-                                    ? [userInfo.personal.ubicacion.ciudad, userInfo.personal.ubicacion.pais].filter(Boolean).join(', ')
-                                    : null}
-                                notConfirmed={!userInfo.personal?.ubicacion?.ciudad && !userInfo.personal?.ubicacion?.pais}
-                            />
-                            {userInfo.personal?.celular && (
-                                <InfoItem
-                                    icon={Phone}
-                                    label="Celular"
-                                    value={userInfo.personal.celular}
-                                />
-                            )}
-                        </InfoCard>
-                    </div>
-
-                    {/* Sección Administrativa de Ministerios */}
-                    {currentUser && iglesiaId && (
-                        <SeccionAdministrativaMinisterios
-                            usuario={userInfo}
-                            iglesiaId={iglesiaId}
-                            currentUser={currentUser}
-                        />
-                    )}
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
