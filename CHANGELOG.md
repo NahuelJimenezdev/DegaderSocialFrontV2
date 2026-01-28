@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.8.1...v1.8.2) (2026-01-28)
+
+
+### Bug Fixes
+
+* **frontend:** corrección de notificaciones 'todos', visualización sidebar y permisos; Se renombra la opción 'Todos los Miembros' a 'Todos' en CreateMeetingModal.; Se corrige la navegación en MemberCards pasando explícitamente el iglesiaId.; Se solucionan permisos y visualización del sidebar en MemberProfilePage.; Se limpian logs y warnings en SeccionAdministrativaMinisterios. ([7036011](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/70360116e287020048eaf8c2f548a96612c75d4b))
+
 ### [1.8.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.8.0...v1.8.1) (2026-01-27)
 
 
