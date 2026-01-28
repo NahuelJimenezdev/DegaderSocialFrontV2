@@ -24,7 +24,11 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
     } catch (error) {
       console.error('Error leaving iglesia:', error);
       // Aquí podrías mostrar un toast de error si tuvieras acceso a useToast
-      alert('Error al salir de la iglesia');
+      setAlertConfig({
+        isOpen: true,
+        variant: 'error',
+        message: 'Ocurrió un error al intentar salir de la iglesia. Por favor intenta de nuevo.'
+      });
     }
   };
 
@@ -539,7 +543,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">Miembro Activo</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Te uniste el {new Date(user?.createdAt).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Te uniste el {new Date(user?.eclesiastico?.fechaUnion || user?.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
               </div>

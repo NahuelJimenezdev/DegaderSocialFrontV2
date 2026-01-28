@@ -7,6 +7,8 @@ import GruposPages from './features/grupos/pages/GruposPages'
 import GroupDetail from './features/grupos/pages/GroupDetail'
 import IglesiaPage from './features/iglesias/pages/IglesiaPage'
 import IglesiaDetail from './features/iglesias/pages/IglesiaDetail'
+import IglesiaExMiembros from './features/iglesias/pages/IglesiaExMiembros'
+import IglesiaExMiembroDetalle from './features/iglesias/pages/IglesiaExMiembroDetalle'
 import MemberProfilePage from './features/iglesias/pages/MemberProfilePage'
 import MisCarpetasPage from './features/carpetas/pages/MisCarpetasPage'
 import FolderDetail from './features/carpetas/pages/FolderDetail'
@@ -65,6 +67,9 @@ export const router = createBrowserRouter([
       { path: '/Mis_grupos/:id', element: <GroupDetail /> },
       { path: '/Mi_iglesia', element: <IglesiaPage /> },
       { path: '/Mi_iglesia/:id', element: <IglesiaDetail /> },
+      { path: '/iglesias/:id', element: <IglesiaDetail /> },
+      { path: '/iglesias/:id/miembros_salidos', element: <IglesiaExMiembros /> },
+      { path: '/iglesias/:id/miembros_salidos/:userId/motivo', element: <IglesiaExMiembroDetalle /> },
       { path: '/iglesias/:iglesiaId/miembros/:userId', element: <MemberProfilePage /> },
       { path: '/Mis_carpetas', element: <MisCarpetasPage /> },
       { path: '/Mis_carpetas/:id', element: <FolderDetailAdvanced /> },

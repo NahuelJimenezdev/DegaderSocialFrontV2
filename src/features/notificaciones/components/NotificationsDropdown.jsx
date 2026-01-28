@@ -101,6 +101,12 @@ export default function NotificationsDropdown() {
       'solicitud_cancelada'
     ];
 
+    console.log('🔍 [DEBUG] handleProfileClick', {
+      tipo: notificacion.tipo,
+      referencia: notificacion.referencia,
+      fullNotification: notificacion
+    });
+
     if (typesToDelete.includes(notificacion.tipo)) {
       await deleteInformativeNotification(notificacion._id);
     } else if (!notificacion.leido) {
@@ -125,7 +131,9 @@ export default function NotificationsDropdown() {
     }
 
     if (['solicitud_iglesia', 'solicitud_iglesia_aprobada', 'solicitud_iglesia_rechazada'].includes(notificacion.tipo)) {
-      const iglesiaId = notificacion.referencia?.id?._id || notificacion.referencia?.id;
+      const rawId = notificacion.referencia?.id;
+      const iglesiaId = typeof rawId === 'object' ? rawId?._id : rawId;
+
       if (iglesiaId) {
         navigate(`/Mis_Iglesias/${iglesiaId}`);
         setOpen(false);
@@ -137,6 +145,28 @@ export default function NotificationsDropdown() {
       navigate('/Mi_iglesia', { state: { activeTab: 'fundacion' } });
       setOpen(false);
       return;
+    }
+
+    if (notificacion.tipo === 'miembro_abandono_iglesia') {
+      let iglesiaId = null;
+      if (notificacion.referencia?.id) {
+        iglesiaId = notificacion.referencia.id._id || notificacion.referencia.id;
+        // Si es un objeto pero _id sigue siendo undefined (raro), intentar castear a string si parece un ID
+        if (typeof iglesiaId === 'object' && !iglesiaId._id) {
+          // Último recurso: si el objeto tiene un toString o es el ID mismo
+          iglesiaId = notificacion.referencia.id.toString();
+        }
+      }
+
+      console.log('🚪 [DEBUG] Redirigiendo a historial de salidas. IglesiaID:', iglesiaId);
+
+      if (iglesiaId && typeof iglesiaId === 'string' && iglesiaId !== '[object Object]') {
+        navigate(`/iglesias/${iglesiaId}/miembros_salidos`);
+        setOpen(false);
+        return;
+      } else {
+        console.error('❌ [DEBUG] No se pudo extraer un ID válido de iglesia:', notificacion.referencia);
+      }
     }
 
     console.log('🔔 [CLICK] Notification:', notificacion);

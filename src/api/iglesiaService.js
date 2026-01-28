@@ -31,6 +31,11 @@ const iglesiaService = {
     return response.data;
   },
 
+  getExMiembros: async (id) => {
+    const response = await api.get(`/iglesias/${id}/ex-miembros`);
+    return response.data;
+  },
+
   manageRequest: async (id, userId, action) => {
     const response = await api.post(`/iglesias/${id}/solicitudes/${userId}`, { accion: action });
     return response.data;

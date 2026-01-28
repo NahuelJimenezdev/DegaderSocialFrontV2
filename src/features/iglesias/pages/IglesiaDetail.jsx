@@ -16,7 +16,8 @@ import IglesiaComentarios from '../components/IglesiaComentarios';
 const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
   const { id: paramId } = useParams();
-  const id = churchId || paramId;
+  const resolvedChurchId = typeof churchId === 'object' ? churchId?._id : churchId;
+  const id = resolvedChurchId || paramId;
   const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('info');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -54,6 +55,10 @@ const IglesiaDetail = ({ churchId }) => {
     { id: 'settings', icon: 'settings', label: 'Configuración' },
   ];
 
+  if (isPastor) {
+    allMenuItems.splice(3, 0, { id: 'ex_miembros', icon: 'history', label: 'Historial Salidas' }); // Insertar visualmente donde convenga, ej: después de Miembros
+  }
+
   // Menú limitado para visitantes (solo información y comentarios para leer)
   const visitorMenuItems = [
     { id: 'info', icon: 'info', label: 'Información' },
@@ -79,18 +84,34 @@ const IglesiaDetail = ({ churchId }) => {
         return <IglesiaComentarios iglesiaData={iglesiaData} />;
       case 'members':
         return <IglesiaMembers iglesiaData={iglesiaData} refetch={refetch} user={user} />;
+      case 'ex_miembros':
+        // Redirigir a la página de historial
+        // Nota: Como IglesiaDetail maneja sub-rutas simuladas con activeSection para la mayoría de componentes,
+        // pero `IglesiaExMiembros` es una página completa (Page) que usa routing real de react-router,
+        // al hacer clic aquí, navegamos a la ruta real.
+        // PERO IglesiaSidebar llama a setActiveSection.
+        // Haremos un efecto para navegar si se selecciona 'ex_miembros'
+        return null;
+      case 'settings':
+        return <IglesiaSettings iglesiaData={iglesiaData} refetch={refetch} />;
       case 'chat':
         return <IglesiaChat iglesiaData={iglesiaData} user={user} />;
       case 'events':
         return <IglesiaEvents iglesiaData={iglesiaData} />;
       case 'multimedia':
         return <IglesiaMultimedia iglesiaData={iglesiaData} refetch={refetch} />;
-      case 'settings':
-        return <IglesiaSettings iglesiaData={iglesiaData} refetch={refetch} />;
       default:
         return <IglesiaInfo iglesiaData={iglesiaData} />;
     }
   };
+
+  useEffect(() => {
+    if (activeSection === 'ex_miembros') {
+      navigate(`/iglesias/${id}/miembros_salidos`);
+      // Resetear para evitar loop si vuelve atrás
+      setActiveSection('info');
+    }
+  }, [activeSection, id, navigate]);
 
   if (loading || !iglesiaData) {
     return (
