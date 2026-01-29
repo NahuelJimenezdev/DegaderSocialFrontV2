@@ -58,7 +58,7 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
   const displayUsername = member.social?.username ? `@${member.social.username}` : (member.email || 'Sin email público');
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow relative group">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow relative group overflow-hidden">
 
       {/* Badge de Rol con Dropdown */}
       <div className="absolute top-4 right-4 z-10" ref={dropdownRef}>
@@ -129,12 +129,14 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
         )}
       </h3>
 
-      <p
-        className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2 break-words px-2"
-        title={displayUsername}
-      >
-        {displayUsername}
-      </p>
+      <div className="w-full overflow-hidden px-2">
+        <p
+          className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2 break-all"
+          title={displayUsername}
+        >
+          {displayUsername}
+        </p>
+      </div>
 
       {/* Actions */}
       <div className="flex items-center gap-2 w-full mt-auto">
