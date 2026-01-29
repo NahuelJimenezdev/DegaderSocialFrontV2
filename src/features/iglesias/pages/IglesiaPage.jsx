@@ -86,10 +86,12 @@ export default function IglesiaPage() {
     await handleCrearIglesia(e, refreshUser);
   };
 
-  // Si es miembro, redirigir INMEDIATAMENTE a su iglesia
-  if (user?.esMiembroIglesia && user?.eclesiastico?.iglesia) {
-    return <IglesiaDetail churchId={user.eclesiastico.iglesia} />;
-  }
+  // Si es miembro, redirigir INMEDIATAMENTE a su iglesia con navigate()
+  useEffect(() => {
+    if (user?.esMiembroIglesia && user?.eclesiastico?.iglesia) {
+      navigate(`/Mi_iglesia/${user.eclesiastico.iglesia}`, { replace: true });
+    }
+  }, [user?.esMiembroIglesia, user?.eclesiastico?.iglesia, navigate]);
 
   // Si es Founder, mostrar página con panel de monitoreo
   const isFounder = user?.seguridad?.rolSistema === 'Founder';
