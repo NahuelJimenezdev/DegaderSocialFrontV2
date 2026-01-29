@@ -70,6 +70,31 @@ export const AuthProvider = ({ children }) => {
     };
   }, [user]);
 
+  // Listener para notificaciones de ministerio (recargar perfil)
+  useEffect(() => {
+    const handleNotification = async (event) => {
+      const notification = event.detail;
+
+      // Si la notificación es de ministerio asignado y es para el usuario actual
+      if (notification.tipo === 'ministerio_asignado') {
+        logger.log('🔔 [AuthContext] Notificación de ministerio recibida, recargando perfil...');
+        try {
+          const response = await authService.getProfile();
+          setUser(response.data || response.user);
+          logger.log('✅ [AuthContext] Perfil recargado con nuevos ministerios');
+        } catch (err) {
+          logger.error('❌ [AuthContext] Error al recargar perfil por ministerio:', err);
+        }
+      }
+    };
+
+    window.addEventListener('socket:notification:new', handleNotification);
+
+    return () => {
+      window.removeEventListener('socket:notification:new', handleNotification);
+    };
+  }, [user]);
+
   const login = async (email, password) => {
     try {
       setError(null);
@@ -129,6 +154,16 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
+  const refreshProfile = async () => {
+    try {
+      const response = await authService.getProfile();
+      setUser(response.data || response.user);
+      logger.log('✅ [AuthContext] Perfil refrescado manualmente');
+    } catch (err) {
+      logger.error('❌ [AuthContext] Error al refrescar perfil:', err);
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -137,6 +172,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
+    refreshProfile,
     isAuthenticated: !!user,
   };
 

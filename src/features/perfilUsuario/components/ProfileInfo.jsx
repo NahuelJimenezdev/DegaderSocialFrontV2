@@ -19,6 +19,25 @@ const ProfileInfo = memo(({ user, stats }) => {
           {user.social?.biografia || '¡Hola! Soy parte de la comunidad Degader 🙏'}
         </p>
 
+        {/* Ministerios Minimalista */}
+        {user.eclesiastico?.ministerios?.length > 0 && (
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
+            {user.eclesiastico.ministerios.filter(m => m.activo).map((min, index) => {
+              // Mapeo simple de nombres para no depender del hook si no es necesario, o importar
+              const nombreMinisterio = min.nombre.charAt(0).toUpperCase() + min.nombre.slice(1).replace('_', ' ');
+              const cargo = min.cargo === 'lider' ? 'Líder' : min.cargo === 'sublider' ? 'Sublíder' : 'Miembro';
+
+              return (
+                <span key={index} className="flex items-center gap-1.5 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                  <span className="font-medium">{cargo}</span>
+                  <span className="opacity-75">de {nombreMinisterio}</span>
+                </span>
+              );
+            })}
+          </div>
+        )}
+
         <div className="flex flex-wrap gap-3 md:gap-4 text-xs md:text-sm text-gray-500">
           {user.personal?.ubicacion?.ciudad && (
             <span className="flex items-center gap-1">

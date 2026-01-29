@@ -57,6 +57,19 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
     };
   }, [iglesiaData._id, refetch]);
 
+  // Listener global para refresh desde otros componentes (ej: SeccionAdministrativaMinisterios)
+  useEffect(() => {
+    const handleGlobalRefresh = () => {
+      logger.log('🔄 [IglesiaMembers] Evento refresco global recibido');
+      refetch();
+    };
+
+    window.addEventListener('ui:refresh-church-data', handleGlobalRefresh);
+    return () => {
+      window.removeEventListener('ui:refresh-church-data', handleGlobalRefresh);
+    };
+  }, [refetch]);
+
   // Aprobar solicitud
   const handleApproveRequest = async (userId) => {
     console.log('🔵 handleApproveRequest - userId:', userId);

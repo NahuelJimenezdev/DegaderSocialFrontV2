@@ -10,11 +10,13 @@ import { es } from 'date-fns/locale';
 import SeccionAdministrativaMinisterios from '../components/SeccionAdministrativaMinisterios';
 import IglesiaSidebar from '../components/IglesiaSidebar';
 import { useIglesiaData } from '../hooks/useIglesiaData';
+import { getIglesiaMenuItems } from '../utils/menuHelpers';
+import { MINISTERIOS_DISPONIBLES } from '../hooks/useMinisterios';
 
 const MemberProfilePage = () => {
     const { iglesiaId, userId } = useParams();
     const navigate = useNavigate();
-    const { user: currentUser } = useAuth();
+    const { user: currentUser, refreshProfile } = useAuth();
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -36,36 +38,9 @@ const MemberProfilePage = () => {
         navigate(`/Mi_iglesia/${iglesiaId}`, { state: { section } });
     };
 
-    // Calculate permissions for sidebar
-    const isPastor = iglesiaData?.pastorPrincipal?._id === currentUser?._id ||
-        iglesiaData?.pastorPrincipal === currentUser?._id;
 
-    // Verificar si el usuario es miembro (lógica copiada de IglesiaDetail)
-    const isMember = iglesiaData?.miembros?.some(m => {
-        const memberId = m._id || m;
-        return memberId.toString() === currentUser?._id?.toString();
-    });
-
-    const hasAccess = isPastor || isMember;
-
-    // Menú completo para miembros y pastor
-    const allMenuItems = [
-        { id: 'info', icon: 'info', label: 'Información' },
-        { id: 'comentarios', icon: 'forum', label: 'Comentarios' },
-        { id: 'members', icon: 'group', label: 'Miembros' },
-        { id: 'chat', icon: 'chat', label: 'Chat' },
-        { id: 'events', icon: 'event', label: 'Reuniones' },
-        { id: 'multimedia', icon: 'collections', label: 'Multimedia' },
-        { id: 'settings', icon: 'settings', label: 'Configuración' },
-    ];
-
-    // Menú limitado para visitantes
-    const visitorMenuItems = [
-        { id: 'info', icon: 'info', label: 'Información' },
-        { id: 'comentarios', icon: 'forum', label: 'Comentarios' },
-    ];
-
-    const menuItems = hasAccess ? allMenuItems : visitorMenuItems;
+    // ✅ Usar utilidad compartida para permisos y menú
+    const { menuItems, isPastor, isMember, hasAccess } = getIglesiaMenuItems(iglesiaData, currentUser);
 
     useEffect(() => {
         loadUserInfo();
@@ -78,6 +53,11 @@ const MemberProfilePage = () => {
 
             if (response.success) {
                 setUserInfo(response.data);
+
+                // Si el usuario editado es el mismo logueado, actualizar el contexto global inmediatamente
+                if (currentUser && (currentUser._id === userId || currentUser.id === userId)) {
+                    await refreshProfile();
+                }
             } else {
                 setError('No se pudo cargar la información del usuario');
             }
@@ -195,11 +175,11 @@ const MemberProfilePage = () => {
             </div>
 
             {/* Main Content con padding igual al sidebar width en desktop */}
-            <div className={`w-full h-full lg:pl-[280px]`}>
+            <div className="w-full h-full">
                 <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
                     {/* Content - Sin Header de Volver */}
-                    <div className="mt-mobile-10 mb-mobile-67 pt-8">
-                        <div className="max-w-4xl mx-auto px-4">
+                    <div className="mt-mobile-10 mb-mobile-67 pt-8 pb-20">
+                        <div className="w-full px-4 lg:px-8">
                             {/* User Header */}
                             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
                                 <div className="flex items-center gap-4">
@@ -217,6 +197,25 @@ const MemberProfilePage = () => {
                                                 userInfo.eclesiastico?.rolPrincipal === 'adminIglesia' ? 'Administrador de Iglesia' :
                                                     'Miembro de la iglesia'}
                                         </p>
+                                        {/* Mostrar ministerios activos */}
+                                        {userInfo.eclesiastico?.ministerios?.filter(m => m.activo).length > 0 && (
+                                            <div className="mt-2 flex flex-wrap gap-2">
+                                                {userInfo.eclesiastico.ministerios
+                                                    .filter(m => m.activo)
+                                                    .map((ministerio, index) => {
+                                                        const ministerioLabel = MINISTERIOS_DISPONIBLES.find(m => m.value === ministerio.nombre)?.label || ministerio.nombre;
+                                                        const cargoLabel = ministerio.cargo === 'lider' ? 'Líder' : ministerio.cargo === 'sublider' ? 'Sublíder' : 'Miembro';
+                                                        return (
+                                                            <span
+                                                                key={index}
+                                                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                                                            >
+                                                                {cargoLabel} de {ministerioLabel}
+                                                            </span>
+                                                        );
+                                                    })}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -284,18 +283,21 @@ const MemberProfilePage = () => {
                                     )}
                                 </InfoCard>
                             </div>
-
-                            {/* Sección Administrativa de Ministerios */}
-                            {currentUser && iglesiaId && (
-                                <SeccionAdministrativaMinisterios
-                                    usuario={userInfo}
-                                    iglesiaId={iglesiaId}
-                                    currentUser={currentUser}
-                                    isPastor={isPastor}
-                                />
-                            )}
                         </div>
                     </div>
+
+                    {/* Sección Administrativa de Ministerios - Fuera del contenedor restrictivo */}
+                    {currentUser && iglesiaId && (
+                        <div className="max-w-7xl mx-auto px-4">
+                            <SeccionAdministrativaMinisterios
+                                usuario={userInfo}
+                                iglesiaId={iglesiaId}
+                                currentUser={currentUser}
+                                isPastor={isPastor}
+                                onUpdate={loadUserInfo}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </>

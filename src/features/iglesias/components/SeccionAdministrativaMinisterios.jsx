@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Edit2, Users, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, Plus, X, Trash2, Edit2, Check } from 'lucide-react';
 import { useMinisterios, MINISTERIOS_DISPONIBLES, CARGOS_MINISTERIO } from '../hooks/useMinisterios';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 
@@ -7,15 +8,16 @@ import { AlertDialog } from '../../../shared/components/AlertDialog';
  * Componente para gestión administrativa de ministerios
  * Solo visible para pastor_principal y adminIglesia
  */
-const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser }) => {
+const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser, onUpdate }) => {
     const {
         ministerios,
         loading,
         error,
+        cargarMinisterios,
         agregarMinisterio,
         actualizarMinisterio,
         eliminarMinisterio
-    } = useMinisterios(usuario._id);
+    } = useMinisterios(usuario?._id);
 
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [ministerioSeleccionado, setMinisterioSeleccionado] = useState('');
@@ -57,14 +59,34 @@ const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser }) =
             return;
         }
 
+        console.log('✅ [MINISTERIO] Iniciando asignación...', { ministerioSeleccionado, cargoSeleccionado });
+
         const result = await agregarMinisterio(ministerioSeleccionado, cargoSeleccionado, iglesiaId);
 
         if (result.success) {
+            console.log('✅ [MINISTERIO] Asignado exitosamente');
             setAlertConfig({ isOpen: true, variant: 'success', message: 'Ministerio asignado exitosamente' });
             setMostrarFormulario(false);
             setMinisterioSeleccionado('');
             setCargoSeleccionado('miembro');
+            // ✅ Recargar ministerios para actualizar vista interna
+            await cargarMinisterios();
+
+            // 🔄 Notificar al componente padre para que actualice sus datos (header del perfil)
+            if (onUpdate) onUpdate();
+
+            // 📢 Emitir evento global
+            window.dispatchEvent(new CustomEvent('ui:refresh-church-data'));
+
+            // 🔄 Redirigir al ministerio si es líder
+
+            // 🔄 Redirigir al ministerio si es líder
+            if (cargoSeleccionado === 'lider') {
+                // TODO: Implementar redirección cuando exista la ruta del ministerio
+                // navigate(`/iglesias/${iglesiaId}/ministerios/${ministerioSeleccionado}`);
+            }
         } else {
+            console.error('❌ [MINISTERIO] Error al asignar:', result.error);
             setAlertConfig({ isOpen: true, variant: 'error', message: result.error || 'Error al asignar ministerio' });
         }
     };
@@ -82,16 +104,38 @@ const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser }) =
     };
 
     // Manejar eliminar ministerio
-    const handleEliminarMinisterio = async (ministerioId, nombreMinisterio) => {
-        if (!confirm(`¿Estás seguro de remover a este usuario del ministerio de ${nombreMinisterio}?`)) {
+    const handleEliminarMinisterio = async (nombreMinisterio, labelMinisterio) => {
+        if (!confirm(`¿Estás seguro de remover a este usuario del ministerio de ${labelMinisterio}?`)) {
             return;
         }
 
-        const result = await eliminarMinisterio(ministerioId);
+        // Buscar el _id del ministerio por su nombre
+        console.log('🔍 [DEBUG] Todos los ministerios:', ministerios);
+        console.log('🔍 [DEBUG] Buscando ministerio:', nombreMinisterio);
+
+        const ministerio = ministerios.find(m => m.nombre === nombreMinisterio);
+        console.log('🔍 [DEBUG] Ministerio encontrado:', ministerio);
+
+        if (!ministerio || !ministerio._id) {
+            console.error('❌ [MINISTERIO] No se encontró el ministerio o no tiene _id:', nombreMinisterio);
+            console.error('❌ [DEBUG] Ministerio completo:', JSON.stringify(ministerio, null, 2));
+            setAlertConfig({ isOpen: true, variant: 'error', message: 'Error: Ministerio no encontrado' });
+            return;
+        }
+
+        console.log('🗑️ [MINISTERIO] Eliminando:', { ministerioId: ministerio._id, nombre: nombreMinisterio });
+        const result = await eliminarMinisterio(ministerio._id);
 
         if (result.success) {
+            console.log('✅ [MINISTERIO] Eliminado exitosamente');
             setAlertConfig({ isOpen: true, variant: 'success', message: 'Ministerio removido exitosamente' });
+            await cargarMinisterios();
+            // 🔄 Notificar al componente padre
+            if (onUpdate) onUpdate();
+            // 📢 Emitir evento global
+            window.dispatchEvent(new CustomEvent('ui:refresh-church-data'));
         } else {
+            console.error('❌ [MINISTERIO] Error al eliminar:', result.error);
             setAlertConfig({ isOpen: true, variant: 'error', message: result.error || 'Error al remover ministerio' });
         }
     };
@@ -107,187 +151,191 @@ const SeccionAdministrativaMinisterios = ({ usuario, iglesiaId, currentUser }) =
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                    <div className="bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg">
-                        <Users className="text-purple-500 w-5 h-5" />
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Administración de Ministerios
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="w-full max-w-none mt-6 px-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                {/* Header */}
+                <div className="ministerios-admin-header">
+                    <div className="ministerios-admin-header-content">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg">
+                                <Users className="text-purple-500 w-5 h-5" />
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                    Administración de Ministerios
+                                </h2>
+                            </div>
+                        </div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 ministerios-admin-subtitle">
                             Solo visible para pastores y administradores
                         </p>
                     </div>
+
+                    {!mostrarFormulario && ministeriosDisponibles.length > 0 && (
+                        <button
+                            onClick={() => setMostrarFormulario(true)}
+                            className="ministerios-admin-add-btn flex items-center justify-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium"
+                        >
+                            <Plus size={18} />
+                            Agregar Ministerio
+                        </button>
+                    )}
                 </div>
 
-                {!mostrarFormulario && ministeriosDisponibles.length > 0 && (
-                    <button
-                        onClick={() => setMostrarFormulario(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium"
-                    >
-                        <Plus size={18} />
-                        Agregar Ministerio
-                    </button>
-                )}
-            </div>
-
-            {/* Formulario para agregar ministerio */}
-            {mostrarFormulario && (
-                <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-200 dark:border-purple-800">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-md font-medium text-gray-900 dark:text-white">
-                            Nuevo Ministerio
-                        </h3>
-                        <button
-                            onClick={() => {
-                                setMostrarFormulario(false);
-                                setMinisterioSeleccionado('');
-                                setCargoSeleccionado('miembro');
-                            }}
-                            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                        >
-                            <X size={20} />
-                        </button>
-                    </div>
-
-                    <form onSubmit={handleAgregarMinisterio} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Ministerio
-                            </label>
-                            <select
-                                value={ministerioSeleccionado}
-                                onChange={(e) => setMinisterioSeleccionado(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                required
-                            >
-                                <option value="">Selecciona un ministerio...</option>
-                                {ministeriosDisponibles.map(m => (
-                                    <option key={m.value} value={m.value}>{m.label}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Cargo
-                            </label>
-                            <select
-                                value={cargoSeleccionado}
-                                onChange={(e) => setCargoSeleccionado(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                required
-                            >
-                                {CARGOS_MINISTERIO.map(c => (
-                                    <option key={c.value} value={c.value}>{c.label}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="flex items-center gap-3">
+                {/* Formulario para agregar ministerio */}
+                {mostrarFormulario && (
+                    <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-200 dark:border-purple-800">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-md font-medium text-gray-900 dark:text-white">
+                                Nuevo Ministerio
+                            </h3>
                             <button
-                                type="submit"
-                                disabled={loading}
-                                className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                            >
-                                {loading ? 'Asignando...' : 'Asignar Ministerio'}
-                            </button>
-                            <button
-                                type="button"
                                 onClick={() => {
                                     setMostrarFormulario(false);
                                     setMinisterioSeleccionado('');
                                     setCargoSeleccionado('miembro');
                                 }}
-                                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
+                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                             >
-                                Cancelar
+                                <X size={20} />
                             </button>
                         </div>
-                    </form>
-                </div>
-            )}
 
-            {/* Lista de ministerios actuales */}
-            <div className="space-y-3">
-                {ministerios.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                        <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                        <p>Este usuario no tiene ministerios asignados</p>
+                        <form onSubmit={handleAgregarMinisterio} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Ministerio
+                                </label>
+                                <select
+                                    value={ministerioSeleccionado}
+                                    onChange={(e) => setMinisterioSeleccionado(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    required
+                                >
+                                    <option value="">Selecciona un ministerio...</option>
+                                    {ministeriosDisponibles.map(m => (
+                                        <option key={m.value} value={m.value}>{m.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Cargo
+                                </label>
+                                <select
+                                    value={cargoSeleccionado}
+                                    onChange={(e) => setCargoSeleccionado(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    required
+                                >
+                                    {CARGOS_MINISTERIO.map(c => (
+                                        <option key={c.value} value={c.value}>{c.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                                >
+                                    {loading ? 'Asignando...' : 'Asignar Ministerio'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMostrarFormulario(false);
+                                        setMinisterioSeleccionado('');
+                                        setCargoSeleccionado('miembro');
+                                    }}
+                                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                ) : (
-                    ministerios.filter(m => m.activo).map((ministerio) => (
-                        <div
-                            key={ministerio._id}
-                            className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600"
-                        >
-                            <div className="flex-1">
-                                <h4 className="font-medium text-gray-900 dark:text-white">
-                                    {getMinisterioLabel(ministerio.nombre)}
-                                </h4>
-
-                                {editandoMinisterio === ministerio._id ? (
-                                    <div className="mt-2">
-                                        <select
-                                            defaultValue={ministerio.cargo}
-                                            onChange={(e) => handleActualizarCargo(ministerio._id, e.target.value)}
-                                            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                        >
-                                            {CARGOS_MINISTERIO.map(c => (
-                                                <option key={c.value} value={c.value}>{c.label}</option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            onClick={() => setEditandoMinisterio(null)}
-                                            className="ml-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                                        >
-                                            Cancelar
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                                        Cargo: {getCargoLabel(ministerio.cargo)}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setEditandoMinisterio(editandoMinisterio === ministerio._id ? null : ministerio._id)}
-                                    className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                                    title="Editar cargo"
-                                >
-                                    <Edit2 size={18} />
-                                </button>
-                                <button
-                                    onClick={() => handleEliminarMinisterio(ministerio._id, ministerio.nombre)}
-                                    className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                                    title="Remover ministerio"
-                                >
-                                    <Trash2 size={18} />
-                                </button>
-                            </div>
-                        </div>
-                    ))
                 )}
-            </div>
 
-            {error && (
-                <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                {/* Lista de ministerios actuales */}
+                <div className="space-y-3">
+                    {ministerios.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                            <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                            <p>Este usuario no tiene ministerios asignados</p>
+                        </div>
+                    ) : (
+                        ministerios.filter(m => m.activo).map((ministerio, index) => (
+                            <div
+                                key={`ministerio-${ministerio.nombre}-${index}`}
+                                className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600"
+                            >
+                                <div className="flex-1">
+                                    <h4 className="font-medium text-gray-900 dark:text-white">
+                                        {getMinisterioLabel(ministerio.nombre)}
+                                    </h4>
+
+                                    {editandoMinisterio === ministerio._id ? (
+                                        <div className="mt-2">
+                                            <select
+                                                defaultValue={ministerio.cargo}
+                                                onChange={(e) => handleActualizarCargo(ministerio._id, e.target.value)}
+                                                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                            >
+                                                {CARGOS_MINISTERIO.map(c => (
+                                                    <option key={c.value} value={c.value}>{c.label}</option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                onClick={() => setEditandoMinisterio(null)}
+                                                className="ml-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                            >
+                                                Cancelar
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            Cargo: {getCargoLabel(ministerio.cargo)}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setEditandoMinisterio(editandoMinisterio === ministerio._id ? null : ministerio._id)}
+                                        className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                                        title="Editar cargo"
+                                    >
+                                        <Edit2 size={18} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleEliminarMinisterio(ministerio.nombre, getMinisterioLabel(ministerio.nombre))}
+                                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                        title="Remover ministerio"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
-            )}
 
-            <AlertDialog
-                isOpen={alertConfig.isOpen}
-                onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
-                variant={alertConfig.variant}
-                message={alertConfig.message}
-            />
+                {error && (
+                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                    </div>
+                )}
+
+                <AlertDialog
+                    isOpen={alertConfig.isOpen}
+                    onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
+                    variant={alertConfig.variant}
+                    message={alertConfig.message}
+                />
+            </div>
         </div>
     );
 };

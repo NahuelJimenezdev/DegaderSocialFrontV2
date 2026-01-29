@@ -1,13 +1,15 @@
-export default function ChurchDetailSkeleton() {
+export default function ChurchDetailSkeleton({ isMobile = false }) {
     return (
         <>
-            {/* Mobile Toggle Skeleton */}
-            <div className="fixed top-20 left-4 z-[60] hidden lg:block">
-                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
-            </div>
+            {/* Mobile Toggle Skeleton - Solo en mobile */}
+            {isMobile && (
+                <div className="fixed top-20 left-4 z-[60]">
+                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+                </div>
+            )}
 
-            {/* Sidebar Skeleton */}
-            <div className="fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[145]">
+            {/* Sidebar Skeleton - Oculto en mobile */}
+            <div className={`fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[145] ${isMobile ? 'hidden' : 'block'}`}>
                 <div className="h-full flex flex-col p-4">
                     {/* Header con logo y nombre */}
                     <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
@@ -30,8 +32,8 @@ export default function ChurchDetailSkeleton() {
                 </div>
             </div>
 
-            {/* Main Content Skeleton */}
-            <div className="ml-[280px] min-h-screen">
+            {/* Main Content Skeleton - Sin margin en mobile */}
+            <div className={isMobile ? 'min-h-screen' : 'ml-[280px] min-h-screen'}>
                 {/* Header Skeleton */}
                 <div className="relative">
                     <div className="h-64 bg-gray-200 dark:bg-gray-700 animate-pulse" />
