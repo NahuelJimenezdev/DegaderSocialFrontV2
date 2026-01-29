@@ -17,8 +17,21 @@ import ChurchDetailSkeleton from '../components/ChurchDetailSkeleton';
 const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
   const { id: paramId } = useParams();
-  const resolvedChurchId = typeof churchId === 'object' ? churchId?._id : churchId;
-  const id = resolvedChurchId || paramId;
+
+  // Resolver el ID de iglesia de forma segura
+  let resolvedId = null;
+  if (churchId) {
+    // Si churchId es un objeto, extraer el _id
+    resolvedId = typeof churchId === 'object' ? churchId?._id : churchId;
+  } else if (paramId) {
+    resolvedId = paramId;
+  }
+
+  // Convertir a string para asegurar que siempre sea válido
+  const id = resolvedId ? String(resolvedId) : null;
+
+  console.log('🔍 [IglesiaDetail] IDs:', { churchId, paramId, resolvedId, finalId: id });
+
   const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('info');
   const [sidebarOpen, setSidebarOpen] = useState(false);

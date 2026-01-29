@@ -13,7 +13,12 @@ export const useIglesiaData = (id) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await iglesiaService.getById(id);
+
+      // Convertir a string para asegurar que siempre sea un ID válido
+      const idString = id ? String(id) : null;
+      logger.log('📥 Cargando iglesia con ID:', idString);
+
+      const response = await iglesiaService.getById(idString);
       logger.log('📥 Datos de iglesia recibidos:', response);
 
       const iglesia = response?.data || response;
