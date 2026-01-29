@@ -326,7 +326,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => navigate(`/iglesias/${iglesiaData._id}/miembros/${miembro._id}`)}
+                          onClick={() => navigate(`/Mi_iglesia/${iglesiaData._id}/miembros/${miembro._id}`)}
                           className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
                         >
                           Ver más <ChevronRight className="w-4 h-4 inline-block ml-1" />

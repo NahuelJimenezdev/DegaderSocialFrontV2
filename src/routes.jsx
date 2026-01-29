@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
       { path: '/iglesias/:id', element: <IglesiaDetail /> },
       { path: '/Mi_iglesia/:id/miembros_salidos', element: <IglesiaExMiembros /> },
       { path: '/Mi_iglesia/:id/miembros_salidos/:userId/motivo', element: <IglesiaExMiembroDetalle /> },
-      { path: '/iglesias/:iglesiaId/miembros/:userId', element: <MemberProfilePage /> },
+      { path: '/Mi_iglesia/:iglesiaId/miembros/:userId', element: <MemberProfilePage /> },
       { path: '/Mis_carpetas', element: <MisCarpetasPage /> },
       { path: '/Mis_carpetas/:id', element: <FolderDetailAdvanced /> },
       { path: '/Mi_perfil', element: <ProfilePage /> },
