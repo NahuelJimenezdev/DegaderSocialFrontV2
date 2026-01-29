@@ -72,7 +72,7 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
 
         {/* Dropdown Menu */}
         {showRolesDropdown && (
-          <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+          <div className="absolute right-0 mt-2 w-89 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
             <div className="py-1">
               <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -129,7 +129,10 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
         )}
       </h3>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-1">
+      <p
+        className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2 break-words px-2"
+        title={displayUsername}
+      >
         {displayUsername}
       </p>
 
