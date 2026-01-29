@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.2...v1.10.3) (2026-01-29)
+
+
+### Bug Fixes
+
+* corregido exitosamente los errores en la sección Historial Salidas. ([b58f57d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b58f57dd7d182647e136522fab60b85cec239f66))
+
 ### [1.10.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.1...v1.10.2) (2026-01-29)
 
 
