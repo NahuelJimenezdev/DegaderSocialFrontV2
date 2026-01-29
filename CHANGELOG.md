@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.1...v1.9.2) (2026-01-29)
+
+
+### Bug Fixes
+
+* corrección integral de sincronización, dropdowns y notificaciones ([a0dc39e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a0dc39e19440945f11f8bc29e041c70cc508443e))
+
 ### [1.9.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.0...v1.9.1) (2026-01-28)
 
 ## [1.9.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.8.2...v1.9.0) (2026-01-28)
