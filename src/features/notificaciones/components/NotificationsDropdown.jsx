@@ -161,7 +161,7 @@ export default function NotificationsDropdown() {
       console.log('🚪 [DEBUG] Redirigiendo a historial de salidas. IglesiaID:', iglesiaId);
 
       if (iglesiaId && typeof iglesiaId === 'string' && iglesiaId !== '[object Object]') {
-        navigate(`/iglesias/${iglesiaId}/miembros_salidos`);
+        navigate(`/Mi_iglesia/${iglesiaId}/miembros_salidos`);
         setOpen(false);
         return;
       } else {

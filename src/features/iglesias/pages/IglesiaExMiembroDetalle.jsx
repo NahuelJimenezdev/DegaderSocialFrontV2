@@ -15,7 +15,7 @@ const IglesiaExMiembroDetalle = () => {
         } else {
             // Si no hay state (navegación directa), redirigir a la lista
             // Idealmente aquí se haría otro fetch si se quisiera soportar acceso directo por URL sin state
-            navigate(`/iglesias/${id}/miembros_salidos`);
+            navigate(`/Mi_iglesia/${id}/miembros_salidos`);
         }
     }, [location, id, navigate]);
 
@@ -28,7 +28,7 @@ const IglesiaExMiembroDetalle = () => {
                 <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => navigate(`/iglesias/${id}/miembros_salidos`)}
+                            onClick={() => navigate(`/Mi_iglesia/${id}/miembros_salidos`)}
                             className="p-2 bg-white dark:bg-gray-700 rounded-full shadow-sm text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                         >
                             <span className="material-symbols-outlined">arrow_back</span>
