@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.0...v1.10.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* corregir envío de iglesiaId como [object Object] en solicitudes desde notificaciones ([afb40b9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/afb40b975767c055831a0ad250df9a12c7a5abd5))
+
 ## [1.10.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.4...v1.10.0) (2026-01-29)
 
 
