@@ -53,10 +53,13 @@ const IglesiaDetail = ({ churchId }) => {
 
   // Detectar query parameter 'member' y cambiar a member_profile
   useEffect(() => {
-    if (memberIdParam) {
+    console.log('🔍 [IglesiaDetail] useEffect member_profile:', { memberIdParam, activeSection });
+    if (memberIdParam && activeSection !== 'member_profile') {
+      console.log('✅ [IglesiaDetail] Cambiando a member_profile');
       setActiveSection('member_profile');
-    } else if (activeSection === 'member_profile') {
+    } else if (!memberIdParam && activeSection === 'member_profile') {
       // Si se borra el query param, volver a members
+      console.log('✅ [IglesiaDetail] Cambiando a members');
       setActiveSection('members');
     }
   }, [memberIdParam]);
