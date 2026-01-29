@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.4...v1.10.0) (2026-01-29)
+
+
+### Features
+
+* agregar 4 columnas para pantallas extra grandes (1280px) ([ddefa5d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ddefa5d18713ec0e555c2819a4a169875ddfdb00))
+* limitar visualización a máximo 3 miembros por línea ([4f131de](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4f131de90b18ba4091ae9cddd18c6fcee40d6109))
+
 ### [1.9.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.3...v1.9.4) (2026-01-29)
 
 
