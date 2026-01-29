@@ -13,6 +13,7 @@ import IglesiaHeader from '../components/IglesiaHeader';
 import IglesiaSettings from '../components/IglesiaSettings';
 import IglesiaComentarios from '../components/IglesiaComentarios';
 import ChurchDetailSkeleton from '../components/ChurchDetailSkeleton';
+import IglesiaExMiembrosContent from '../components/IglesiaExMiembrosContent';
 
 const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
@@ -69,13 +70,7 @@ const IglesiaDetail = ({ churchId }) => {
       case 'members':
         return <IglesiaMembers iglesiaData={iglesiaData} refetch={refetch} user={user} />;
       case 'ex_miembros':
-        // Redirigir a la página de historial
-        // Nota: Como IglesiaDetail maneja sub-rutas simuladas con activeSection para la mayoría de componentes,
-        // pero `IglesiaExMiembros` es una página completa (Page) que usa routing real de react-router,
-        // al hacer clic aquí, navegamos a la ruta real.
-        // PERO IglesiaSidebar llama a setActiveSection.
-        // Haremos un efecto para navegar si se selecciona 'ex_miembros'
-        return null;
+        return <IglesiaExMiembrosContent iglesiaId={id} />;
       case 'settings':
         return <IglesiaSettings iglesiaData={iglesiaData} refetch={refetch} />;
       case 'chat':
@@ -89,13 +84,7 @@ const IglesiaDetail = ({ churchId }) => {
     }
   };
 
-  useEffect(() => {
-    if (activeSection === 'ex_miembros') {
-      navigate(`/iglesias/${id}/miembros_salidos`);
-      // Resetear para evitar loop si vuelve atrás
-      setActiveSection('info');
-    }
-  }, [activeSection, id, navigate]);
+
 
   if (loading || !iglesiaData) {
     return <ChurchDetailSkeleton isMobile={isMobile} />;
