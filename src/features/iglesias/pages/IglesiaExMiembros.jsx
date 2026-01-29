@@ -48,6 +48,11 @@ const IglesiaExMiembros = () => {
     }, [id]);
 
     const handleSectionChange = (section) => {
+        // Cerrar sidebar en móvil al cambiar de sección
+        if (isMobile) {
+            setSidebarOpen(false);
+        }
+        // Navegar a la ruta de la iglesia con la sección seleccionada
         navigate(`/Mi_iglesia/${id}`, { state: { section } });
     };
 
@@ -97,20 +102,27 @@ const IglesiaExMiembros = () => {
                 />
             )}
 
-            {/* ✅ Sidebar de Iglesia */}
-            <IglesiaSidebar
-                iglesiaData={iglesiaData}
-                activeSection="ex_miembros"
-                setActiveSection={handleSectionChange}
-                isPastor={isPastor}
-                isMobile={isMobile}
-                menuItems={menuItems}
-                isOpen={sidebarOpen}
-                onClose={() => setSidebarOpen(false)}
-            />
+            {/* ✅ Sidebar de Iglesia con posicionamiento fijo */}
+            <div
+                className={`
+                    fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 
+                    transition-transform duration-300 ease-in-out lg:transition-none
+                    ${isMobile
+                        ? `right-0 z-[150] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
+                        : 'left-0 z-40 translate-x-0'}
+                `}
+            >
+                <IglesiaSidebar
+                    iglesiaData={iglesiaData}
+                    activeSection="ex_miembros"
+                    setActiveSection={handleSectionChange}
+                    menuItems={menuItems}
+                    isMobile={isMobile}
+                />
+            </div>
 
             {/* Main Content */}
-            <div className={isMobile ? 'p-4 md:p-6' : 'ml-[280px] p-4 md:p-6'}>
+            <div className="p-4 md:p-6 lg:ml-[280px]">
                 <div className="max-w-4xl mx-auto">
                     {/* Header sin botón atrás */}
                     <div className="mb-6">
