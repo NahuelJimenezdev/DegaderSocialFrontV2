@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.5...v1.11.0) (2026-01-29)
+
+
+### Features
+
+* integrar perfil de miembro con query params para navegación sin recarga ([8a1d5a4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8a1d5a46ba27878daf8a3a4f94577a7f3df04721))
+
+
+### Bug Fixes
+
+* usar navigate en lugar de prop churchId para evitar recarga de página ([715555b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/715555b556a64aff0e4097ddd95911e41f8e7fd0))
+
 ### [1.10.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.4...v1.10.5) (2026-01-29)
 
 ### [1.10.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.3...v1.10.4) (2026-01-29)
