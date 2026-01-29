@@ -17,29 +17,40 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 
   const { emisor, metadata, createdAt, tipo, referencia } = notification;
   const { iglesiaNombre, solicitanteId } = metadata || {};
-  
+
   // Obtener ID de la iglesia de forma segura
+  // referencia puede ser: { tipo: 'Iglesia', id: '12345' } o { tipo: 'Iglesia', _id: '12345' }
   const iglesiaId = referencia?.id || referencia?._id;
+
+  // Convertir a string y validar
+  const iglesiaIdString = iglesiaId ? String(iglesiaId) : null;
+
+  logger.log('🔍 [IglesiaNotificationCard] IDs extraídos:', {
+    referencia,
+    iglesiaId,
+    iglesiaIdString,
+    solicitanteId
+  });
 
   // Formatear tiempo relativo
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diff = now - date;
-    
+
     const minutes = Math.floor(diff / 60000);
     if (minutes < 1) return 'ahora';
     if (minutes < 60) return `hace ${minutes}m`;
-    
+
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `hace ${hours}h`;
-    
+
     const days = Math.floor(hours / 24);
     return `hace ${days}d`;
   };
 
   const handleAction = async (accion) => {
-    if (!iglesiaId) {
+    if (!iglesiaIdString) {
       logger.error('❌ No se pudo obtener el ID de la iglesia:', referencia);
       toast.error('Error: No se puede identificar la iglesia');
       return;
@@ -53,17 +64,17 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 
     setLoading(true);
     try {
-      logger.log('📤 Gestionando solicitud:', { iglesiaId, solicitanteId, accion });
-      
+      logger.log('📤 Gestionando solicitud:', { iglesiaId: iglesiaIdString, solicitanteId, accion });
+
       await iglesiaService.manageRequest(
-        iglesiaId,
+        iglesiaIdString,
         solicitanteId,
         accion
       );
-      
+
       toast.success(
-        accion === 'aprobar' 
-          ? 'Solicitud aprobada exitosamente' 
+        accion === 'aprobar'
+          ? 'Solicitud aprobada exitosamente'
           : 'Solicitud rechazada'
       );
 
@@ -73,7 +84,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
       } catch (deleteError) {
         logger.warn('⚠️ Error al eliminar notificación (puede que ya no exista):', deleteError);
       }
-      
+
       // Notificar al componente padre para actualizar la lista
       if (onAction) {
         onAction(notification._id);
@@ -98,8 +109,8 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
       }
     }
 
-    if (iglesiaId) {
-      navigate(`/Mi_iglesia/${iglesiaId}`);
+    if (iglesiaIdString) {
+      navigate(`/Mi_iglesia/${iglesiaIdString}`);
     }
   };
 
@@ -113,7 +124,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 
   // Lógica de URL de imagen
   const isResponseNotif = tipo === 'solicitud_iglesia_aprobada' || tipo === 'solicitud_iglesia_rechazada';
-  const logoUrl = metadata?.iglesiaLogo 
+  const logoUrl = metadata?.iglesiaLogo
     ? (metadata.iglesiaLogo.startsWith('http') ? metadata.iglesiaLogo : `${import.meta.env.VITE_API_URL}${metadata.iglesiaLogo}`)
     : null;
 
@@ -121,7 +132,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
     <div className="group relative bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg p-4 transition-all duration-200 border border-gray-100 dark:border-gray-700">
       <div className="flex items-start gap-3">
         {/* Avatar del solicitante o Logo de Iglesia */}
-        <div 
+        <div
           className="flex-shrink-0 cursor-pointer overflow-hidden rounded-full w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 ring-2 ring-white dark:ring-gray-800"
           onClick={handleClick}
         >
@@ -150,7 +161,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 
         {/* Contenido */}
         <div className="flex-1 min-w-0">
-          <div 
+          <div
             className="cursor-pointer"
             onClick={handleClick}
           >
@@ -173,7 +184,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
                 </>
               )}
             </p>
-            
+
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               {formatTime(createdAt)}
             </p>
