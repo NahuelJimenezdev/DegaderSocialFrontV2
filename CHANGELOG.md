@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.2...v1.9.3) (2026-01-29)
+
+
+### Bug Fixes
+
+* mejorar visualización de emails largos en cards de miembros ([4cd984e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4cd984e26cdffd43701564c855163b851c0b8fb2))
+
 ### [1.9.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.9.1...v1.9.2) (2026-01-29)
 
 
