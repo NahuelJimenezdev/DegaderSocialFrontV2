@@ -27,7 +27,7 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
   }, [showRolesDropdown]);
 
   const handleVerMas = () => {
-    navigate(`/Mi_iglesia/${iglesiaId}/miembros/${member._id}`);
+    navigate(`/Mi_iglesia/${iglesiaId}?member=${member._id}`);
   };
 
   // Obtener ministerios activos

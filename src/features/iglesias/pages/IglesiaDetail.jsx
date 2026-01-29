@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useIglesiaData } from '../hooks/useIglesiaData';
 import { getIglesiaMenuItems } from '../utils/menuHelpers';
@@ -14,10 +14,12 @@ import IglesiaSettings from '../components/IglesiaSettings';
 import IglesiaComentarios from '../components/IglesiaComentarios';
 import ChurchDetailSkeleton from '../components/ChurchDetailSkeleton';
 import IglesiaExMiembrosContent from '../components/IglesiaExMiembrosContent';
+import MemberProfileContent from '../components/MemberProfileContent';
 
 const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
   const { id: paramId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Resolver el ID de iglesia de forma segura
   let resolvedId = null;
@@ -38,6 +40,9 @@ const IglesiaDetail = ({ churchId }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Detectar si hay memberId en query params
+  const memberIdParam = searchParams.get('member');
+
   // Detectar mobile
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -45,6 +50,16 @@ const IglesiaDetail = ({ churchId }) => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Detectar query parameter 'member' y cambiar a member_profile
+  useEffect(() => {
+    if (memberIdParam) {
+      setActiveSection('member_profile');
+    } else if (activeSection === 'member_profile') {
+      // Si se borra el query param, volver a members
+      setActiveSection('members');
+    }
+  }, [memberIdParam]);
 
   const { iglesiaData, loading, refetch } = useIglesiaData(id);
 
@@ -71,6 +86,8 @@ const IglesiaDetail = ({ churchId }) => {
         return <IglesiaMembers iglesiaData={iglesiaData} refetch={refetch} user={user} />;
       case 'ex_miembros':
         return <IglesiaExMiembrosContent iglesiaId={id} />;
+      case 'member_profile':
+        return <MemberProfileContent userId={memberIdParam} iglesiaId={id} isPastor={isPastor} />;
       case 'settings':
         return <IglesiaSettings iglesiaData={iglesiaData} refetch={refetch} />;
       case 'chat':
