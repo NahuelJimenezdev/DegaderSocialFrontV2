@@ -203,64 +203,56 @@ const GroupDetail = () => {
   }
 
   return (
-    <div className="flex h-full overflow-hidden overflow-x-hidden bg-gray-50 dark:bg-gray-900 relative">
-      <div className='mb-mobile-67'>
-
-        {/* Botón hamburguesa - Visible en mobile y tablet */}
-        {isMobile && (
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="fixed top-20 right-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-12 h-12 flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
-              {sidebarOpen ? 'close' : 'menu'}
-            </span>
-          </button>
-        )}
-
-        {/* Overlay para cerrar sidebar en mobile/tablet */}
-        {sidebarOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Sidebar del grupo */}
-        <div
-          className={`
-          w-64 flex-shrink-0 bg-white dark:bg-gray-800
-          lg:relative lg:!translate-x-0 lg:h-full lg:border-r
-          fixed top-16 z-40 h-[calc(100vh-64px)]
-          transition-transform duration-300 ease-in-out lg:transition-none
-          ${isMobile ? 'right-0 border-l' : 'left-0 border-r'}
-          ${isMobile
-              ? (sidebarOpen ? 'translate-x-0' : 'translate-x-full')
-              : (sidebarOpen ? 'translate-x-0' : '-translate-x-full')
-            }
-          lg:translate-x-0 border-gray-200 dark:border-gray-700
-        `}
+    <>
+      {/* Botón hamburguesa - Visible en mobile y tablet */}
+      {isMobile && (
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="fixed top-20 left-4 z-[60] p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-12 h-12 flex items-center justify-center"
         >
-          <SidebarGroup
-            groupData={groupData}
-            navigate={navigate}
-            activeSection={activeSection}
-            setActiveSection={(section) => {
-              setActiveSection(section)
-              setSidebarOpen(false) // Cerrar sidebar al seleccionar una sección en mobile
-            }}
-            menuItems={menuItems}
-          />
-        </div>
+          <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
+            {sidebarOpen ? 'close' : 'menu'}
+          </span>
+        </button>
+      )}
 
-        {/* Contenido principal - Ocupa el resto del espacio */}
-        <main className="flex-1 h-full overflow-hidden overflow-x-hidden">
-          <div className="w-full h-full overflow-x-hidden">
-            {renderSection()}
-          </div>
-        </main>
+      {/* Backdrop para móvil */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[140]"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar del grupo - Reemplaza visualmente al sidebar global */}
+      <div
+        className={`
+          fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 
+          transition-transform duration-300 ease-in-out lg:transition-none
+          ${isMobile
+            ? `right-0 z-[150] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
+            : 'left-0 z-40 translate-x-0'}
+        `}
+      >
+        <SidebarGroup
+          groupData={groupData}
+          navigate={navigate}
+          activeSection={activeSection}
+          setActiveSection={(section) => {
+            setActiveSection(section)
+            setSidebarOpen(false)
+          }}
+          menuItems={menuItems}
+        />
       </div>
-    </div>
+
+      {/* Main Content Area */}
+      <div className={`w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin ${activeSection === 'chat' ? '' : 'mb-mobile-67'}`}>
+        <div className={activeSection === 'chat' ? 'h-full relative z-[100]' : 'p-4 md:p-8 pt-0'}>
+          {renderSection()}
+        </div>
+      </div>
+    </>
   )
 }
 

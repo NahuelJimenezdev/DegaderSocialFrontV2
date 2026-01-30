@@ -6,11 +6,8 @@
  */
 
 export const hideAdsSidebarRoutes = [
-  // /Mis_grupos/1, /Mis_grupos/2, etc.
-  /^\/Mis_grupos\/\d+$/,
-
-  // /Mis_Carpetas/1, /Mis_Carpetas/2, etc.
-  /^\/Mis_Carpetas\/\d+$/,
+  // /Mis_Carpetas/id (allows alphanumeric IDs)
+  /^\/Mis_Carpetas\/[a-zA-Z0-9]+$/,
   // /mensajes/1, /mensajes/2, etc.
   /^\/mensajes(\/.*)?$/i,
 ]
@@ -20,8 +17,6 @@ export const hideAdsSidebarRoutes = [
  * Útil para páginas que tienen su propio sidebar personalizado
  */
 export const hideSidebarRoutes = [
-  // /Mis_grupos/1, /Mis_grupos/2, etc. - Los grupos tienen su propio sidebar
-  /^\/Mis_grupos\/\d+$/,
   // Ocultar sidebar global en la sección de miembros salidos (ya tiene sidebar de iglesia)
   /^\/Mi_iglesia\/[a-zA-Z0-9_-]+\/miembros_salidos.*$/,
 ]
