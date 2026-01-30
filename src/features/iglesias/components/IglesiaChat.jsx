@@ -174,15 +174,6 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
       {/* Header Estilo Mensajes - Altura fija para evitar saltos */}
       <div className="h-[70px] border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 bg-white dark:bg-gray-900 shadow-sm shrink-0">
         <div className="flex items-center gap-2">
-          {/* Botón Volver - Lleva a /Mi_iglesia como pidió el usuario */}
-          <button
-            onClick={() => navigate('/Mi_iglesia')}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors flex items-center justify-center"
-            aria-label="Volver a Iglesias"
-          >
-            <ArrowLeft size={24} className="text-gray-700 dark:text-gray-300" />
-          </button>
-
           {/* Botón Menú Hamburguesa para Sidebar */}
           {isMobile && (
             <button

@@ -135,11 +135,11 @@ const IglesiaDetail = ({ churchId }) => {
       {/* Sidebar de Iglesia - Reemplaza al sidebar global */}
       <div
         className={`
-          fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 
-          transition-transform duration-300 ease-in-out lg:transition-none
+          fixed top-0 bottom-0 left-0 right-0 bg-white dark:bg-gray-800 
+          transition-transform duration-300 ease-in-out lg:top-[65px] lg:w-[280px] lg:transition-none
           ${isMobile
-            ? `right-0 z-[150] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
-            : 'left-0 z-40 translate-x-0'}
+            ? `z-[200] ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}`
+            : 'z-40 translate-x-0'}
         `}
       >
         <IglesiaSidebar
