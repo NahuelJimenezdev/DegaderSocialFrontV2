@@ -129,6 +129,7 @@ export const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
   const date = new Date(dateString);
   return date.toLocaleDateString('es-ES', {
+    timeZone: 'UTC', // IMPORTANTE: La fecha se guarda como UTC Midnight. Mostrar tal cual.
     weekday: 'long',
     year: 'numeric',
     month: 'long',

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Send, Image as ImageIcon, X, Paperclip, Smile, ArrowLeft, Menu, MoreVertical } from 'lucide-react';
 import { API_BASE_URL } from '../../../shared/config/env';
 import { logger } from '../../../shared/utils/logger';
-import { io } from 'socket.io-client';
+import { getSocket } from '../../../shared/lib/socket';
 import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { useAuth } from '../../../context/AuthContext';
@@ -70,32 +70,54 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
   useEffect(() => {
     if (!iglesiaData?._id || !user?._id) return;
 
-    const socketUrl = import.meta.env.VITE_API_URL
-      ? import.meta.env.VITE_API_URL.replace('/api', '')
-      : API_BASE_URL;
+    console.log('[IglesiaChat] Initializing socket connection for church:', iglesiaData._id);
+    const socket = getSocket();
 
-    const socket = io(socketUrl, {
-      transports: ['websocket'],
-      reconnection: true
-    });
+    if (!socket) {
+      console.error('[IglesiaChat] Socket not initialized or not found!');
+      logger.warn('[IglesiaChat] Socket not initialized');
+      return;
+    }
 
-    socketRef.current = socket;
+    if (!socket.connected) {
+      console.warn('[IglesiaChat] Socket found but disconnected. ID:', socket.id);
+    } else {
+      console.log('[IglesiaChat] Socket connected. ID:', socket.id);
+    }
 
-    socket.on('connect', () => {
-      logger.log('Connected to socket');
-      socket.emit('joinRoom', `iglesia:${iglesiaData._id}`);
-    });
+    // Join room
+    const roomName = `iglesia:${iglesiaData._id}`;
+    console.log('[IglesiaChat] Joining room:', roomName);
+    socket.emit('joinRoom', roomName);
 
-    socket.on('newIglesiaMessage', (message) => {
-      setMessages(prev => [...prev, message]);
-    });
+    // Listeners
+    const handleNewMessage = (message) => {
+      console.log('[IglesiaChat] Received new message via socket:', message);
+      setMessages(prev => {
+        // Prevent duplicates just in case
+        if (prev.some(m => m._id === message._id)) {
+          console.log('[IglesiaChat] Duplicate message ignored:', message._id);
+          return prev;
+        }
+        return [...prev, message];
+      });
+    };
 
-    socket.on('iglesiaMessageDeleted', ({ messageId }) => {
+    const handleMessageDeleted = ({ messageId }) => {
+      console.log('[IglesiaChat] Message deleted via socket:', messageId);
       setMessages(prev => prev.filter(m => m._id !== messageId));
-    });
+    };
+
+    socket.on('newIglesiaMessage', handleNewMessage);
+    socket.on('iglesiaMessageDeleted', handleMessageDeleted);
 
     return () => {
-      socket.disconnect();
+      if (socket) {
+        console.log('[IglesiaChat] Leaving room:', roomName);
+        socket.emit('leaveRoom', roomName);
+        socket.off('newIglesiaMessage', handleNewMessage);
+        socket.off('iglesiaMessageDeleted', handleMessageDeleted);
+      }
     };
   }, [iglesiaData?._id, user?._id]);
 
@@ -107,9 +129,13 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
       const content = newMessage.trim();
       setNewMessage(''); // Optimistic clear
 
-      await iglesiaService.sendMessage(iglesiaData._id, { content });
+      console.log('[IglesiaChat] Sending message via API...');
+      const response = await iglesiaService.sendMessage(iglesiaData._id, { content });
+      console.log('[IglesiaChat] Message sent successfully via API:', response);
+
       // Message will be added via socket event
     } catch (error) {
+      console.error('[IglesiaChat] Error sending message:', error);
       logger.error('Error sending message:', error);
       setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al enviar mensaje' });
     }

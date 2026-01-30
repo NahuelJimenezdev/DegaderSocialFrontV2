@@ -95,13 +95,11 @@ export function ReunionesPage() {
   }, [location.state, meetings]);
 
   const handleCreateMeeting = async (meetingData) => {
-    // Formatear la fecha en formato ISO para el backend
-    const dateISO = new Date(`${meetingData.date}T${meetingData.time}:00`).toISOString();
-
+    // Enviar la fecha como string YYYY-MM-DD directo.
+    // Mongoose lo guardará como T00:00:00.000Z (UTC Midnight), que usaremos como standard.
     const dataToSend = {
       ...meetingData,
-      date: dateISO,
-      time: meetingData.time, // Mantener el time separado como espera el backend
+      time: meetingData.time,
     };
 
     const result = await createNewMeeting(dataToSend);
