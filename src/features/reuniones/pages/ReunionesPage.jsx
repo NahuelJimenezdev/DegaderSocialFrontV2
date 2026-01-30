@@ -95,26 +95,42 @@ export function ReunionesPage() {
   }, [location.state, meetings]);
 
   const handleCreateMeeting = async (meetingData) => {
-    // Enviar la fecha como string YYYY-MM-DD directo.
-    // Mongoose lo guardará como T00:00:00.000Z (UTC Midnight), que usaremos como standard.
-    const dataToSend = {
-      ...meetingData,
-      time: meetingData.time,
-    };
+    try {
+      // 🌍 DETECCIÓN DE ZONA HORARIA Y CÁLCULO UTC
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const result = await createNewMeeting(dataToSend);
+      // Combinamos fecha (YYYY-MM-DD) y hora (HH:mm) locales
+      const [year, month, day] = meetingData.date.split('-').map(Number);
+      const [hours, minutes] = meetingData.time.split(':').map(Number);
 
-    if (result.success) {
-      // Éxito
-      setIsModalOpen(false);
-      logger.log('Reunión creada y lista actualizada.');
-    } else {
-      // No cerramos el modal, dejamos que el modal maneje el error
-      logger.error('Fallo la creación:', result.error);
+      // Creamos la fecha en el contexto LOCAL del navegador
+      const localDate = new Date(year, month - 1, day, hours, minutes);
+
+      // toISOString() da el instante universal exacto
+      const startsAt = localDate.toISOString();
+
+      const dataToSend = {
+        ...meetingData,
+        timezone,
+        startsAt
+      };
+
+      const result = await createNewMeeting(dataToSend);
+
+      if (result.success) {
+        // Éxito
+        setIsModalOpen(false);
+        logger.log('Reunión creada y lista actualizada.');
+      } else {
+        // No cerramos el modal, dejamos que el modal maneje el error
+        logger.error('Fallo la creación:', result.error);
+      }
+
+      return result;
+    } catch (error) {
+      logger.error('Error en handleCreateMeeting:', error);
+      return { success: false, error: error.message };
     }
-
-    // Retornar el resultado para que el modal lo maneje
-    return result;
   };
 
   // Manejar selección de reunión desde el calendario

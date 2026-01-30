@@ -125,16 +125,34 @@ export const getStatusColor = (status) => {
 };
 
 // Función utilitaria para formatear la fecha
-export const formatDate = (dateString) => {
-  if (!dateString) return 'N/A';
-  const date = new Date(dateString);
+export const formatDate = (dateString, startsAt) => {
+  if (!startsAt && !dateString) return 'N/A';
+
+  // Si tenemos startsAt (UTC), lo usamos para la fecha local
+  const date = startsAt ? new Date(startsAt) : new Date(dateString);
+
   return date.toLocaleDateString('es-ES', {
-    timeZone: 'UTC', // IMPORTANTE: La fecha se guarda como UTC Midnight. Mostrar tal cual.
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
+};
+
+export const formatTime = (timeString, startsAt) => {
+  if (!startsAt && !timeString) return 'N/A';
+
+  // Si tenemos startsAt (UTC), extraemos la hora local
+  if (startsAt) {
+    const date = new Date(startsAt);
+    return date.toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  }
+
+  return timeString; // Fallback legacy
 };
 
 

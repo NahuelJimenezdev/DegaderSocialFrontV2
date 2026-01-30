@@ -118,13 +118,13 @@ export function MeetingCard({ meeting, onCancel, currentUserId }) {
       <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4" />
-          <span>{formatDate(date)}</span>
+          <span>{formatDate(date, meeting.startsAt)}</span>
         </div>
 
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" />
           <span>
-            {time} ({duration})
+            {formatTime(time, meeting.startsAt)} ({duration})
           </span>
         </div>
 
