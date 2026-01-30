@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import iglesiaService from '../../../api/iglesiaService';
-import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
+import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 
 const IglesiaExMiembrosContent = ({ iglesiaId }) => {
     const navigate = useNavigate();
@@ -46,9 +46,9 @@ const IglesiaExMiembrosContent = ({ iglesiaId }) => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
             {/* Header */}
-            <div className="mb-6">
+            <div className="mb-6 text-center">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                     Historial de Salidas
                 </h1>
@@ -79,9 +79,13 @@ const IglesiaExMiembrosContent = ({ iglesiaId }) => {
                                         <td className="py-4 px-6">
                                             <div className="flex items-center gap-3">
                                                 <img
-                                                    src={getAvatarUrl(registro.usuario?.social?.fotoPerfil)}
-                                                    alt="Avatar"
+                                                    src={getUserAvatar(registro.usuario)}
+                                                    alt={`${registro.usuario?.nombres?.primero || 'Usuario'} ${registro.usuario?.apellidos?.primero || ''}`}
                                                     className="w-10 h-10 rounded-full object-cover bg-gray-200 dark:bg-gray-700 flex-shrink-0"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = getUserAvatar({ ...registro.usuario, social: { fotoPerfil: '' } });
+                                                    }}
                                                 />
                                                 <div className="overflow-hidden">
                                                     <p className="font-semibold text-gray-900 dark:text-white truncate max-w-[180px]">

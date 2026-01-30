@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
+import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 
 const IglesiaExMiembroDetalle = () => {
     const { id } = useParams(); // ID iglesia
@@ -45,9 +45,13 @@ const IglesiaExMiembroDetalle = () => {
                     <div className="flex flex-col items-center mb-8">
                         <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-purple-500 mb-4 shadow-lg">
                             <img
-                                src={getAvatarUrl(registro.usuario?.social?.fotoPerfil)}
-                                alt="Avatar"
+                                src={getUserAvatar(registro.usuario)}
+                                alt={`${registro.usuario?.nombres?.primero || 'Usuario'} ${registro.usuario?.apellidos?.primero || ''}`}
                                 className="w-full h-full rounded-full object-cover border-4 border-white dark:border-gray-800 bg-white"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = getUserAvatar({ ...registro.usuario, social: { fotoPerfil: '' } });
+                                }}
                             />
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">

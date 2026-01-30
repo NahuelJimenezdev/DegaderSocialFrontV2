@@ -18,9 +18,19 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
   const { emisor, metadata, createdAt, tipo, referencia } = notification;
   const { iglesiaNombre, solicitanteId } = metadata || {};
 
+  // Helper para resolver ID recursivamente
+  const resolveId = (val) => {
+    if (!val) return null;
+    if (typeof val === 'string') return val;
+    if (typeof val === 'object') {
+      return resolveId(val._id || val.id);
+    }
+    return String(val);
+  };
+
   // Obtener ID de la iglesia de forma segura
-  // referencia puede ser: { tipo: 'Iglesia', id: '12345' } o { tipo: 'Iglesia', _id: '12345' }
-  const iglesiaId = referencia?.id || referencia?._id;
+  const rawId = referencia?.id || referencia?._id;
+  const iglesiaId = resolveId(rawId);
 
   // Convertir a string y validar
   const iglesiaIdString = iglesiaId ? String(iglesiaId) : null;
