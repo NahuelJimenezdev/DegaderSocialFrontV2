@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.11.0...v1.11.1) (2026-01-30)
+
+
+### Bug Fixes
+
+* **iglesias:** corregir renderizado y alineación en historial salidas ([715f8da](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/715f8da752e6cb10eca5c744e9d08b5ed7807dfc))
+* **ui:** aumentar z-index de notificaciones para visibilidad sobre chat ([2315535](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/23155350e60073060efc8c914be0cbf4e1f80606))
+
 ## [1.11.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.10.5...v1.11.0) (2026-01-29)
 
 
