@@ -22,6 +22,8 @@ export const hideAdsSidebarRoutes = [
 export const hideSidebarRoutes = [
   // /Mis_grupos/1, /Mis_grupos/2, etc. - Los grupos tienen su propio sidebar
   /^\/Mis_grupos\/\d+$/,
+  // Ocultar sidebar global en la sección de miembros salidos (ya tiene sidebar de iglesia)
+  /^\/Mi_iglesia\/[a-zA-Z0-9_-]+\/miembros_salidos.*$/,
 ]
 
 
