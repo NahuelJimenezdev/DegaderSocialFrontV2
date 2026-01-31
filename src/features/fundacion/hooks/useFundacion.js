@@ -451,9 +451,10 @@ export const useFundacion = (user, updateUser) => {
     const cargarSolicitudesPendientes = useCallback(async () => {
         try {
             // Founder NO debe usar este endpoint, usa monitoreo global
-            if (user?.seguridad?.rolSistema === 'Founder') {
-                return;
-            }
+            // Founder AHORA puede usar este endpoint para ver solicitudes escaladas
+            // if (user?.seguridad?.rolSistema === 'Founder') {
+            //     return;
+            // }
 
             logger.log('🔍 Cargando solicitudes pendientes...');
             logger.log('👤 Usuario actual:', {
@@ -554,7 +555,7 @@ export const useFundacion = (user, updateUser) => {
                 barrio: user.fundacion.territorio?.barrio || ''
             }));
 
-            if (user.fundacion.estadoAprobacion === 'aprobado') {
+            if (user.fundacion.estadoAprobacion === 'aprobado' || user.seguridad?.rolSistema === 'Founder') {
                 cargarSolicitudesPendientes();
             }
         }
@@ -588,7 +589,7 @@ export const useFundacion = (user, updateUser) => {
             });
 
             // Recargar solicitudes para mantener sincronizado
-            if (user?.fundacion?.estadoAprobacion === 'aprobado') {
+            if (user?.fundacion?.estadoAprobacion === 'aprobado' || user?.seguridad?.rolSistema === 'Founder') {
                 cargarSolicitudesPendientes();
             }
         };

@@ -53,15 +53,15 @@ export default function FundacionPage() {
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                         {/* Estado Actual */}
-                        {user?.esMiembroFundacion && (
-                            <div className={`p-4 rounded-lg mb-6 ${user.fundacion.estadoAprobacion === 'aprobado' ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200' :
-                                user.fundacion.estadoAprobacion === 'rechazado' ? 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200' :
+                        {user?.esMiembroFundacion && user?.fundacion && (
+                            <div className={`p-4 rounded-lg mb-6 ${user.fundacion?.estadoAprobacion === 'aprobado' ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200' :
+                                user.fundacion?.estadoAprobacion === 'rechazado' ? 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200' :
                                     'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-200'
                                 }`}>
                                 <p className="font-semibold">
-                                    Estado: {user.fundacion.estadoAprobacion.toUpperCase()}
+                                    Estado: {user.fundacion?.estadoAprobacion?.toUpperCase() || 'DESCONOCIDO'}
                                 </p>
-                                {user.fundacion.estadoAprobacion === 'pendiente' && (
+                                {user.fundacion?.estadoAprobacion === 'pendiente' && (
                                     <p className="text-sm mt-1">Tu solicitud está siendo revisada por un superior jerárquico.</p>
                                 )}
                             </div>
@@ -327,7 +327,7 @@ export default function FundacionPage() {
                     </div>
 
                     {/* Panel de Aprobaciones */}
-                    {user?.fundacion?.estadoAprobacion === 'aprobado' && (
+                    {(user?.fundacion?.estadoAprobacion === 'aprobado' || user?.seguridad?.rolSistema === 'Founder') && (
                         <SolicitudesList
                             solicitudes={solicitudesPendientes}
                             onGestionarSolicitud={handleGestionarSolicitud}
