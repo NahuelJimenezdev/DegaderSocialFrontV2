@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { logger } from '../../../shared/utils/logger';
 import { Calendar, Clock, Users, Video, ExternalLink, XCircle } from "lucide-react";
-import { getStatusColor, getTypeColor, formatDate } from "../services/meetingService";
+import { getStatusColor, getTypeColor, formatDate, formatTime } from "../services/meetingService";
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 
