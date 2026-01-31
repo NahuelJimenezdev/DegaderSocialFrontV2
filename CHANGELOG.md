@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.1...v1.12.2) (2026-01-31)
+
+
+### Bug Fixes
+
+* agregar importación faltante de formatTime en MeetingCard ([46bf07d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/46bf07d0946dbddfa03b91af714aeedec1aac901))
+
 ### [1.12.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.0...v1.12.1) (2026-01-30)
 
 ## [1.12.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.11.7...v1.12.0) (2026-01-30)
