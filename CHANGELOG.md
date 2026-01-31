@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.2...v1.12.3) (2026-01-31)
+
+
+### Bug Fixes
+
+* permitir visualización de solicitudes a Founder y prevenir crash ([907a84b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/907a84baf4797208f7ebcc558a4a354e22b0eed1))
+
 ### [1.12.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.1...v1.12.2) (2026-01-31)
 
 
