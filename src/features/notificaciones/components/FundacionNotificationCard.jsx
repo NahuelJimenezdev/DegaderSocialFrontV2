@@ -3,6 +3,7 @@ import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Users } from 'lucide-react';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import { getTerritorioString } from '../../../shared/utils/userUtils';
 import fundacionService from '../../../api/fundacionService';
 import notificationService from '../../../api/notificationService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
@@ -157,6 +158,7 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
                         {tipo === 'solicitud_fundacion' && (nivel || area) && (
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 Nivel: {nivel} • Área: {area}
+                                {getTerritorioString(emisor) && ` • ${getTerritorioString(emisor)}`}
                             </p>
                         )}
 

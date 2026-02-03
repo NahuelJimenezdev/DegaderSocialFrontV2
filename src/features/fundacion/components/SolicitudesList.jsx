@@ -1,4 +1,5 @@
 import { Users, Check, X } from 'lucide-react';
+import { getTerritorioString } from '../../../shared/utils/userUtils';
 
 /**
  * Lista de solicitudes pendientes de aprobación
@@ -39,6 +40,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                             </p>
                             <p className="text-xs text-gray-500">
                                 Área: {solicitud.fundacion.area}
+                                {getTerritorioString(solicitud) && ` • ${getTerritorioString(solicitud)}`}
                             </p>
                         </div>
                         <div className="flex gap-2">

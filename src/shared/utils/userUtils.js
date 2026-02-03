@@ -43,4 +43,19 @@ export const getNombreDisplay = (user) => {
   return nombreCompleto !== 'Usuario' ? nombreCompleto : user?.email || 'Usuario';
 };
 
+/**
+ * Obtiene la cadena de territorio formateada para la fundación
+ * @param {Object} user - Objeto usuario
+ * @returns {string} Territorio formateado (ej: "Formosa, Argentina")
+ */
+export const getTerritorioString = (user) => {
+  if (!user?.fundacion?.territorio) return '';
+  const { pais, region, departamento, municipio, barrio } = user.fundacion.territorio;
+
+  const parts = [barrio, municipio, departamento, region, pais].filter(Boolean);
+
+  // Eliminar duplicados si los hay y unir
+  return [...new Set(parts)].join(', ');
+};
+
 
