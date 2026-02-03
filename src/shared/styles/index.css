@@ -253,7 +253,7 @@ body {
 .main-content {
   flex: 1;
   height: 100%;
-  margin-left: 250px;
+  /* margin-left eliminado porque usamos flexbox en el padre */
   overflow-y: auto;
   overflow-x: hidden;
   padding: 2rem;
