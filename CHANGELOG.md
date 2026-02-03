@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.13.1...v1.14.0) (2026-02-03)
+
+
+### Features
+
+* **auth:** integrate dynamic country and province selection in registration ([7d51908](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7d519086188ff1bc5216e44eb8d223a768d0870e))
+
+
+### Bug Fixes
+
+* se agregan mas paises a la base de datos ([0e5f4df](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0e5f4df81fe6c8d670d7f8c61a9aa0c5598fde00))
+
 ### [1.13.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.13.0...v1.13.1) (2026-02-03)
 
 
