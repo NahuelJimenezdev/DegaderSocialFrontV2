@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../../data/paisesProvincias';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -25,6 +26,17 @@ const Register = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+    setError('');
+  };
+
+  const handleCountryChange = (e) => {
+    const nuevoPais = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      pais: nuevoPais,
+      estado: '', // Reseteamos la provincia/estado al cambiar de país
+      ciudad: '', // Opcional: resetear ciudad también
     }));
     setError('');
   };
@@ -169,37 +181,52 @@ const Register = () => {
             </select>
           </div>
 
+
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="pais" className="block text-sm font-medium text-gray-700 mb-2">
                 País <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 id="pais"
                 name="pais"
                 value={formData.pais}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="Ej: Argentina"
+                onChange={handleCountryChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                 disabled={loading}
-              />
+              >
+                <option value="">Selecciona un país</option>
+                {getPaisesOrdenados().map((pais) => (
+                  <option key={pais} value={pais}>
+                    {pais}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
               <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-2">
-                Provincia / Estado
+                {formData.pais ?
+                  getTipoDivision(formData.pais).charAt(0).toUpperCase() + getTipoDivision(formData.pais).slice(1)
+                  : 'Provincia / Estado'}
+                <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 id="estado"
                 name="estado"
                 value={formData.estado}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="Ej: Buenos Aires"
-                disabled={loading}
-              />
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                disabled={loading || !formData.pais}
+              >
+                <option value="">Selecciona una opción</option>
+                {formData.pais && getDivisionesPais(formData.pais).map((division) => (
+                  <option key={division} value={division}>
+                    {division}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
