@@ -245,10 +245,7 @@ body {
   height: 100%;
   background-color: var(--bg-card);
   border-right: 1px solid var(--border-primary);
-  position: fixed;
-  left: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* position, overflow y layout delegados a sidebar.style.css */
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 

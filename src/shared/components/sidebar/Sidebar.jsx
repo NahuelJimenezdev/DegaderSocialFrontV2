@@ -14,7 +14,8 @@ const Sidebar = () => {
   return (
     <>
       <aside className="sidebar">
-        <div className="sidebar-content">
+        {/* Contenedor Superior: Menú Scrolleable */}
+        <div className="sidebar-menu">
           <div className="sidebar-items">
             <NavItem to="/" icon={Home} label="Inicio" />
           </div>
@@ -60,11 +61,12 @@ const Sidebar = () => {
               <NavItem to="/founder/users" icon={ShieldAlert} label="Gestión Usuarios" />
             </div>
           )}
+        </div>
 
-          {/* Separador arriba de Configuración */}
-          <div className="border-t border-gray-200 dark:border-gray-700 mx-4 my-4"></div>
-
-          <div className="sidebar-items">
+        {/* Contenedor Inferior: Configuración Fija */}
+        <div className="sidebar-footer">
+          <div className="border-t border-gray-200 dark:border-gray-700 mx-4 mb-4"></div>
+          <div className="sidebar-items px-4 pb-4">
             <NavItem to="/configuracion" icon={Settings} label="Configuración" />
           </div>
         </div>
