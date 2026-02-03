@@ -158,6 +158,8 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
                         {tipo === 'solicitud_fundacion' && (nivel || area) && (
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 Nivel: {nivel} • Área: {area}
+                                {metadata?.subArea && ` • Sub-Área: ${metadata.subArea}`}
+                                {metadata?.programa && ` • Programa: ${metadata.programa}`}
                                 {getTerritorioString(emisor) && ` • ${getTerritorioString(emisor)}`}
                             </p>
                         )}
