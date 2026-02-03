@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.5...v1.13.0) (2026-02-03)
+
+
+### Features
+
+* **auth:** add registration fields and fix foundation notifications ([13a3838](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/13a383866cadbf970c6ff1c0463c9c66121da1c5))
+
 ### [1.12.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.4...v1.12.5) (2026-02-03)
 
 
