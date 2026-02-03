@@ -10,7 +10,7 @@ const Register = () => {
     apellido: '',
     email: '',
     fechaNacimiento: '',
-    genero: 'Otro', // Valor por defecto
+    genero: 'M', // Valor por defecto
     pais: '',
     ciudad: '',
     estado: '',
@@ -166,8 +166,6 @@ const Register = () => {
             >
               <option value="M">Masculino</option>
               <option value="F">Femenino</option>
-              <option value="Otro">Otro</option>
-              <option value="Otro">Prefiero no decir</option>
             </select>
           </div>
 
