@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.14.0...v1.15.0) (2026-02-03)
+
+
+### Features
+
+* **notificaciones:** agregar visualización de territorio en solicitudes de fundación ([18097a4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/18097a476110c5f5a80f11e1746036fdc5d9b645))
+
 ## [1.14.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.13.1...v1.14.0) (2026-02-03)
 
 
