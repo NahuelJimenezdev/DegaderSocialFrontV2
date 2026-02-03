@@ -33,6 +33,73 @@ export const PAISES_DIVISIONES = {
             "Tucumán"
         ]
     },
+    "Bolivia": {
+        tipo: "departamentos",
+        divisiones: [
+            "Beni",
+            "Chuquisaca",
+            "Cochabamba",
+            "La Paz",
+            "Oruro",
+            "Pando",
+            "Potosí",
+            "Santa Cruz",
+            "Tarija"
+        ]
+    },
+    "Brasil": {
+        tipo: "estados",
+        divisiones: [
+            "Acre",
+            "Alagoas",
+            "Amapá",
+            "Amazonas",
+            "Bahía",
+            "Ceará",
+            "Distrito Federal",
+            "Espírito Santo",
+            "Goiás",
+            "Maranhão",
+            "Mato Grosso",
+            "Mato Grosso do Sul",
+            "Minas Gerais",
+            "Pará",
+            "Paraíba",
+            "Paraná",
+            "Pernambuco",
+            "Piauí",
+            "Río de Janeiro",
+            "Rio Grande do Norte",
+            "Rio Grande do Sul",
+            "Rondônia",
+            "Roraima",
+            "Santa Catarina",
+            "São Paulo",
+            "Sergipe",
+            "Tocantins"
+        ]
+    },
+    "Chile": {
+        tipo: "regiones",
+        divisiones: [
+            "Arica y Parinacota",
+            "Tarapacá",
+            "Antofagasta",
+            "Atacama",
+            "Coquimbo",
+            "Valparaíso",
+            "Región Metropolitana de Santiago",
+            "O'Higgins",
+            "Maule",
+            "Ñuble",
+            "Biobío",
+            "La Araucanía",
+            "Los Ríos",
+            "Los Lagos",
+            "Aysén",
+            "Magallanes y de la Antártica Chilena"
+        ]
+    },
     "Colombia": {
         tipo: "departamentos",
         divisiones: [
@@ -71,6 +138,167 @@ export const PAISES_DIVISIONES = {
             "Vichada"
         ]
     },
+    "Costa Rica": {
+        tipo: "provincias",
+        divisiones: [
+            "Alajuela",
+            "Cartago",
+            "Guanacaste",
+            "Heredia",
+            "Limón",
+            "Puntarenas",
+            "San José"
+        ]
+    },
+    "Cuba": {
+        tipo: "provincias",
+        divisiones: [
+            "Artemisa",
+            "Camagüey",
+            "Ciego de Ávila",
+            "Cienfuegos",
+            "Granma",
+            "Guantánamo",
+            "Holguín",
+            "La Habana",
+            "Las Tunas",
+            "Matanzas",
+            "Mayabeque",
+            "Pinar del Río",
+            "Sancti Spíritus",
+            "Santiago de Cuba",
+            "Villa Clara",
+            "Isla de la Juventud"
+        ]
+    },
+    "Ecuador": {
+        tipo: "provincias",
+        divisiones: [
+            "Azuay",
+            "Bolívar",
+            "Cañar",
+            "Carchi",
+            "Chimborazo",
+            "Cotopaxi",
+            "El Oro",
+            "Esmeraldas",
+            "Galápagos",
+            "Guayas",
+            "Imbabura",
+            "Loja",
+            "Los Ríos",
+            "Manabí",
+            "Morona Santiago",
+            "Napo",
+            "Orellana",
+            "Pastaza",
+            "Pichincha",
+            "Santa Elena",
+            "Santo Domingo de los Tsáchilas",
+            "Sucumbíos",
+            "Tungurahua",
+            "Zamora Chinchipe"
+        ]
+    },
+    "El Salvador": {
+        tipo: "departamentos",
+        divisiones: [
+            "Ahuachapán",
+            "Cabañas",
+            "Chalatenango",
+            "Cuscatlán",
+            "La Libertad",
+            "La Paz",
+            "La Unión",
+            "Morazán",
+            "San Miguel",
+            "San Salvador",
+            "San Vicente",
+            "Santa Ana",
+            "Sonsonate",
+            "Usulután"
+        ]
+    },
+    "España": {
+        tipo: "comunidades autónomas",
+        divisiones: [
+            "Andalucía",
+            "Aragón",
+            "Asturias",
+            "Islas Baleares",
+            "Canarias",
+            "Cantabria",
+            "Castilla-La Mancha",
+            "Castilla y León",
+            "Cataluña",
+            "Comunidad Valenciana",
+            "Extremadura",
+            "Galicia",
+            "La Rioja",
+            "Comunidad de Madrid",
+            "Región de Murcia",
+            "Navarra",
+            "País Vasco",
+            "Ceuta",
+            "Melilla"
+        ]
+    },
+    "Estados Unidos": {
+        tipo: "estados",
+        divisiones: [
+            "Alabama",
+            "Alaska",
+            "Arizona",
+            "Arkansas",
+            "California",
+            "Colorado",
+            "Connecticut",
+            "Delaware",
+            "Florida",
+            "Georgia",
+            "Hawái",
+            "Idaho",
+            "Illinois",
+            "Indiana",
+            "Iowa",
+            "Kansas",
+            "Kentucky",
+            "Luisiana",
+            "Maine",
+            "Maryland",
+            "Massachusetts",
+            "Míchigan",
+            "Minnesota",
+            "Misisipi",
+            "Misuri",
+            "Montana",
+            "Nebraska",
+            "Nevada",
+            "Nueva Hampshire",
+            "Nueva Jersey",
+            "Nuevo México",
+            "Nueva York",
+            "Carolina del Norte",
+            "Dakota del Norte",
+            "Ohio",
+            "Oklahoma",
+            "Oregón",
+            "Pensilvania",
+            "Rhode Island",
+            "Carolina del Sur",
+            "Dakota del Sur",
+            "Tennessee",
+            "Texas",
+            "Utah",
+            "Vermont",
+            "Virginia",
+            "Washington",
+            "Virginia Occidental",
+            "Wisconsin",
+            "Wyoming",
+            "Distrito de Columbia"
+        ]
+    },
     "Honduras": {
         tipo: "departamentos",
         divisiones: [
@@ -92,6 +320,43 @@ export const PAISES_DIVISIONES = {
             "Santa Bárbara",
             "Valle",
             "Yoro"
+        ]
+    },
+    "México": {
+        tipo: "estados",
+        divisiones: [
+            "Aguascalientes",
+            "Baja California",
+            "Baja California Sur",
+            "Campeche",
+            "Chiapas",
+            "Chihuahua",
+            "Ciudad de México",
+            "Coahuila",
+            "Colima",
+            "Durango",
+            "Estado de México",
+            "Guanajuato",
+            "Guerrero",
+            "Hidalgo",
+            "Jalisco",
+            "Michoacán",
+            "Morelos",
+            "Nayarit",
+            "Nuevo León",
+            "Oaxaca",
+            "Puebla",
+            "Querétaro",
+            "Quintana Roo",
+            "San Luis Potosí",
+            "Sinaloa",
+            "Sonora",
+            "Tabasco",
+            "Tamaulipas",
+            "Tlaxcala",
+            "Veracruz",
+            "Yucatán",
+            "Zacatecas"
         ]
     },
     "Nicaragua": {
@@ -116,6 +381,24 @@ export const PAISES_DIVISIONES = {
             "Rivas"
         ]
     },
+    "Panamá": {
+        tipo: "provincias",
+        divisiones: [
+            "Bocas del Toro",
+            "Chiriquí",
+            "Coclé",
+            "Colón",
+            "Darién",
+            "Herrera",
+            "Los Santos",
+            "Panamá",
+            "Panamá Oeste",
+            "Veraguas",
+            "Guna Yala",
+            "Emberá-Wounaan",
+            "Ngäbe-Buglé"
+        ]
+    },
     "Paraguay": {
         tipo: "departamentos",
         divisiones: [
@@ -137,6 +420,36 @@ export const PAISES_DIVISIONES = {
             "Paraguarí",
             "Presidente Hayes",
             "San Pedro"
+        ]
+    },
+    "Perú": {
+        tipo: "departamentos",
+        divisiones: [
+            "Amazonas",
+            "Áncash",
+            "Apurímac",
+            "Arequipa",
+            "Ayacucho",
+            "Cajamarca",
+            "Callao",
+            "Cusco",
+            "Huancavelica",
+            "Huánuco",
+            "Ica",
+            "Junín",
+            "La Libertad",
+            "Lambayeque",
+            "Lima",
+            "Loreto",
+            "Madre de Dios",
+            "Moquegua",
+            "Pasco",
+            "Piura",
+            "Puno",
+            "San Martín",
+            "Tacna",
+            "Tumbes",
+            "Ucayali"
         ]
     },
     "Venezuela": {
