@@ -40,6 +40,8 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                             </p>
                             <p className="text-xs text-gray-500">
                                 Área: {solicitud.fundacion.area}
+                                {solicitud.fundacion.subArea && ` • Sub-Área: ${solicitud.fundacion.subArea}`}
+                                {solicitud.fundacion.programa && ` • Programa: ${solicitud.fundacion.programa}`}
                                 {getTerritorioString(solicitud) && ` • ${getTerritorioString(solicitud)}`}
                             </p>
                         </div>
