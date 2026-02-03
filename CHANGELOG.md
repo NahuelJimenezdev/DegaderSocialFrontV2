@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.4...v1.12.5) (2026-02-03)
+
+
+### Bug Fixes
+
+* **layout:** remove redundant margin-left from main-content to fix spacing gap ([8db70cc](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8db70cc4236a27a87231a7714ec330875327723a))
+
 ### [1.12.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.3...v1.12.4) (2026-02-03)
 
 ### [1.12.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.12.2...v1.12.3) (2026-01-31)
