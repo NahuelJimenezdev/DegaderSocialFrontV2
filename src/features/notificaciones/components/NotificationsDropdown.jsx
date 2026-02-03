@@ -93,8 +93,8 @@ export default function NotificationsDropdown() {
     const typesToDelete = [
       'solicitud_iglesia_aprobada',
       'solicitud_iglesia_rechazada',
-      'solicitud_fundacion_aprobada',
-      'solicitud_fundacion_rechazada',
+      // 'solicitud_fundacion_aprobada',  <-- NO BORRAR AUTOMÁTICAMENTE
+      // 'solicitud_fundacion_rechazada', <-- NO BORRAR AUTOMÁTICAMENTE
       'solicitud_grupo_aprobada',
       'solicitud_grupo_rechazada',
       'solicitud_rechazada',
@@ -142,7 +142,7 @@ export default function NotificationsDropdown() {
     }
 
     if (['solicitud_fundacion', 'solicitud_fundacion_aprobada', 'solicitud_fundacion_rechazada'].includes(notificacion.tipo)) {
-      navigate('/Mi_iglesia', { state: { activeTab: 'fundacion' } });
+      navigate('/fundacion');
       setOpen(false);
       return;
     }
@@ -304,6 +304,7 @@ export default function NotificationsDropdown() {
                         onAction={(notifId) => {
                           setNotifications(prev => prev.filter(notif => notif._id !== notifId));
                         }}
+                        onMarkAsRead={() => markAsRead(n._id)}
                       />
                     );
                   }

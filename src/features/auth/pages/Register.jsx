@@ -10,6 +10,10 @@ const Register = () => {
     apellido: '',
     email: '',
     fechaNacimiento: '',
+    genero: 'Otro', // Valor por defecto
+    pais: '',
+    ciudad: '',
+    estado: '',
     password: '',
     confirmPassword: '',
   });
@@ -30,7 +34,7 @@ const Register = () => {
     setError('');
 
     // Validations
-    if (!formData.nombre || !formData.apellido || !formData.email || !formData.fechaNacimiento || !formData.password) {
+    if (!formData.nombre || !formData.apellido || !formData.email || !formData.fechaNacimiento || !formData.password || !formData.pais || !formData.ciudad) {
       setError('Por favor completa todos los campos obligatorios');
       return;
     }
@@ -52,6 +56,10 @@ const Register = () => {
         apellido: formData.apellido,
         email: formData.email,
         fechaNacimiento: formData.fechaNacimiento,
+        genero: formData.genero,
+        pais: formData.pais,
+        ciudad: formData.ciudad,
+        estado: formData.estado,
         password: formData.password,
       };
 
@@ -140,6 +148,75 @@ const Register = () => {
               value={formData.fechaNacimiento}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              disabled={loading}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="genero" className="block text-sm font-medium text-gray-700 mb-2">
+              Género <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="genero"
+              name="genero"
+              value={formData.genero}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+              disabled={loading}
+            >
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="Otro">Otro</option>
+              <option value="Otro">Prefiero no decir</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="pais" className="block text-sm font-medium text-gray-700 mb-2">
+                País <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="pais"
+                name="pais"
+                value={formData.pais}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                placeholder="Ej: Argentina"
+                disabled={loading}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-2">
+                Provincia / Estado
+              </label>
+              <input
+                type="text"
+                id="estado"
+                name="estado"
+                value={formData.estado}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                placeholder="Ej: Buenos Aires"
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700 mb-2">
+              Ciudad <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="ciudad"
+              name="ciudad"
+              value={formData.ciudad}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              placeholder="Ej: La Plata"
               disabled={loading}
             />
           </div>

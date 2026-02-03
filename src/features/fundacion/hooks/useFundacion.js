@@ -539,23 +539,25 @@ export const useFundacion = (user, updateUser) => {
 
     // Inicializar datos cuando cambia el usuario
     useEffect(() => {
-        if (user?.fundacion) {
-            setFormData(prev => ({
-                ...prev,
-                nivel: user.fundacion.nivel || '',
-                area: user.fundacion.area || '',
-                subArea: user.fundacion.subArea || '',
-                programa: user.fundacion.programa || '',
-                cargo: user.fundacion.cargo || '',
-                rolFuncional: user.fundacion.rolFuncional || '',
-                pais: user.fundacion.territorio?.pais || 'Colombia',
-                region: user.fundacion.territorio?.region || '',
-                departamento: user.fundacion.territorio?.departamento || '',
-                municipio: user.fundacion.territorio?.municipio || '',
-                barrio: user.fundacion.territorio?.barrio || ''
-            }));
+        if (user?.fundacion || user?.seguridad?.rolSistema === 'Founder') {
+            if (user?.fundacion) {
+                setFormData(prev => ({
+                    ...prev,
+                    nivel: user.fundacion.nivel || '',
+                    area: user.fundacion.area || '',
+                    subArea: user.fundacion.subArea || '',
+                    programa: user.fundacion.programa || '',
+                    cargo: user.fundacion.cargo || '',
+                    rolFuncional: user.fundacion.rolFuncional || '',
+                    pais: user.fundacion.territorio?.pais || 'Colombia',
+                    region: user.fundacion.territorio?.region || '',
+                    departamento: user.fundacion.territorio?.departamento || '',
+                    municipio: user.fundacion.territorio?.municipio || '',
+                    barrio: user.fundacion.territorio?.barrio || ''
+                }));
+            }
 
-            if (user.fundacion.estadoAprobacion === 'aprobado' || user.seguridad?.rolSistema === 'Founder') {
+            if (user?.fundacion?.estadoAprobacion === 'aprobado' || user?.seguridad?.rolSistema === 'Founder') {
                 cargarSolicitudesPendientes();
             }
         }

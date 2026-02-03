@@ -7,7 +7,7 @@ import fundacionService from '../../../api/fundacionService';
 import notificationService from '../../../api/notificationService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 
-const FundacionNotificationCard = ({ notification, onAction }) => {
+const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => {
     const navigate = useNavigate();
     const toast = useToast();
     const [loading, setLoading] = useState(false);
@@ -61,12 +61,15 @@ const FundacionNotificationCard = ({ notification, onAction }) => {
 
             // Eliminar la notificación del backend para que no vuelva a aparecer
             try {
-                await notificationService.deleteNotification(notification._id);
+                // NOTA: Para fundacion, si queremos mantener historial, NO debemos borrarla
+                // Solo marcamos como leída o ejecutamos onAction para remover de la vista actual si es necesario
+                // await notificationService.deleteNotification(notification._id);
+                if (onMarkAsRead) onMarkAsRead();
             } catch (deleteError) {
-                logger.warn('⚠️ Error al eliminar notificación (puede que ya no exista):', deleteError);
+                logger.warn('⚠️ Error al gestionar post-acción:', deleteError);
             }
 
-            // Notificar al componente padre para actualizar la lista
+            // Notificar al componente padre para actualizar la lista (ej. remover del dropdown)
             if (onAction) {
                 onAction(notification._id);
             }
@@ -79,19 +82,13 @@ const FundacionNotificationCard = ({ notification, onAction }) => {
     };
 
     const handleClick = async () => {
-        // Si es notificación final (aprobada/rechazada), borrarla al hacer click
-        if (tipo === 'solicitud_fundacion_aprobada' || tipo === 'solicitud_fundacion_rechazada') {
-            try {
-                logger.log('🗑️ Eliminando notificación al clickear:', notification._id);
-                await notificationService.deleteNotification(notification._id);
-                if (onAction) onAction(notification._id);
-            } catch (error) {
-                logger.error('❌ Error eliminando notificación:', error);
-            }
+        // Marcar como leída usando la función pasada por props
+        if (!notification.leida && onMarkAsRead) {
+            onMarkAsRead();
         }
 
-        // Navegar a la página de iglesias (tab fundación)
-        navigate('/Mi_iglesia', { state: { activeTab: 'fundacion' } });
+        // Navegar a la página de fundación correcta
+        navigate('/fundacion');
     };
 
     // Obtener nombre del solicitante
@@ -172,7 +169,10 @@ const FundacionNotificationCard = ({ notification, onAction }) => {
                     {tipo === 'solicitud_fundacion' && (
                         <div className="flex items-center gap-2 mt-3">
                             <button
-                                onClick={() => handleAction('aprobar')}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAction('aprobar');
+                                }}
                                 disabled={loading}
                                 className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white text-sm font-medium rounded-lg transition-colors"
                             >
@@ -180,7 +180,10 @@ const FundacionNotificationCard = ({ notification, onAction }) => {
                                 Aceptar
                             </button>
                             <button
-                                onClick={() => handleAction('rechazar')}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAction('rechazar');
+                                }}
                                 disabled={loading}
                                 className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white text-sm font-medium rounded-lg transition-colors"
                             >
