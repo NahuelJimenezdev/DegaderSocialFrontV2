@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.15.0...v1.16.0) (2026-02-03)
+
+
+### Features
+
+* **fundacion:** corregir selección de programas y mostrar detalles en notificaciones ([89d1101](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/89d11018a04e94db7e3872a61ac7854652be6b68))
+
 ## [1.15.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.14.0...v1.15.0) (2026-02-03)
 
 
