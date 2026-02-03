@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.16.0...v1.17.0) (2026-02-03)
+
+
+### Features
+
+* **fundacion:** mostrar sub-área y programa en lista de solicitudes pendientes ([ec996a7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ec996a7f508ca4d81702b59f29d7b657d01f39dc))
+
 ## [1.16.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.15.0...v1.16.0) (2026-02-03)
 
 
