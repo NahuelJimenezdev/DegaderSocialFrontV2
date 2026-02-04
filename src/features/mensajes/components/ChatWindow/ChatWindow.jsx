@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatarUtils';
+import { getSocket } from '../../../../shared/lib/socket';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
 
@@ -33,7 +34,7 @@ const ChatWindow = ({
 
     // Socket: Escuchar eventos de escritura
     React.useEffect(() => {
-        const socket = require('../../../../shared/lib/socket').getSocket();
+        const socket = getSocket();
         if (!socket || !conversacionActual) return;
 
         const handleRemoteTypingStart = (data) => {
@@ -70,7 +71,7 @@ const ChatWindow = ({
 
     // Función para manejar el input del usuario y emitir eventos
     const handleTypingLocal = (text) => {
-        const socket = require('../../../../shared/lib/socket').getSocket();
+        const socket = getSocket();
         if (!socket || !otroUsuario) return;
 
         const now = Date.now();
