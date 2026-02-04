@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.0...v1.19.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **chat:** eliminar propiedad duplicada handleEmojiSelect en ChatInput ([0e5ab99](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0e5ab9952758cff9cf56bcf1844d8e38464d77cf))
+
 ## [1.19.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.18.0...v1.19.0) (2026-02-04)
 
 
