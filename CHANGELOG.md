@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.22.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.22.1...v1.22.2) (2026-02-04)
+
+
+### Bug Fixes
+
+* **favorites:** mostrar contador de amigos en tarjeta de favorito ([ecfc727](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ecfc727ebf8f4b7340cfde0947c848da63cee8ad))
+
 ### [1.22.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.22.0...v1.22.1) (2026-02-04)
 
 
