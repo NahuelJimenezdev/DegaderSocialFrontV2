@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.26.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.25.0...v1.26.0) (2026-02-04)
+
+
+### Features
+
+* **grupos:** permitir acceso a configuración a todos los miembros y mejoras en UX de unirse ([99d4566](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/99d4566724bfdc6edd7bde2fd0cf8590dfc2abc5))
+
 ## [1.25.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.5...v1.25.0) (2026-02-04)
 
 
