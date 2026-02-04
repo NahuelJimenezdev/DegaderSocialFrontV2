@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.24.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.3...v1.24.4) (2026-02-04)
+
+
+### Bug Fixes
+
+* **notificaciones:** cambiar dropdown a position fixed con cálculo dinámico de posición ([11cb268](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/11cb26826b2e0bb624e3f318da4f8c6b27516bc1))
+
 ### [1.24.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.2...v1.24.3) (2026-02-04)
 
 
