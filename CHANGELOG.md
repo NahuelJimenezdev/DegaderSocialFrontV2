@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.25.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.5...v1.25.0) (2026-02-04)
+
+
+### Features
+
+* **grupos:** implementar alerta iOS minimalista para acceso restringido a grupos ([7f13560](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7f135609f99d0ca7bceccb67dfb3d4e6e3756a33))
+* **grupos:** scroll instantáneo al final del chat al cargar ([3abb0c7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3abb0c73572b97e5048995809517cb6608e8cd95))
+
 ### [1.24.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.4...v1.24.5) (2026-02-04)
 
 
