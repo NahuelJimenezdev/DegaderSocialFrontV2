@@ -274,7 +274,12 @@ export const useChatController = () => {
                 });
                 scrollToBottom();
                 if (message.emisor?._id !== userId && message.emisor !== userId) {
-                    conversationService.markAsRead(conversacionActual._id).catch(console.error);
+                    // 🆕 Emitir evento socket 'message_read' inmediatamente para actualización en tiempo real (ticks azules)
+                    // en lugar de llamada REST lenta
+                    socket.emit('message_read', {
+                        conversationId: conversacionActual._id,
+                        readerId: userId
+                    });
                 }
             }
         };
