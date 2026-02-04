@@ -69,6 +69,27 @@ const ChatWindow = ({
         };
     }, [conversacionActual, userId, otroUsuario]);
 
+    // Efecto para marcar mensajes como leídos
+    React.useEffect(() => {
+        const socket = getSocket();
+        if (!socket || !conversacionActual || !userId) return;
+
+        // Verificar si hay mensajes no leídos para mí
+        // Usamos toString() para asegurar comparación correcta entre ObjectId y strings
+        const unreadMessages = conversacionActual.mensajesNoLeidos?.some(m =>
+            (m.usuario?._id || m.usuario)?.toString() === userId?.toString() && m.cantidad > 0
+        );
+
+        // Si hay mensajes no leídos, emitir evento de lectura
+        if (unreadMessages) {
+            console.log('[ChatWindow] Emitiendo message_read para limpieza de no leídos');
+            socket.emit('message_read', {
+                conversationId: conversacionActual._id,
+                readerId: userId
+            });
+        }
+    }, [conversacionActual, userId]);
+
     // Función para manejar el input del usuario y emitir eventos
     const handleTypingLocal = (text) => {
         const socket = getSocket();
