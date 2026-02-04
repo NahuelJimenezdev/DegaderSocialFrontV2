@@ -452,6 +452,67 @@ export const PAISES_DIVISIONES = {
             "Ucayali"
         ]
     },
+    "Republica Dominicana": {
+        tipo: "provincias",
+        divisiones: [
+            "Azua",
+            "Bahoruco",
+            "Barahona",
+            "Dajabon",
+            "Distrito Nacional",
+            "Duarte",
+            "El Seibo",
+            "Elias Pina",
+            "Espaillat",
+            "Hato Mayor",
+            "Hermanas Mirabal",
+            "Independencia",
+            "La Altagracia",
+            "La Romana",
+            "La Vega",
+            "Maria Trinidad Sanchez",
+            "Monsenor Nouel",
+            "Monte Cristi",
+            "Monte Plata",
+            "Pedernales",
+            "Peravia",
+            "Puerto Plata",
+            "Samana",
+            "San Cristobal",
+            "San Jose de Ocoa",
+            "San Juan",
+            "San Pedro de Macoris",
+            "Sanchez Ramirez",
+            "Santiago",
+            "Santiago Rodriguez",
+            "Santo Domingo",
+            "Valverde"
+        ]
+    },
+    "Uruguay": {
+        tipo: "departamentos",
+        divisiones: [
+            "Artigas",
+            "Canelones",
+            "Cerro Largo",
+            "Colonia",
+            "Durazno",
+            "Flores",
+            "Florida",
+            "Lavalleja",
+            "Maldonado",
+            "Montevideo",
+            "Paysandu",
+            "Rio Negro",
+            "Rivera",
+            "Rocha",
+            "Salto",
+            "San Jose",
+            "Soriano",
+            "Tacuarembo",
+            "Treinta y Tres"
+        ]
+    },
     "Venezuela": {
         tipo: "estados",
         divisiones: [
