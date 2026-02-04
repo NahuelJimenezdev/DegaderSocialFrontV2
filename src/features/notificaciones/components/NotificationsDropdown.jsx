@@ -34,6 +34,7 @@ export default function NotificationsDropdown() {
   const userId = user?._id || user?.id;
   const [open, setOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
   const bellRef = useRef(null);
 
   const {
@@ -47,6 +48,18 @@ export default function NotificationsDropdown() {
     deleteInformativeNotification,
     setNotifications
   } = useNotifications(user);
+
+  // Calculate dropdown position when opening
+  const handleToggleDropdown = () => {
+    if (!open && bellRef.current) {
+      const rect = bellRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right
+      });
+    }
+    setOpen(!open);
+  };
 
   // Click outside handler
   useEffect(() => {
@@ -235,7 +248,7 @@ export default function NotificationsDropdown() {
 
   return (
     <div className={styles.dropdownContainer} ref={bellRef}>
-      <button className={styles.bellButton} onClick={() => setOpen(!open)}>
+      <button className={styles.bellButton} onClick={handleToggleDropdown}>
         <Bell size={20} />
         {unreadCount > 0 && (
           <span className={styles.badge}>
@@ -244,7 +257,10 @@ export default function NotificationsDropdown() {
         )}
       </button>
       {open && (
-        <div className={`${styles.dropdownMenu} ${styles.dropdownAnim}`}>
+        <div
+          className={`${styles.dropdownMenu} ${styles.dropdownAnim}`}
+          style={{ top: `${dropdownPosition.top}px`, right: `${dropdownPosition.right}px` }}
+        >
           <h4 className={styles.title}>Notificaciones</h4>
           {unreadNotifications.length === 0 ? (
             <div className={styles.empty}>
