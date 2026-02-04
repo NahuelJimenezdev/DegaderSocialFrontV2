@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.17.0...v1.18.0) (2026-02-04)
+
+
+### Features
+
+* **data:** agregar provincias y departamentos para República Dominicana y Uruguay ([42365e1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/42365e16133e5ac29f1644aeee63204a9aaff35e))
+
 ## [1.17.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.16.0...v1.17.0) (2026-02-03)
 
 
