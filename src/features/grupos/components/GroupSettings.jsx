@@ -4,6 +4,7 @@ import GroupGeneralSettings from './GroupGeneralSettings';
 import GroupPermissionsPanel from './GroupPermissionsPanel';
 import GroupNotificationsPanel from './GroupNotificationsPanel';
 import GroupDangerZone from './GroupDangerZone';
+import TransferOwnershipModal from './TransferOwnershipModal';
 
 const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => {
   // Use custom hook for all business logic
@@ -24,7 +25,10 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
     handleDeleteAvatar,
     handleDeleteGroup,
     handleLeaveGroup,
-    cancelEdit
+    cancelEdit,
+    showTransferModal,
+    setShowTransferModal,
+    handleTransferSuccess
   } = useGroupSettings(groupData, refetch, user, isOwner);
 
   // Access control - only admins and owners
@@ -91,13 +95,21 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
         />
       </div>
 
-      {/* AlertDialog Component */}
       <AlertDialog
         isOpen={alertConfig.isOpen}
         onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
         variant={alertConfig.variant}
         message={alertConfig.message}
       />
+
+      {/* Transfer Ownership Modal */}
+      {showTransferModal && (
+        <TransferOwnershipModal
+          groupId={groupData._id}
+          onClose={() => setShowTransferModal(false)}
+          onSuccess={handleTransferSuccess}
+        />
+      )}
     </div>
   );
 };

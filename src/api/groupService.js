@@ -68,6 +68,16 @@ const groupService = {
   },
 
   /**
+   * Get group members
+   * @param {string} groupId - Group ID
+   * @returns {Promise<Object>} Response data
+   */
+  getGroupMembers: async (groupId) => {
+    const response = await api.get(`/grupos/${groupId}/members`);
+    return response.data;
+  },
+
+  /**
    * Update group information (admin/owner only)
    * @param {string} groupId - Group ID
    * @param {Object} data - Data to update
