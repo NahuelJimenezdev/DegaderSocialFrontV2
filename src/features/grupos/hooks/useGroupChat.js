@@ -81,6 +81,11 @@ export const useGroupChat = (groupData, user, targetMessageId, onClearTargetMess
                 const transformedMessages = Array.isArray(data) ? data.map(transformMessage) : [];
                 setMessages(transformedMessages);
                 prevMessagesLengthRef.current = transformedMessages.length;
+
+                // Scroll instantáneo al final después de cargar mensajes
+                setTimeout(() => {
+                    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+                }, 100);
             } catch (err) {
                 logger.error('❌ [LOAD] Error loading messages:', err);
                 setMessages([]);
@@ -181,7 +186,7 @@ export const useGroupChat = (groupData, user, targetMessageId, onClearTargetMess
     }, [groupData?._id, user?._id]);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
     };
 
     useEffect(() => {
