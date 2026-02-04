@@ -84,7 +84,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
         <GroupPermissionsPanel groupData={groupData} />
 
         {/* Notifications */}
-        <GroupNotificationsPanel />
+        <GroupNotificationsPanel groupId={groupData._id} />
 
         {/* Danger Zone */}
         <GroupDangerZone

@@ -369,6 +369,26 @@ const groupService = {
     const response = await api.get(`/grupos/${groupId}/eventos`);
     return response.data;
   },
+
+  // ===== NOTIFICATION SETTINGS =====
+
+  /**
+   * Update notification settings for current user in group
+   * @param {string} groupId - Group ID
+   * @param {Object} settings - Notification settings
+   * @param {boolean} settings.muted - Whether notifications are muted
+   * @param {string} settings.duration - Mute duration ('1h' | '8h' | '24h' | 'siempre')
+   * @param {string} settings.muteType - Mute type ('total' | 'solo_menciones')
+   * @returns {Promise<Object>} Response data
+   */
+  updateNotificationSettings: async (groupId, settings) => {
+    const response = await api.post(`/grupos/${groupId}/notifications/settings`, {
+      silenciadas: settings.muted,
+      duracion: settings.duration,
+      tipoSilencio: settings.muteType
+    });
+    return response.data;
+  },
 };
 
 export default groupService;
