@@ -125,6 +125,34 @@ const UserInfoPage = () => {
         ? `${userInfo.nombre} ${userInfo.apellido}`
         : userInfo.nombreCompleto || 'Usuario';
 
+    // Helper para determinar el rol a mostrar
+    const getDisplayRole = (userInfo) => {
+        if (!userInfo.eclesiastico) return 'Miembro';
+
+        // 1. Priorizar roles de liderazgo en ministerios
+        if (userInfo.eclesiastico.ministerios && userInfo.eclesiastico.ministerios.length > 0) {
+            // Buscar si es líder, director, coordinador, etc.
+            const liderazgo = userInfo.eclesiastico.ministerios.find(m =>
+                ['lider', 'director', 'coordinador', 'pastor', 'anciano', 'diacono'].includes(m.cargo?.toLowerCase()) && m.activo
+            );
+
+            if (liderazgo) {
+                // Capitalizar cargo y ministerio
+                const cargo = liderazgo.cargo.charAt(0).toUpperCase() + liderazgo.cargo.slice(1);
+                // Mapear nombres de ministerios técnicos a bonitos si es necesario, o usar el nombre directo
+                const ministerioNombre = liderazgo.nombre.charAt(0).toUpperCase() + liderazgo.nombre.slice(1).replace(/_/g, ' ');
+                return `${cargo} de ${ministerioNombre}`;
+            }
+        }
+
+        // 2. Fallback al rol principal
+        if (userInfo.eclesiastico.rolPrincipal) {
+            return userInfo.eclesiastico.rolPrincipal.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        return 'Miembro';
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
@@ -210,7 +238,7 @@ const UserInfoPage = () => {
                             />
                         </InfoCard>
 
-                        {/* Cargo en Iglesia */}
+                        {/* Cargo en Iglesia (Lógica Mejorada) */}
                         {userInfo.esMiembroIglesia && userInfo.eclesiastico && (
                             <InfoCard
                                 icon={Building2}
@@ -221,7 +249,7 @@ const UserInfoPage = () => {
                                 <InfoItem
                                     icon={Briefcase}
                                     label="Rol / Cargo"
-                                    value={userInfo.eclesiastico.rolPrincipal ? userInfo.eclesiastico.rolPrincipal.replace(/_/g, ' ') : 'Miembro'}
+                                    value={getDisplayRole(userInfo)}
                                     className="capitalize"
                                 />
                                 {userInfo.eclesiastico.iglesia && (
