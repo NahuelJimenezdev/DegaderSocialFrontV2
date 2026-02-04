@@ -1,3 +1,7 @@
+import React from 'react';
+import { Star, MoreVertical, Trash2, Archive, Eraser } from 'lucide-react';
+import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatarUtils';
+import { useChatContext } from '../../context/ChatContext';
 import { ConfirmDialog } from '../../../../shared/components/ConfirmDialog/ConfirmDialog';
 
 /**
