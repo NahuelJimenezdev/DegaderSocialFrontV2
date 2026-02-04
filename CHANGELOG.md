@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.22.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.22.0...v1.22.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **profile:** priorizar roles de liderazgo en ministerios sobre rol principal generico ([43858fd](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/43858fda95b75ec3a0a58b90f64cb9e23806b1c5))
+
 ## [1.22.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.21.1...v1.22.0) (2026-02-04)
 
 
