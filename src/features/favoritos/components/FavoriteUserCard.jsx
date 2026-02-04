@@ -38,7 +38,17 @@ const FavoriteUserCard = ({ user, onRemove }) => {
     const online = isOnlineRealTime !== null ? isOnlineRealTime : isOnlineFallback;
 
     // Obtener número de amigos/contactos
-    const friendsCount = user.amigos?.length || user.social?.stats?.amigos || 0;
+    // Priorizar el contador calculado por el backend
+    const friendsCount = user.friendsCount ?? (user.amigos?.length || user.social?.stats?.amigos || 0);
+
+    console.log(`🎴 [FAVORITE CARD] ${user.username}:`, {
+        friendsCount,
+        backendCount: user.friendsCount,
+        amigosLength: user.amigos?.length,
+        statsAmigos: user.social?.stats?.amigos,
+        hasAmigosArray: Array.isArray(user.amigos),
+        amigosType: typeof user.amigos
+    });
 
     return (
         <div
