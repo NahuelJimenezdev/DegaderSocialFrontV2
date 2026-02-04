@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.5...v1.19.6) (2026-02-04)
+
+
+### Bug Fixes
+
+* **chat:** emitir message_read por socket al recibir nuevo mensaje en chat abierto ([1bf3171](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1bf3171cef2337c6963b7ec668e717ce6fea1248))
+
 ### [1.19.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.4...v1.19.5) (2026-02-04)
 
 ### [1.19.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.3...v1.19.4) (2026-02-04)
