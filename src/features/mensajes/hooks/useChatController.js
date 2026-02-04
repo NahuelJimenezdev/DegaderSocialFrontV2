@@ -497,7 +497,7 @@ export const useChatController = () => {
     };
 
     const handleEliminarChat = async (conversationId) => {
-        if (!confirm('¿Estás seguro de que quieres eliminar esta conversación?')) return;
+        // Confirmación delegada a la UI (ConfirmDialog)
         try {
             await conversationService.deleteConversation(conversationId);
             setConversaciones(prev => prev.filter(conv => conv._id !== conversationId));
@@ -531,7 +531,7 @@ export const useChatController = () => {
     };
 
     const handleVaciarConversacion = async (conversationId) => {
-        if (!confirm('¿Estás seguro de que quieres eliminar todos los mensajes de esta conversación?')) return;
+        // Confirmación delegada a la UI (ConfirmDialog)
         try {
             await conversationService.clearConversation(conversationId);
             if (conversacionActual?._id === conversationId) {
@@ -569,7 +569,7 @@ export const useChatController = () => {
     };
 
     const handleRechazarSolicitud = async (conversationId) => {
-        if (!confirm('¿Estás seguro de que quieres rechazar esta solicitud?')) return;
+        // Confirmación delegada a la UI (ConfirmDialog)
         try {
             await conversationService.declineMessageRequest(conversationId);
             setConversaciones(prev => prev.filter(conv => conv._id !== conversationId));

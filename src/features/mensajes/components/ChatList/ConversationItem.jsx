@@ -1,7 +1,4 @@
-import React from 'react';
-import { Star, MoreVertical, Trash2, Archive, Eraser } from 'lucide-react';
-import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatarUtils';
-import { useChatContext } from '../../context/ChatContext';
+import { ConfirmDialog } from '../../../../shared/components/ConfirmDialog/ConfirmDialog';
 
 /**
  * ConversationItem - Item individual de conversación en la lista
@@ -29,6 +26,10 @@ const ConversationItem = ({ conversacion }) => {
     } = useChatContext();
     const otro = getOtroParticipante(conversacion);
     const unreadCount = getUnreadCount(conversacion);
+
+    // Estado local para manejar qué diálogo de confirmación mostrar
+    // null | { type: 'eliminar'|'vaciar'|'rechazar', title: string, message: string, ... }
+    const [actionDialog, setActionDialog] = React.useState(null);
 
     if (!otro) return null;
 
@@ -90,7 +91,13 @@ const ConversationItem = ({ conversacion }) => {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleRechazarSolicitud(conversacion._id);
+                            setActionDialog({
+                                type: 'rechazar',
+                                title: 'Rechazar solicitud',
+                                message: '¿Estás seguro de que quieres rechazar esta solicitud? La conversación se eliminará.',
+                                confirmText: 'Rechazar',
+                                variant: 'danger'
+                            });
                         }}
                         className="px-3 py-1 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs rounded-md transition-colors"
                     >
@@ -126,7 +133,13 @@ const ConversationItem = ({ conversacion }) => {
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleEliminarChat(conversacion._id);
+                                    setActionDialog({
+                                        type: 'eliminar',
+                                        title: 'Eliminar chat',
+                                        message: '¿Estás seguro de que quieres eliminar esta conversación? Esta acción solo la borrará para ti.',
+                                        confirmText: 'Eliminar',
+                                        variant: 'danger'
+                                    });
                                 }}
                                 className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 text-red-600 dark:text-red-400"
                             >
@@ -146,7 +159,13 @@ const ConversationItem = ({ conversacion }) => {
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleVaciarConversacion(conversacion._id);
+                                    setActionDialog({
+                                        type: 'vaciar',
+                                        title: 'Vaciar conversación',
+                                        message: '¿Estás seguro de que quieres eliminar todos los mensajes? Esta acción no se puede deshacer.',
+                                        confirmText: 'Vaciar',
+                                        variant: 'danger'
+                                    });
                                 }}
                                 className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-300"
                             >
@@ -157,6 +176,22 @@ const ConversationItem = ({ conversacion }) => {
                     )}
                 </div>
             )}
+            {/* Diálogos de Confirmación */}
+            <ConfirmDialog
+                isOpen={!!actionDialog}
+                onClose={() => setActionDialog(null)}
+                onConfirm={() => {
+                    if (actionDialog.type === 'eliminar') handleEliminarChat(conversacion._id);
+                    if (actionDialog.type === 'vaciar') handleVaciarConversacion(conversacion._id);
+                    if (actionDialog.type === 'rechazar') handleRechazarSolicitud(conversacion._id);
+                    setActionDialog(null);
+                }}
+                title={actionDialog?.title || 'Confirmar acción'}
+                message={actionDialog?.message || '¿Estás seguro?'}
+                confirmText={actionDialog?.confirmText || 'Confirmar'}
+                cancelText="Cancelar"
+                variant={actionDialog?.variant || 'warning'}
+            />
         </div>
     );
 };
