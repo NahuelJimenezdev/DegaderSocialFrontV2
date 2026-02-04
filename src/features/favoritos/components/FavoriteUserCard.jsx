@@ -9,8 +9,8 @@ const FavoriteUserCard = ({ user, onRemove }) => {
     const onlineUsers = useOnlineUsers();
 
     const handleCardClick = () => {
-        const identifier = user.username || user._id;
-        navigate(`/informacionUsuario/${identifier}`);
+        const identifier = user._id;
+        navigate(`/perfil/${identifier}`);
     };
 
     const handleRemoveClick = (e) => {
