@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.21.1...v1.22.0) (2026-02-04)
+
+
+### Features
+
+* **profile:** mostrar info detallada de gloria y fundacion en perfil publico ([6c43162](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6c43162d79da56d57947da6f17793903bf521e3c))
+
 ### [1.21.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.21.0...v1.21.1) (2026-02-04)
 
 
