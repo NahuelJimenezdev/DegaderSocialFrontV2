@@ -1,4 +1,5 @@
 import IOSAlert from '../../../shared/components/IOSAlert';
+import '../../../shared/styles/layout.mobile.css';
 import { useState, useEffect } from 'react'
 import { logger } from '../../../shared/utils/logger';
 import { useNavigate, useParams } from 'react-router-dom'

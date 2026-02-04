@@ -16,9 +16,9 @@
 }
 
 /* Ocultar sidebar en mobile */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .sidebar {
-        display: none;
+        display: none !important;
     }
 }
 

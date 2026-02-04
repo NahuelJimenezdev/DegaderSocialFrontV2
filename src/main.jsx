@@ -5,6 +5,7 @@ import { router } from './routes'
 import { AuthProvider } from './context/AuthContext'
 import { ToastProvider } from './shared/components/Toast/ToastProvider'
 import { OnlineUsersProvider } from './contexts/OnlineUsersContext'
+import './shared/styles/layout.mobile.css';
 // import './index.css'
 // import App from './App.jsx'
 
