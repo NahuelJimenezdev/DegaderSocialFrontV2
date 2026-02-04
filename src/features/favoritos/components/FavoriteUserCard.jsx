@@ -37,8 +37,8 @@ const FavoriteUserCard = ({ user, onRemove }) => {
     const isOnlineFallback = isOnlineByLastConnection();
     const online = isOnlineRealTime !== null ? isOnlineRealTime : isOnlineFallback;
 
-    // Obtener número de seguidores
-    const followersCount = user.seguidores || 0;
+    // Obtener número de amigos/contactos
+    const friendsCount = user.amigos?.length || user.social?.stats?.amigos || 0;
 
     return (
         <div
@@ -90,7 +90,7 @@ const FavoriteUserCard = ({ user, onRemove }) => {
                     <div className="flex items-center gap-1">
                         <Users size={12} className="text-gray-400" />
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {followersCount}
+                            {friendsCount}
                         </span>
                     </div>
                 </div>
