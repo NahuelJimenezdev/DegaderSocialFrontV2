@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.24.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.2...v1.24.3) (2026-02-04)
+
+
+### Bug Fixes
+
+* **navbar:** aumentar z-index de 40 a 50 para que dropdown de notificaciones aparezca sobre el chat ([d2ef6d7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d2ef6d754d8fd8f5488b36a6e2089e0b4966a667))
+
 ### [1.24.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.1...v1.24.2) (2026-02-04)
 
 
