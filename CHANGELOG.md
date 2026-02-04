@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.1...v1.19.2) (2026-02-04)
+
+
+### Bug Fixes
+
+* **chat:** reemplazar require() por import en ChatWindow para evitar error de runtime ([318868c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/318868c553d741ac330413c28677392112c37ff7))
+
 ### [1.19.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.0...v1.19.1) (2026-02-04)
 
 
