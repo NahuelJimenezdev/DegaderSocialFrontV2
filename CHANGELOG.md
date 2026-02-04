@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.20.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.6...v1.20.0) (2026-02-04)
+
+
+### Features
+
+* interfaz para transferencia de propiedad de grupos y modal de confirmación ([0515de5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0515de5c55b22d22ef5268fdd9fc6aee08d03224))
+
 ### [1.19.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.5...v1.19.6) (2026-02-04)
 
 
