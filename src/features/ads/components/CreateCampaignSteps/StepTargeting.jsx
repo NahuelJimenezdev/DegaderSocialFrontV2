@@ -51,7 +51,7 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
                     Género
                 </label>
                 <div className="flex gap-4">
-                    {['todos', 'masculino', 'femenino', 'otro'].map((genero) => (
+                    {['todos', 'masculino', 'femenino'].map((genero) => (
                         <label key={genero} className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"

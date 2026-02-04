@@ -28,7 +28,9 @@ const ChatInput = ({
     mostrarEmojiPicker,
     setMostrarEmojiPicker,
     handleEmojiSelect,
-    handleEnviarMensaje
+    handleEmojiSelect,
+    handleEnviarMensaje,
+    handleTyping // Prop para manejar evento de escritura
 }) => {
     return (
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
@@ -101,7 +103,13 @@ const ChatInput = ({
                     type="text"
                     placeholder="Escribe un mensaje..."
                     value={nuevoMensaje}
-                    onChange={(e) => setNuevoMensaje(e.target.value)}
+                    onChange={(e) => {
+                        setNuevoMensaje(e.target.value);
+                        if (handleTyping) handleTyping(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (handleTyping) handleTyping(e.target.value);
+                    }}
                     className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-800 border-0 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white"
                 />
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check, CheckCheck } from 'lucide-react';
 import api from '../../../../api/config';
 
 // Función auxiliar para formatear tiempo (copiada para encapsulamiento)
@@ -108,9 +109,23 @@ const MessageBubble = ({ msg, currentUserId }) => {
                     <p className="text-sm break-words">{msg.contenido}</p>
                 )}
 
-                <p className={`text-xs mt-1 ${esMio ? 'text-indigo-100' : 'text-gray-500 dark:text-gray-400'}`}>
-                    {formatearTiempo(msg.createdAt)}
-                </p>
+                <div className={`flex items-center justify-end gap-1 mt-1`}>
+                    <p className={`text-xs ${esMio ? 'text-indigo-100' : 'text-gray-500 dark:text-gray-400'}`}>
+                        {formatearTiempo(msg.createdAt)}
+                    </p>
+                    {esMio && (
+                        <span className="flex items-center" title={msg.estado || (msg.leido ? 'leido' : 'enviado')}>
+                            {/* Lógica de retrocompatibilidad: si 'estado' existe úsalo, si no, usa 'leido' bool */}
+                            {(msg.estado === 'leido' || msg.leido) ? (
+                                <CheckCheck size={16} className="text-cyan-300" />
+                            ) : (msg.estado === 'entregado') ? (
+                                <CheckCheck size={16} className="text-indigo-200" />
+                            ) : (
+                                <Check size={16} className="text-indigo-200" />
+                            )}
+                        </span>
+                    )}
+                </div>
             </div>
         </div>
     );

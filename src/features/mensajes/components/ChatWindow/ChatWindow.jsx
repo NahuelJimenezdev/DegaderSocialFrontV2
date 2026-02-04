@@ -27,6 +27,78 @@ const ChatWindow = ({
     handleCerrarChat // Handler para botón atrás móvil
 }) => {
     const otroUsuario = conversacionActual ? getOtroParticipante(conversacionActual) : null;
+    const [isTyping, setIsTyping] = React.useState(false);
+    const typingTimeoutRef = useRef(null);
+    const lastTypingEmittedRef = useRef(0);
+
+    // Socket: Escuchar eventos de escritura
+    React.useEffect(() => {
+        const socket = require('../../../../shared/lib/socket').getSocket();
+        if (!socket || !conversacionActual) return;
+
+        const handleRemoteTypingStart = (data) => {
+            // Verificar si el evento es para esta conversación O para este usuario (si es chat nuevo)
+            // Aquí asumimos que si llega el evento es relevante, PERO validamos conversationId si existe
+            if (data.userId !== userId) { // No mostramos nuestro propio typing
+                if (data.conversationId && data.conversationId === conversacionActual._id) {
+                    setIsTyping(true);
+                } else if (!data.conversationId && otroUsuario && data.userId === otroUsuario._id) {
+                    // Caso chat nuevo: si el sender es el otro usuario de este chat
+                    setIsTyping(true);
+                }
+            }
+        };
+
+        const handleRemoteTypingStop = (data) => {
+            if (data.userId !== userId) {
+                if (data.conversationId && data.conversationId === conversacionActual._id) {
+                    setIsTyping(false);
+                } else if (!data.conversationId && otroUsuario && data.userId === otroUsuario._id) {
+                    setIsTyping(false);
+                }
+            }
+        };
+
+        socket.on('user_typing_start', handleRemoteTypingStart);
+        socket.on('user_typing_stop', handleRemoteTypingStop);
+
+        return () => {
+            socket.off('user_typing_start', handleRemoteTypingStart);
+            socket.off('user_typing_stop', handleRemoteTypingStop);
+        };
+    }, [conversacionActual, userId, otroUsuario]);
+
+    // Función para manejar el input del usuario y emitir eventos
+    const handleTypingLocal = (text) => {
+        const socket = require('../../../../shared/lib/socket').getSocket();
+        if (!socket || !otroUsuario) return;
+
+        const now = Date.now();
+        const THROTTLE_TIME = 2000;
+
+        // Emitir start si ha pasado el tiempo de throttle
+        if (now - lastTypingEmittedRef.current > THROTTLE_TIME) {
+            socket.emit('typing_start', {
+                recipientId: otroUsuario._id,
+                conversationId: conversacionActual?._id
+            });
+            lastTypingEmittedRef.current = now;
+        }
+
+        // Limpiar timeout anterior de stop
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
+        // Configurar nuevo timeout para emitir stop después de dejar de escribir
+        typingTimeoutRef.current = setTimeout(() => {
+            socket.emit('typing_stop', {
+                recipientId: otroUsuario._id,
+                conversationId: conversacionActual?._id
+            });
+            lastTypingEmittedRef.current = 0; // Reset para permitir nuevo start inmediato
+        }, 1500);
+    };
 
     return (
         <div className={`
@@ -98,6 +170,19 @@ const ChatWindow = ({
                                 />
                             ))
                         )}
+
+                        {/* Indicador de escritura */}
+                        {isTyping && (
+                            <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm ml-4 animate-pulse">
+                                <div className="flex gap-1">
+                                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                    <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                </div>
+                                <span>Escribiendo...</span>
+                            </div>
+                        )}
+
                         <div ref={mensajesEndRef} />
                     </div>
 
@@ -114,6 +199,7 @@ const ChatWindow = ({
                         setMostrarEmojiPicker={setMostrarEmojiPicker}
                         handleEmojiSelect={handleEmojiSelect}
                         handleEnviarMensaje={handleEnviarMensaje}
+                        handleTyping={handleTypingLocal}
                     />
                 </>
             )}

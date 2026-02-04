@@ -295,8 +295,24 @@ export const useChatController = () => {
             ));
         };
 
+        const handleMessagesReadUpdate = (data) => {
+            logger.log('🔍 [DEBUG] messagesReadUpdate recibido:', data);
+            if (conversacionActual && data.conversationId === conversacionActual._id) {
+                setMensajes(prev => prev.map(msg => {
+                    // Convertir a string para asegurar comparación
+                    const emisorId = msg.emisor?._id?.toString() || msg.emisor?.toString();
+                    // Si yo soy el emisor, marcar como leído
+                    if (emisorId === userId) {
+                        return { ...msg, leido: true, estado: 'leido', fechaLeido: data.readAt };
+                    }
+                    return msg;
+                }));
+            }
+        };
+
         socket.on('newMessage', handleNewMessage);
         socket.on('conversationRead', handleConversationRead);
+        socket.on('messages_read_update', handleMessagesReadUpdate);
 
         // Subscribe to conversation room
         if (conversacionActual?._id) {
@@ -306,6 +322,7 @@ export const useChatController = () => {
         return () => {
             socket.off('newMessage', handleNewMessage);
             socket.off('conversationRead', handleConversationRead);
+            socket.off('messages_read_update', handleMessagesReadUpdate);
             if (conversacionActual?._id) {
                 socket.emit('unsubscribeConversation', { conversationId: conversacionActual._id });
             }

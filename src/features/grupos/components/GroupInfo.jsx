@@ -59,11 +59,11 @@ const GroupInfo = ({ groupData }) => {
             </h3>
             <p className="text-white/80 mt-1 text-sm">Detalles y configuración del grupo</p>
           </div>
-          
+
           <div className="p-6 lg:p-8">
             {/* Grid Adaptativo */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-              
+
               {/* Card: Nombre del Grupo */}
               <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-6 border border-blue-100 dark:border-blue-800 hover:shadow-lg transition-all duration-300">
                 <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
@@ -177,7 +177,7 @@ const GroupInfo = ({ groupData }) => {
             </h3>
             <p className="text-white/80 mt-1 text-sm">Métricas y datos en tiempo real</p>
           </div>
-          
+
           <div className="p-6 lg:p-8">
             <style>{`
               .stats-grid {
@@ -194,63 +194,63 @@ const GroupInfo = ({ groupData }) => {
             `}</style>
             {/* Grid Adaptativo con CSS puro - 1 columna en móvil, 2 en PC */}
             <div className="stats-grid">
-              
+
               {/* Card 1: Miembros Totales - Destacada */}
-              <div className="md:col-span-2 lg:col-span-1 group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="md:col-span-2 lg:col-span-1 group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-600 dark:to-cyan-700 p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-blue-100 dark:border-blue-500">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 dark:bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-4xl text-white">
+                    <div className="p-3 bg-blue-500/10 dark:bg-white/20 rounded-xl backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-4xl text-blue-600 dark:text-white">
                         groups
                       </span>
                     </div>
-                    <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm">
-                      <span className="text-xs font-semibold text-white">ACTIVO</span>
+                    <div className="px-3 py-1 bg-blue-100 dark:bg-white/20 rounded-full backdrop-blur-sm">
+                      <span className="text-xs font-semibold text-blue-700 dark:text-white">ACTIVO</span>
                     </div>
                   </div>
-                  <p className="text-5xl lg:text-6xl font-black text-white mb-2">
+                  <p className="text-5xl lg:text-6xl font-black text-gray-900 dark:text-white mb-2">
                     {groupData?.members?.length || 0}
                   </p>
-                  <p className="text-white/90 font-medium text-lg">
+                  <p className="text-gray-700 dark:text-white/90 font-medium text-lg">
                     Miembros Totales
                   </p>
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-white/70 text-sm mt-1">
                     Comunidad activa
                   </p>
                 </div>
               </div>
 
               {/* Card 2: Administradores */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-600 dark:to-indigo-700 p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-purple-100 dark:border-purple-500">
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 dark:bg-white/10 rounded-full -ml-12 -mb-12 group-hover:scale-150 transition-transform duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-3xl text-white">
+                    <div className="p-3 bg-purple-500/10 dark:bg-white/20 rounded-xl backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-3xl text-purple-600 dark:text-white">
                         admin_panel_settings
                       </span>
                     </div>
                   </div>
-                  <p className="text-4xl lg:text-5xl font-black text-white mb-2">
+                  <p className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-2">
                     {getAdminCount()}
                   </p>
-                  <p className="text-white/90 font-medium">
+                  <p className="text-gray-700 dark:text-white/90 font-medium">
                     Administradores
                   </p>
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-white/70 text-sm mt-1">
                     Gestión del grupo
                   </p>
                 </div>
               </div>
 
               {/* Card 3: Solicitudes Pendientes */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-600 dark:to-orange-700 p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-amber-100 dark:border-amber-500">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 dark:bg-white/10 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-3xl text-white">
+                    <div className="p-3 bg-amber-500/10 dark:bg-white/20 rounded-xl backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-3xl text-amber-600 dark:text-white">
                         person_add
                       </span>
                     </div>
@@ -260,85 +260,85 @@ const GroupInfo = ({ groupData }) => {
                       </div>
                     )}
                   </div>
-                  <p className="text-4xl lg:text-5xl font-black text-white mb-2">
+                  <p className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-2">
                     {groupData?.joinRequests?.filter(r => r.status === 'pending').length || 0}
                   </p>
-                  <p className="text-white/90 font-medium">
+                  <p className="text-gray-700 dark:text-white/90 font-medium">
                     Solicitudes
                   </p>
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-white/70 text-sm mt-1">
                     Pendientes de revisión
                   </p>
                 </div>
               </div>
 
-              {/* Card 4: Mensajes (Placeholder - puedes agregar datos reales) */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute bottom-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-14 -mb-14 group-hover:scale-150 transition-transform duration-500"></div>
+              {/* Card 4: Mensajes */}
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-600 dark:to-teal-700 p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-emerald-100 dark:border-emerald-500">
+                <div className="absolute bottom-0 right-0 w-28 h-28 bg-emerald-500/10 dark:bg-white/10 rounded-full -mr-14 -mb-14 group-hover:scale-150 transition-transform duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-3xl text-white">
+                    <div className="p-3 bg-emerald-500/10 dark:bg-white/20 rounded-xl backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-3xl text-emerald-600 dark:text-white">
                         chat_bubble
                       </span>
                     </div>
                   </div>
-                  <p className="text-4xl lg:text-5xl font-black text-white mb-2">
+                  <p className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-2">
                     {groupData?.messageCount || '0'}
                   </p>
-                  <p className="text-white/90 font-medium">
+                  <p className="text-gray-700 dark:text-white/90 font-medium">
                     Mensajes
                   </p>
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-white/70 text-sm mt-1">
                     Total de conversaciones
                   </p>
                 </div>
               </div>
 
               {/* Card 5: Archivos Compartidos */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute top-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mt-12 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-600 dark:to-pink-700 p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-rose-100 dark:border-rose-500">
+                <div className="absolute top-0 left-0 w-24 h-24 bg-rose-500/10 dark:bg-white/10 rounded-full -ml-12 -mt-12 group-hover:scale-150 transition-transform duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-3xl text-white">
+                    <div className="p-3 bg-rose-500/10 dark:bg-white/20 rounded-xl backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-3xl text-rose-600 dark:text-white">
                         folder_shared
                       </span>
                     </div>
                   </div>
-                  <p className="text-4xl lg:text-5xl font-black text-white mb-2">
+                  <p className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-2">
                     {groupData?.fileCount || '0'}
                   </p>
-                  <p className="text-white/90 font-medium">
+                  <p className="text-gray-700 dark:text-white/90 font-medium">
                     Archivos
                   </p>
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-white/70 text-sm mt-1">
                     Multimedia compartida
                   </p>
                 </div>
               </div>
 
               {/* Card 6: Actividad */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-600 dark:to-purple-700 p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-violet-100 dark:border-violet-500">
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-violet-500/10 dark:bg-white/10 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-3xl text-white">
+                    <div className="p-3 bg-violet-500/10 dark:bg-white/20 rounded-xl backdrop-blur-sm">
+                      <span className="material-symbols-outlined text-3xl text-violet-600 dark:text-white">
                         trending_up
                       </span>
                     </div>
                     <div className={`px-2 py-1 ${getActivityBadge(groupData?.activityLevel || 0).color} rounded-full`}>
-                      <span className="text-xs font-bold text-white">{getActivityBadge(groupData?.activityLevel || 0).label}</span>
+                      <span className="text-xs font-bold text-white shadow-sm">{getActivityBadge(groupData?.activityLevel || 0).label}</span>
                     </div>
                   </div>
-                  <p className="text-4xl lg:text-5xl font-black text-white mb-2">
+                  <p className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-2">
                     {groupData?.activityLevel || '0'}%
                   </p>
-                  <p className="text-white/90 font-medium">
+                  <p className="text-gray-700 dark:text-white/90 font-medium">
                     Actividad
                   </p>
-                  <p className="text-white/70 text-sm mt-1">
+                  <p className="text-gray-500 dark:text-white/70 text-sm mt-1">
                     Nivel de participación
                   </p>
                 </div>

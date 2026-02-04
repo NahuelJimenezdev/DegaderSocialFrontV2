@@ -302,7 +302,7 @@ const EditCampaignModal = ({ isOpen, onClose, onSuccess, currentBalance, campaig
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>Género</label>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                  {['todos', 'masculino', 'femenino', 'otro'].map(g => (
+                  {['todos', 'masculino', 'femenino'].map(g => (
                     <label key={g} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: '#fff' }}>
                       <input type="radio" name="genero" value={g} checked={formData.segmentacion.genero === g} onChange={(e) => updateSegmentation('genero', e.target.value)} /> <span style={{ textTransform: 'capitalize' }}>{g}</span>
                     </label>
