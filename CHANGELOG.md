@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.21.0...v1.21.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **chat:** restaurar imports faltantes en ConversationItem para error de referencia ([b61a0d4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b61a0d4052cd86a9785629442cafcae9f42b69e0))
+
 ## [1.21.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.20.0...v1.21.0) (2026-02-04)
 
 
