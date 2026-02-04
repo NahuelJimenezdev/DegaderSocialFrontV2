@@ -31,26 +31,7 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
     handleTransferSuccess
   } = useGroupSettings(groupData, refetch, user, isOwner);
 
-  // Access control - only admins and owners
-  if (!isAdmin && !isOwner) {
-    return (
-      <div className="h-full overflow-auto p-6 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-12 text-center">
-            <span className="material-symbols-outlined text-6xl text-red-500 dark:text-red-400">
-              block
-            </span>
-            <p className="text-red-800 dark:text-red-200 mt-4 font-medium">
-              No tienes permisos para acceder a la configuración del grupo
-            </p>
-            <p className="text-sm text-red-600 dark:text-red-300 mt-2">
-              Solo los administradores y propietarios pueden modificar la configuración
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // No bloqueamos acceso global, pero renderizamos condicionalmente las secciones
 
   return (
     <div className="h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
@@ -63,30 +44,34 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
           </p>
         </div>
 
-        {/* General Settings */}
-        <GroupGeneralSettings
-          groupData={groupData}
-          editMode={editMode}
-          formData={formData}
-          imagePreview={imagePreview}
-          imageError={imageError}
-          loading={loading}
-          handleChange={handleChange}
-          handleImageChange={handleImageChange}
-          handleDeleteAvatar={handleDeleteAvatar}
-          handleSubmit={handleSubmit}
-          cancelEdit={cancelEdit}
-          setEditMode={setEditMode}
-          setImageError={setImageError}
-        />
+        {/* General Settings - Solo Admins y Owners */}
+        {(isAdmin || isOwner) && (
+          <GroupGeneralSettings
+            groupData={groupData}
+            editMode={editMode}
+            formData={formData}
+            imagePreview={imagePreview}
+            imageError={imageError}
+            loading={loading}
+            handleChange={handleChange}
+            handleImageChange={handleImageChange}
+            handleDeleteAvatar={handleDeleteAvatar}
+            handleSubmit={handleSubmit}
+            cancelEdit={cancelEdit}
+            setEditMode={setEditMode}
+            setImageError={setImageError}
+          />
+        )}
 
-        {/* Permissions */}
-        <GroupPermissionsPanel groupData={groupData} />
+        {/* Permissions - Solo Admins y Owners */}
+        {(isAdmin || isOwner) && (
+          <GroupPermissionsPanel groupData={groupData} />
+        )}
 
-        {/* Notifications */}
-        <GroupNotificationsPanel groupId={groupData._id} />
+        {/* Notifications - Visible para TODOS */}
+        <GroupNotificationsPanel groupId={groupData._id} currentSettings={groupData.notificaciones} />
 
-        {/* Danger Zone */}
+        {/* Danger Zone - Visible para TODOS (Lógica interna maneja permisos) */}
         <GroupDangerZone
           isOwner={isOwner}
           loading={loading}

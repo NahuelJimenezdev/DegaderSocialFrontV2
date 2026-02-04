@@ -30,10 +30,61 @@ const GroupDetail = () => {
   // Estado para unirse al grupo
   const [joining, setJoining] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
 
   // Contadores para los badges del sidebar
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
   const [newPostsCount, setNewPostsCount] = useState(0)
+
+  const handleJoinGroup = async () => {
+    try {
+      setJoining(true);
+      const response = await groupService.joinGroup(id);
+
+      if (response && (response.success || response.status === 'success')) {
+        toast.success(response.message || 'Solicitud enviada correctamente');
+        // No cerramos el alert, cambiamos a estado pendiente
+        setRequestSent(true);
+        refetch();
+      } else {
+        toast.error('No se pudo unir al grupo');
+      }
+    } catch (err) {
+      console.error('Error joining group:', err);
+      // Si el error dice que ya está pendiente, actualizamos estado visual
+      if (err.response?.data?.message?.includes('pendiente') || err.message?.includes('pendiente')) {
+        setRequestSent(true);
+        toast.success('Ya tienes una solicitud pendiente');
+      } else {
+        toast.error(err.response?.data?.message || 'Error al intentar unirse');
+      }
+    } finally {
+      setJoining(false);
+    }
+  };
+
+  // ... (existing code)
+
+  // Si hay ALERTA DE ACCESO DENEGADO (IOS Style)
+  if (alertOpen) {
+    return (
+      <IOSAlert
+        isOpen={alertOpen}
+        title={requestSent ? "Solicitud Pendiente" : "Acceso Restringido"}
+        message={requestSent
+          ? "Tu solicitud para unirte a este grupo ha sido enviada y está pendiente de aprobación por un administrador."
+          : "No puedes ingresar a este grupo a menos que te unas. Haz clic en unirse para enviar una solicitud o entrar."
+        }
+        onJoin={handleJoinGroup}
+        onCancel={handleCancelJoin}
+        isJoining={joining}
+      // Custom props handled by generic IOSAlert logic or we can add specific props if needed
+      // For now, we control texts via props. 
+      // We'll modify IOSAlert to accept custom button text if generic props aren't enough, 
+      // BUT better to just handle logic here:
+      />
+    );
+  }
 
   // Detectar si es mobile/tablet o desktop
   useEffect(() => {
@@ -85,26 +136,6 @@ const GroupDetail = () => {
       }
     }
   }, [groupData, loading, userMember, isOwner, isAdmin]);
-
-  const handleJoinGroup = async () => {
-    try {
-      setJoining(true);
-      const response = await groupService.joinGroup(id);
-
-      if (response && (response.success || response.status === 'success')) {
-        toast.success(response.message || 'Solicitud enviada o unido correctamente');
-        setAlertOpen(false);
-        refetch(); // Recargar datos para entrar
-      } else {
-        toast.error('No se pudo unir al grupo');
-      }
-    } catch (err) {
-      console.error('Error joining group:', err);
-      toast.error(err.response?.data?.message || 'Error al intentar unirse');
-    } finally {
-      setJoining(false);
-    }
-  };
 
   const handleCancelJoin = () => {
     navigate('/Mis_grupos'); // Volver a la lista si cancela
@@ -264,11 +295,16 @@ const GroupDetail = () => {
     return (
       <IOSAlert
         isOpen={alertOpen}
-        title="Acceso Restringido"
-        message="No puedes ingresar a este grupo a menos que te unas. Haz clic en unirse para enviar una solicitud o entrar."
+        title={requestSent ? "Solicitud Pendiente" : "Acceso Restringido"}
+        message={requestSent
+          ? "Tu solicitud para unirte a este grupo ha sido enviada y está pendiente de aprobación."
+          : "No puedes ingresar a este grupo a menos que te unas. Haz clic en unirse para enviar una solicitud o entrar."
+        }
         onJoin={handleJoinGroup}
         onCancel={handleCancelJoin}
         isJoining={joining}
+        isPending={requestSent}
+        mainActionText="Unirse al Grupo"
       />
     );
   }
