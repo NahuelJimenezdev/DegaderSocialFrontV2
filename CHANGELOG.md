@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.26.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.26.0...v1.26.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **layout:** corregir visibilidad global del sidebar en mobile y dependencias css ([f06e3f1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f06e3f1f3e4c3f8404d40b69cc60d81960c74d80))
+
 ## [1.26.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.25.0...v1.26.0) (2026-02-04)
 
 
