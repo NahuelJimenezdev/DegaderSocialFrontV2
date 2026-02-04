@@ -28,7 +28,6 @@ const ChatInput = ({
     mostrarEmojiPicker,
     setMostrarEmojiPicker,
     handleEmojiSelect,
-    handleEmojiSelect,
     handleEnviarMensaje,
     handleTyping // Prop para manejar evento de escritura
 }) => {
