@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.24.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.24.0...v1.24.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **notificaciones:** agregar navegación a grupo para tipo mensaje_grupo ([0b0adf6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0b0adf63b6224892b8c95a4bb3864968bd476b98))
+
 ## [1.24.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.23.0...v1.24.0) (2026-02-04)
 
 
