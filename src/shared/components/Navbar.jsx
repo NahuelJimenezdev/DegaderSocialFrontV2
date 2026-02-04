@@ -15,7 +15,7 @@ const Navbar = () => {
   const unreadMessages = useMessageCounter(user?._id || user?.id);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-50 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 z-[150] shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Left Section: Logo + SearchBar */}
