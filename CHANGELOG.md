@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.20.0...v1.21.0) (2026-02-04)
+
+
+### Features
+
+* **chat:** reemplazar alertas nativas por ConfirmDialog customizado en lista de chats ([441094f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/441094fa60ec86d0b7b88764784a49f571dba948))
+
 ## [1.20.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.19.6...v1.20.0) (2026-02-04)
 
 
