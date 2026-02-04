@@ -211,46 +211,61 @@ const UserInfoPage = () => {
                         </InfoCard>
 
                         {/* Cargo en Iglesia */}
-                        {userInfo.cargoIglesia && (
+                        {userInfo.esMiembroIglesia && userInfo.eclesiastico && (
                             <InfoCard
                                 icon={Building2}
-                                title="Cargo en Iglesia"
+                                title="Información Eclesiástica"
                                 iconColor="text-indigo-500"
                                 bgColor="bg-indigo-50 dark:bg-indigo-900/20"
                             >
                                 <InfoItem
                                     icon={Briefcase}
-                                    label="Cargo"
-                                    value={userInfo.cargoIglesia.nombre || 'No especificado'}
+                                    label="Rol / Cargo"
+                                    value={userInfo.eclesiastico.rolPrincipal ? userInfo.eclesiastico.rolPrincipal.replace(/_/g, ' ') : 'Miembro'}
+                                    className="capitalize"
                                 />
-                                {userInfo.cargoIglesia.iglesia && (
+                                {userInfo.eclesiastico.iglesia && (
                                     <InfoItem
                                         icon={Building2}
                                         label="Iglesia"
-                                        value={userInfo.cargoIglesia.iglesia}
+                                        value={typeof userInfo.eclesiastico.iglesia === 'object' ? userInfo.eclesiastico.iglesia.nombre : 'Iglesia Local'}
                                     />
                                 )}
+                                <InfoItem
+                                    icon={Clock}
+                                    label="Miembro desde"
+                                    value={formatDate(userInfo.eclesiastico.fechaUnion)}
+                                    subtitle={`Hace ${calculateTimeSince(userInfo.eclesiastico.fechaUnion)}`}
+                                />
                             </InfoCard>
                         )}
 
                         {/* Cargo en Fundación */}
-                        {userInfo.cargoFundacion && (
+                        {userInfo.esMiembroFundacion && userInfo.fundacion && (
                             <InfoCard
                                 icon={Users}
-                                title="Cargo en Fundación"
+                                title="Información Fundación"
                                 iconColor="text-green-500"
                                 bgColor="bg-green-50 dark:bg-green-900/20"
                             >
                                 <InfoItem
                                     icon={Briefcase}
                                     label="Cargo"
-                                    value={userInfo.cargoFundacion.nombre || 'No especificado'}
+                                    value={userInfo.fundacion.cargo || 'No especificado'}
                                 />
-                                {userInfo.cargoFundacion.area && (
+                                {userInfo.fundacion.area && (
                                     <InfoItem
                                         icon={Users}
                                         label="Área"
-                                        value={userInfo.cargoFundacion.area}
+                                        value={userInfo.fundacion.area}
+                                    />
+                                )}
+                                {userInfo.fundacion.fechaIngreso && (
+                                    <InfoItem
+                                        icon={Clock}
+                                        label="Miembro desde"
+                                        value={formatDate(userInfo.fundacion.fechaIngreso)}
+                                        subtitle={`Hace ${calculateTimeSince(userInfo.fundacion.fechaIngreso)}`}
                                     />
                                 )}
                             </InfoCard>
