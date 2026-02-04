@@ -74,6 +74,16 @@ export default function NotificationCard({
         return;
       }
 
+      // Si es notificación de mensaje de grupo, redirigir al grupo
+      if (tipo === 'mensaje_grupo' || notification?.tipo === 'mensaje_grupo') {
+        const groupId = notification?.referencia?.id;
+        if (groupId) {
+          logger.log('👥 Navegando al grupo:', groupId);
+          window.location.href = `/Mis_grupos/${groupId}`;
+          return;
+        }
+      }
+
       // Para otros tipos, navegar al perfil
       if (onProfileClick) {
         const userId = remitenteId?._id || remitenteId;
