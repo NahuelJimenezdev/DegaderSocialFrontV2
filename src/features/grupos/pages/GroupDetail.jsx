@@ -1,3 +1,4 @@
+import IOSAlert from '../../../shared/components/IOSAlert';
 import { useState, useEffect } from 'react'
 import { logger } from '../../../shared/utils/logger';
 import { useNavigate, useParams } from 'react-router-dom'
@@ -15,6 +16,7 @@ import GroupFiles from '../components/GroupFiles'
 import GroupLinks from '../components/GroupLinks'
 import GroupEvents from '../components/GroupEvents'
 import GroupSettings from '../components/GroupSettings'
+import toast from 'react-hot-toast';
 
 const GroupDetail = () => {
   const navigate = useNavigate()
@@ -24,6 +26,10 @@ const GroupDetail = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [targetMessageId, setTargetMessageId] = useState(null)
+
+  // Estado para unirse al grupo
+  const [joining, setJoining] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   // Contadores para los badges del sidebar
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
@@ -41,8 +47,19 @@ const GroupDetail = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Usar custom hook para obtener los datos del grupo
-  const { groupData, loading, refetch } = useGroupData(id)
+  // Usar custom hook para obtener los datos del grupo (incluyendo error)
+  const { groupData, loading, error, refetch } = useGroupData(id)
+
+  // Determinar si hay error de acceso (403 o mensaje específico)
+  useEffect(() => {
+    if (error && (
+      error.includes('No tienes acceso') ||
+      error.includes('403') ||
+      error.includes('privado')
+    )) {
+      setAlertOpen(true);
+    }
+  }, [error]);
 
   // Determinar rol del usuario en el grupo
   const isOwner = String(groupData?.creador?._id) === String(user?._id);
@@ -53,7 +70,45 @@ const GroupDetail = () => {
   const userMember = groupData?.members?.find(m =>
     String(m.user?._id || m.user) === String(user?._id)
   );
-  const userRole = isOwner ? 'owner' : (isAdmin ? 'admin' : userMember?.role || 'member');
+
+  // BUG FIX: Si no es miembro, role debería ser null/undefined, no 'member'
+  const userRole = isOwner ? 'owner' : (isAdmin ? 'admin' : (userMember?.role || (userMember ? 'member' : null)));
+
+  // Verificar si el usuario debe ver el alert (ej: grupo privado y no es miembro)
+  useEffect(() => {
+    if (groupData && !loading) {
+      const isMember = userMember || isOwner || isAdmin;
+      if (!isMember && groupData.tipo !== 'publico') {
+        // Si tengo datos pero no soy miembro y no es público, mostrar alert
+        // (Aunque normalmente el backend bloquearía esto antes)
+        setAlertOpen(true);
+      }
+    }
+  }, [groupData, loading, userMember, isOwner, isAdmin]);
+
+  const handleJoinGroup = async () => {
+    try {
+      setJoining(true);
+      const response = await groupService.joinGroup(id);
+
+      if (response && (response.success || response.status === 'success')) {
+        toast.success(response.message || 'Solicitud enviada o unido correctamente');
+        setAlertOpen(false);
+        refetch(); // Recargar datos para entrar
+      } else {
+        toast.error('No se pudo unir al grupo');
+      }
+    } catch (err) {
+      console.error('Error joining group:', err);
+      toast.error(err.response?.data?.message || 'Error al intentar unirse');
+    } finally {
+      setJoining(false);
+    }
+  };
+
+  const handleCancelJoin = () => {
+    navigate('/Mis_grupos'); // Volver a la lista si cancela
+  };
 
   // Contador de solicitudes pendientes
   const pendingRequestsCount = groupData?.joinRequests?.length || groupData?.solicitudesPendientes?.length || 0;
@@ -97,6 +152,8 @@ const GroupDetail = () => {
   useEffect(() => {
     const loadUnreadCount = async () => {
       try {
+        if (!groupData) return; // No intentar cargar mensajes si no hay acceso
+
         // Obtener la última visita del usuario al chat de este grupo desde localStorage
         const lastVisitKey = `group_chat_last_visit_${id}`;
         const lastVisit = localStorage.getItem(lastVisitKey);
@@ -118,10 +175,10 @@ const GroupDetail = () => {
       }
     };
 
-    if (id && user?._id) {
+    if (id && user?._id && groupData) { // Solo si groupData existe
       loadUnreadCount();
     }
-  }, [id, user?._id]);
+  }, [id, user?._id, groupData]);
 
   // Guardar timestamp cuando se visita el chat
   useEffect(() => {
@@ -193,13 +250,39 @@ const GroupDetail = () => {
     }
   }
 
-  // Mostrar loading mientras se cargan los datos
-  if (loading || !groupData) {
+  // Si hay error de acceso o está cargando
+  if (loading || (!groupData && !error)) {
     return (
       <div className="h-screen flex items-center justify-center">
         <p className="text-xl text-[#64748b] dark:text-[#94a3b8]">Cargando grupo...</p>
       </div>
     )
+  }
+
+  // Si hay ALERTA DE ACCESO DENEGADO (IOS Style)
+  if (alertOpen) {
+    return (
+      <IOSAlert
+        isOpen={alertOpen}
+        title="Acceso Restringido"
+        message="No puedes ingresar a este grupo a menos que te unas. Haz clic en unirse para enviar una solicitud o entrar."
+        onJoin={handleJoinGroup}
+        onCancel={handleCancelJoin}
+        isJoining={joining}
+      />
+    );
+  }
+
+  // Si hay otro error y no es de acceso (ej: 404, 500)
+  if (!groupData && error && !alertOpen) {
+    return (
+      <div className="h-screen flex items-center justify-center flex-col p-4 text-center">
+        <p className="text-xl text-red-500 mb-4">{typeof error === 'string' ? error : 'Error al cargar el grupo'}</p>
+        <button onClick={() => navigate('/Mis_grupos')} className="px-4 py-2 bg-blue-600 text-white rounded-lg">
+          Volver a Grupos
+        </button>
+      </div>
+    );
   }
 
   return (
