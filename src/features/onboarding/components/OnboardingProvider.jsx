@@ -3,7 +3,9 @@ import Joyride from 'react-joyride';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { desktopSteps } from '../config/desktopSteps';
 import { mobileSteps } from '../config/mobileSteps';
+import { mobileSteps } from '../config/mobileSteps';
 import OnboardingModal from './OnboardingModal';
+import OnboardingTooltip from './OnboardingTooltip';
 
 const OnboardingContext = createContext();
 
@@ -90,56 +92,13 @@ export const OnboardingProvider = ({ children }) => {
                 floaterProps={{
                     disableAnimation: false,
                 }}
+                tooltipComponent={OnboardingTooltip}
                 styles={{
                     options: {
-                        primaryColor: '#3b82f6',
                         zIndex: 10000,
-                        arrowColor: '#fff',
-                        backgroundColor: '#fff',
+                        arrowColor: '#fff', // Match with tooltip bg
                         overlayColor: 'rgba(0, 0, 0, 0.5)',
-                        textColor: '#1f2937',
-                        width: 380,
-                    },
-                    tooltip: {
-                        borderRadius: '12px',
-                        fontSize: '16px',
-                        padding: '20px',
-                    },
-                    tooltipContainer: {
-                        textAlign: 'left',
-                    },
-                    tooltipTitle: {
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        marginBottom: '8px',
-                    },
-                    tooltipContent: {
-                        padding: '8px 0',
-                        lineHeight: '1.6',
-                    },
-                    buttonNext: {
-                        backgroundColor: '#3b82f6',
-                        borderRadius: '8px',
-                        padding: '10px 20px',
-                        fontSize: '15px',
-                        fontWeight: '600',
-                    },
-                    buttonBack: {
-                        color: '#6b7280',
-                        marginRight: '10px',
-                        fontSize: '15px',
-                    },
-                    buttonSkip: {
-                        color: '#9ca3af',
-                        fontSize: '14px',
-                    },
-                }}
-                locale={{
-                    back: 'Atrás',
-                    close: 'Cerrar',
-                    last: 'Finalizar',
-                    next: 'Siguiente',
-                    skip: 'Saltar',
+                    }
                 }}
             />
         </OnboardingContext.Provider>
