@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.28.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.27.1...v1.28.0) (2026-02-05)
+
+
+### Features
+
+* implementar tour guiado de onboarding con react-joyride ([b347968](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b34796829df2118c8231b74995d64d726f429ef1))
+
 ### [1.27.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.27.0...v1.27.1) (2026-02-05)
 
 
