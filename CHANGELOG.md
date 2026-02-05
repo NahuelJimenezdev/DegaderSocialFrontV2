@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.30.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.29.1...v1.30.0) (2026-02-05)
+
+
+### Features
+
+* traducir contador de pasos con estilos originales ([ed8f9c5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ed8f9c55e8701373ca8d30c9ea5a8fb1f9705d6a))
+
 ### [1.29.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.29.0...v1.29.1) (2026-02-05)
 
 
