@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.29.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.29.0...v1.29.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* corregir UI dropdown y extender tour mobile a 6 pasos ([42290a2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/42290a282cbe9184ae1118b702bc2b67805c7fa0))
+
 ## [1.29.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.28.1...v1.29.0) (2026-02-05)
 
 
