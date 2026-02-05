@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star, Shield, ShieldAlert } from 'lucide-react';
+import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star, Shield, ShieldAlert, Compass } from 'lucide-react';
 import { useUserRole } from '../hooks/useUserRole';
 import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
@@ -14,7 +14,7 @@ const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
   const { user, logout } = useAuth();
-  const { restartTour } = useOnboardingContext();
+  const { restartTour, isMobile } = useOnboardingContext();
   const { canModerate, isFounder } = useUserRole();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -207,16 +207,19 @@ const ProfileDropdown = () => {
             })}
 
 
-            {/* Tour Guiado (Visible en Mobile y Desktop) */}
-            <div className="menu-item" onClick={() => {
-              restartTour();
-              setIsOpen(false);
-            }}>
-              <div className="flex items-center gap-3 w-full px-4 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
-                <HelpCircle size={16} />
+            {/* Tour Guiado (Visible solo en Mobile) */}
+            {isMobile && (
+              <button
+                onClick={() => {
+                  restartTour();
+                  setIsOpen(false);
+                }}
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <Compass size={16} />
                 <span>Reiniciar Tour Guiado</span>
-              </div>
-            </div>
+              </button>
+            )}
 
             <div className="menu-divider"></div>
 

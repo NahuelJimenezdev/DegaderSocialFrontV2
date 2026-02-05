@@ -61,7 +61,7 @@ export const OnboardingProvider = ({ children }) => {
     }, [isMobile, steps, run, stepIndex]);
 
     return (
-        <OnboardingContext.Provider value={{ restartTour }}>
+        <OnboardingContext.Provider value={{ restartTour, isMobile }}>
             {children}
 
             {/* Modal inicial */}
