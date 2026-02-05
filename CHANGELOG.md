@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.29.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.28.1...v1.29.0) (2026-02-05)
+
+
+### Features
+
+* agregar opcion reiniciar tour en menu de perfil para mobile ([cf6bfdf](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cf6bfdf51c7399069e3682a228da62506c292344))
+
 ### [1.28.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.28.0...v1.28.1) (2026-02-05)
 
 
