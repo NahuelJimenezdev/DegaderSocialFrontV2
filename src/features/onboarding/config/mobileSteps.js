@@ -13,22 +13,8 @@ export const mobileSteps = [
     },
     {
         target: '.profile-dropdown-trigger',
-        content: 'Tocá tu foto para ver todas las opciones y secciones disponibles en el menú.',
-        title: 'Menú Principal',
-        placement: 'bottom',
-        disableBeacon: true,
-    },
-    {
-        target: '.onboarding-create-post',
-        content: 'Compartí desde cualquier lugar con un toque. Creá publicaciones rápidamente.',
-        title: 'Crear Publicación',
-        placement: 'bottom',
-        disableBeacon: true,
-    },
-    {
-        target: '.notifications-button',
-        content: 'Mantenete al día con tus notificaciones. Todas tus actualizaciones en un solo lugar.',
-        title: 'Notificaciones',
+        content: 'Tocá tu foto de perfil para acceder a todas las opciones: configuración, tema oscuro, notificaciones y más.',
+        title: 'Menú de Perfil',
         placement: 'bottom',
         disableBeacon: true,
     }

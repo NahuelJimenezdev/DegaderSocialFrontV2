@@ -7,12 +7,14 @@ import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import IOSAlert from '../components/IOSAlert';
+import { useOnboardingContext } from '../../features/onboarding/components/OnboardingProvider';
 import './ProfileDropdown.css';
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
   const { user, logout } = useAuth();
+  const { restartTour } = useOnboardingContext();
   const { canModerate, isFounder } = useUserRole();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -203,6 +205,24 @@ const ProfileDropdown = () => {
                 </button>
               );
             })}
+
+
+            {/* Tour Guiado (Visible en Mobile y Desktop para facilitar debugging) */}
+            <div className="menu-item" onClick={() => {
+              restartTour();
+              setIsOpen(false);
+            }}>
+              <HelpCircle size={18} />
+              <span>Tour Guiado</span>
+            </div>
+
+            <div className="menu-divider"></div>
+
+            {/* Configuración */}
+            <div className="menu-item" onClick={() => setShowComingSoonAlert(true)}>
+              <Settings size={18} />
+              <span>Configuración</span>
+            </div>
 
             {/* Theme Switcher */}
             <div className="px-1 py-1">

@@ -8,7 +8,7 @@ import OnboardingModal from './OnboardingModal';
 const OnboardingContext = createContext();
 
 export const OnboardingProvider = ({ children }) => {
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     const {
         run,
@@ -24,14 +24,40 @@ export const OnboardingProvider = ({ children }) => {
     // Detectar cambios de tamaño de ventana
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
+            const newIsMobile = window.innerWidth <= 768;
+            // DEBUG TEMPORAL: Alert para ver en celular
+            if (newIsMobile !== isMobile) {
+                // alert(`Cambio tamaño: Ancho=${window.innerWidth}, Mobile=${newIsMobile}`);
+            }
+            setIsMobile(newIsMobile);
         };
 
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [isMobile]);
 
     const steps = isMobile ? mobileSteps : desktopSteps;
+
+    // Log cuando cambian los pasos
+    useEffect(() => {
+        /* DEBUG: Descomentar si se necesita ver en celular
+        alert(`Configuración:
+        Ancho: ${window.innerWidth}
+        Mobile: ${isMobile}
+        Pasos: ${steps.length}
+        Run: ${run}
+        Index: ${stepIndex}`);
+        */
+
+        console.log('🎯 [ONBOARDING] Configuración actual:', {
+            isMobile,
+            windowWidth: window.innerWidth,
+            stepsCount: steps.length,
+            stepTargets: steps.map(s => s.target),
+            run,
+            stepIndex
+        });
+    }, [isMobile, steps, run, stepIndex]);
 
     return (
         <OnboardingContext.Provider value={{ restartTour }}>
