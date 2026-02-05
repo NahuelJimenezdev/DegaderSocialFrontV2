@@ -125,7 +125,7 @@ const ProfileDropdown = () => {
       {/* Avatar Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 dark:hover:border-indigo-400 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="profile-dropdown-trigger w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 dark:hover:border-indigo-400 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
         <img
           src={avatarUrl}

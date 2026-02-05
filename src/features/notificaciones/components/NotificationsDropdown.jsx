@@ -248,7 +248,7 @@ export default function NotificationsDropdown() {
 
   return (
     <div className={styles.dropdownContainer} ref={bellRef}>
-      <button className={styles.bellButton} onClick={handleToggleDropdown}>
+      <button className={`notifications-button ${styles.bellButton}`} onClick={handleToggleDropdown}>
         <Bell size={20} />
         {unreadCount > 0 && (
           <span className={styles.badge}>

@@ -1,10 +1,11 @@
-import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert } from "lucide-react";
+import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert, HelpCircle } from "lucide-react";
 import { useState } from 'react';
 import NavItem from "../navItem/NavItem";
 import { useAuth } from '../../../context/AuthContext';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
 import { useUserRole } from "../../hooks/useUserRole";
 import IOSAlert from '../IOSAlert';
+import { useOnboardingContext } from '../../../features/onboarding/components/OnboardingProvider';
 import styles from './styles/Sidebar.module.css';
 import '../../../shared/styles/sidebar.style.css';
 
@@ -13,6 +14,7 @@ const Sidebar = () => {
   const pendingCount = usePendingMessageCounter(user?._id || user?.id);
   const { canModerate, isFounder } = useUserRole();
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
+  const { restartTour } = useOnboardingContext();
 
   return (
     <>
@@ -70,6 +72,17 @@ const Sidebar = () => {
         <div className="sidebar-footer">
           <div className="border-t border-gray-200 dark:border-gray-700 mx-4 mb-4"></div>
           <div className="sidebar-items px-4 pb-4">
+            {/* Tour Guiado Button */}
+            <button
+              onClick={restartTour}
+              className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left mb-2"
+              title="Reiniciar tour guiado"
+            >
+              <HelpCircle size={20} />
+              <span className="font-medium">Tour Guiado</span>
+            </button>
+
+            {/* Configuración Button */}
             <button
               onClick={() => setShowComingSoonAlert(true)}
               className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"

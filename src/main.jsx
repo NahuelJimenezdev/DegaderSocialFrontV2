@@ -5,6 +5,7 @@ import { router } from './routes'
 import { AuthProvider } from './context/AuthContext'
 import { ToastProvider } from './shared/components/Toast/ToastProvider'
 import { OnlineUsersProvider } from './contexts/OnlineUsersContext'
+import { OnboardingProvider } from './features/onboarding/components/OnboardingProvider'
 import './shared/styles/layout.mobile.css';
 // import './index.css'
 // import App from './App.jsx'
@@ -27,7 +28,9 @@ createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <OnlineUsersProvider>
         <ToastProvider>
-          <RouterProvider router={router} />
+          <OnboardingProvider>
+            <RouterProvider router={router} />
+          </OnboardingProvider>
         </ToastProvider>
       </OnlineUsersProvider>
     </AuthProvider>

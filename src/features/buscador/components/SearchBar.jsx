@@ -119,7 +119,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className={styles.searchBarWrap} ref={searchRef}>
+    <div className={`search-bar ${styles.searchBarWrap}`} ref={searchRef}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputWrap}>
           <Search className={styles.searchIcon} size={18} />
