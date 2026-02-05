@@ -232,6 +232,8 @@ const ProfileDropdown = () => {
         onCancel={() => setShowComingSoonAlert(false)}
         mainActionText="Entendido"
         isPending={false}
+        showCancelButton={false}
+        icon="construction"
       />
     </div>
   );

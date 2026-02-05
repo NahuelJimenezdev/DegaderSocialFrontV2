@@ -6,7 +6,11 @@ const IOSAlert = ({
     message = "No puedes ver el contenido de este grupo sin ser miembro.",
     onJoin,
     onCancel,
-    isJoining = false
+    isJoining = false,
+    mainActionText = "Unirse al Grupo",
+    isPending = false,
+    showCancelButton = true,
+    icon = null
 }) => {
     if (!isOpen) return null;
 
@@ -23,9 +27,9 @@ const IOSAlert = ({
 
                 {/* Contenido */}
                 <div className="p-6 text-center">
-                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4">
-                        <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-2xl">
-                            lock
+                    <div className={`mx-auto flex items-center justify-center h-12 w-12 rounded-full mb-4 ${isPending ? 'bg-yellow-100 dark:bg-yellow-900/30' : 'bg-blue-100 dark:bg-blue-900/30'}`}>
+                        <span className={`material-symbols-outlined text-2xl ${isPending ? 'text-yellow-600 dark:text-yellow-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                            {icon || (isPending ? 'hourglass_top' : 'lock')}
                         </span>
                     </div>
 
@@ -42,8 +46,12 @@ const IOSAlert = ({
                 <div className="flex flex-col border-t border-gray-200 dark:border-gray-700/50">
                     <button
                         onClick={onJoin}
-                        disabled={isJoining}
-                        className="w-full py-3.5 text-[17px] text-blue-600 dark:text-blue-400 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700/30 active:bg-gray-100 dark:active:bg-gray-700/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        disabled={isJoining || isPending}
+                        className={`w-full py-3.5 text-[17px] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2
+              ${isPending
+                                ? 'text-gray-400 dark:text-gray-500'
+                                : 'text-blue-600 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700/30 active:bg-gray-100 dark:active:bg-gray-700/50'
+                            }`}
                     >
                         {isJoining ? (
                             <>
@@ -51,18 +59,20 @@ const IOSAlert = ({
                                 Uniendo...
                             </>
                         ) : (
-                            'Unirse al Grupo'
+                            isPending ? 'Solicitud Pendiente' : mainActionText
                         )}
                     </button>
 
-                    <div className="border-t border-gray-200 dark:border-gray-700/50">
-                        <button
-                            onClick={onCancel}
-                            className="w-full py-3.5 text-[17px] text-gray-500 dark:text-gray-400 font-medium hover:bg-gray-50 dark:hover:bg-gray-700/30 active:bg-gray-100 dark:active:bg-gray-700/50 transition-colors"
-                        >
-                            Cancelar
-                        </button>
-                    </div>
+                    {showCancelButton && (
+                        <div className="border-t border-gray-200 dark:border-gray-700/50">
+                            <button
+                                onClick={onCancel}
+                                className="w-full py-3.5 text-[17px] text-gray-500 dark:text-gray-400 font-medium hover:bg-gray-50 dark:hover:bg-gray-700/30 active:bg-gray-100 dark:active:bg-gray-700/50 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
