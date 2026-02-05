@@ -5,7 +5,7 @@ import GroupChatHeader from './Chat/GroupChatHeader';
 import GroupMessageBubble from './Chat/GroupMessageBubble';
 import GroupMessageInput from './Chat/GroupMessageInput';
 
-const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targetMessageId, onClearTargetMessage }) => {
+const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targetMessageId, onClearTargetMessage, onMenuClick }) => {
   const {
     messages,
     loading,
@@ -49,7 +49,7 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#1F2937]">
-      <GroupChatHeader messagesCount={messages.length} />
+      <GroupChatHeader messagesCount={messages.length} onMenuClick={onMenuClick} />
 
       <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 bg-gray-50 dark:bg-[#0a0e27] scrollbar-thin">
         {loading ? (

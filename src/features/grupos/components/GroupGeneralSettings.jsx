@@ -22,8 +22,8 @@ const GroupGeneralSettings = ({
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-4">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                        <span className="material-symbols-outlined">info</span>
+                    <h3 className="text-lg font-bold !text-white flex items-center gap-2" style={{ color: '#ffffff !important' }}>
+                        <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>info</span>
                         Información del Grupo
                     </h3>
                     {!editMode && (

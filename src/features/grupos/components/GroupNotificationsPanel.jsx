@@ -42,8 +42,8 @@ const GroupNotificationsPanel = ({ groupId, currentSettings }) => {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="material-symbols-outlined">notifications</span>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>notifications</span>
                     Notificaciones
                 </h3>
             </div>

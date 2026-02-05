@@ -5,8 +5,8 @@ const GroupDangerZone = ({ isOwner, loading, handleLeaveGroup, handleDeleteGroup
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border-2 border-red-200 dark:border-red-900">
             <div className="bg-gradient-to-r from-red-500 to-rose-500 p-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="material-symbols-outlined">warning</span>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>warning</span>
                     Zona de Peligro
                 </h3>
             </div>

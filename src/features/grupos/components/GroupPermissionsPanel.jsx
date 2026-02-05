@@ -5,8 +5,8 @@ const GroupPermissionsPanel = ({ groupData }) => {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="material-symbols-outlined">admin_panel_settings</span>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
+                    <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>admin_panel_settings</span>
                     Permisos y Roles
                 </h3>
             </div>

@@ -248,6 +248,7 @@ const GroupDetail = () => {
           user={user}
           targetMessageId={targetMessageId}
           onClearTargetMessage={() => setTargetMessageId(null)}
+          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         />
       case 'detail':
         return <GroupInfo groupData={groupData} />
@@ -324,8 +325,8 @@ const GroupDetail = () => {
 
   return (
     <>
-      {/* Botón hamburguesa - Visible en mobile y tablet */}
-      {isMobile && (
+      {/* Botón hamburguesa - Visible en mobile y tablet, EXCEPTO en chat */}
+      {isMobile && activeSection !== 'chat' && (
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="fixed top-20 left-4 z-[60] p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-12 h-12 flex items-center justify-center"
@@ -339,7 +340,7 @@ const GroupDetail = () => {
       {/* Backdrop para móvil */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-[140]"
+          className="fixed inset-0 bg-black/50 z-[250]"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -347,10 +348,11 @@ const GroupDetail = () => {
       {/* Sidebar del grupo - Reemplaza visualmente al sidebar global */}
       <div
         className={`
-          fixed top-[65px] bottom-0 w-[280px] bg-white dark:bg-gray-800 
+          fixed bottom-0 w-[280px] bg-white dark:bg-gray-800 
           transition-transform duration-300 ease-in-out lg:transition-none
+          ${isMobile && activeSection === 'chat' ? 'top-0' : 'top-[65px]'}
           ${isMobile
-            ? `right-0 z-[150] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
+            ? `right-0 z-[260] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
             : 'left-0 z-40 translate-x-0'}
         `}
       >
@@ -367,8 +369,13 @@ const GroupDetail = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className={`w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin ${activeSection === 'chat' ? '' : 'mb-mobile-67'}`}>
-        <div className={activeSection === 'chat' ? 'h-full relative z-[100]' : 'p-4 md:p-8 pt-0'}>
+      <div className={`
+        w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin
+        ${activeSection === 'chat'
+          ? 'max-md:fixed max-md:inset-0 max-md:z-[240]'
+          : 'mb-mobile-67'}
+      `}>
+        <div className={activeSection === 'chat' ? 'h-full' : 'p-4 md:p-8 pt-0'}>
           {renderSection()}
         </div>
       </div>
