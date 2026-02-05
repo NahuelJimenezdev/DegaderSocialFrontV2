@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.30.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.30.1...v1.30.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* importar Compass icon para evitar ReferenceError ([3100bf2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3100bf203ef93dcfdea251c44fb11cabc9403899))
+
 ### [1.30.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.30.0...v1.30.1) (2026-02-05)
 
 
