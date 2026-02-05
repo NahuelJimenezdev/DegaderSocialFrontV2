@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.30.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.30.0...v1.30.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* eliminar import duplicado de mobileSteps ([7b6d7ec](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7b6d7ecf7e4938c3a06eaa0eb55014a82c2e6b7a))
+
 ## [1.30.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.29.1...v1.30.0) (2026-02-05)
 
 
