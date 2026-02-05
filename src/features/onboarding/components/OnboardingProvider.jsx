@@ -3,7 +3,6 @@ import Joyride from 'react-joyride';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { desktopSteps } from '../config/desktopSteps';
 import { mobileSteps } from '../config/mobileSteps';
-import { mobileSteps } from '../config/mobileSteps';
 import OnboardingModal from './OnboardingModal';
 import OnboardingTooltip from './OnboardingTooltip';
 
