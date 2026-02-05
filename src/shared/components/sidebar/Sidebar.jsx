@@ -1,8 +1,10 @@
 import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert } from "lucide-react";
+import { useState } from 'react';
 import NavItem from "../navItem/NavItem";
 import { useAuth } from '../../../context/AuthContext';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
 import { useUserRole } from "../../hooks/useUserRole";
+import IOSAlert from '../IOSAlert';
 import styles from './styles/Sidebar.module.css';
 import '../../../shared/styles/sidebar.style.css';
 
@@ -10,6 +12,7 @@ const Sidebar = () => {
   const { user } = useAuth();
   const pendingCount = usePendingMessageCounter(user?._id || user?.id);
   const { canModerate, isFounder } = useUserRole();
+  const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
 
   return (
     <>
@@ -67,10 +70,27 @@ const Sidebar = () => {
         <div className="sidebar-footer">
           <div className="border-t border-gray-200 dark:border-gray-700 mx-4 mb-4"></div>
           <div className="sidebar-items px-4 pb-4">
-            <NavItem to="/configuracion" icon={Settings} label="Configuración" />
+            <button
+              onClick={() => setShowComingSoonAlert(true)}
+              className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+            >
+              <Settings size={20} />
+              <span className="font-medium">Configuración</span>
+            </button>
           </div>
         </div>
       </aside>
+
+      {/* Coming Soon Alert */}
+      <IOSAlert
+        isOpen={showComingSoonAlert}
+        title="Próximamente"
+        message="Estamos trabajando en esta funcionalidad. ¡Pronto estará disponible!"
+        onJoin={() => setShowComingSoonAlert(false)}
+        onCancel={() => setShowComingSoonAlert(false)}
+        mainActionText="Entendido"
+        isPending={false}
+      />
     </>
   );
 };

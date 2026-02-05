@@ -6,10 +6,12 @@ import { useUserRole } from '../hooks/useUserRole';
 import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
+import IOSAlert from '../components/IOSAlert';
 import './ProfileDropdown.css';
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
   const { user, logout } = useAuth();
   const { canModerate, isFounder } = useUserRole();
   const navigate = useNavigate();
@@ -90,7 +92,10 @@ const ProfileDropdown = () => {
     {
       icon: Settings,
       label: 'Configuración',
-      onClick: () => handleMenuClick('/settings')
+      onClick: () => {
+        setIsOpen(false);
+        setShowComingSoonAlert(true);
+      }
     },
     {
       icon: Bell,
@@ -100,12 +105,18 @@ const ProfileDropdown = () => {
     {
       icon: Lock,
       label: 'Privacidad',
-      onClick: () => handleMenuClick('/privacidad')
+      onClick: () => {
+        setIsOpen(false);
+        setShowComingSoonAlert(true);
+      }
     },
     {
       icon: HelpCircle,
       label: 'Ayuda',
-      onClick: () => handleMenuClick('/ayuda')
+      onClick: () => {
+        setIsOpen(false);
+        setShowComingSoonAlert(true);
+      }
     }
   ];
 
@@ -211,6 +222,17 @@ const ProfileDropdown = () => {
           </div>
         </div>
       )}
+
+      {/* Coming Soon Alert */}
+      <IOSAlert
+        isOpen={showComingSoonAlert}
+        title="Próximamente"
+        message="Estamos trabajando en esta funcionalidad. ¡Pronto estará disponible!"
+        onJoin={() => setShowComingSoonAlert(false)}
+        onCancel={() => setShowComingSoonAlert(false)}
+        mainActionText="Entendido"
+        isPending={false}
+      />
     </div>
   );
 };
