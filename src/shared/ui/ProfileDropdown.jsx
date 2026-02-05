@@ -207,22 +207,18 @@ const ProfileDropdown = () => {
             })}
 
 
-            {/* Tour Guiado (Visible en Mobile y Desktop para facilitar debugging) */}
+            {/* Tour Guiado (Visible en Mobile y Desktop) */}
             <div className="menu-item" onClick={() => {
               restartTour();
               setIsOpen(false);
             }}>
-              <HelpCircle size={18} />
-              <span>Tour Guiado</span>
+              <div className="flex items-center gap-3 w-full px-4 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+                <HelpCircle size={16} />
+                <span>Reiniciar Tour Guiado</span>
+              </div>
             </div>
 
             <div className="menu-divider"></div>
-
-            {/* Configuración */}
-            <div className="menu-item" onClick={() => setShowComingSoonAlert(true)}>
-              <Settings size={18} />
-              <span>Configuración</span>
-            </div>
 
             {/* Theme Switcher */}
             <div className="px-1 py-1">

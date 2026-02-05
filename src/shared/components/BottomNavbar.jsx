@@ -11,27 +11,32 @@ const BottomNavbar = () => {
     {
       icon: Home,
       label: 'Inicio',
-      path: '/'
+      path: '/',
+      className: 'bottom-nav-home'
     },
     {
       icon: Search,
       label: 'Buscar',
-      path: '/Amigos'
+      path: '/Amigos',
+      className: 'bottom-nav-search'
     },
     {
       icon: () => <span className="material-symbols-outlined">groups</span>,
       label: 'Grupos',
-      path: '/Mis_grupos'
+      path: '/Mis_grupos',
+      className: 'bottom-nav-groups'
     },
     {
       icon: Building2,
       label: 'Institución',
-      path: '/Mi_iglesia'
+      path: '/Mi_iglesia',
+      className: 'bottom-nav-church'
     },
     {
       icon: Folder,
       label: 'Carpetas',
-      path: '/Mis_carpetas'
+      path: '/Mis_carpetas',
+      className: 'bottom-nav-folders'
     }
   ];
 
@@ -49,7 +54,7 @@ const BottomNavbar = () => {
           <button
             key={index}
             onClick={() => handleNavigation(item.path)}
-            className={`bottom-navbar-item ${isActive ? 'active' : ''}`}
+            className={`bottom-navbar-item ${item.className} ${isActive ? 'active' : ''}`}
             aria-label={item.label}
           >
             <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />

@@ -1,8 +1,8 @@
 export const mobileSteps = [
     {
         target: '.bottom-navbar',
-        content: 'Tu navegación rápida está acá abajo. Accedé a Inicio, Buscar, Grupos, Institución y Carpetas con un toque.',
-        title: 'Navegación Móvil',
+        content: 'Esta es tu barra de navegación principal. Desde aquí puedes acceder rápidamente a todas las secciones importantes.',
+        title: 'Navegación Táctil',
         placement: 'top',
         disableBeacon: true,
         styles: {
@@ -12,9 +12,37 @@ export const mobileSteps = [
         }
     },
     {
+        target: '.bottom-nav-home',
+        content: 'Tu Feed principal: aquí verás las publicaciones de tus amigos y grupos.',
+        title: 'Inicio',
+        placement: 'top',
+        disableBeacon: true,
+    },
+    {
+        target: '.bottom-nav-search',
+        content: 'Buscá personas, grupos o contenidos específicos en toda la plataforma.',
+        title: 'Buscar',
+        placement: 'top',
+        disableBeacon: true,
+    },
+    {
+        target: '.bottom-nav-groups',
+        content: 'Accedé a tus grupos de interés y mantenete conectado con tu comunidad.',
+        title: 'Grupos',
+        placement: 'top',
+        disableBeacon: true,
+    },
+    {
+        target: '.bottom-nav-church',
+        content: 'Información y actividades de tu institución o iglesia.',
+        title: 'Institución',
+        placement: 'top',
+        disableBeacon: true,
+    },
+    {
         target: '.profile-dropdown-trigger',
-        content: 'Tocá tu foto de perfil para acceder a todas las opciones: configuración, tema oscuro, notificaciones y más.',
-        title: 'Menú de Perfil',
+        content: 'Tu menú personal. Tocá aquí para configurar tu perfil, ver notificaciones, cambiar a modo oscuro o reiniciar este tour.',
+        title: 'Tu Perfil',
         placement: 'bottom',
         disableBeacon: true,
     }
