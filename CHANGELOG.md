@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.28.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.28.0...v1.28.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* agregar .npmrc para compatibilidad de react-joyride con React 19 ([f3930e6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f3930e6f3b1be4d6c67ee4e272c74d586fdd8c5b))
+
 ## [1.28.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.27.1...v1.28.0) (2026-02-05)
 
 
