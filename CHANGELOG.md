@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.27.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.27.0...v1.27.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* mejorar alert 'Próximamente' con un solo botón e ícono de construcción ([ecf54fa](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ecf54fa3878348f2e9c02e6c556156191439ebff))
+
 ## [1.27.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.26.3...v1.27.0) (2026-02-05)
 
 
