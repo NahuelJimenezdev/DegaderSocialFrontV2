@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.31.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.30.2...v1.31.0) (2026-02-05)
+
+
+### Features
+
+* rediseño perfil visitante, muro de usuario y protección founder ([4f32c0e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4f32c0e6fde7424901f7a6d4536b4a5604663c69))
+
 ### [1.30.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.30.1...v1.30.2) (2026-02-05)
 
 
