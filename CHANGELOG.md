@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.26.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.26.1...v1.26.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* **chat:** corregir visualización pantalla completa en mobile y z-index ([5e28787](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5e28787926e87cd641fe2323b18881fe90232c88))
+
 ### [1.26.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.26.0...v1.26.1) (2026-02-04)
 
 
