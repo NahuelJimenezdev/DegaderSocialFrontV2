@@ -36,10 +36,6 @@
         padding-bottom: 70px !important;
     }
 
-    /* Excepción para la página de mensajes */
-    .page-container.messages-page {
-        padding: 0 !important;
-    }
 
     .mt-mobile-10 {
         margin-top: 10px !important;
@@ -213,15 +209,16 @@
     0% {
         opacity: 1;
         transform: scale(1);
-        max-height: 1000px; /* Suficiente para el post */
+        max-height: 1000px;
+        /* Suficiente para el post */
         margin-bottom: 1rem;
     }
-    
+
     50% {
         opacity: 0;
         transform: scale(0.95);
     }
-    
+
     100% {
         opacity: 0;
         transform: scale(0.9);
@@ -235,7 +232,8 @@
 
 .post-fade-out {
     animation: fadeOutDelete 0.5s ease-out forwards;
-    pointer-events: none; /* Evitar clics durante la animación */
+    pointer-events: none;
+    /* Evitar clics durante la animación */
 }
 
 .post-hidden {
@@ -247,8 +245,10 @@
    ============================================ */
 .multimedia-gallery-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Desktop Large >= 1440px */
-    gap: 1.5rem; /* 24px default gap */
+    grid-template-columns: repeat(5, 1fr);
+    /* Desktop Large >= 1440px */
+    gap: 1.5rem;
+    /* 24px default gap */
     width: 100%;
 }
 

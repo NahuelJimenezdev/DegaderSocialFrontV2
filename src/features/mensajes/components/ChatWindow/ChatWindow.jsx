@@ -126,7 +126,7 @@ const ChatWindow = ({
         <div className={`
             flex-1 flex flex-col bg-white dark:bg-gray-900 overflow-hidden
             ${conversacionActual
-                ? 'max-md:fixed max-md:inset-0 max-md:z-50'
+                ? 'max-md:fixed max-md:inset-0 max-md:z-[200]'
                 : 'max-md:hidden'
             }
         `}>
