@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.27.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.26.3...v1.27.0) (2026-02-05)
+
+
+### Features
+
+* agregar alertas 'Próximamente' para Configuración, Privacidad y Ayuda ([69d8dda](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/69d8ddab481aa0d7eb223c098d036e1741bcb8be))
+
 ### [1.26.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.26.2...v1.26.3) (2026-02-05)
 
 
