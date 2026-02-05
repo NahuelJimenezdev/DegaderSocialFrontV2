@@ -46,13 +46,15 @@ const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
             >
               <MessageSquare size={20} />
             </button>
-            <button
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
-              onClick={() => setIsReportModalOpen(true)}
-              title="Reportar perfil"
-            >
-              <Flag size={20} className="text-red-500" />
-            </button>
+            {usuario?.seguridad?.rolSistema !== 'Founder' && (
+              <button
+                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+                onClick={() => setIsReportModalOpen(true)}
+                title="Reportar perfil"
+              >
+                <Flag size={20} className="text-red-500" />
+              </button>
+            )}
           </div>
         </div>
       </div>

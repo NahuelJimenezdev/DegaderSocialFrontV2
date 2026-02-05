@@ -142,6 +142,9 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
         }
     };
 
+    const [privacy, setPrivacy] = useState('publico');
+    const { canModerate, isFounder } = { canModerate: currentUser?.seguridad?.rolSistema === 'moderador' || currentUser?.seguridad?.rolSistema === 'admin', isFounder: () => currentUser?.seguridad?.rolSistema === 'Founder' }; // Simple check locally or import hook if available
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!content.trim() && selectedImages.length === 0) return;
@@ -151,7 +154,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
             // 🆕 Usar FormData para enviar archivos reales (R2)
             const formData = new FormData();
             formData.append('contenido', content || ' ');
-            formData.append('privacidad', 'publico');
+            formData.append('privacidad', privacy);
 
             // Agregar archivos reales (no base64)
             if (selectedImages.length > 0) {
@@ -280,6 +283,17 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                                     Cancelar
                                 </button>
                             )}
+
+                            {/* Privacy Selector */}
+                            <select
+                                value={privacy}
+                                onChange={(e) => setPrivacy(e.target.value)}
+                                className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                            >
+                                <option value="publico">🌍 Público</option>
+                                <option value="amigos">👥 Amigos</option>
+                                <option value="privado">🔒 Solo yo</option>
+                            </select>
                             <button
                                 type="submit"
                                 disabled={(!content.trim() && selectedImages.length === 0) || isSubmitting}

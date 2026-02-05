@@ -311,8 +311,8 @@ export default function PostOptionsMenu({
                     {/* Divisor */}
                     {!isOwnPost && <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>}
 
-                    {/* Reportar - Solo para OTROS */}
-                    {!isOwnPost && (
+                    {/* Reportar - Solo para OTROS y NO es Founder */}
+                    {!isOwnPost && post.usuario?.seguridad?.rolSistema !== 'Founder' && (
                         <button
                             onClick={handleReportClick}
                             className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
