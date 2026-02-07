@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.32.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.31.0...v1.32.0) (2026-02-07)
+
+
+### Features
+
+* **auth:** corregir diseño responsivo del formulario de registro para mantener dos columnas en móviles ([556c760](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/556c7600fef2eebd5c78d42acdeec113fc6dbb32))
+
 ## [1.31.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.30.2...v1.31.0) (2026-02-05)
 
 
