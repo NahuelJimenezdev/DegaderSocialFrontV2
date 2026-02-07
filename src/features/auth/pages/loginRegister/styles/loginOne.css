@@ -1,0 +1,356 @@
+/* RESET Y BASE */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f9fafb;
+}
+
+/* WRAPPER PRINCIPAL */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* CARD PRINCIPAL */
+.auth-card {
+    width: 100%;
+    max-width: 1000px;
+    background: white;
+    display: flex;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* ========== PANEL IZQUIERDO ========== */
+.auth-left {
+    width: 45%;
+    background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    color: white;
+    padding: 80px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+}
+
+/* ☁️ EL EFECTO NUBES (parte importante) */
+.clouds {
+    position: absolute;
+    top: 0;
+    right: -60px;
+    width: 160px;
+    height: 100%;
+    background: white;
+    border-radius: 80px 0 0 80px;
+    z-index: 1;
+}
+
+/* Capas adicionales (las “nubes” reales) */
+.clouds::before,
+.clouds::after {
+    content: "";
+    position: absolute;
+    left: -60px;
+    background: white;
+    border-radius: 50%;
+}
+
+.clouds::before {
+    top: 120px;
+    width: 160px;
+    height: 160px;
+}
+
+.clouds::after {
+    top: 300px;
+    width: 120px;
+    height: 120px;
+}
+
+/* Contenido encima (importante z-index) */
+.brand {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth-logo {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 30px;
+}
+
+/* Textos del panel izquierdo */
+.auth-left h2 {
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.auth-left h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.auth-left p {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 20px;
+    max-width: 350px;
+    line-height: 1.6;
+}
+
+/* ========== PANEL DERECHO ========== */
+.auth-right {
+    width: 55%;
+    padding: 60px 70px;
+    background: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-right-inner {
+    background: white;
+    padding: 50px 45px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Título del formulario */
+.auth-right h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 35px;
+}
+
+/* ========== FORMULARIO ========== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.auth-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    gap: 8px;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+    border: none;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 12px 4px;
+    font-size: 15px;
+    color: #1f2937;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.auth-form input[type="text"]::placeholder,
+.auth-form input[type="email"]::placeholder,
+.auth-form input[type="password"]::placeholder {
+    color: #9ca3af;
+}
+
+.auth-form input[type="text"]:focus,
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus {
+    border-color: #2563eb;
+}
+
+/* ========== CHECKBOX DE TÉRMINOS ========== */
+.terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.terms input[type="checkbox"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+.terms span {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.terms a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.terms a:hover {
+    text-decoration: underline;
+}
+
+/* ========== BOTONES ========== */
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+    flex: 1;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: white;
+    color: #374151;
+    border: 2px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+/* ========== MENSAJE DE ERROR ========== */
+.error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* ========== RESPONSIVE - MOBILE ========== */
+@media (max-width: 1024px) {
+    .auth-card {
+        flex-direction: column;
+        max-width: 500px;
+    }
+
+    .auth-left {
+        width: 100%;
+        padding: 50px 30px;
+        border-radius: 24px 24px 0 0;
+    }
+
+    /* Ocultar la forma ondulada en mobile */
+    .auth-left::after {
+        display: none;
+    }
+
+    .auth-left h1 {
+        font-size: 36px;
+    }
+
+    .auth-left h2 {
+        font-size: 18px;
+    }
+
+    .auth-left p {
+        display: none;
+    }
+
+    .auth-logo {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 20px;
+    }
+
+    .auth-right {
+        width: 100%;
+        padding: 40px 30px;
+    }
+
+    .auth-right-inner {
+        padding: 35px 30px;
+    }
+
+    .auth-right h2 {
+        font-size: 26px;
+        margin-bottom: 25px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-wrapper {
+        padding: 10px;
+    }
+
+    .auth-card {
+        border-radius: 16px;
+    }
+
+    .auth-left {
+        padding: 40px 20px;
+    }
+
+    .auth-right {
+        padding: 30px 20px;
+    }
+
+    .auth-right-inner {
+        padding: 30px 20px;
+    }
+}
