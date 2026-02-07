@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../../data/paisesProvincias';
+
+import "../styles/LoginStyles.css";
+import "../styles/loginStylesMobile.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,7 +14,7 @@ const Register = () => {
     apellido: '',
     email: '',
     fechaNacimiento: '',
-    genero: 'M', // Valor por defecto
+    genero: 'M',
     pais: '',
     ciudad: '',
     estado: '',
@@ -20,6 +23,25 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      navigate('/login');
+      setIsClosing(false);
+    }, 500);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,8 +57,8 @@ const Register = () => {
     setFormData((prev) => ({
       ...prev,
       pais: nuevoPais,
-      estado: '', // Reseteamos la provincia/estado al cambiar de país
-      ciudad: '', // Opcional: resetear ciudad también
+      estado: '',
+      ciudad: '',
     }));
     setError('');
   };
@@ -45,7 +67,6 @@ const Register = () => {
     e.preventDefault();
     setError('');
 
-    // Validations
     if (!formData.nombre || !formData.apellido || !formData.email || !formData.fechaNacimiento || !formData.password || !formData.pais || !formData.ciudad) {
       setError('Por favor completa todos los campos obligatorios');
       return;
@@ -84,10 +105,212 @@ const Register = () => {
     }
   };
 
+  if (isMobile) {
+    return (
+      <div className="mobile-auth-shell">
+        <div className={`mobile-login-container ${!isClosing ? 'active' : 'closing'}`}>
+          <div className="mobile-login-header">
+            <div className="header-logo-container">
+              {/* <div className="header-logo-circle">
+                <img
+                  src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
+                  alt="Logo"
+                />
+              </div> */}
+              <span className="header-brand-name mt-2 mb-6">DEGADER SOCIAL</span>
+            </div>
+          </div>
+
+          <div className="mobile-login-tabs">
+            <button
+              className="login-tab"
+              onClick={() => navigate('/login')}
+            >
+              Iniciar sesión
+            </button>
+            <button
+              className="login-tab active"
+              onClick={() => navigate('/register')}
+            >
+              Crear cuenta
+            </button>
+          </div>
+
+          <form className="mobile-login-form-section" onSubmit={handleSubmit} >
+            {error && (
+              <div className="text-red-500 text-xs mb-2 text-center">
+                {error}
+              </div>
+            )}
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Nombre</label>
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                placeholder="Juan"
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Apellido</label>
+              <input
+                type="text"
+                name="apellido"
+                value={formData.apellido}
+                onChange={handleChange}
+                placeholder="Pérez"
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Email Address</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="tu@email.com"
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Fecha de Nacimiento</label>
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleChange}
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Género</label>
+              <select
+                name="genero"
+                value={formData.genero}
+                onChange={handleChange}
+                className="mobile-input-field"
+                disabled={loading}
+              >
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+              </select>
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">País</label>
+              <select
+                name="pais"
+                value={formData.pais}
+                onChange={handleCountryChange}
+                className="mobile-input-field"
+                disabled={loading}
+              >
+                <option value="">Selecciona País</option>
+                {getPaisesOrdenados().map((pais) => (
+                  <option key={pais} value={pais}>
+                    {pais}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">
+                {formData.pais ?
+                  getTipoDivision(formData.pais).charAt(0).toUpperCase() + getTipoDivision(formData.pais).slice(1)
+                  : 'Estado/Provincia'}
+              </label>
+              <select
+                name="estado"
+                value={formData.estado}
+                onChange={handleChange}
+                className="mobile-input-field"
+                disabled={loading || !formData.pais}
+              >
+                <option value="">Selecciona</option>
+                {formData.pais && getDivisionesPais(formData.pais).map((division) => (
+                  <option key={division} value={division}>
+                    {division}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Ciudad</label>
+              <input
+                type="text"
+                name="ciudad"
+                value={formData.ciudad}
+                onChange={handleChange}
+                placeholder="Ej: La Plata"
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="mobile-input-group">
+              <label className="mobile-input-label">Confirmar Contraseña</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="mobile-input-field"
+                disabled={loading}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-mobile-submit"
+              disabled={loading}
+            >
+              {loading ? 'REGISTRANDO...' : 'CREAR CUENTA'}
+            </button>
+
+            <button
+              type="button"
+              className="text-gray-400 text-sm mt-4"
+              onClick={handleClose}
+            >
+              ← Volver al Login
+            </button>
+          </form>
+        </div>
+      </div >
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="contenedor">
-        {/* Left Side */}
         <div className="left-side">
           <div className="logo">
             <div className="logo-circle">
@@ -111,18 +334,17 @@ const Register = () => {
             </p>
 
             <div className="buttons">
-              <button className="btn btn-primary">Iniciar sesión</button>
+              <button className="btn btn-primary" onClick={() => navigate('/login')}>Iniciar sesión</button>
               <button className="btn btn-secondary">Crear cuenta</button>
             </div>
           </div>
         </div>
 
-        {/* Right Side */}
         <div className="right-side">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">Degader Social</h1>
-              <p className="text-gray-600">Crea tu cuenta</p>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">Crea tu cuenta</h1>
+              {/* <p className="text-gray-600">Crea tu cuenta</p> */}
             </div>
 
             {error && (
@@ -143,7 +365,7 @@ const Register = () => {
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-transparent text-gray-900 text-sm outline-none"
                     placeholder="Juan"
                     disabled={loading}
                   />
@@ -159,7 +381,7 @@ const Register = () => {
                     name="apellido"
                     value={formData.apellido}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-transparent text-gray-900 text-sm outline-none"
                     placeholder="Pérez"
                     disabled={loading}
                   />
@@ -177,7 +399,7 @@ const Register = () => {
                     name="fechaNacimiento"
                     value={formData.fechaNacimiento}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-transparent text-gray-900 text-sm outline-none"
                     disabled={loading}
                   />
                 </div>
@@ -256,7 +478,7 @@ const Register = () => {
                     name="ciudad"
                     value={formData.ciudad}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-transparent text-gray-900 text-sm outline-none"
                     placeholder="Ej: La Plata"
                     disabled={loading}
                   />
@@ -272,7 +494,7 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-transparent text-gray-900 text-sm outline-none"
                     placeholder="tu@email.com"
                     disabled={loading}
                   />
@@ -318,7 +540,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors mt-6"
+                className="w-full btn-login text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors mt-6"
               >
                 {loading ? 'Registrando...' : 'Registrarse'}
               </button>
@@ -327,7 +549,7 @@ const Register = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-600">
                 ¿Ya tienes una cuenta?{' '}
-                <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                <Link to="/login" className="textLinkColor hover:text-blue-700 font-medium">
                   Inicia sesión aquí
                 </Link>
               </p>
@@ -340,5 +562,3 @@ const Register = () => {
 };
 
 export default Register;
-
-

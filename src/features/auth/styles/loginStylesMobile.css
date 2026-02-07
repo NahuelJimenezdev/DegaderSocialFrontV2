@@ -1,0 +1,417 @@
+/* loginStylesMobile.css */
+
+/* Solo se aplica en mobile (< 1024px) */
+@media (max-width: 1023px) {
+
+    /* Shell principal con el fondo bokeh persistente */
+    .mobile-auth-shell {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 1000;
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+            url('https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png');
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-welcome-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 60px 20px;
+        color: white;
+        text-align: center;
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .mobile-welcome-container.hidden {
+        opacity: 0;
+        transform: scale(0.95);
+        pointer-events: none;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .mobile-welcome-logo-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .mobile-logo-circle {
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-logo-circle img {
+        width: 80%;
+        height: 80%;
+        object-fit: contain;
+    }
+
+    .mobile-welcome-text h1 {
+        font-size: 1.5rem;
+        font-weight: 300;
+        color: #e5e7eb;
+    }
+
+    .mobile-welcome-text h1 span {
+        display: block;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        margin-top: 5px;
+    }
+
+    /* SESIÓN LOADER (SOLO PRIMERA VEZ) */
+    .mobile-session-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #032137;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .mobile-session-loader.fade-out {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .loader-logo-circle {
+        width: 130px;
+        height: 130px;
+        background: rgba(255, 255, 255, 0.95);
+        /* Fondo blanco para que el logo resalte */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        animation: pulseLogoCircle 2s infinite ease-in-out;
+    }
+
+    .loader-logo {
+        width: 75%;
+        height: 75%;
+        object-fit: contain;
+    }
+
+    @keyframes pulseLogoCircle {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.4);
+        }
+
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    .loader-text {
+        color: white;
+        margin-top: 20px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        opacity: 0.8;
+    }
+
+    .mobile-welcome-subtext {
+        font-size: 0.95rem;
+        opacity: 0.8;
+        max-width: 250px;
+        margin-top: 20px;
+        line-height: 1.5;
+    }
+
+    .mobile-welcome-buttons {
+        width: 100%;
+        display: flex;
+        gap: 15px;
+        margin-top: 40px;
+    }
+
+    .btn-mobile {
+        flex: 1;
+        padding: 16px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-mobile-login {
+        background: rgba(3, 33, 55, 0.9);
+        color: white;
+        border: none;
+    }
+
+    .btn-mobile-register {
+        background: white;
+        color: #032137;
+        border: none;
+    }
+
+    /* VISTA DE LA CARD DESLIZABLE (BOTTOM SHEET) */
+    .mobile-login-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 85vh;
+        /* Se ve un poco del fondo arriba */
+        background: #fdfdf8;
+        border-radius: 40px 40px 0 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 1001;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* Evita desplazamientos horizontales */
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+        transform: translateY(100%);
+        visibility: hidden;
+        box-sizing: border-box;
+    }
+
+    /* Ocultar barra de scroll para un look más premium de App */
+    .mobile-login-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile-login-container {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .mobile-login-container.active {
+        visibility: visible;
+        animation: slideUpBottomSheet 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .mobile-login-container.closing {
+        visibility: visible;
+        animation: slideDownBottomSheet 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes slideUpBottomSheet {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideDownBottomSheet {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(100%);
+        }
+    }
+
+    .mobile-login-header {
+        height: 40vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+            url('https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .mobile-login-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: #fdf9f8;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .header-logo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        z-index: 2;
+    }
+
+    .header-logo-circle {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .header-logo-circle img {
+        width: 70%;
+        object-fit: contain;
+    }
+
+    .header-brand-name {
+        color: white;
+        font-weight: 800;
+        letter-spacing: 2px;
+        font-size: 1.2rem;
+        /* padding-bottom: 30px;
+        padding-top: 12px; */
+    }
+
+    /* TABS */
+    .mobile-login-tabs {
+        display: flex;
+        padding: 0 40px;
+        margin-top: -10px;
+        z-index: 3;
+    }
+
+    .login-tab {
+        flex: 1;
+        padding: 15px 0;
+        background: none;
+        border: none;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #888;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .login-tab.active {
+        color: #032137;
+    }
+
+    .login-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 3px;
+        background: #032137;
+        border-radius: 3px;
+    }
+
+    /* FORMULARIO */
+    .mobile-login-form-section {
+        flex: 1;
+        padding: 30px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .mobile-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .mobile-input-label {
+        font-size: 0.75rem;
+        color: #888;
+        font-weight: 500;
+    }
+
+    .mobile-input-field {
+        width: 100%;
+        /* Asegura que el input use todo el espacio */
+        border: none;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+        font-size: 1rem;
+        background: transparent;
+        color: #333;
+        box-sizing: border-box;
+    }
+
+    .mobile-input-field:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        border-bottom: 2px solid #032137;
+    }
+
+    .mobile-forgot-pass {
+        align-self: flex-start;
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: -10px;
+    }
+
+    .btn-mobile-submit {
+        width: 100%;
+        padding: 16px;
+        background: #1e3a5f;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-top: 20px;
+        box-shadow: 0 10px 20px rgba(30, 58, 95, 0.2);
+    }
+}
