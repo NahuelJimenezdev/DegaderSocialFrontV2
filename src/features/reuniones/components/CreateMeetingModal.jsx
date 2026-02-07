@@ -162,18 +162,18 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] bg-black bg-opacity-40 flex items-center justify-center p-4 text-gray-700" style={{ margin: 0, padding: '1rem' }}>
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-[10000] bg-black bg-opacity-40 flex items-center justify-center p-4 text-gray-700 dark:text-gray-300" style={{ margin: 0, padding: '1rem' }}>
+      <div className="bg-white dark:bg-[#1a1f3a] rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col border dark:border-gray-700">
 
         {/* Encabezado - FIJO */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-100 flex-shrink-0 bg-white">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center space-x-2">
-            <Video className="w-5 h-5 text-blue-600" />
+        <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-[#1a1f3a]">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2">
+            <Video className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             <span>Programar Nueva Reunión {isChurchContext ? '(Eclesiástica)' : ''}</span>
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition"
+            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
           >
             <X className="w-6 h-6" />
           </button>
@@ -184,7 +184,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
 
           {/* Título */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Título de la Reunión</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Título de la Reunión</label>
             <input
               name="title"
               type="text"
@@ -192,58 +192,58 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
               onChange={handleChange}
               placeholder="Ej: Reunión Mensual de Directores"
               required
-              className="w-full border rounded-lg p-3"
+              className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none transition-all"
             />
           </div>
 
           {/* Descripción */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Descripción (Opcional)</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descripción (Opcional)</label>
             <textarea
               name="description"
               rows="2"
               value={formData.description}
               onChange={handleChange}
               placeholder="Agenda o propósito"
-              className="w-full border rounded-lg p-3 resize-none"
+              className="w-full border dark:border-gray-700 rounded-lg p-3 resize-none bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none transition-all"
             />
           </div>
 
           {/* Fecha - Hora - Duración */}
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium flex items-center gap-1"><Calendar className="w-4" /> Fecha</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Calendar className="w-4" /> Fecha</label>
               <input
                 name="date"
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
                 required
-                className="w-full border rounded-lg p-3"
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium flex items-center gap-1"><Clock className="w-4" /> Hora</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Clock className="w-4" /> Hora</label>
               <input
                 name="time"
                 type="time"
                 value={formData.time}
                 onChange={handleChange}
                 required
-                className="w-full border rounded-lg p-3"
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium">Duración</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Duración</label>
               <select
                 name="duration"
                 value={formData.duration}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-3"
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
               >
-                {meetingDurations.map(d => <option key={d}>{d}</option>)}
+                {meetingDurations.map(d => <option key={d} className="dark:bg-[#1a1f3a]">{d}</option>)}
               </select>
             </div>
           </div>
@@ -251,27 +251,27 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
           {/* Enlace y Tipo */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium flex items-center gap-1"><Link className="w-4" /> Enlace</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Link className="w-4" /> Enlace</label>
               <input
                 name="meetLink"
                 type="url"
                 value={formData.meetLink}
                 onChange={handleChange}
                 required
-                className="w-full border rounded-lg p-3"
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none"
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium flex items-center gap-1"><Tag className="w-4" /> Tipo</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Tag className="w-4" /> Tipo</label>
               <select
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className={`w-full border rounded-lg p-3 ${selectedTypeColor}`}
+                className={`w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] ${selectedTypeColor} outline-none`}
               >
                 {availableTypes.map(t => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
+                  <option key={t.value} value={t.value} className="dark:bg-[#1a1f3a]">{t.label}</option>
                 ))}
               </select>
             </div>
@@ -283,23 +283,23 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
 
           {isChurchContext && (
             <div className="space-y-1">
-              <label className="text-sm font-medium flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
                 <Users className="w-4" /> Dirigido A:
               </label>
               <select
                 name="targetMinistry"
                 value={formData.targetMinistry || 'todos'}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-3 bg-blue-50 border-blue-200 text-blue-800 font-medium"
+                className="w-full border rounded-lg p-3 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-medium outline-none"
               >
-                <option value="todos">Todos</option>
-                <optgroup label="Ministerios">
+                <option value="todos" className="dark:bg-[#1a1f3a]">Todos</option>
+                <optgroup label="Ministerios" className="dark:bg-[#1a1f3a]">
                   {MINISTERIOS.map(m => (
-                    <option key={m} value={m}>{formatMinistryName(m)}</option>
+                    <option key={m} value={m} className="dark:bg-[#1a1f3a]">{formatMinistryName(m)}</option>
                   ))}
                 </optgroup>
               </select>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {formData.targetMinistry && formData.targetMinistry !== 'todos'
                   ? `Se notificará solo a los miembros del ministerio de ${formatMinistryName(formData.targetMinistry)}.`
                   : 'Se notificará a toda la congregación.'}
@@ -308,8 +308,8 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
           )}
 
           {/* Participantes */}
-          <div className="space-y-3 p-4 bg-gray-50 rounded-lg border">
-            <h3 className="flex items-center font-semibold"><Users className="w-5 mr-2" /> Participantes ({formData.attendees.length})</h3>
+          <div className="space-y-3 p-4 bg-gray-50 dark:bg-[#0a0e27] rounded-lg border dark:border-gray-700">
+            <h3 className="flex items-center font-semibold text-gray-900 dark:text-white"><Users className="w-5 mr-2" /> Participantes ({formData.attendees.length})</h3>
 
             {/* Búsqueda */}
             <input
@@ -317,13 +317,13 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
               placeholder="Buscar usuarios (min 2 letras)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border rounded-lg p-2"
+              className="w-full border dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-[#1a1f3a] dark:text-white placeholder-gray-400 outline-none"
             />
 
             {/* Resultados */}
-            <div className="max-h-32 overflow-y-auto space-y-1">
-              {searchLoading && <p className="text-sm text-blue-500">Buscando...</p>}
-              {searchError && <p className="text-sm text-red-500">{searchError}</p>}
+            <div className="max-h-32 overflow-y-auto space-y-1 scrollbar-hide">
+              {searchLoading && <p className="text-sm text-blue-500 dark:text-blue-400">Buscando...</p>}
+              {searchError && <p className="text-sm text-red-500 dark:text-red-400">{searchError}</p>}
 
               {(searchResults && searchResults.length > 0) && (
                 searchResults
@@ -334,8 +334,8 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
                       key={user.id}
                       className={`flex justify-between p-2 rounded cursor-pointer
           ${(formData?.attendees || []).some(a => a.id === user.id)
-                          ? 'bg-blue-100 border border-blue-400'
-                          : 'hover:bg-gray-200'}
+                          ? 'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-700 text-gray-900 dark:text-white'
+                          : 'hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}
         `}
                       onClick={() => {
                         handleSelectAttendee(user);
@@ -345,25 +345,24 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
                       <span className="text-sm">{user.name}</span>
 
                       {(formData?.attendees || []).some(a => a.id === user.id)
-                        ? <Check className="w-4 text-blue-600" />
-                        : <Plus className="w-4 text-gray-500" />}
+                        ? <Check className="w-4 text-blue-600 dark:text-blue-400" />
+                        : <Plus className="w-4 text-gray-500 dark:text-gray-400" />}
                     </div>
                   ))
               )}
 
-
               {!searchLoading && searchTerm.length >= 2 && searchResults.length === 0 && (
-                <p className="text-sm text-gray-500 text-center">No se encontraron usuarios.</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">No se encontraron usuarios.</p>
               )}
             </div>
 
             {/* Chips reales */}
-            <div className="flex flex-wrap gap-2 pt-3 border-t">
+            <div className="flex flex-wrap gap-2 pt-3 border-t dark:border-gray-700">
               {formData.attendees.map(user => (
                 <span
                   key={user.id}
                   onClick={() => handleSelectAttendee(user)}
-                  className="px-3 py-1 bg-blue-500 text-white rounded-full text-xs flex items-center gap-1 cursor-pointer hover:bg-red-500"
+                  className="px-3 py-1 bg-blue-500 dark:bg-blue-600 text-white rounded-full text-xs flex items-center gap-1 cursor-pointer hover:bg-red-500 dark:hover:bg-red-600 transition-colors"
                 >
                   {user.name}
                   <X className="w-3" />
@@ -385,7 +384,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold transition-colors"
+              className="px-6 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold transition-colors"
             >
               Cancelar
             </button>
@@ -393,7 +392,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-yellow-500 text-black-700 px-6 py-3 rounded-lg shadow-lg text-lg font-semibold hover:from-blue-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-yellow-500 text-black dark:text-gray-900 px-6 py-3 rounded-lg shadow-lg text-lg font-semibold hover:from-blue-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
             >
               <Send className="w-5" />
               {isSubmitting ? 'Creando...' : 'Programar Reunión'}

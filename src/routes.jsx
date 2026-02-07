@@ -16,6 +16,7 @@ import FolderDetail from './features/carpetas/pages/FolderDetail'
 import FolderDetailAdvanced from './features/carpetas/pages/FolderDetailAdvanced'
 import Login from './features/auth/pages/Login'
 import Register from './features/auth/pages/Register'
+import LoginOne from './features/auth/pages/loginRegister/components/LoginOneLoading'
 import ProtectedRoute from './features/auth/components/ProtectedRoute'
 import ProfilePage from './features/perfilUsuario/page/ProfilePage'
 import MensajesPage from './features/mensajes/pages/MensajesPage'
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
   {
     path: '/register',
     element: <Register />
+  },
+  {
+    path: '/loginOne',
+    element: <LoginOne />
   },
 
   // Protected routes (require authentication)
