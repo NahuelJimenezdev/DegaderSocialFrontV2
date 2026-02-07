@@ -85,220 +85,254 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 py-8">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Degader Social</h1>
-          <p className="text-gray-600">Crea tu cuenta</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+      <div className="contenedor">
+        {/* Left Side */}
+        <div className="left-side">
+          <div className="logo">
+            <div className="logo-circle">
+              <img
+                src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
+                alt="Degader Logo"
+                className="logo-img"
+              />
+            </div>
+          </div>
+
+          <div className="welcome-content">
+            <h1 className="welcome-title">
+              Bienvenido a
+              <br />
+              <span>Degader Social</span>
+            </h1>
+
+            <p className="welcome-subtitle">
+              Conecta, comparte y crece junto a tu comunidad
+            </p>
+
+            <div className="buttons">
+              <button className="btn btn-primary">Iniciar sesión</button>
+              <button className="btn btn-secondary">Crear cuenta</button>
+            </div>
+          </div>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="Juan"
-                disabled={loading}
-              />
+        {/* Right Side */}
+        <div className="right-side">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">Degader Social</h1>
+              <p className="text-gray-600">Crea tu cuenta</p>
             </div>
 
-            <div>
-              <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-2">
-                Apellido <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="apellido"
-                name="apellido"
-                value={formData.apellido}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="Pérez"
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Nombre <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    placeholder="Juan"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Apellido <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="apellido"
+                    name="apellido"
+                    value={formData.apellido}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    placeholder="Pérez"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="fechaNacimiento" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Fecha Nac. <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaNacimiento"
+                    name="fechaNacimiento"
+                    value={formData.fechaNacimiento}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="genero" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Género <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="genero"
+                    name="genero"
+                    value={formData.genero}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white text-sm"
+                    disabled={loading}
+                  >
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="pais" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    País <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="pais"
+                    name="pais"
+                    value={formData.pais}
+                    onChange={handleCountryChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white text-sm"
+                    disabled={loading}
+                  >
+                    <option value="">País</option>
+                    {getPaisesOrdenados().map((pais) => (
+                      <option key={pais} value={pais}>
+                        {pais}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    {formData.pais ?
+                      getTipoDivision(formData.pais).charAt(0).toUpperCase() + getTipoDivision(formData.pais).slice(1)
+                      : 'Estado'}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="estado"
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white text-sm"
+                    disabled={loading || !formData.pais}
+                  >
+                    <option value="">División</option>
+                    {formData.pais && getDivisionesPais(formData.pais).map((division) => (
+                      <option key={division} value={division}>
+                        {division}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Ciudad <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="ciudad"
+                    name="ciudad"
+                    value={formData.ciudad}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    placeholder="Ej: La Plata"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    placeholder="tu@email.com"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <label htmlFor="password" alt="Contraseña" className="block text-sm font-medium text-gray-700 mb-2 truncate">
+                    Contraseña <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    placeholder="••••••••"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700 mb-2 truncate"
+                  >
+                    Confirmar <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    placeholder="••••••••"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
                 disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-              placeholder="tu@email.com"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="fechaNacimiento" className="block text-sm font-medium text-gray-700 mb-2">
-              Fecha de Nacimiento <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              id="fechaNacimiento"
-              name="fechaNacimiento"
-              value={formData.fechaNacimiento}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="genero" className="block text-sm font-medium text-gray-700 mb-2">
-              Género <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="genero"
-              name="genero"
-              value={formData.genero}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-              disabled={loading}
-            >
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-            </select>
-          </div>
-
-
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="pais" className="block text-sm font-medium text-gray-700 mb-2">
-                País <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="pais"
-                name="pais"
-                value={formData.pais}
-                onChange={handleCountryChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                disabled={loading}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors mt-6"
               >
-                <option value="">Selecciona un país</option>
-                {getPaisesOrdenados().map((pais) => (
-                  <option key={pais} value={pais}>
-                    {pais}
-                  </option>
-                ))}
-              </select>
-            </div>
+                {loading ? 'Registrando...' : 'Registrarse'}
+              </button>
+            </form>
 
-            <div>
-              <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-2">
-                {formData.pais ?
-                  getTipoDivision(formData.pais).charAt(0).toUpperCase() + getTipoDivision(formData.pais).slice(1)
-                  : 'Provincia / Estado'}
-                <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="estado"
-                name="estado"
-                value={formData.estado}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                disabled={loading || !formData.pais}
-              >
-                <option value="">Selecciona una opción</option>
-                {formData.pais && getDivisionesPais(formData.pais).map((division) => (
-                  <option key={division} value={division}>
-                    {division}
-                  </option>
-                ))}
-              </select>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">
+                ¿Ya tienes una cuenta?{' '}
+                <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                  Inicia sesión aquí
+                </Link>
+              </p>
             </div>
           </div>
-
-          <div>
-            <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700 mb-2">
-              Ciudad <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="ciudad"
-              name="ciudad"
-              value={formData.ciudad}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-              placeholder="Ej: La Plata"
-              disabled={loading}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Contraseña <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="••••••••"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Confirmar Contraseña <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="••••••••"
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors mt-6"
-          >
-            {loading ? 'Registrando...' : 'Registrarse'}
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-600">
-            ¿Ya tienes una cuenta?{' '}
-            <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
-              Inicia sesión aquí
-            </Link>
-          </p>
         </div>
       </div>
     </div>
