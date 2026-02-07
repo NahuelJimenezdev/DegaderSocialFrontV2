@@ -1,0 +1,622 @@
+/* loginOneLoading.css */
+
+.contenedor {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* LEFT SIDE */
+.left-side {
+    flex: 1;
+    background: linear-gradient(rgba(0, 0, 0, 0.233), rgba(0, 0, 0, 0.151)),
+        url('https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 50px;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.left-side::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -110px;
+    width: 420px;
+    height: 100%;
+    background-color: #f5f5f0;
+    z-index: 3;
+    pointer-events: none;
+
+    -webkit-mask-image:
+        radial-gradient(circle at 280px 20px, black 60px, transparent 90px),
+        radial-gradient(circle at 300px 100px, black 60px, transparent 71px),
+        radial-gradient(circle at 320px 150px, black 60px, transparent 71px),
+        radial-gradient(circle at 360px 240px, black 70px, transparent 81px),
+        radial-gradient(circle at 320px 360px, black 80px, transparent 85px),
+        radial-gradient(circle at 340px 480px, black 65px, transparent 76px),
+        radial-gradient(circle at 315px 550px, black 75px, transparent 76px),
+        radial-gradient(circle at 305px 680px, black 85px, transparent 96px),
+        /* radial-gradient(circle at 200px 840px, black 155px, transparent 96px), */
+
+        radial-gradient(circle at 260px 20px, black 60px, transparent 61px),
+        radial-gradient(circle at 320px 100px, black 60px, transparent 61px),
+        radial-gradient(circle at 340px 150px, black 60px, transparent 61px),
+        radial-gradient(circle at 380px 240px, black 70px, transparent 71px),
+        radial-gradient(circle at 340px 360px, black 80px, transparent 81px),
+        radial-gradient(circle at 360px 480px, black 65px, transparent 66px),
+        radial-gradient(circle at 325px 550px, black 75px, transparent 86px),
+        radial-gradient(circle at 315px 680px, black 85px, transparent 86px),
+        radial-gradient(circle at 210px 840px, black 155px, transparent 86px);
+
+    -webkit-mask-repeat: repeat-y;
+    -webkit-mask-size: 420px 900px;
+}
+
+
+
+.left-side::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -70px;
+    width: 180px;
+    height: 100%;
+
+    /* background:
+        radial-gradient(circle at 50px 120px, rgba(245, 245, 240, 0.35) 80px, transparent 81px),
+        radial-gradient(circle at 110px 360px, rgba(245, 245, 240, 0.35) 90px, transparent 91px),
+        radial-gradient(circle at 60px 600px, rgba(245, 245, 240, 0.35) 85px, transparent 86px); */
+
+    background-repeat: repeat-y;
+    background-size: 180px 800px;
+
+    z-index: 2;
+    pointer-events: none;
+}
+
+
+
+.left-side::before,
+.left-side::after {
+    pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+
+    .left-side::before,
+    .left-side::after {
+        display: none;
+    }
+}
+
+@keyframes cloudFloat {
+    from {
+        background-position-y: 0;
+    }
+
+    to {
+        background-position-y: 200px;
+    }
+}
+
+.left-side::after,
+.left-side::before {
+    animation: cloudFloat 30s linear infinite;
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1;
+}
+
+.logo-circle {
+    width: 460px;
+    height: 460px;
+    /* background-color: #306ea5; */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* .logo-circle::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 30px;
+    height: 30px;
+    background-color: #2d4356;
+    border-radius: 0 0 50% 0;
+    transform: rotate(-45deg);
+} */
+
+.logo-text {
+    display: none;
+}
+
+.logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: contain;
+    padding: 2px;
+    z-index: 1;
+}
+
+.logo-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: -5px;
+}
+
+.brand-name {
+    color: #2d4356;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+}
+
+.welcome-content {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+    margin-top: -150px;
+}
+
+.welcome-title {
+    color: white;
+    font-size: 32px;
+    font-weight: 200;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.welcome-title span {
+    font-size: 48px;
+    font-weight: 600;
+}
+
+.welcome-subtitle {
+    color: white;
+    font-size: 16px;
+    font-weight: 200;
+    margin-bottom: 40px;
+    opacity: 0.95;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 14px 40px;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #032137;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1f2e3d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #2d4356;
+}
+
+.btn-secondary:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* RIGHT SIDE */
+.right-side {
+    flex: 1;
+    background-color: #f5f5f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+}
+
+.login-card {
+    background-color: white;
+    border-radius: 30px;
+    padding: 50px 60px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 50px;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.tab {
+    flex: 1;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #999;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.tab.active {
+    color: #2d4356;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #2d4356;
+}
+
+.tab:hover {
+    color: #2d4356;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-field {
+    width: 100%;
+    padding: 18px 20px 18px 55px;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 15px;
+    font-size: 15px;
+    color: #333;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+.input-field::placeholder {
+    color: #999;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #2d4356;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(45, 67, 86, 0.1);
+}
+
+.forgot-password {
+    text-align: right;
+    color: #666;
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: -10px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #2d4356;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 18px;
+    background-color: #032137;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn-login:hover {
+    background-color: #1f2e3d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(45, 67, 86, 0.3);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+/* @media (min-width: 360px) {
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 1;
+    }
+
+    .logo-circle {
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 80px;
+    }
+
+    .welcome-content {
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0;
+        margin-top: -150px;
+        line-height: 1.2;
+    }
+
+    .welcome-title .bienvenido {
+        color: white;
+        font-size: 20px;
+        font-weight: 200;
+    }
+
+    .welcome-title .degader {
+        font-size: 30px;
+        font-weight: 800;
+        margin-top: -42px !important;
+    }
+
+    .welcome-subtitle {
+        color: white;
+        font-size: 16px;
+        font-weight: 200;
+        margin-bottom: 40px;
+        margin-top: 40px;
+        opacity: 0.95;
+    }
+
+} */
+
+@media (max-width: 1024px) {
+    .contenedor {
+        flex-direction: column;
+    }
+
+    .mobile-hidden {
+        display: none !important;
+    }
+
+    /* Welcome View Mobile */
+    .left-side {
+        padding: 40px 30px;
+        min-height: 100vh;
+        justify-content: center;
+        gap: 60px;
+        text-align: center;
+    }
+
+    /* Ocultamos las nubes de PC en mobile para usar el diseño de la imagen */
+    .left-side::before,
+    .left-side::after {
+        display: none !important;
+    }
+
+    .welcome-title {
+        font-size: 38px !important;
+    }
+
+    .welcome-subtitle {
+        font-size: 15px;
+        max-width: 280px;
+        margin-bottom: 40px;
+    }
+
+    .buttons {
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 16px;
+    }
+
+    /* Auth View Mobile */
+    .right-side {
+        padding: 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        background-color: #f5f5f0;
+    }
+
+    .mobile-auth-header {
+        width: 100%;
+        height: 35vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            url('https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    /* Nubes específicas para el header mobile según la imagen */
+    .mobile-auth-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C150,0 350,0 500,100 C650,200 850,200 1000,100 L1000,100 L0,100 Z' fill='%23f5f5f0' /%3E%3C/svg%3E");
+        background-size: 100% 100%;
+        z-index: 1;
+    }
+
+    .logo-circle.small {
+        width: 80px;
+        height: 80px;
+        z-index: 2;
+        margin-bottom: 10px;
+    }
+
+    .login-card {
+        background: transparent;
+        box-shadow: none;
+        padding: 20px 30px;
+        margin-top: -20px;
+        position: relative;
+        z-index: 2;
+        max-width: 100%;
+    }
+
+    .tabs {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .input-label {
+        display: block !important;
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 4px;
+    }
+
+    .input-field-clean {
+        width: 100%;
+        padding: 10px 0;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        background: transparent;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .btn-login-premium {
+        width: 100%;
+        padding: 16px;
+        background-color: #2d4356;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 20px;
+        box-shadow: 0 10px 20px rgba(45, 67, 86, 0.2);
+    }
+
+    .back-to-welcome {
+        display: block !important;
+        width: 100%;
+        padding: 15px;
+        background: none;
+        border: none;
+        color: #999;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .left-side::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -110px;
+        width: 420px;
+        height: 100%;
+        background-color: #f5f5f0;
+        z-index: 3;
+        pointer-events: none;
+
+        -webkit-mask-image:
+            radial-gradient(circle at 280px 20px, black 60px, transparent 90px),
+            radial-gradient(circle at 300px 100px, black 60px, transparent 71px),
+            radial-gradient(circle at 320px 150px, black 60px, transparent 71px),
+            radial-gradient(circle at 360px 240px, black 70px, transparent 81px),
+            radial-gradient(circle at 320px 360px, black 80px, transparent 85px),
+            radial-gradient(circle at 340px 480px, black 65px, transparent 76px),
+            radial-gradient(circle at 315px 550px, black 75px, transparent 76px),
+            radial-gradient(circle at 305px 680px, black 85px, transparent 96px),
+            radial-gradient(circle at 310px 810px, black 125px, transparent 96px),
+            radial-gradient(circle at 210px 1000px, black 155px, transparent 96px),
+
+            radial-gradient(circle at 260px 20px, black 60px, transparent 61px),
+            radial-gradient(circle at 320px 100px, black 60px, transparent 61px),
+            radial-gradient(circle at 340px 150px, black 60px, transparent 61px),
+            radial-gradient(circle at 380px 240px, black 70px, transparent 71px),
+            radial-gradient(circle at 340px 360px, black 80px, transparent 81px),
+            radial-gradient(circle at 360px 480px, black 65px, transparent 66px),
+            radial-gradient(circle at 325px 550px, black 75px, transparent 86px),
+            radial-gradient(circle at 315px 680px, black 85px, transparent 86px),
+            radial-gradient(circle at 235px 850px, black 85px, transparent 96px),
+            radial-gradient(circle at 210px 1000px, black 155px, transparent 86px);
+
+        -webkit-mask-repeat: repeat-y;
+        -webkit-mask-size: 420px 1200px;
+    }
+}
