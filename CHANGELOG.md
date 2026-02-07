@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.34.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.33.1...v1.34.0) (2026-02-07)
+
+
+### Features
+
+* **auth:** integrar nuevos estilos premium y actualizar componente de login ([1a6ab5c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1a6ab5cad3db7d02a0b12dc141a9fef25d72ebee))
+
 ### [1.33.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.33.0...v1.33.1) (2026-02-07)
 
 
