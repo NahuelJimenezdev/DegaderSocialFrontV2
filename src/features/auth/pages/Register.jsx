@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../../data/paisesProvincias';
 
-import "../styles/LoginStyles.css";
+import "../styles/loginStyles.css";
 import "../styles/loginStylesMobile.css";
 
 const Register = () => {
