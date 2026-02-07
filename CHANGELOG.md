@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.33.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.33.0...v1.33.1) (2026-02-07)
+
+
+### Bug Fixes
+
+* **routes:** eliminar referencia a componente de prueba ausente que bloqueaba el build ([09579cf](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/09579cfa261851a4ce931e0f22ada97f71f0699e))
+
 ## [1.33.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.32.0...v1.33.0) (2026-02-07)
 
 
