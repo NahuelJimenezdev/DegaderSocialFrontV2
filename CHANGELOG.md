@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.33.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.32.0...v1.33.0) (2026-02-07)
+
+
+### Features
+
+* **ui:** sincronizar cambios pendientes en navegación, sidebar, creación de reuniones y login original ([6ca2977](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6ca2977861ba2fe8eac45ca897f08f32017d4d88))
+
 ## [1.32.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.31.0...v1.32.0) (2026-02-07)
 
 
