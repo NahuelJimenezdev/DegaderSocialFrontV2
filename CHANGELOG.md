@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.35.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.34.0...v1.35.0) (2026-02-07)
+
+
+### Features
+
+* **auth:** consolidación final de estilos y componentes de prueba para flujo móvil ([818f13d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/818f13d62484c307fc83865f34f6cf0f23549b6a))
+* **auth:** implementación premium de flujo móvil con BottomSheet y Loader inteligente ([cf2562c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cf2562c18fea926b1a469e2bf6d881ba41a61b8d))
+
 ## [1.34.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.33.1...v1.34.0) (2026-02-07)
 
 
