@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../../data/paisesProvincias';
 
-import "../styles/loginStyles.css";
+// import "../styles/loginStyles.css";
 import "../styles/loginStylesMobile.css";
 
 const Register = () => {
@@ -111,13 +111,13 @@ const Register = () => {
         <div className={`mobile-login-container ${!isClosing ? 'active' : 'closing'}`}>
           <div className="mobile-login-header">
             <div className="header-logo-container">
-              {/* <div className="header-logo-circle">
+              <div className="header-logo-circle">
                 <img
                   src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                   alt="Logo"
                 />
-              </div> */}
-              <span className="header-brand-name mt-2 mb-6">DEGADER SOCIAL</span>
+              </div>
+              <span className="header-brand-name">DEGADER SOCIAL</span>
             </div>
           </div>
 

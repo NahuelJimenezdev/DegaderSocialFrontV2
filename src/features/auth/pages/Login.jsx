@@ -138,13 +138,13 @@ const Login = () => {
         <div className={`mobile-login-container ${mobileView === 'login' && !isClosing ? 'active' : ''} ${isClosing ? 'closing' : ''}`}>
           <div className="mobile-login-header">
             <div className="header-logo-container">
-              {/* <div className="header-logo-circle">
+              <div className="header-logo-circle">
                 <img
                   src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                   alt="Logo"
                 />
-              </div> */}
-              <span className="header-brand-name mb-4">DEGADER SOCIAL</span>
+              </div>
+              <span className="header-brand-name">DEGADER SOCIAL</span>
             </div>
           </div>
 
