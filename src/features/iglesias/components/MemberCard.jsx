@@ -123,7 +123,7 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2 justify-center">
         {fullName}
         {isCurrentUser && (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 colorMarcaDegader dark:bg-indigo-900/30 dark:text-indigo-400">
             Tú
           </span>
         )}
@@ -142,7 +142,7 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
       <div className="flex items-center gap-2 w-full mt-auto">
         <button
           onClick={handleVerMas}
-          className="flex-1 py-2 px-4 bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
+          className="flex-1 py-2 px-4 bg-indigo-50 colorMarcaDegader dark:bg-indigo-900/20 dark:text-indigo-400 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
         >
           Ver más
         </button>

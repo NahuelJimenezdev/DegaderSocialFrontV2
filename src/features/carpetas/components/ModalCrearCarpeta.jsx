@@ -165,13 +165,12 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                   key={tipo.valor}
                   type="button"
                   onClick={() => handleChange('tipo', tipo.valor)}
-                  className={`flex flex-col items-center p-4 rounded-xl border-2 transition-all ${
-                    formData.tipo === tipo.valor
+                  className={`flex flex-col items-center p-4 rounded-xl border-2 transition-all ${formData.tipo === tipo.valor
                       ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
-                  <div className={`mb-2 ${formData.tipo === tipo.valor ? 'text-indigo-600' : 'text-gray-500'}`}>
+                  <div className={`mb-2 ${formData.tipo === tipo.valor ? 'colorMarcaDegader' : 'text-gray-500'}`}>
                     {tipo.icon}
                   </div>
                   <span className="font-medium text-gray-900 dark:text-white">{tipo.nombre}</span>
@@ -188,7 +187,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 <Building size={18} className="text-indigo-500" />
                 Configuración Institucional
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Área</label>
@@ -254,7 +253,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-3 mt-2">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5">
-                      <Globe size={16} className="text-indigo-600 dark:text-indigo-400" />
+                      <Globe size={16} className="colorMarcaDegader dark:text-indigo-400" />
                     </div>
                     <div>
                       <p className="text-sm text-indigo-900 dark:text-indigo-200 font-medium">
@@ -265,7 +264,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                           type="checkbox"
                           checked={formData.compartirAutomaticamente}
                           onChange={(e) => handleChange('compartirAutomaticamente', e.target.checked)}
-                          className="rounded text-indigo-600 focus:ring-indigo-500"
+                          className="rounded colorMarcaDegader focus:ring-indigo-500"
                         />
                         <span className="text-sm text-gray-700 dark:text-gray-300">
                           Compartir automáticamente con estos usuarios
@@ -287,9 +286,8 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                   key={color.valor}
                   type="button"
                   onClick={() => handleChange('color', color.valor)}
-                  className={`w-8 h-8 rounded-full border-2 transition-transform ${
-                    formData.color === color.valor ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-105'
-                  }`}
+                  className={`w-8 h-8 rounded-full border-2 transition-transform ${formData.color === color.valor ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-105'
+                    }`}
                   style={{ backgroundColor: color.valor }}
                   title={color.nombre}
                 />

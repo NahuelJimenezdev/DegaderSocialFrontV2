@@ -99,7 +99,7 @@ const CreateChurchEventModal = ({ isOpen, onClose, onCreate, initialData }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Ticket className="text-indigo-600" />
+                        <Ticket className="colorMarcaDegader" />
                         {initialData ? 'Editar Evento' : 'Crear Evento de Iglesia'}
                     </h2>
                     <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
@@ -158,7 +158,7 @@ const CreateChurchEventModal = ({ isOpen, onClose, onCreate, initialData }) => {
                                         )}
                                     </div>
                                 ))}
-                                <button type="button" onClick={addDate} className="text-sm text-indigo-600 font-medium hover:underline flex items-center gap-1">
+                                <button type="button" onClick={addDate} className="text-sm colorMarcaDegader font-medium hover:underline flex items-center gap-1">
                                     + Agregar otra fecha
                                 </button>
                             </div>

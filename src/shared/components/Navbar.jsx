@@ -23,7 +23,7 @@ const Navbar = () => {
             {/* Logo */}
             <button
               onClick={() => navigate('/')}
-              className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors flex-shrink-0"
+              className="text-2xl font-bold text-brand-adapt hover:opacity-80 transition-all flex-shrink-0"
             >
               Degader
             </button>

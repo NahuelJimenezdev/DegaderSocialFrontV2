@@ -59,7 +59,7 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
                                 value={genero}
                                 checked={formData.segmentacion.genero === genero}
                                 onChange={(e) => updateSegmentation('genero', e.target.value)}
-                                className="w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                className="w-4 h-4 colorMarcaDegader focus:ring-indigo-500 cursor-pointer"
                             />
                             <span className="text-gray-900 dark:text-white text-sm capitalize">
                                 {genero}
@@ -86,7 +86,7 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
                                         : formData.segmentacion.intereses.filter(i => i !== interes);
                                     updateSegmentation('intereses', newIntereses);
                                 }}
-                                className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer"
+                                className="w-4 h-4 colorMarcaDegader rounded focus:ring-indigo-500 cursor-pointer"
                             />
                             <span className="text-gray-900 dark:text-white text-sm capitalize">
                                 {interes}
@@ -106,7 +106,7 @@ const StepTargeting = ({ formData, updateSegmentation, errors }) => {
                             ...formData.segmentacion.ubicacion,
                             esGlobal: e.target.checked
                         })}
-                        className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer"
+                        className="w-4 h-4 colorMarcaDegader rounded focus:ring-indigo-500 cursor-pointer"
                     />
                     <span className="text-gray-900 dark:text-white text-sm">
                         Mostrar a nivel global (sin restricciones geográficas)

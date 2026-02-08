@@ -240,7 +240,7 @@ const IglesiaInfo = ({ iglesiaData }) => {
                         {testimonio.usuario.social?.fotoPerfil ? (
                           <img src={getAvatarUrl(testimonio.usuario.social.fotoPerfil)} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-indigo-600 dark:text-indigo-200 font-bold">{testimonio.usuario.nombres.primero.charAt(0)}</span>
+                          <span className="colorMarcaDegader dark:text-indigo-200 font-bold">{testimonio.usuario.nombres.primero.charAt(0)}</span>
                         )}
                       </div>
                       <div>
@@ -356,7 +356,7 @@ const IglesiaInfo = ({ iglesiaData }) => {
                       href={iglesiaData.ubicacion.googleMapsLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col items-center gap-3 px-6 py-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:scale-105 transition-transform text-indigo-600 dark:text-indigo-400"
+                      className="flex flex-col items-center gap-3 px-6 py-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:scale-105 transition-transform colorMarcaDegader dark:text-indigo-400"
                     >
                       <MapPin size={40} className="text-red-500" />
                       <span className="font-bold text-lg">Abrir ubicación en Google Maps</span>

@@ -403,7 +403,7 @@ const PostCard = ({
                                 {/* Line 1: Group Name (if exists) */}
                                 {isFeedMode && post.grupo && (
                                     <div className="flex items-center gap-1 text-[11px] leading-tight">
-                                        <span className="font-medium text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">
+                                        <span className="font-medium colorMarcaDegader dark:text-indigo-400 hover:underline cursor-pointer">
                                             {post.grupo.nombre}
                                         </span>
                                         <span className="text-gray-400">
@@ -504,7 +504,7 @@ const PostCard = ({
                             {displayContent.split(/(@[a-zA-Z0-9._-]+)/g).map((part, index) => {
                                 if (part.match(/^@[a-zA-Z0-9._-]+$/)) {
                                     return (
-                                        <span key={index} className="text-indigo-600 dark:text-indigo-400 font-semibold cursor-pointer hover:underline">
+                                        <span key={index} className="colorMarcaDegader dark:text-indigo-400 font-semibold cursor-pointer hover:underline">
                                             {part}
                                         </span>
                                     );

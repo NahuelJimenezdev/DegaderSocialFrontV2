@@ -166,7 +166,7 @@ const ChatWindow = ({
                                 />
                                 <div>
                                     <h3
-                                        className="font-semibold text-gray-900 dark:text-white cursor-pointer hover:text-indigo-600"
+                                        className="font-semibold text-gray-900 dark:text-white cursor-pointer hover:colorMarcaDegader"
                                         onClick={() => navigate(`/perfil/${otroUsuario._id}`)}
                                     >
                                         {otroUsuario.nombres?.primero} {otroUsuario.apellidos?.primero}

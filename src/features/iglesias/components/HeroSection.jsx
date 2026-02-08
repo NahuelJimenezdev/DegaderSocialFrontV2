@@ -25,7 +25,7 @@ const HeroSection = ({
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4 max-w-2xl">
         <div className="flex flex-col items-center p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-          <MapPin className="w-6 h-6 mb-2 text-indigo-600 dark:text-indigo-400" />
+          <MapPin className="w-6 h-6 mb-2 colorMarcaDegader dark:text-indigo-400" />
           <span className="text-2xl font-bold text-gray-900 dark:text-white">{stats.churches}</span>
           <span className="text-sm text-gray-600 dark:text-gray-400">Iglesias</span>
         </div>

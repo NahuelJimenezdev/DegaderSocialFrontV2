@@ -196,7 +196,7 @@ const ProfileDropdown = () => {
                   key={index}
                   onClick={item.onClick}
                   className={`flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors ${item.highlight
-                    ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-600 dark:text-indigo-400 hover:from-indigo-500/20 hover:to-purple-500/20 font-semibold'
+                    ? 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 colorMarcaDegader dark:text-indigo-400 hover:from-indigo-500/20 hover:to-purple-500/20 font-semibold'
                     : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
                 >

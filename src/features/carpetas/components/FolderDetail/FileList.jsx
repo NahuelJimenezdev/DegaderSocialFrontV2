@@ -66,7 +66,7 @@ const FileList = ({ files, onPreview, onDelete, canEdit }) => {
                                 <div className="flex items-center justify-end gap-2">
                                     <button
                                         onClick={() => onPreview(archivo)}
-                                        className="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                        className="p-2 text-gray-400 hover:colorMarcaDegader dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                         title="Vista previa"
                                     >
                                         <Eye size={18} />

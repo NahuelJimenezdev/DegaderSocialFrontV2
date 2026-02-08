@@ -59,7 +59,7 @@ const IglesiaExMiembros = () => {
     if (loading || iglesiaLoading) {
         return (
             <div className="flex justify-center items-center h-64">
-                <span className="material-symbols-outlined animate-spin text-4xl text-indigo-600">progress_activity</span>
+                <span className="material-symbols-outlined animate-spin text-4xl colorMarcaDegader">progress_activity</span>
             </div>
         );
     }
@@ -190,7 +190,7 @@ const IglesiaExMiembros = () => {
                                                     </p>
                                                     <button
                                                         onClick={() => navigate(`/Mi_iglesia/${id}/miembros_salidos/${registro.usuario?._id}/motivo`, { state: { registro } })}
-                                                        className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium text-xs border border-indigo-200 dark:border-indigo-800 rounded-lg px-2 py-1 transition-colors whitespace-nowrap"
+                                                        className="colorMarcaDegader dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium text-xs border border-indigo-200 dark:border-indigo-800 rounded-lg px-2 py-1 transition-colors whitespace-nowrap"
                                                     >
                                                         Ver Detalle
                                                     </button>

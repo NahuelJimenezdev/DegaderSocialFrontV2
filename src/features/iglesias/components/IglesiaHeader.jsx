@@ -109,7 +109,7 @@ const IglesiaHeader = ({ iglesia, user, onJoin, setActiveSection }) => {
               <img src={getAvatarUrl(iglesia.logo)} alt={iglesia.nombre} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/30">
-                <span className="material-symbols-outlined text-4xl text-indigo-600 dark:text-indigo-400">
+                <span className="material-symbols-outlined text-4xl colorMarcaDegader dark:text-indigo-400">
                   church
                 </span>
               </div>
@@ -141,8 +141,8 @@ const IglesiaHeader = ({ iglesia, user, onJoin, setActiveSection }) => {
                   className={`text-center ${stat.clickable ? 'cursor-pointer group' : ''}`}
                   onClick={() => stat.clickable && handleStatClick(stat)}
                 >
-                  <div className={`flex items-center justify-center gap-1 font-bold text-lg ${stat.clickable ? 'text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors' : 'text-gray-900 dark:text-white'}`}>
-                    <stat.icon size={18} className="text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
+                  <div className={`flex items-center justify-center gap-1 font-bold text-lg ${stat.clickable ? 'text-gray-900 dark:text-white group-hover:colorMarcaDegader dark:group-hover:text-indigo-400 transition-colors' : 'text-gray-900 dark:text-white'}`}>
+                    <stat.icon size={18} className="text-gray-400 group-hover:colorMarcaDegader dark:group-hover:text-indigo-400 transition-colors" />
                     {stat.value}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">

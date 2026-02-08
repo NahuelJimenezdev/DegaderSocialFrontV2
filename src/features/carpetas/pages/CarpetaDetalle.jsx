@@ -150,8 +150,8 @@ const CarpetaDetalle = () => {
                 {/* Visibility Badges */}
                 <div className="flex flex-wrap gap-2 mt-2">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${carpeta.tipo === 'personal' ? 'bg-blue-100 text-blue-800' :
-                      carpeta.tipo === 'grupal' ? 'bg-purple-100 text-purple-800' :
-                        'bg-orange-100 text-orange-800'
+                    carpeta.tipo === 'grupal' ? 'bg-purple-100 text-purple-800' :
+                      'bg-orange-100 text-orange-800'
                     }`}>
                     {carpeta.tipo === 'personal' && <Shield size={12} className="mr-1" />}
                     {carpeta.tipo === 'grupal' && <Users size={12} className="mr-1" />}
@@ -237,7 +237,7 @@ const CarpetaDetalle = () => {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setPreviewFile(archivo)}
-                            className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
+                            className="p-1 text-gray-400 hover:colorMarcaDegader transition-colors"
                             title="Ver/Descargar"
                           >
                             <Eye size={18} />

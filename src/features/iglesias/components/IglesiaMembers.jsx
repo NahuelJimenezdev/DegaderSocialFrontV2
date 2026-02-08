@@ -149,7 +149,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'grid'
-                    ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                    ? 'bg-white dark:bg-gray-600 colorMarcaDegader dark:text-indigo-400 shadow-sm'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                     }`}
                   title="Vista Cuadrícula"
@@ -159,7 +159,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'list'
-                    ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                    ? 'bg-white dark:bg-gray-600 colorMarcaDegader dark:text-indigo-400 shadow-sm'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                     }`}
                   title="Vista Lista"
@@ -302,7 +302,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                             <div className="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-2">
                               {fullName}
                               {isCurrentUser && (
-                                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 colorMarcaDegader dark:bg-indigo-900/30 dark:text-indigo-400">
                                   Tú
                                 </span>
                               )}
@@ -327,7 +327,7 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           onClick={() => navigate(`/Mi_iglesia/${iglesiaData._id}?member=${miembro._id}`)}
-                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
+                          className="colorMarcaDegader hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
                         >
                           Ver más <ChevronRight className="w-4 h-4 inline-block ml-1" />
                         </button>

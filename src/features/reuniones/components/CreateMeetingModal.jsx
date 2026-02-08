@@ -6,7 +6,7 @@ import { useUserSearch } from '../hooks/useUserSearch';
 const churchMeetingTypes = [
   { value: 'oracion', label: 'Oración', color: 'text-purple-600' },
   { value: 'estudio_biblico', label: 'Estudio de la Palabra', color: 'text-blue-600' },
-  { value: 'culto', label: 'Culto General', color: 'text-indigo-600' },
+  { value: 'culto', label: 'Culto General', color: 'colorMarcaDegader' },
   { value: 'escuela_dominical', label: 'Escuela Dominical', color: 'text-orange-600' },
   { value: 'capacitacion', label: 'Capacitación', color: 'text-teal-600' },
   { value: 'grupal', label: 'Grupal', color: 'text-pink-600' },

@@ -42,7 +42,7 @@ export default function EditPostModal({ isOpen, onClose, post, onSave }) {
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                     <div className="flex items-center gap-2">
-                        <Edit3 size={20} className="text-indigo-600 dark:text-indigo-400" />
+                        <Edit3 size={20} className="colorMarcaDegader dark:text-indigo-400" />
                         <h3 className="font-semibold text-gray-900 dark:text-white">Editar publicación</h3>
                     </div>
                     <button

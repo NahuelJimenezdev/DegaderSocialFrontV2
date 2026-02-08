@@ -239,7 +239,7 @@ export default function FounderUsersPage() {
                                                         <button
                                                             onClick={() => handleDeleteUser(user._id)}
                                                             disabled={user.seguridad.estadoCuenta === 'eliminado'}
-                                                            className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                            className="colorMarcaDegader dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 disabled:opacity-30 disabled:cursor-not-allowed"
                                                             title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta eliminada' : 'Editar usuario'}
                                                         >
                                                             <Edit2 className="w-5 h-5" />

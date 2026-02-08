@@ -49,7 +49,7 @@ export default function AuditLogsPage() {
         <div className="page-container">
             <div className="mb-6">
                 <div className="flex items-center gap-3 mb-2">
-                    <Shield className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                    <Shield className="w-8 h-8 colorMarcaDegader dark:text-indigo-400" />
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                         Registros de Auditoría
                     </h1>

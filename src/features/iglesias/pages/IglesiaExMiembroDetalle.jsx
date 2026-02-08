@@ -29,7 +29,7 @@ const IglesiaExMiembroDetalle = () => {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => navigate(`/Mi_iglesia/${id}/miembros_salidos`)}
-                            className="p-2 bg-white dark:bg-gray-700 rounded-full shadow-sm text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                            className="p-2 bg-white dark:bg-gray-700 rounded-full shadow-sm text-gray-600 dark:text-gray-300 hover:colorMarcaDegader dark:hover:text-indigo-400 transition-colors"
                         >
                             <span className="material-symbols-outlined">arrow_back</span>
                         </button>
@@ -69,7 +69,7 @@ const IglesiaExMiembroDetalle = () => {
                     <div className="space-y-6">
                         {/* Motivo de Salida */}
                         <div className="bg-indigo-50 dark:bg-indigo-900/10 rounded-xl p-6 border border-indigo-100 dark:border-indigo-900/30 relative">
-                            <span className="absolute -top-3 left-6 inline-block px-2 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider">
+                            <span className="absolute -top-3 left-6 inline-block px-2 bg-white dark:bg-gray-800 colorMarcaDegader dark:text-indigo-400 text-xs font-bold uppercase tracking-wider">
                                 Motivo Registrado
                             </span>
                             <p className="text-gray-800 dark:text-gray-200 text-lg leading-relaxed italic font-medium">

@@ -69,8 +69,8 @@ const FilterBar = ({
           <button
             onClick={() => onViewModeChange('grid')}
             className={`p-1.5 rounded-md transition-all ${viewMode === 'grid'
-                ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+              ? 'bg-white dark:bg-gray-600 colorMarcaDegader dark:text-indigo-400 shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
               }`}
             title="Vista Cuadrícula"
           >
@@ -79,8 +79,8 @@ const FilterBar = ({
           <button
             onClick={() => onViewModeChange('list')}
             className={`p-1.5 rounded-md transition-all ${viewMode === 'list'
-                ? 'bg-white dark:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+              ? 'bg-white dark:bg-gray-600 colorMarcaDegader dark:text-indigo-400 shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
               }`}
             title="Vista Lista"
           >

@@ -188,7 +188,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
                     desea unirse a
                   </span>
                   {' '}
-                  <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                  <span className="font-semibold colorMarcaDegader dark:text-indigo-400">
                     {iglesiaNombre || 'la iglesia'}
                   </span>
                 </>

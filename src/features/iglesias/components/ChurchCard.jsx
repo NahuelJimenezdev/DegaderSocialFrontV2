@@ -168,7 +168,7 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
           <button
             onClick={handleJoinClick}
             disabled={isJoining}
-            className="flex-1 px-4 py-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-1.5 text-sm font-medium colorMarcaDegader hover:text-indigo-700 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isJoining ? 'Enviando...' : 'Unirme'}
           </button>
@@ -207,7 +207,7 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
               <img src={getAvatarUrl(iglesia.logo)} alt={iglesia.nombre} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/30">
-                <span className="material-symbols-outlined text-xl text-indigo-600 dark:text-indigo-400">church</span>
+                <span className="material-symbols-outlined text-xl colorMarcaDegader dark:text-indigo-400">church</span>
               </div>
             )}
           </div>
@@ -305,7 +305,7 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/30">
-              <span className="material-symbols-outlined text-3xl text-indigo-600 dark:text-indigo-400">
+              <span className="material-symbols-outlined text-3xl colorMarcaDegader dark:text-indigo-400">
                 church
               </span>
             </div>

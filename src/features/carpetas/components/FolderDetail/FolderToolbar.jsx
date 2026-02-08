@@ -44,7 +44,7 @@ const FolderToolbar = ({
                                     setFilterType(filter.value);
                                     setShowFilterMenu(false);
                                 }}
-                                className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${filterType === filter.value ? 'bg-indigo-50 dark:bg-gray-700 text-indigo-600 dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300'
+                                className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${filterType === filter.value ? 'bg-indigo-50 dark:bg-gray-700 colorMarcaDegader dark:text-indigo-400' : 'text-gray-700 dark:text-gray-300'
                                     }`}
                             >
                                 <filter.icon size={16} />
@@ -59,7 +59,7 @@ const FolderToolbar = ({
             <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-gray-200 dark:border-gray-600">
                 <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 shadow-sm text-indigo-600 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 shadow-sm colorMarcaDegader dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                         }`}
                     title="Vista de cuadrícula"
                 >
@@ -67,7 +67,7 @@ const FolderToolbar = ({
                 </button>
                 <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white dark:bg-indigo-600 shadow-sm text-indigo-600 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white dark:bg-indigo-600 shadow-sm colorMarcaDegader dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                         }`}
                     title="Vista de lista"
                 >

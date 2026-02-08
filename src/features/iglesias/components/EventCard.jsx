@@ -62,7 +62,7 @@ const EventCard = ({ event, isOnline, onDismiss, onEdit, onCancel }) => {
         {isCreator && (
           <button
             onClick={handleShowStats}
-            className="absolute top-2 right-2 p-2 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-sm text-indigo-600 hover:bg-gray-100 z-10"
+            className="absolute top-2 right-2 p-2 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-sm colorMarcaDegader hover:bg-gray-100 z-10"
             title="Ver estadísticas"
           >
             <BarChart2 size={18} />
@@ -72,7 +72,7 @@ const EventCard = ({ event, isOnline, onDismiss, onEdit, onCancel }) => {
         <div className="flex h-full">
           {/* Date Badge */}
           <div className="w-24 bg-indigo-50 dark:bg-indigo-900/20 flex flex-col items-center justify-center p-4 border-r border-gray-100 dark:border-gray-700">
-            <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400 uppercase">
+            <span className="text-sm font-medium colorMarcaDegader dark:text-indigo-400 uppercase">
               {dayName}
             </span>
             <span className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -84,7 +84,7 @@ const EventCard = ({ event, isOnline, onDismiss, onEdit, onCancel }) => {
           <div className="flex-1 p-5 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start mb-2 pr-8">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:colorMarcaDegader dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
                   {event.title || event.nombre}
                 </h3>
               </div>

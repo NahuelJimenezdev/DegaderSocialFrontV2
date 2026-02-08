@@ -9,7 +9,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
         return (
             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <Users className="text-indigo-600" />
+                    <Users className="colorMarcaDegader" />
                     Solicitudes Pendientes (0)
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-center py-8">
@@ -22,7 +22,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Users className="text-indigo-600" />
+                <Users className="colorMarcaDegader" />
                 Solicitudes Pendientes ({solicitudes.length})
             </h3>
             <div className="space-y-4">

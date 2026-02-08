@@ -162,7 +162,7 @@ const MisCarpetasPage = () => {
                   type="checkbox"
                   checked={filtros.compartidas}
                   onChange={(e) => actualizarFiltro('compartidas', e.target.checked)}
-                  className="rounded text-indigo-600 focus:ring-indigo-500"
+                  className="rounded colorMarcaDegader focus:ring-indigo-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Compartidas conmigo</span>
               </label>

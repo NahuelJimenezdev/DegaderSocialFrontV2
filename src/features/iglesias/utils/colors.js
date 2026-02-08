@@ -1,7 +1,7 @@
 // Color palette and styling constants for church components
 export const churchColors = {
   // Primary colors
-  primary: 'text-indigo-600 dark:text-indigo-400',
+  primary: 'colorMarcaDegader dark:text-indigo-400',
   primaryBg: 'bg-indigo-600 hover:bg-indigo-700',
   primaryLight: 'bg-indigo-50 dark:bg-indigo-900/20',
   primaryBorder: 'border-indigo-600',

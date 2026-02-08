@@ -10,6 +10,8 @@
 :root {
   /* ===== COLORES PRINCIPALES ===== */
   --primary: #4f46e5;
+  --color-marca: #1e3a5f;
+  /* Color original Degader */
   /* Indigo-600 */
   --primary-hover: #4338ca;
   /* Indigo-700 */
@@ -110,6 +112,8 @@
 .dark {
   /* Colores principales */
   --primary: #6366f1;
+  --color-marca: #fdfdfd;
+  /* Color legible en oscuro */
   /* Indigo-500 (más claro en dark) */
   --primary-hover: #4f46e5;
   /* Indigo-600 */
@@ -191,6 +195,8 @@
   --success: #10b981;
   --accent: #6366f1;
   --info: #3b82f6;
+
+
 }
 
 /* ===== RESET BÁSICO ===== */
@@ -206,6 +212,19 @@ body {
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Clase de marca original (ahora adaptativa si se prefiere) */
+.colorMarcaDegader {
+  color: var(--color-marca);
+  transition: color 0.3s ease;
+}
+
+/* Utilidad adaptativa inteligente para usar en JSX */
+.text-brand-adapt {
+  color: var(--color-marca) !important;
+  transition: color 0.3s ease;
+}
+
 
 /* ===== LAYOUT PRINCIPAL ===== */
 .app-container {

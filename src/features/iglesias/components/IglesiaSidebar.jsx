@@ -35,12 +35,12 @@ const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItem
             {/* Botón para volver al inicio - Restaurado por petición del usuario */}
             <button
               onClick={() => navigate('/')}
-              className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="text-gray-500 hover:colorMarcaDegader dark:text-gray-400 dark:hover:text-indigo-400 transition-colors p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
               title="Volver al Inicio"
             >
               <span className="material-symbols-outlined text-xl">arrow_back</span>
             </button>
-            <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center colorMarcaDegader dark:text-indigo-400 flex-shrink-0">
               {iglesiaData?.logo ? (
                 <img src={getAvatarUrl(iglesiaData.logo)} alt="Logo" className="w-full h-full object-cover rounded-lg" />
               ) : (

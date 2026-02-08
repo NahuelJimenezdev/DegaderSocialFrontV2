@@ -72,7 +72,7 @@ const PerfilVisitantePage = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === id
-        ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+        ? 'border-indigo-500 colorMarcaDegader dark:text-indigo-400'
         : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
         }`}
     >
@@ -84,7 +84,7 @@ const PerfilVisitantePage = () => {
   const InfoCard = ({ title, icon: Icon, children }) => (
     <div className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
       <div className="flex items-center gap-2 mb-4 text-gray-900 dark:text-white pb-3 border-b border-gray-100 dark:border-gray-700">
-        <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
+        <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg colorMarcaDegader dark:text-indigo-400">
           <Icon size={20} />
         </div>
         <h3 className="font-semibold text-lg">{title}</h3>
@@ -205,7 +205,7 @@ const PerfilVisitantePage = () => {
                         <div className="pt-2">
                           <InfoItem
                             label="Sitio Web"
-                            value={<a href={usuario.social.sitioWeb} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">{usuario.social.sitioWeb}</a>}
+                            value={<a href={usuario.social.sitioWeb} target="_blank" rel="noopener noreferrer" className="colorMarcaDegader hover:underline">{usuario.social.sitioWeb}</a>}
                             icon={GlobeIcon}
                           />
                         </div>
@@ -228,15 +228,15 @@ const PerfilVisitantePage = () => {
                     {/* Estadísticas Rápidas */}
                     <div className="grid grid-cols-3 gap-4">
                       <div className="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-sm">
-                        <span className="block text-2xl font-bold text-indigo-600">{usuario.social?.stats?.amigos || 0}</span>
+                        <span className="block text-2xl font-bold colorMarcaDegader">{usuario.social?.stats?.amigos || 0}</span>
                         <span className="text-xs text-gray-500 uppercase">Amigos</span>
                       </div>
                       <div className="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-sm">
-                        <span className="block text-2xl font-bold text-indigo-600">{usuario.social?.stats?.seguidores || 0}</span>
+                        <span className="block text-2xl font-bold colorMarcaDegader">{usuario.social?.stats?.seguidores || 0}</span>
                         <span className="text-xs text-gray-500 uppercase">Seguidores</span>
                       </div>
                       <div className="bg-white dark:bg-gray-800 p-4 rounded-xl text-center shadow-sm">
-                        <span className="block text-2xl font-bold text-indigo-600">{usuario.social?.stats?.posts || 0}</span>
+                        <span className="block text-2xl font-bold colorMarcaDegader">{usuario.social?.stats?.posts || 0}</span>
                         <span className="text-xs text-gray-500 uppercase">Posts</span>
                       </div>
                     </div>

@@ -304,8 +304,8 @@
     }
 
     .header-logo-circle {
-        width: 70px;
-        height: 70px;
+        width: 90px;
+        height: 90px;
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 50%;
@@ -316,7 +316,7 @@
     }
 
     .header-logo-circle img {
-        width: 70%;
+        width: 100%;
         object-fit: contain;
     }
 

@@ -118,7 +118,7 @@ export default function IglesiaPage() {
         {isFounder && (
           <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-8">
             <button
-              className="pb-4 px-2 text-sm font-medium transition-colors relative text-indigo-600 dark:text-indigo-400"
+              className="pb-4 px-2 text-sm font-medium transition-colors relative colorMarcaDegader dark:text-indigo-400"
             >
               <div className="flex items-center gap-2">
                 <Building2 size={18} />
@@ -156,7 +156,7 @@ export default function IglesiaPage() {
           ) : (
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Building2 className="text-indigo-600" />
+                <Building2 className="colorMarcaDegader" />
                 Encuentra tu Iglesia
               </h3>
               <button

@@ -29,7 +29,7 @@ const GroupGeneralSettings = ({
                     {!editMode && (
                         <button
                             onClick={() => setEditMode(true)}
-                            className="flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-white colorMarcaDegader rounded-lg hover:bg-gray-100 transition-colors"
                         >
                             <span className="material-symbols-outlined text-lg">edit</span>
                             <span>Editar</span>

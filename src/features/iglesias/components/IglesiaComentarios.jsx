@@ -166,7 +166,7 @@ const IglesiaComentarios = ({ iglesiaData }) => {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => setModoEdicion(true)}
-                                        className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors flex items-center gap-1"
+                                        className="p-2 colorMarcaDegader hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors flex items-center gap-1"
                                     >
                                         <span className="material-symbols-outlined text-[20px]">edit</span>
                                         <span className="hidden md:inline">Editar</span>
@@ -201,7 +201,7 @@ const IglesiaComentarios = ({ iglesiaData }) => {
                                         {testimonio.usuario.social?.fotoPerfil ? (
                                             <img src={getAvatarUrl(testimonio.usuario.social.fotoPerfil)} alt={testimonio.usuario.nombres.primero} className="w-full h-full object-cover" />
                                         ) : (
-                                            <span className="text-indigo-600 dark:text-indigo-400 font-bold">
+                                            <span className="colorMarcaDegader dark:text-indigo-400 font-bold">
                                                 {testimonio.usuario.nombres.primero.charAt(0)}
                                             </span>
                                         )}
@@ -210,7 +210,7 @@ const IglesiaComentarios = ({ iglesiaData }) => {
                                         <h5 className="font-bold text-gray-900 dark:text-white text-sm">
                                             {testimonio.usuario.nombres.primero} {testimonio.usuario.apellidos.primero}
                                         </h5>
-                                        <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                                        <p className="text-xs colorMarcaDegader dark:text-indigo-400 font-medium">
                                             {getRolUsuario(testimonio.usuario)}
                                         </p>
                                     </div>

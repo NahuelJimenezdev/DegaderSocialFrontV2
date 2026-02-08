@@ -87,7 +87,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative whitespace-nowrap ${activeTab === tab
-              ? 'text-indigo-600 dark:text-indigo-400'
+              ? 'colorMarcaDegader dark:text-indigo-400'
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
           >
@@ -115,7 +115,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                   {logoPreview || iglesiaData?.logo ? (
                     <img src={logoPreview || getAvatarUrl(iglesiaData.logo)} alt="Logo" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="material-symbols-outlined text-4xl text-indigo-600 dark:text-indigo-400">church</span>
+                    <span className="material-symbols-outlined text-4xl colorMarcaDegader dark:text-indigo-400">church</span>
                   )}
                 </div>
                 <div className="flex-1">
@@ -250,7 +250,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                   <div key={index} className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
                     <span className="flex-1 text-gray-900 dark:text-white">
                       <span className="font-semibold">{horario.dia}</span> - {horario.hora}
-                      {horario.tipo && <span className="ml-2 text-sm text-indigo-600 dark:text-indigo-400">({horario.tipo})</span>}
+                      {horario.tipo && <span className="ml-2 text-sm colorMarcaDegader dark:text-indigo-400">({horario.tipo})</span>}
                     </span>
                     <button
                       type="button"
@@ -454,7 +454,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                     <div key={`new-${index}`} className="relative group aspect-square rounded-xl overflow-hidden border-2 border-dashed border-indigo-400">
                       <img src={preview} alt={`Nueva ${index}`} className="w-full h-full object-cover opacity-70" />
                       <div className="absolute inset-0 flex flex-col items-center justify-center bg-indigo-500/10">
-                        <span className="text-[10px] font-bold text-indigo-600 bg-white/90 px-2 py-1 rounded shadow-sm">NUEVA</span>
+                        <span className="text-[10px] font-bold colorMarcaDegader bg-white/90 px-2 py-1 rounded shadow-sm">NUEVA</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveGaleriaImage(index, false)}
@@ -478,7 +478,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                     <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-colors">
                       <span className="material-symbols-outlined text-3xl text-gray-400 group-hover:text-indigo-500">add_a_photo</span>
                     </div>
-                    <span className="text-xs font-semibold text-gray-500 group-hover:text-indigo-600">Agregar Fotos</span>
+                    <span className="text-xs font-semibold text-gray-500 group-hover:colorMarcaDegader">Agregar Fotos</span>
                   </label>
                 </div>
 
@@ -538,7 +538,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
               <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Estado de Membresía</h3>
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center colorMarcaDegader dark:text-indigo-400">
                     <span className="material-symbols-outlined text-2xl">verified</span>
                   </div>
                   <div>
