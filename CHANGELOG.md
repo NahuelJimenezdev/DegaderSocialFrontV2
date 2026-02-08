@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.36.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.35.2...v1.36.0) (2026-02-08)
+
+
+### Features
+
+* **auth:** unificar identidad visual de headers moviles ([dfa492d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/dfa492d2ff85ca28a87b0d91789feaa14acdddb3))
+
+
+### Bug Fixes
+
+* **auth:** incluir corrección de minúsculas en importaciones CSS omitidas en release anterior ([e02c6db](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e02c6db25f7c1185b0c1d2c3a18ab33ab35bcbdf))
+
 ### [1.35.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.35.1...v1.35.2) (2026-02-07)
 
 ### [1.35.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.35.0...v1.35.1) (2026-02-07)
