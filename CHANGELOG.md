@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.1...v1.36.2) (2026-02-08)
+
+
+### Bug Fixes
+
+* se arregla el interlineado del titulo h1 haciendo que se visualice mas cerca ([003c27d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/003c27d641589e43784504f0a8fe78ca9d52997a))
+
 ### [1.36.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.0...v1.36.1) (2026-02-08)
 
 ## [1.36.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.35.2...v1.36.0) (2026-02-08)
