@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.2...v1.36.3) (2026-02-08)
+
+
+### Bug Fixes
+
+* se arregla el el posicionamiento de los botones en pantallas muy alargadas ya que se ven muy abajo ([5487dda](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5487ddadded360952bf365d8502a3c70ae96d8db))
+
 ### [1.36.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.1...v1.36.2) (2026-02-08)
 
 
