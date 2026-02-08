@@ -26,7 +26,9 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
-        padding: 60px 20px;
+        padding: 50px 20px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px));
+        /* Espacio extra abajo */
         color: white;
         text-align: center;
         transition: opacity 0.4s ease, transform 0.4s ease;
@@ -366,7 +368,8 @@
     .mobile-login-form-section {
         flex: 1;
         padding: 20px 40px;
-        /* Reducido padding superior de 30px a 20px */
+        padding-bottom: calc(40px + env(safe-area-inset-bottom, 20px));
+        /* Asegura que 'Volver' se vea */
         display: flex;
         flex-direction: column;
         gap: 15px;
