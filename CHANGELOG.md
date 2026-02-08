@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.37.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.3...v1.37.0) (2026-02-08)
+
+
+### Features
+
+* **design:** implementar colores adaptativos y optimizar espaciado movil ([1e14164](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1e1416432b93d9dab61e82cc716f0c9bc7656ebe))
+
 ### [1.36.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.2...v1.36.3) (2026-02-08)
 
 
