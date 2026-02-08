@@ -265,7 +265,8 @@
     }
 
     .mobile-login-header {
-        height: 40vh;
+        height: 30vh;
+        /* Reducido de 40vh para ganar espacio */
         background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
             url('https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png');
         background-size: cover;
@@ -359,10 +360,12 @@
     /* FORMULARIO */
     .mobile-login-form-section {
         flex: 1;
-        padding: 30px 40px;
+        padding: 20px 40px;
+        /* Reducido padding superior de 30px a 20px */
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 15px;
+        /* Reducido gap de 30px a 15px para compactar */
     }
 
     .mobile-input-group {
@@ -411,7 +414,8 @@
         border-radius: 30px;
         font-weight: 700;
         font-size: 1rem;
-        margin-top: 20px;
+        margin-top: 10px;
+        /* Reducido de 20px a 10px */
         box-shadow: 0 10px 20px rgba(30, 58, 95, 0.2);
     }
 }
