@@ -38,6 +38,7 @@ import NotificationsPage from './features/notificaciones/pages/NotificationsPage
 import PerfilVisitantePage from './features/perfilVisitante/page/PerfilVisitantePage'
 import IglesiaExMiembroDetalle from './features/iglesias/pages/IglesiaExMiembroDetalle'
 import SystemNotificationPage from './features/notificaciones/pages/SystemNotificationPage'
+import ArenaPage from './features/LaSendadelReino/components/ArenaPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -82,7 +83,6 @@ export const router = createBrowserRouter([
       { path: '/notificaciones', element: <NotificationsPage /> },
       { path: '/Sistema/:id', element: <SystemNotificationPage /> },
       { path: '/favoritos', element: <FavoritosPage /> },
-      { path: '/favoritos', element: <FavoritosPage /> },
       // Ticket System Routes
       { path: '/tickets/:id', element: <TicketDetailPage /> }, // Vista usuario
       // Advertising routes
@@ -93,12 +93,12 @@ export const router = createBrowserRouter([
       { path: '/moderador', element: <ModeratorRoute><ModeratorDashboard /></ModeratorRoute> },
       // Admin Panel
       { path: '/admin/suspendidos', element: <ModeratorRoute><SuspendedUsersPage /></ModeratorRoute> },
-      { path: '/admin/suspendidos', element: <ModeratorRoute><SuspendedUsersPage /></ModeratorRoute> },
       { path: '/admin/tickets', element: <ModeratorRoute><TicketsManagementPage /></ModeratorRoute> },
       { path: '/admin/tickets/:id', element: <ModeratorRoute><TicketDetailPage /></ModeratorRoute> }, // Vista admin
       // Founder Panel
       { path: '/admin/logs', element: <FounderRoute><AuditLogsPage /></FounderRoute> }, // Solo Founder/Audit
-      { path: '/founder/users', element: <FounderRoute><FounderUsersPage /></FounderRoute> }
+      { path: '/founder/users', element: <FounderRoute><FounderUsersPage /></FounderRoute> },
+      { path: '/arena', element: <ArenaPage /> }
     ],
   },
 
@@ -108,6 +108,3 @@ export const router = createBrowserRouter([
     element: <Navigate to="/" replace />
   }
 ])
-
-
-
