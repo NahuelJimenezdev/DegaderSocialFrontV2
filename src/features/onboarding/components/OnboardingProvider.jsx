@@ -5,6 +5,7 @@ import { desktopSteps } from '../config/desktopSteps';
 import { mobileSteps } from '../config/mobileSteps';
 import OnboardingModal from './OnboardingModal';
 import OnboardingTooltip from './OnboardingTooltip';
+import FounderWelcomeModal from './FounderWelcomeModal';
 
 const OnboardingContext = createContext();
 
@@ -15,6 +16,8 @@ export const OnboardingProvider = ({ children }) => {
         run,
         stepIndex,
         showInitialModal,
+        showWelcomePost,
+        handleCloseWelcomePost,
         loading,
         startTour,
         skipTour,
@@ -64,7 +67,14 @@ export const OnboardingProvider = ({ children }) => {
         <OnboardingContext.Provider value={{ restartTour, isMobile }}>
             {children}
 
-            {/* Modal inicial */}
+            {/* Mensaje del Fundador (Primero) */}
+            {showWelcomePost && !loading && (
+                <FounderWelcomeModal
+                    onNext={handleCloseWelcomePost}
+                />
+            )}
+
+            {/* Modal inicial de Tour (Después del mensaje del fundador) */}
             {showInitialModal && !loading && (
                 <OnboardingModal
                     onStart={startTour}

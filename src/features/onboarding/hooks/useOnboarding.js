@@ -7,6 +7,7 @@ export const useOnboarding = () => {
     const [run, setRun] = useState(false);
     const [stepIndex, setStepIndex] = useState(0);
     const [showInitialModal, setShowInitialModal] = useState(false);
+    const [showWelcomePost, setShowWelcomePost] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -26,8 +27,8 @@ export const useOnboarding = () => {
                     setStepIndex(status.currentStep);
                     setRun(true);
                 } else {
-                    // Primera vez - mostrar modal
-                    setShowInitialModal(true);
+                    // Primera vez - mostrar mensaje del fundador
+                    setShowWelcomePost(true);
                 }
             }
         } catch (error) {
@@ -35,6 +36,11 @@ export const useOnboarding = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleCloseWelcomePost = () => {
+        setShowWelcomePost(false);
+        setShowInitialModal(true); // Pasar al modal tradicional de invitación al tour
     };
 
     const startTour = () => {
@@ -118,6 +124,8 @@ export const useOnboarding = () => {
         run,
         stepIndex,
         showInitialModal,
+        showWelcomePost,
+        handleCloseWelcomePost,
         loading,
         startTour,
         skipTour,

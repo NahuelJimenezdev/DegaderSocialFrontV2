@@ -117,7 +117,7 @@ const Register = () => {
                   alt="Logo"
                 />
               </div>
-              <span className="header-brand-name">DEGADeR SOCIAL</span>
+              <span className="header-brand-name">DEGADER SOCIAL</span>
             </div>
           </div>
 

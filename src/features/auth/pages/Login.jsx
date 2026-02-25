@@ -123,7 +123,7 @@ const Login = () => {
               className="btn-mobile btn-mobile-login"
               onClick={() => setMobileView('login')}
             >
-              Iniciar sesiónn
+              Iniciar sesión
             </button>
             <button
               className="btn-mobile btn-mobile-register"
