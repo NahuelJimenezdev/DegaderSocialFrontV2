@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.38.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.37.0...v1.38.0) (2026-02-25)
+
+
+### Features
+
+* **onboarding:** adjust width of FounderWelcomeModal for desktop screens ([20769b0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/20769b033ccaf0d6178216083dc98c2918cc27b9))
+* **onboarding:** complete implementation of Founder Welcome Message and tour logic ([f3b5006](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f3b5006f9e884b612447a3f58d9f59787966b1a0))
+
 ## [1.37.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.36.3...v1.37.0) (2026-02-08)
 
 
