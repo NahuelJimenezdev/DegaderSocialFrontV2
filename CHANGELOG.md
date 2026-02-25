@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.39.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.38.0...v1.39.0) (2026-02-25)
+
+
+### Features
+
+* **arena:** rediseño de Leaderboard y soporte anti-farming ([be84a50](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/be84a5016e5989f1582c25b409f15072d259d099))
+
 ## [1.38.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.37.0...v1.38.0) (2026-02-25)
 
 
