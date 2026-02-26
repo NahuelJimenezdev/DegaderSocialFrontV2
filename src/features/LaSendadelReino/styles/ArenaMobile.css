@@ -1,0 +1,52 @@
+/* ArenaMobile.css - Estilos Premium para Réplica Exacta Battle Pass */
+
+.arena-layout-mobile {
+    background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 60%);
+}
+
+/* Efecto Brillo Arena Points */
+.arena-stat-value {
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Tipografía Display para Nivel */
+.arena-level-text {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.05em;
+    background: linear-gradient(180deg, #f3e3b4 0%, #b4934d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Contenedor HUD con Glassmorphism */
+.arena-hud-container {
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Animación sutil de respiración para la estrella */
+@keyframes star-ring {
+    0% {
+        filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.5));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.8));
+    }
+
+    100% {
+        filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.5));
+    }
+}
+
+.arena-star-glow {
+    animation: star-ring 3s infinite ease-in-out;
+}
+
+/* Responsive fixes */
+@media (max-width: 640px) {
+    .arena-page-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}

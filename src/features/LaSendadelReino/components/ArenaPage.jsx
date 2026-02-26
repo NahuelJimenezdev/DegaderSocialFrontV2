@@ -10,6 +10,7 @@ import Leaderboard from './Leaderboard';
 import AchievementGrid from './AchievementGrid';
 import ArenaLoading from './ArenaLoading';
 import { ARENA_ASSETS } from '../constants/arenaConfig';
+import '../styles/ArenaMobile.css';
 
 const ArenaPage = () => {
     const [activeTab, setActiveTab] = useState('arena');
@@ -47,65 +48,76 @@ const ArenaPage = () => {
                         <img src={ARENA_ASSETS.LOGO} alt="" className="w-full h-full object-contain scale-150 grayscale" />
                     </div>
 
-                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14 relative z-10 w-full text-white">
+                    <div className="flex flex-col items-center gap-8 relative z-10 w-full text-white">
 
-                        {/* 1. Izquierda: Avatar con Nivel Elevado */}
-                        <div className="shrink-0">
+                        {/* 1. Avatar Central Superior */}
+                        <div className="w-full flex justify-center">
                             <AvatarDisplay
                                 level={user.level}
                                 rank={user.rank}
                                 avatarUrl={user.avatar}
                                 username={user.username}
-                                layout="horizontal"
                             />
                         </div>
 
-                        {/* 2. Centro: Identidad Detallada (Más Compacta para Réplica Exacta) */}
-                        <div className="flex-1 space-y-4 min-w-0 w-full lg:max-w-xl">
-                            <div className="text-center lg:text-left">
-                                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-0 uppercase italic leading-none text-white whitespace-nowrap overflow-hidden text-ellipsis">
-                                    {user.name || 'VALKYRIE_07'}
+                        {/* 2. Info de Identidad Centrada */}
+                        <div className="w-full space-y-4 text-center">
+                            <div>
+                                <h1 className="text-4xl md:text-7xl font-black tracking-tighter drop-shadow-[0_4px_15px_rgba(0,0,0,0.6)] mb-1 uppercase italic leading-none text-white">
+                                    {user.username || 'VALKYRIE_07'}
                                 </h1>
-                                <p className="text-[#3ea6ff] font-bold uppercase tracking-[0.25em] text-[10px] md:text-[13px] drop-shadow-md">
+                                <p className="text-[#3ea6ff] font-black uppercase tracking-[0.35em] text-[11px] md:text-[15px] drop-shadow-md">
                                     LA SENDA DEL REINO
                                 </p>
                             </div>
 
-                            <div className="w-full py-1">
-                                <ProgressBar currentXP={user.totalXP} level={user.level} />
+                            <div className="w-full max-w-md mx-auto py-2">
+                                <ProgressBar currentXP={user.totalXP || 0} level={user.level || 1} />
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 -mt-2">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none">RANK {user.level}:</span>
-                                    <span className="text-white font-black text-[11px] md:text-[13px] uppercase tracking-wider drop-shadow-sm leading-none">{user.rank.label}</span>
-                                </div>
-                                <div className="flex gap-2">
-                                    <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center text-[9px] font-black border border-blue-400/40 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)]">XP</div>
-                                    <div className="w-6 h-6 rounded bg-gray-500/20 flex items-center justify-center text-[9px] font-black border border-gray-500/40 text-gray-400">XP</div>
-                                </div>
+                            {/* Línea Divisoria de Rango (Réplica Exacta) */}
+                            <div className="flex items-center justify-center gap-4 py-2 opacity-80 max-w-sm mx-auto">
+                                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/30" />
+                                <span className="text-white/60 text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em] whitespace-nowrap">
+                                    RANK {user.level}: <span className="text-white">{user.rank.label}</span>
+                                </span>
+                                <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/30" />
                             </div>
                         </div>
 
-                        {/* 3. Derecha: Panel HUD de Estadísticas */}
-                        <div className="shrink-0 w-full lg:w-[280px] bg-black/40 rounded-[24px] border border-blue-500/20 p-6 space-y-5 backdrop-blur-xl shadow-inner">
+                        {/* 3. Panel HUD de Estadísticas (Estilo Lista Vertical) */}
+                        <div className="w-full max-w-sm bg-black/30 rounded-[28px] border border-blue-500/20 p-5 md:p-6 backdrop-blur-2xl shadow-2xl space-y-1">
                             {[
-                                { label: 'ARENA POINTS', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-[#3ea6ff]' },
-                                { label: 'WINS', value: (user.wins || 0).toLocaleString(), icon: '🏆', color: 'text-gray-200' },
-                                { label: 'GAMES PLAYED', value: (user.gamesPlayed || 0).toLocaleString(), icon: '⚔️', color: 'text-gray-200' },
-                                { label: 'K/D RATIO', value: user.kdRatio || '0.00', icon: '🎯', color: 'text-red-500' },
-                                { label: 'SEASON PASS', value: `TIER ${user.level}`, icon: '🎁', color: 'text-white' }
+                                { label: 'Arena Points:', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-white' },
+                                { label: 'Wins:', value: (user.wins || 0).toLocaleString(), icon: '🏆', color: 'text-white' },
+                                { label: 'Games Played:', value: (user.gamesPlayed || 0).toLocaleString(), icon: '⚔️', color: 'text-white' },
+                                { label: 'K/D Ratio:', value: user.kdRatio || '1.95', icon: '🎯', color: 'text-white' }
                             ].map((stat, i) => (
-                                <div key={i} className="flex items-center gap-4 group cursor-default">
-                                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl border border-white/10 group-hover:border-blue-500/40 transition-all duration-300">
-                                        {stat.icon}
+                                <div key={i} className={`flex items-center justify-between py-3 px-2 ${i !== 3 ? 'border-b border-white/5' : ''}`}>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-lg border border-blue-400/20 shadow-inner">
+                                            {stat.icon}
+                                        </div>
+                                        <span className="text-[11px] font-bold text-white/50 uppercase tracking-wider">{stat.label}</span>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.15em] leading-none mb-1.5">{stat.label}:</span>
-                                        <span className={`text-[17px] font-black tracking-tighter ${stat.color} leading-none`}>{stat.value}</span>
-                                    </div>
+                                    <span className={`text-[17px] font-black tracking-tight ${stat.color}`}>{stat.value}</span>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* 4. Season Pass Bar (Bottom) */}
+                        <div className="w-full max-w-sm bg-gradient-to-r from-[#1a1f3c] to-[#0a0e27] rounded-xl border border-white/10 p-3 flex items-center justify-between shadow-lg">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded bg-yellow-500/20 flex items-center justify-center text-lg border border-yellow-400/20">📦</div>
+                                <span className="text-[10px] font-black text-white uppercase tracking-widest">Season Pass</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[13px] font-black text-white italic tracking-tighter uppercase">Tier {user.level}</span>
+                                <div className="flex -space-x-1">
+                                    <div className="w-5 h-5 rounded-full bg-gray-400 border border-white/20 shadow-sm" />
+                                    <div className="w-5 h-5 rounded-full bg-yellow-400 border border-white/20 shadow-sm" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
