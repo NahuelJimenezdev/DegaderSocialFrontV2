@@ -29,9 +29,10 @@ const AudienceInsights = ({ deviceData, browserData }) => {
             {/* Dispositivos */}
             {deviceData.length > 0 && (
                 <div style={{
-                    backgroundColor: '#1a1a2e',
+                    backgroundColor: 'var(--bg-card)',
                     padding: '1.5rem',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    border: '1px solid var(--border-primary)'
                 }}>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>
                         Dispositivos
@@ -67,9 +68,10 @@ const AudienceInsights = ({ deviceData, browserData }) => {
             {/* Navegadores */}
             {browserData.length > 0 && (
                 <div style={{
-                    backgroundColor: '#1a1a2e',
+                    backgroundColor: 'var(--bg-card)',
                     padding: '1.5rem',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    border: '1px solid var(--border-primary)'
                 }}>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>
                         Navegadores

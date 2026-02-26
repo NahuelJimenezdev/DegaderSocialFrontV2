@@ -11,10 +11,11 @@ const COLORS = {
 const PerformanceAnalysis = ({ metrics, campaign }) => {
     return (
         <div style={{
-            backgroundColor: '#1a1a2e',
+            backgroundColor: 'var(--bg-card)',
             padding: '1.5rem',
             borderRadius: '12px',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            border: '1px solid var(--border-primary)'
         }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem' }}>
                 📊 Análisis de Rendimiento
@@ -25,7 +26,7 @@ const PerformanceAnalysis = ({ metrics, campaign }) => {
                 gap: '1.5rem'
             }}>
                 <div>
-                    <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                         Tasa de Conversión
                     </p>
                     <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.success }}>
@@ -43,7 +44,7 @@ const PerformanceAnalysis = ({ metrics, campaign }) => {
                     <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.primary }}>
                         {campaign.costoPorImpresion || 1} crédito(s)
                     </p>
-                    <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         Configurado en la campaña
                     </p>
                 </div>
@@ -55,7 +56,7 @@ const PerformanceAnalysis = ({ metrics, campaign }) => {
                     <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.warning }}>
                         {((campaign.presupuesto || 0) - metrics.creditsSpent).toLocaleString()}
                     </p>
-                    <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         De {campaign.presupuesto?.toLocaleString() || 0} créditos totales
                     </p>
                 </div>
@@ -67,7 +68,7 @@ const PerformanceAnalysis = ({ metrics, campaign }) => {
                     <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: COLORS.cyan }}>
                         {Math.ceil((new Date() - new Date(campaign.fechaInicio)) / (1000 * 60 * 60 * 24))}
                     </p>
-                    <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         De {Math.ceil((new Date(campaign.fechaFin) - new Date(campaign.fechaInicio)) / (1000 * 60 * 60 * 24))} días totales
                     </p>
                 </div>

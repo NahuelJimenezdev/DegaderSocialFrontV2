@@ -34,12 +34,12 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
   // No bloqueamos acceso global, pero renderizamos condicionalmente las secciones
 
   return (
-    <div className="h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
+    <div className="h-full overflow-y-auto p-6 scrollbar-thin" style={{ backgroundColor: 'var(--bg-main)' }}>
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Configuración del Grupo</h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <div className="rounded-lg shadow-sm p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Configuración del Grupo</h2>
+          <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>
             Administra la información y configuración del grupo
           </p>
         </div>

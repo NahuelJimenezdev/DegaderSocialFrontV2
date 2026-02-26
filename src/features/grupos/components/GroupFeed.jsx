@@ -141,17 +141,20 @@ const GroupFeed = ({ groupData }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="p-6 border-b border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] flex-shrink-0">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+    <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--bg-main)' }}>
+      <header className="p-6 flex-shrink-0" style={{
+        borderBottom: '1px solid var(--border-primary)',
+        backgroundColor: 'var(--bg-card)'
+      }}>
+        <h2 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
           Feed del Grupo
         </h2>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">
+        <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>
           Publicaciones y actualizaciones de {groupData?.nombre || 'este grupo'}
         </p>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-[#0a0e27] scrollbar-thin">
+      <div className="flex-1 overflow-y-auto p-6 scrollbar-thin" style={{ backgroundColor: 'var(--bg-main)' }}>
         <div className="max-w-2xl mx-auto space-y-6">
           <CreatePostCard currentUser={user} onPostCreated={handleCreatePost} />
 

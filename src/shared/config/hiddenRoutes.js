@@ -7,7 +7,7 @@
 
 export const hideAdsSidebarRoutes = [
   // /Mis_Carpetas/id (allows alphanumeric IDs)
-  /^\/Mis_Carpetas\/[a-zA-Z0-9]+$/,
+  /^\/Mis_carpetas\/[a-zA-Z0-9]+$/,
   // /mensajes/1, /mensajes/2, etc.
   /^\/mensajes(\/.*)?$/i,
 ]

@@ -67,3 +67,13 @@
     flex-direction: column;
     gap: 0.5rem;
 }
+
+.text-size-sidebar {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-marca);
+}
+
+.items-config-tour {
+    color: var(--color-marca);
+}

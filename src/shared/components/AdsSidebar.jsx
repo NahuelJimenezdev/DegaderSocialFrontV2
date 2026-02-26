@@ -133,7 +133,7 @@ const AdsSidebar = () => {
         </div>
 
         {/* Footer informativo */}
-        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #1a1f3a' }}>
+        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-primary)' }}>
           <p style={{ fontSize: '0.75rem', color: '#6b7280', textAlign: 'center' }}>
             Los anuncios ayudan a mantener DegaderSocial gratuito
           </p>

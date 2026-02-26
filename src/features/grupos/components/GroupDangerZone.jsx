@@ -3,7 +3,7 @@
  */
 const GroupDangerZone = ({ isOwner, loading, handleLeaveGroup, handleDeleteGroup }) => {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border-2 border-red-200 dark:border-red-900">
+        <div className="rounded-lg shadow-sm overflow-hidden border-2 border-red-200 dark:border-red-900" style={{ backgroundColor: 'var(--bg-card)' }}>
             <div className="bg-gradient-to-r from-red-500 to-rose-500 p-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
                     <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>warning</span>
@@ -17,8 +17,8 @@ const GroupDangerZone = ({ isOwner, loading, handleLeaveGroup, handleDeleteGroup
                             logout
                         </span>
                         <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Abandonar Grupo</h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                            <h4 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Abandonar Grupo</h4>
+                            <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
                                 {isOwner
                                     ? "Como propietario, deberás transferir la propiedad antes de salir."
                                     : "Dejarás de ser miembro de este grupo y perderás acceso a todo el contenido."}

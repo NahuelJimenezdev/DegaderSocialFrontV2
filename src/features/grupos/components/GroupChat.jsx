@@ -48,23 +48,23 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
   };
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#1F2937]">
+    <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--bg-card)' }}>
       <GroupChatHeader messagesCount={messages.length} onMenuClick={onMenuClick} />
 
-      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 bg-gray-50 dark:bg-[#0a0e27] scrollbar-thin">
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 scrollbar-thin" style={{ backgroundColor: 'var(--bg-main)' }}>
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
           </div>
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-              <span className="material-symbols-outlined text-4xl text-gray-400 dark:text-gray-600">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: 'var(--bg-card)' }}>
+              <span className="material-symbols-outlined text-4xl" style={{ color: 'var(--text-secondary)' }}>
                 chat_bubble
               </span>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 font-medium">No hay mensajes aún</p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">¡Sé el primero en escribir!</p>
+            <p className="font-medium" style={{ color: 'var(--text-primary)' }}>No hay mensajes aún</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>¡Sé el primero en escribir!</p>
           </div>
         ) : (
           <div className="space-y-6 max-w-3xl mx-auto">

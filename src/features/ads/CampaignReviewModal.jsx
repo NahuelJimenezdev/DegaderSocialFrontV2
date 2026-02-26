@@ -92,30 +92,31 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
     >
       <div
         style={{
-          backgroundColor: '#1a1a2e',
+          backgroundColor: 'var(--bg-card)',
           borderRadius: '16px',
           maxWidth: '800px',
           width: '100%',
           maxHeight: '90vh',
           overflow: 'auto',
-          position: 'relative'
+          position: 'relative',
+          border: '1px solid var(--border-primary)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div style={{
           padding: '1.5rem',
-          borderBottom: '1px solid #2a2a3e',
+          borderBottom: '1px solid var(--border-primary)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           position: 'sticky',
           top: 0,
-          backgroundColor: '#1a1a2e',
+          backgroundColor: 'var(--bg-card)',
           zIndex: 10
         }}>
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ffffff', marginBottom: '0.5rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
               {campaign.nombreCliente}
             </h2>
             {getEstadoBadge(campaign.estado)}
@@ -125,7 +126,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
             style={{
               background: 'none',
               border: 'none',
-              color: '#9ca3af',
+              color: 'var(--text-secondary)',
               cursor: 'pointer',
               padding: '0.5rem'
             }}
@@ -138,14 +139,14 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
         <div style={{ padding: '1.5rem' }}>
           {/* Preview de la imagen */}
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Vista Previa
             </h3>
             <div style={{
-              backgroundColor: '#0f0f1e',
+              backgroundColor: 'var(--bg-main)',
               borderRadius: '12px',
               overflow: 'hidden',
-              border: '1px solid #2a2a3e'
+              border: '1px solid var(--border-primary)'
             }}>
               <img
                 src={campaign.imagenUrl}
@@ -160,8 +161,8 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                   e.target.src = 'https://via.placeholder.com/800x400?text=Imagen+no+disponible';
                 }}
               />
-              <div style={{ padding: '1rem', backgroundColor: '#1a1a2e' }}>
-                <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+              <div style={{ padding: '1rem', backgroundColor: 'var(--bg-card)' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                   {campaign.textoAlternativo}
                 </p>
                 <a
@@ -198,19 +199,19 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
 
           {/* Información del Cliente */}
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Información del Cliente
             </h3>
             <div style={{
-              backgroundColor: '#0f0f1e',
+              backgroundColor: 'var(--bg-main)',
               padding: '1rem',
               borderRadius: '12px',
-              border: '1px solid #2a2a3e'
+              border: '1px solid var(--border-primary)'
             }}>
-              <p style={{ color: '#e5e7eb', marginBottom: '0.5rem' }}>
+              <p style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
                 <strong>Nombre:</strong> {campaign.clienteId?.nombreCompleto || 'N/A'}
               </p>
-              <p style={{ color: '#e5e7eb' }}>
+              <p style={{ color: 'var(--text-primary)' }}>
                 <strong>Email:</strong> {campaign.clienteId?.email || 'N/A'}
               </p>
             </div>
@@ -218,7 +219,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
 
           {/* Detalles de la Campaña */}
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Detalles de la Campaña
             </h3>
             <div style={{
@@ -227,61 +228,61 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
               gap: '1rem'
             }}>
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e'
+                border: '1px solid var(--border-primary)'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <Calendar size={20} color="#6366f1" />
-                  <span style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Fecha Inicio</span>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Fecha Inicio</span>
                 </div>
-                <p style={{ color: '#ffffff', fontWeight: '600' }}>
+                <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>
                   {formatDate(campaign.fechaInicio)}
                 </p>
               </div>
 
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e'
+                border: '1px solid var(--border-primary)'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <Calendar size={20} color="#6366f1" />
-                  <span style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Fecha Fin</span>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Fecha Fin</span>
                 </div>
-                <p style={{ color: '#ffffff', fontWeight: '600' }}>
+                <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>
                   {formatDate(campaign.fechaFin)}
                 </p>
               </div>
 
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e'
+                border: '1px solid var(--border-primary)'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <Target size={20} color="#6366f1" />
-                  <span style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Prioridad</span>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Prioridad</span>
                 </div>
-                <p style={{ color: '#ffffff', fontWeight: '600', textTransform: 'capitalize' }}>
+                <p style={{ color: 'var(--text-primary)', fontWeight: '600', textTransform: 'capitalize' }}>
                   {campaign.prioridad}
                 </p>
               </div>
 
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e'
+                border: '1px solid var(--border-primary)'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <DollarSign size={20} color="#6366f1" />
-                  <span style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Costo/Impresión</span>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Costo/Impresión</span>
                 </div>
-                <p style={{ color: '#ffffff', fontWeight: '600' }}>
+                <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>
                   {campaign.costoPorImpresion} crédito(s)
                 </p>
               </div>
@@ -290,36 +291,36 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
 
           {/* Segmentación */}
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Segmentación
             </h3>
             <div style={{
-              backgroundColor: '#0f0f1e',
+              backgroundColor: 'var(--bg-main)',
               padding: '1rem',
               borderRadius: '12px',
-              border: '1px solid #2a2a3e'
+              border: '1px solid var(--border-primary)'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 <Users size={20} color="#6366f1" />
-                <span style={{ color: '#e5e7eb' }}>
+                <span style={{ color: 'var(--text-primary)' }}>
                   <strong>Edad:</strong> {campaign.segmentacion?.edadMin || 18} - {campaign.segmentacion?.edadMax || 65} años
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 <Users size={20} color="#6366f1" />
-                <span style={{ color: '#e5e7eb' }}>
+                <span style={{ color: 'var(--text-primary)' }}>
                   <strong>Género:</strong> {campaign.segmentacion?.genero === 'todos' ? 'Todos' : campaign.segmentacion?.genero}
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 <MapPin size={20} color="#6366f1" />
-                <span style={{ color: '#e5e7eb' }}>
+                <span style={{ color: 'var(--text-primary)' }}>
                   <strong>Alcance:</strong> {campaign.segmentacion?.ubicacion?.esGlobal ? 'Global' : `Local (${campaign.segmentacion?.ubicacion?.radioKm || 50} km)`}
                 </span>
               </div>
               {campaign.segmentacion?.intereses?.length > 0 && (
                 <div style={{ marginTop: '0.75rem' }}>
-                  <strong style={{ color: '#e5e7eb', display: 'block', marginBottom: '0.5rem' }}>Intereses:</strong>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: '0.5rem' }}>Intereses:</strong>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                     {campaign.segmentacion.intereses.map((interes, idx) => (
                       <span
@@ -343,7 +344,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
 
           {/* Métricas */}
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ color: '#ffffff', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '1rem', fontWeight: '600' }}>
               Métricas Actuales
             </h3>
             <div style={{
@@ -352,50 +353,50 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
               gap: '1rem'
             }}>
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e',
+                border: '1px solid var(--border-primary)',
                 textAlign: 'center'
               }}>
-                <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Impresiones</p>
-                <p style={{ color: '#ffffff', fontSize: '1.5rem', fontWeight: 'bold' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Impresiones</p>
+                <p style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 'bold' }}>
                   {campaign.metricas?.impresiones || 0}
                 </p>
               </div>
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e',
+                border: '1px solid var(--border-primary)',
                 textAlign: 'center'
               }}>
-                <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Clicks</p>
-                <p style={{ color: '#ffffff', fontSize: '1.5rem', fontWeight: 'bold' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Clicks</p>
+                <p style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 'bold' }}>
                   {campaign.metricas?.clicks || 0}
                 </p>
               </div>
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e',
+                border: '1px solid var(--border-primary)',
                 textAlign: 'center'
               }}>
-                <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '0.5rem' }}>CTR</p>
-                <p style={{ color: '#ffffff', fontSize: '1.5rem', fontWeight: 'bold' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>CTR</p>
+                <p style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 'bold' }}>
                   {campaign.metricas?.ctr?.toFixed(2) || 0}%
                 </p>
               </div>
               <div style={{
-                backgroundColor: '#0f0f1e',
+                backgroundColor: 'var(--bg-main)',
                 padding: '1rem',
                 borderRadius: '12px',
-                border: '1px solid #2a2a3e',
+                border: '1px solid var(--border-primary)',
                 textAlign: 'center'
               }}>
-                <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Gastado</p>
-                <p style={{ color: '#ffffff', fontSize: '1.5rem', fontWeight: 'bold' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Gastado</p>
+                <p style={{ color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: 'bold' }}>
                   {campaign.creditosGastados || 0}
                 </p>
               </div>
@@ -405,11 +406,11 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
           {/* Acciones - Solo para campañas pendientes */}
           {campaign.estado === 'pendiente_aprobacion' && (
             <div style={{
-              borderTop: '1px solid #2a2a3e',
+              borderTop: '1px solid var(--border-primary)',
               paddingTop: '1.5rem',
               position: 'sticky',
               bottom: 0,
-              backgroundColor: '#1a1a2e',
+              backgroundColor: 'var(--bg-card)',
               marginLeft: '-1.5rem',
               marginRight: '-1.5rem',
               marginBottom: '-1.5rem',
@@ -466,7 +467,7 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                 </div>
               ) : (
                 <div>
-                  <label style={{ color: '#ffffff', display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                  <label style={{ color: 'var(--text-primary)', display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
                     Motivo del rechazo:
                   </label>
                   <textarea
@@ -475,9 +476,9 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
                     placeholder="Explica por qué se rechaza esta campaña..."
                     style={{
                       width: '100%',
-                      backgroundColor: '#0f0f1e',
-                      color: '#ffffff',
-                      border: '1px solid #2a2a3e',
+                      backgroundColor: 'var(--bg-main)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--border-primary)',
                       borderRadius: '8px',
                       padding: '0.75rem',
                       marginBottom: '1rem',

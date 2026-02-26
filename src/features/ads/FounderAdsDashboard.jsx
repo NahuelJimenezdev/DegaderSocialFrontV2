@@ -119,10 +119,10 @@ const FounderAdsDashboard = () => {
     <div style={{ padding: '2rem', maxWidth: '1600px', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffffff', marginBottom: '0.5rem' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
           Panel de Administración - Publicidad
         </h1>
-        <p style={{ color: '#9ca3af' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>
           Gestiona todas las campañas publicitarias y monitorea los ingresos
         </p>
 
@@ -147,76 +147,76 @@ const FounderAdsDashboard = () => {
       }}>
         {/* Ingresos Totales */}
         <div style={{
-          backgroundColor: '#0f1229',
-          border: '1px solid #1a1f3a',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-primary)',
           borderRadius: '12px',
           padding: '1.5rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <DollarSign size={24} color="#10b981" />
-            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Ingresos</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Ingresos</span>
           </div>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffffff' }}>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
             {revenue?.ingresosTotales?.toLocaleString() || 0} 💎
           </p>
-          <p style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
             DegaCoins vendidos
           </p>
         </div>
 
         {/* Campañas Pendientes */}
         <div style={{
-          backgroundColor: '#0f1229',
-          border: '1px solid #1a1f3a',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-primary)',
           borderRadius: '12px',
           padding: '1.5rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <Filter size={24} color="#f59e0b" />
-            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Pendientes</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Pendientes</span>
           </div>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffffff' }}>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
             {revenue?.estadisticas?.pendientes || 0}
           </p>
-          <p style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
             Requieren aprobación
           </p>
         </div>
 
         {/* Campañas Activas */}
         <div style={{
-          backgroundColor: '#0f1229',
-          border: '1px solid #1a1f3a',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-primary)',
           borderRadius: '12px',
           padding: '1.5rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <TrendingUp size={24} color="#10b981" />
-            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Activas</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Activas</span>
           </div>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffffff' }}>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
             {revenue?.estadisticas?.activas || 0}
           </p>
-          <p style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
             Campañas en ejecución
           </p>
         </div>
 
         {/* Total Impresiones */}
         <div style={{
-          backgroundColor: '#0f1229',
-          border: '1px solid #1a1f3a',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-primary)',
           borderRadius: '12px',
           padding: '1.5rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <Eye size={24} color="#3b82f6" />
-            <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Impresiones</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Impresiones</span>
           </div>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffffff' }}>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
             {revenue?.estadisticas?.totalImpresiones?.toLocaleString() || 0}
           </p>
-          <p style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
             Total de vistas
           </p>
         </div>
@@ -237,9 +237,9 @@ const FounderAdsDashboard = () => {
               onClick={() => setFilter(f)}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: filter === f ? '#6366f1' : '#1a1f3a',
-                color: '#ffffff',
-                border: 'none',
+                backgroundColor: filter === f ? 'var(--primary)' : 'var(--bg-card)',
+                color: filter === f ? '#white' : 'var(--text-primary)',
+                border: `1px solid ${filter === f ? 'var(--primary)' : 'var(--border-primary)'}`,
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '0.875rem',
@@ -271,10 +271,10 @@ const FounderAdsDashboard = () => {
             style={{
               width: '100%',
               padding: '0.5rem 1rem 0.5rem 3rem',
-              backgroundColor: '#1a1f3a',
-              border: '1px solid #2a2f4a',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-primary)',
               borderRadius: '8px',
-              color: '#ffffff',
+              color: 'var(--text-primary)',
               fontSize: '0.875rem'
             }}
           />
@@ -283,13 +283,13 @@ const FounderAdsDashboard = () => {
 
       {/* Lista de Campañas */}
       <div style={{
-        backgroundColor: '#0f1229',
-        border: '1px solid #1a1f3a',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border-primary)',
         borderRadius: '12px',
         overflow: 'hidden'
       }}>
-        <div style={{ padding: '1.5rem', borderBottom: '1px solid #1a1f3a' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#ffffff' }}>
+        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-primary)' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
             Todas las Campañas ({filteredCampaigns.length})
           </h2>
         </div>
@@ -304,8 +304,8 @@ const FounderAdsDashboard = () => {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ backgroundColor: '#1a1f3a' }}>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#9ca3af', fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase' }}>
+                <tr style={{ backgroundColor: 'var(--bg-main)' }}>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase' }}>
                     Campaña
                   </th>
                   <th style={{ padding: '1rem', textAlign: 'left', color: '#9ca3af', fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase' }}>
@@ -334,11 +334,11 @@ const FounderAdsDashboard = () => {
                     key={campaign._id}
                     onClick={() => handleCampaignClick(campaign)}
                     style={{
-                      borderTop: '1px solid #1a1f3a',
+                      borderTop: '1px solid var(--border-primary)',
                       cursor: 'pointer',
                       transition: 'background-color 0.2s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1f3a'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <td style={{ padding: '1rem' }}>
@@ -350,28 +350,28 @@ const FounderAdsDashboard = () => {
                           onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }}
                         />
                         <div>
-                          <p style={{ color: '#ffffff', fontWeight: '600', fontSize: '0.875rem' }}>
+                          <p style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '0.875rem' }}>
                             {campaign.nombreCliente}
                           </p>
-                          <p style={{ color: '#9ca3af', fontSize: '0.75rem' }}>
+                          <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
                             {new Date(campaign.fechaInicio).toLocaleDateString()} - {new Date(campaign.fechaFin).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
                     </td>
-                    <td style={{ padding: '1rem', color: '#ffffff' }}>
+                    <td style={{ padding: '1rem', color: 'var(--text-primary)' }}>
                       {campaign.clienteId?.nombres?.primero || 'N/A'} {campaign.clienteId?.apellidos?.primero || ''}
                     </td>
                     <td style={{ padding: '1rem' }}>
                       {getEstadoBadge(campaign.estado)}
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center', color: '#ffffff' }}>
+                    <td style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-primary)' }}>
                       {campaign.metricas?.impresiones?.toLocaleString() || 0}
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center', color: '#ffffff' }}>
+                    <td style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-primary)' }}>
                       {campaign.metricas?.ctr?.toFixed(2) || 0}%
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center', color: '#ffffff' }}>
+                    <td style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-primary)' }}>
                       {campaign.creditosGastados || 0} 💎
                     </td>
                     <td style={{ padding: '1rem' }}>
@@ -428,10 +428,10 @@ const FounderAdsDashboard = () => {
                           style={{
                             padding: '0.5rem',
                             backgroundColor: 'transparent',
-                            border: '1px solid #1a1f3a',
+                            border: '1px solid var(--border-primary)',
                             borderRadius: '6px',
                             cursor: 'pointer',
-                            color: '#9ca3af'
+                            color: 'var(--text-secondary)'
                           }}
                           title="Ver estadísticas detalladas"
                         >

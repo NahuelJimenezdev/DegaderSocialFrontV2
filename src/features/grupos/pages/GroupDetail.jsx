@@ -286,8 +286,8 @@ const GroupDetail = () => {
   // Si hay error de acceso o está cargando
   if (loading || (!groupData && !error)) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="text-xl text-[#64748b] dark:text-[#94a3b8]">Cargando grupo...</p>
+      <div className="h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-main)' }}>
+        <p className="text-xl" style={{ color: 'var(--text-secondary)' }}>Cargando grupo...</p>
       </div>
     )
   }
@@ -329,9 +329,13 @@ const GroupDetail = () => {
       {isMobile && activeSection !== 'chat' && (
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-20 left-4 z-[60] p-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 w-12 h-12 flex items-center justify-center"
+          className="fixed top-20 left-4 z-[60] rounded-xl shadow-lg w-12 h-12 flex items-center justify-center"
+          style={{
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-primary)'
+          }}
         >
-          <span className="material-symbols-outlined text-2xl text-gray-700 dark:text-gray-300">
+          <span className="material-symbols-outlined text-2xl" style={{ color: 'var(--text-primary)' }}>
             {sidebarOpen ? 'close' : 'menu'}
           </span>
         </button>
@@ -348,13 +352,14 @@ const GroupDetail = () => {
       {/* Sidebar del grupo - Reemplaza visualmente al sidebar global */}
       <div
         className={`
-          fixed bottom-0 w-[280px] bg-white dark:bg-gray-800 
+          fixed bottom-0 w-[280px] 
           transition-transform duration-300 ease-in-out lg:transition-none
           ${isMobile && activeSection === 'chat' ? 'top-0' : 'top-[65px]'}
           ${isMobile
             ? `right-0 z-[260] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
             : 'left-0 z-40 translate-x-0'}
         `}
+        style={{ backgroundColor: 'var(--bg-card)' }}
       >
         <SidebarGroup
           groupData={groupData}
@@ -374,7 +379,7 @@ const GroupDetail = () => {
         ${activeSection === 'chat'
           ? 'max-md:fixed max-md:inset-0 max-md:z-[240]'
           : 'mb-mobile-67'}
-      `}>
+      `} style={{ backgroundColor: 'var(--bg-main)' }}>
         <div className={activeSection === 'chat' ? 'h-full' : 'p-4 md:p-8 pt-0'}>
           {renderSection()}
         </div>

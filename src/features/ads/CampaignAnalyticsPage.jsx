@@ -39,11 +39,11 @@ export default function CampaignAnalyticsPage() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundColor: '#0f0f1e',
+        backgroundColor: 'var(--bg-main)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#ffffff'
+        color: 'var(--text-primary)'
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
@@ -62,9 +62,9 @@ export default function CampaignAnalyticsPage() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundColor: '#0f0f1e',
+        backgroundColor: 'var(--bg-main)',
         padding: '2rem',
-        color: '#ffffff'
+        color: 'var(--text-primary)'
       }}>
         <button
           onClick={() => navigate(-1)}
@@ -91,9 +91,9 @@ export default function CampaignAnalyticsPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#0f0f1e',
+      backgroundColor: 'var(--bg-main)',
       padding: '2rem',
-      color: '#ffffff'
+      color: 'var(--text-primary)'
     }}>
       {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
@@ -122,50 +122,51 @@ export default function CampaignAnalyticsPage() {
         }}>
           Estadísticas Detalladas
         </h1>
-        <p style={{ color: '#9ca3af', fontSize: '1.1rem' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
           {campaign.nombreCliente}
         </p>
       </div>
 
       {/* Date Filters */}
       <div style={{
-        backgroundColor: '#1a1a2e',
+        backgroundColor: 'var(--bg-card)',
         padding: '1.5rem',
         borderRadius: '12px',
         marginBottom: '2rem',
         display: 'flex',
         gap: '1rem',
         alignItems: 'center',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        border: '1px solid var(--border-primary)'
       }}>
         <Calendar size={20} color="#6366f1" />
         <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Desde</span>
+          <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Desde</span>
           <input
             type="date"
             value={dateRange.startDate}
             onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
             style={{
-              backgroundColor: '#0f0f1e',
-              border: '1px solid #2a2a3e',
+              backgroundColor: 'var(--bg-main)',
+              border: '1px solid var(--border-primary)',
               borderRadius: '8px',
               padding: '0.5rem',
-              color: '#ffffff'
+              color: 'var(--text-primary)'
             }}
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Hasta</span>
+          <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Hasta</span>
           <input
             type="date"
             value={dateRange.endDate}
             onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
             style={{
-              backgroundColor: '#0f0f1e',
-              border: '1px solid #2a2a3e',
+              backgroundColor: 'var(--bg-main)',
+              border: '1px solid var(--border-primary)',
               borderRadius: '8px',
               padding: '0.5rem',
-              color: '#ffffff'
+              color: 'var(--text-primary)'
             }}
           />
         </label>
@@ -186,10 +187,11 @@ export default function CampaignAnalyticsPage() {
       {/* Geography */}
       {stats.geography && stats.geography.length > 0 && (
         <div style={{
-          backgroundColor: '#1a1a2e',
+          backgroundColor: 'var(--bg-card)',
           padding: '1.5rem',
           borderRadius: '12px',
-          marginBottom: '2rem'
+          marginBottom: '2rem',
+          border: '1px solid var(--border-primary)'
         }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Globe size={20} color={COLORS.primary} />

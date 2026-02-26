@@ -40,7 +40,7 @@ const GroupNotificationsPanel = ({ groupId, currentSettings }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="rounded-lg shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
                     <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>notifications</span>
@@ -50,12 +50,12 @@ const GroupNotificationsPanel = ({ groupId, currentSettings }) => {
 
             <div className="p-6 space-y-6">
                 {/* Toggle principal */}
-                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'var(--bg-main)' }}>
                     <div className="flex-1">
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="font-medium" style={{ color: 'var(--text-primary)' }}>
                             Silenciar notificaciones
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
                             Controla cómo recibes notificaciones de este grupo
                         </p>
                     </div>

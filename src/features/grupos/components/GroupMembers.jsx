@@ -133,13 +133,13 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
+    <div className="h-full overflow-y-auto p-6 scrollbar-thin" style={{ backgroundColor: 'var(--bg-main)' }}>
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header y Búsqueda */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="rounded-lg shadow-sm p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
           <div className="flex flex-col sm:flex-row sm:items-left sm:justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
                 Miembros del Grupo
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -238,7 +238,11 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
         )}
 
         {/* Lista de Miembros */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="rounded-lg shadow-sm divide-y" style={{
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-primary)',
+          borderColor: 'var(--border-primary)'
+        }}>
           {filteredMembers.length === 0 ? (
             <div className="p-12 text-center">
               <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">
@@ -291,7 +295,7 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-semibold text-gray-900 dark:text-white truncate">
+                          <p className="font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
                             {fullName}
                           </p>
                           {isCurrentUser && (

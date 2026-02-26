@@ -78,8 +78,8 @@ const Sidebar = () => {
               className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left mb-2"
               title="Reiniciar tour guiado"
             >
-              <HelpCircle size={20} />
-              <span className="text-sm">Tour Guiado</span>
+              <HelpCircle size={20} className="items-config-tour" />
+              <span className="text-size-sidebar">Tour Guiado</span>
             </button>
 
             {/* Configuración Button */}
@@ -87,8 +87,8 @@ const Sidebar = () => {
               onClick={() => setShowComingSoonAlert(true)}
               className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
             >
-              <Settings size={20} />
-              <span className="text-sm">Configuración</span>
+              <Settings size={20} className="items-config-tour" />
+              <span className="text-size-sidebar">Configuración</span>
             </button>
           </div>
         </div>

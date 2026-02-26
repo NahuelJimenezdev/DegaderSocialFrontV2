@@ -3,7 +3,7 @@
  */
 const GroupPermissionsPanel = ({ groupData }) => {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="rounded-lg shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2" style={{ color: '#ffffff' }}>
                     <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>admin_panel_settings</span>
@@ -11,10 +11,10 @@ const GroupPermissionsPanel = ({ groupData }) => {
                 </h3>
             </div>
             <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'var(--bg-main)' }}>
                     <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Permitir que miembros inviten a otros</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Los miembros regulares pueden enviar invitaciones</p>
+                        <p className="font-medium" style={{ color: 'var(--text-primary)' }}>Permitir que miembros inviten a otros</p>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Los miembros regulares pueden enviar invitaciones</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" />

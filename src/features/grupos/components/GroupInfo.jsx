@@ -40,18 +40,18 @@ const GroupInfo = ({ groupData }) => {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 scrollbar-thin">
+    <div className="h-full overflow-y-auto p-6 scrollbar-thin" style={{ backgroundColor: 'var(--bg-main)' }}>
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Información del Grupo</h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <div className="rounded-lg shadow-sm p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Información del Grupo</h2>
+          <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>
             Detalles y estadísticas del grupo
           </p>
         </div>
 
         {/* Información General - Diseño Profesional */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+        <div className="rounded-2xl shadow-lg overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
           <div className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 p-6">
             <h3 className="text-2xl font-bold text-white flex items-center gap-3">
               <span className="material-symbols-outlined text-3xl">info</span>
@@ -169,7 +169,7 @@ const GroupInfo = ({ groupData }) => {
         </div>
 
         {/* Estadísticas - Diseño Profesional y Creativo */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+        <div className="rounded-2xl shadow-lg overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
           <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6">
             <h3 className="text-2xl font-bold text-white flex items-center gap-3">
               <span className="material-symbols-outlined text-3xl">analytics</span>
@@ -209,10 +209,10 @@ const GroupInfo = ({ groupData }) => {
                       <span className="text-xs font-semibold text-blue-700 dark:text-white">ACTIVO</span>
                     </div>
                   </div>
-                  <p className="text-5xl lg:text-6xl font-black text-gray-900 dark:text-white mb-2">
+                  <p className="text-5xl lg:text-6xl font-black mb-2" style={{ color: 'var(--text-primary)' }}>
                     {groupData?.members?.length || 0}
                   </p>
-                  <p className="text-gray-700 dark:text-white/90 font-medium text-lg">
+                  <p className="font-medium text-lg" style={{ color: 'var(--text-primary)' }}>
                     Miembros Totales
                   </p>
                   <p className="text-gray-500 dark:text-white/70 text-sm mt-1">

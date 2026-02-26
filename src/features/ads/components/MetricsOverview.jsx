@@ -54,10 +54,10 @@ const MetricsOverview = ({ metrics, campaign }) => {
 function MetricCard({ icon, title, value, subtitle, color }) {
     return (
         <div style={{
-            backgroundColor: '#1a1a2e',
+            backgroundColor: 'var(--bg-card)',
             padding: '1.5rem',
             borderRadius: '12px',
-            border: `1px solid ${color}20`
+            border: `1px solid ${color}40`
         }}>
             <div style={{
                 display: 'flex',
@@ -73,7 +73,7 @@ function MetricCard({ icon, title, value, subtitle, color }) {
                 }}>
                     {icon}
                 </div>
-                <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{title}</span>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{title}</span>
             </div>
             <div style={{
                 fontSize: '2rem',

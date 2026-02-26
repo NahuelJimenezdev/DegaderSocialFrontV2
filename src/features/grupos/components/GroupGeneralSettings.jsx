@@ -19,7 +19,7 @@ const GroupGeneralSettings = ({
     setImageError
 }) => {
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        <div className="rounded-lg shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}>
             <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-4">
                 <div className="flex items-center justify-between">
                     <h3 className="text-lg font-bold !text-white flex items-center gap-2" style={{ color: '#ffffff !important' }}>
@@ -103,7 +103,12 @@ const GroupGeneralSettings = ({
                                 onChange={handleChange}
                                 disabled={loading}
                                 required
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 disabled:opacity-60"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
+                                style={{
+                                    backgroundColor: 'var(--bg-main)',
+                                    color: 'var(--text-primary)',
+                                    borderColor: 'var(--border-primary)'
+                                }}
                             />
                         </div>
 
@@ -118,7 +123,12 @@ const GroupGeneralSettings = ({
                                 onChange={handleChange}
                                 disabled={loading}
                                 rows={4}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 disabled:opacity-60"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
+                                style={{
+                                    backgroundColor: 'var(--bg-main)',
+                                    color: 'var(--text-primary)',
+                                    borderColor: 'var(--border-primary)'
+                                }}
                             />
                         </div>
 
@@ -132,7 +142,12 @@ const GroupGeneralSettings = ({
                                 value={formData.tipo}
                                 onChange={handleChange}
                                 disabled={loading}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 disabled:opacity-60"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"
+                                style={{
+                                    backgroundColor: 'var(--bg-main)',
+                                    color: 'var(--text-primary)',
+                                    borderColor: 'var(--border-primary)'
+                                }}
                             >
                                 <option value="normal">Grupo Normal</option>
                                 <option value="fundacion">Fundación</option>
@@ -181,14 +196,14 @@ const GroupGeneralSettings = ({
 
                         {/* Info */}
                         <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="md:col-span-2 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
-                                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nombre del Grupo</p>
-                                <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white break-words">{groupData?.nombre}</p>
+                            <div className="md:col-span-2 p-4 rounded-xl border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-primary)' }}>
+                                <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--text-secondary)' }}>Nombre del Grupo</p>
+                                <p className="text-xl md:text-2xl font-bold break-words" style={{ color: 'var(--text-primary)' }}>{groupData?.nombre}</p>
                             </div>
 
-                            <div className="md:col-span-2 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
-                                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Descripción</p>
-                                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+                            <div className="md:col-span-2 p-4 rounded-xl border" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border-primary)' }}>
+                                <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--text-secondary)' }}>Descripción</p>
+                                <p className="whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--text-primary)' }}>
                                     {groupData?.descripcion || <span className="italic text-gray-400">Sin descripción</span>}
                                 </p>
                             </div>
