@@ -101,7 +101,7 @@ export const useArenaStore = create((set, get) => ({
                     totalQuestions: challenges.length
                 };
 
-                const response = await ArenaService.submitResult(sessionData);
+                await ArenaService.submitResult(sessionData);
 
                 // IMPORTANTE: Refrescar el perfil global para mostrar los puntos reales persistidos
                 const userStore = (await import('./useUserStore')).useUserStore;
@@ -112,6 +112,8 @@ export const useArenaStore = create((set, get) => ({
                 set({ gameStatus: 'finished', currentChallenge: null, isLoading: false });
             } catch (error) {
                 console.error('Error enviando resultados:', error);
+                const msg = error.response?.data?.message || 'Error de conexión con el servidor de Arena';
+                alert(`⚠️ NO SE GUARDARON LOS PUNTOS: ${msg}`);
                 set({ gameStatus: 'finished', currentChallenge: null, isLoading: false });
             }
         }
