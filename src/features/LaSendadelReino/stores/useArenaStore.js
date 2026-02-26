@@ -101,7 +101,14 @@ export const useArenaStore = create((set, get) => ({
                     totalQuestions: challenges.length
                 };
 
-                await ArenaService.submitResult(sessionData);
+                const response = await ArenaService.submitResult(sessionData);
+
+                // IMPORTANTE: Refrescar el perfil global para mostrar los puntos reales persistidos
+                const userStore = (await import('./useUserStore')).useUserStore;
+                if (userStore) {
+                    await userStore.getState().fetchStatus();
+                }
+
                 set({ gameStatus: 'finished', currentChallenge: null, isLoading: false });
             } catch (error) {
                 console.error('Error enviando resultados:', error);
