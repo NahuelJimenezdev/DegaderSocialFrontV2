@@ -2,7 +2,8 @@ import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useProfileData } from '../hooks/useProfileData';
 import { usePostActions } from '../hooks/usePostActions';
 import { usePostComposer } from '../hooks/usePostComposer';
-import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import { getUserAvatar, getBannerUrl } from '../../../shared/utils/avatarUtils';
+import { userService } from '../../../api';
 
 const ProfileContext = createContext(null);
 
@@ -66,11 +67,31 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
   // Memoizar callback para actualizar el perfil
   const handleProfileUpdate = useCallback((updatedUser) => {
     console.log('🔄 handleProfileUpdate llamado con:', updatedUser);
-    console.log('🔄 Avatar en updatedUser:', updatedUser.social?.fotoPerfil);
     updateUser(updatedUser);
-    // NO refetchAll() porque sobrescribe los datos actualizados con datos viejos del servidor
-    // refetchAll();
   }, [updateUser]);
+
+  // Memoizar callback para actualizar el banner
+  const handleBannerUpdate = useCallback(async (file) => {
+    try {
+      console.log('🖼️ [ProfileProvider] Actualizando banner...');
+      const response = await userService.uploadBanner(user._id || user.id, file);
+      console.log('✅ [ProfileProvider] Banner actualizado:', response);
+
+      // Actualizar el usuario localmente con el nuevo banner
+      const updatedUser = {
+        ...user,
+        social: {
+          ...user.social,
+          fotoBanner: response.banner
+        }
+      };
+      updateUser(updatedUser);
+      return { success: true };
+    } catch (error) {
+      console.error('❌ [ProfileProvider] Error al actualizar banner:', error);
+      return { success: false, error: error.message };
+    }
+  }, [user, updateUser]);
 
   // Memoizar URLs calculadas
   const avatarUrl = useMemo(() => {
@@ -79,7 +100,12 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
     console.log('🖼️ [ProfileProvider] user.social?.fotoPerfil:', user?.social?.fotoPerfil);
     return url;
   }, [user]);
-  const coverUrl = useMemo(() => 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=300&fit=crop', []);
+
+  const coverUrl = useMemo(() => {
+    const url = getBannerUrl(user?.social?.fotoBanner);
+    console.log('🖼️ [ProfileProvider] coverUrl recalculado:', url);
+    return url;
+  }, [user]);
 
   // Memoizar el valor del contexto completo
   const value = useMemo(() => ({
@@ -101,7 +127,8 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
     ...postComposer,
 
     // Callbacks
-    handleProfileUpdate
+    handleProfileUpdate,
+    handleBannerUpdate
   }), [
     user,
     avatarUrl,
@@ -112,7 +139,8 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
     savedPosts,
     postActions,
     postComposer,
-    handleProfileUpdate
+    handleProfileUpdate,
+    handleBannerUpdate
   ]);
 
   return (
