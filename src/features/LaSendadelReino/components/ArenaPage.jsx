@@ -60,25 +60,25 @@ const ArenaPage = () => {
                             />
                         </div>
 
-                        {/* 2. Centro: Identidad Detallada */}
-                        <div className="flex-1 space-y-6 min-w-0 w-full lg:w-auto">
+                        {/* 2. Centro: Identidad Detallada (Más Compacta para Réplica Exacta) */}
+                        <div className="flex-1 space-y-4 min-w-0 w-full lg:max-w-xl">
                             <div className="text-center lg:text-left">
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-1 uppercase italic leading-none text-white whitespace-nowrap overflow-hidden text-ellipsis">
+                                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-0 uppercase italic leading-none text-white whitespace-nowrap overflow-hidden text-ellipsis">
                                     {user.name || 'VALKYRIE_07'}
                                 </h1>
-                                <p className="text-[#3ea6ff] font-bold uppercase tracking-[0.25em] text-[11px] md:text-[14px] drop-shadow-md">
-                                    LEAGUE OF THE COVENANT
+                                <p className="text-[#3ea6ff] font-bold uppercase tracking-[0.25em] text-[10px] md:text-[13px] drop-shadow-md">
+                                    LA SENDA DEL REINO
                                 </p>
                             </div>
 
-                            <div className="w-full max-w-2xl mx-auto lg:mx-0 py-2">
+                            <div className="w-full py-1">
                                 <ProgressBar currentXP={user.totalXP} level={user.level} />
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 -mt-2">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-white/40 text-[10px] font-black uppercase tracking-widest">RANK {user.level}:</span>
-                                    <span className="text-white font-black text-[12px] md:text-[14px] uppercase tracking-wider drop-shadow-sm">{user.rank.label}</span>
+                                    <span className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none">RANK {user.level}:</span>
+                                    <span className="text-white font-black text-[11px] md:text-[13px] uppercase tracking-wider drop-shadow-sm leading-none">{user.rank.label}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center text-[9px] font-black border border-blue-400/40 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)]">XP</div>

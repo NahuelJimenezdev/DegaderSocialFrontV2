@@ -24,12 +24,12 @@ const AvatarDisplay = ({ level, rank, avatarUrl, username, layout = 'vertical' }
             )}
 
             {/* Brillo de fondo sutil */}
-            <div className={`absolute ${isHorizontal ? 'top-10' : 'inset-0'} w-24 h-24 md:w-40 md:h-40 blur-[40px] md:blur-[60px] opacity-20 rounded-full bg-blue-500`} />
+            <div className={`absolute ${isHorizontal ? 'top-12' : 'inset-0'} w-32 h-32 md:w-64 md:h-64 blur-[50px] md:blur-[80px] opacity-30 rounded-full bg-blue-500`} />
 
             {/* Contenedor del Avatar */}
             <div className="relative z-10">
-                <div className={`relative ${isHorizontal ? 'w-24 h-24 md:w-36 md:h-36' : 'w-28 h-28 md:w-44 md:h-44'} p-[3px] rounded-full bg-gradient-to-b from-blue-400 via-blue-600 to-transparent shadow-[0_0_20px_rgba(37,99,235,0.4)] border border-blue-400/30`}>
-                    <div className="w-full h-full rounded-full bg-[#0a0e27] overflow-hidden p-[2px] md:p-[4px]">
+                <div className={`relative ${isHorizontal ? 'w-24 h-24 md:w-56 md:h-56' : 'w-28 h-28 md:w-44 md:h-44'} p-[4px] rounded-full bg-gradient-to-b from-blue-400 via-blue-600 to-transparent shadow-[0_0_40px_rgba(37,99,235,0.5)] border border-blue-400/30`}>
+                    <div className="w-full h-full rounded-full bg-[#0a0e27] overflow-hidden p-[3px] md:p-[6px]">
                         <motion.img
                             key={level}
                             initial={{ scale: 1.1, opacity: 0 }}
