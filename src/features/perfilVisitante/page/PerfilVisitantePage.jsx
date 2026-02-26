@@ -114,28 +114,79 @@ const PerfilVisitantePage = () => {
           onAccionAmistad={handleAccionAmistad}
         />
 
-        {/* --- VISTA PARA NO AMIGOS (Clásica restringida) --- */}
+        {/* --- VISTA HÍBRIDA (Pública para Info, Privada para Muro) --- */}
+        <div className="px-6 py-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+            <FileTextIcon size={20} className="text-gray-500" />
+            Biografía
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed italic mb-6">
+            {usuario.social?.biografia || 'Este usuario aún no tiene biografía.'}
+          </p>
+
+          {/* Sección de Información Adicional (Pública) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 p-6 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-700/50">
+            <div className="space-y-5">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Detalles Personales</h4>
+
+              <InfoItem
+                label="Ubicación"
+                value={`${usuario.personal?.ubicacion?.ciudad || ''}, ${usuario.personal?.ubicacion?.pais || ''}`}
+                icon={MapPinIcon}
+              />
+
+              <InfoItem
+                label="Fecha de Nacimiento"
+                value={formatDate(usuario.personal?.fechaNacimiento)}
+                icon={CalendarIcon}
+              />
+
+              {usuario.social?.privacidad?.mostrarEmail && (
+                <InfoItem label="Correo" value={usuario.email} icon={GlobeIcon} />
+              )}
+
+              {usuario.social?.privacidad?.mostrarTelefono && (
+                <InfoItem label="Teléfono" value={usuario.personal?.celular} icon={BriefcaseIcon} />
+              )}
+            </div>
+
+            <div className="space-y-5">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Vinculación Ministerial</h4>
+
+              {usuario.esMiembroIglesia ? (
+                <InfoItem
+                  label="Iglesia"
+                  value={usuario.eclesiastico?.iglesia?.nombre || 'Miembro Activo'}
+                  icon={ChurchIcon}
+                />
+              ) : (
+                <p className="text-sm text-gray-500 italic">No vinculado a una iglesia pública</p>
+              )}
+
+              {usuario.esMiembroFundacion ? (
+                <InfoItem
+                  label="Fundación"
+                  value={`Fundación Sol y Luna - ${usuario.fundacion?.cargo || 'Miembro'}`}
+                  icon={Building2Icon}
+                />
+              ) : (
+                <p className="text-sm text-gray-500 italic">No vinculado a la fundación</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* --- BLOQUEO DE MURO (Solo si no son amigos) --- */}
         {!isFriend && (
-          <>
-            <div className="px-6 py-6 border-t border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <FileTextIcon size={20} className="text-gray-500" />
-                Biografía
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed italic">
-                {usuario.social?.biografia || 'Este usuario aún no tiene biografía.'}
-              </p>
+          <div className="px-6 py-10 border-t border-gray-100 dark:border-gray-800 text-center">
+            <div className="mx-auto w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4 text-gray-400">
+              <LockIcon size={32} />
             </div>
-            <div className="px-6 py-10 bg-gray-50 dark:bg-gray-800/50 text-center">
-              <div className="mx-auto w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4 text-gray-400">
-                <LockIcon size={32} />
-              </div>
-              <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Perfil Privado</h4>
-              <p className="text-gray-500 max-w-sm mx-auto">
-                Agrega a {usuario.nombres?.primero} a tus amigos para ver su información completa, fundación, iglesia y publicaciones.
-              </p>
-            </div>
-          </>
+            <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Muro Privado</h4>
+            <p className="text-gray-500 max-w-sm mx-auto">
+              Agrega a {usuario.nombres?.primero} a tus amigos para interactuar y ver todas sus publicaciones.
+            </p>
+          </div>
         )}
 
         {/* --- VISTA PARA AMIGOS (Tabs Completos) --- */}

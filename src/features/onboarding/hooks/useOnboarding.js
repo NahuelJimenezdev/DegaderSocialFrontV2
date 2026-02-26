@@ -22,13 +22,17 @@ export const useOnboarding = () => {
             const status = await getOnboardingStatus();
 
             if (!status.hasCompleted) {
-                if (status.currentStep !== null && status.currentStep > 0) {
-                    // Retomar tour interrumpido
+                if (status.currentStep === null) {
+                    // Primera vez absoluta - mostrar mensaje del fundador
+                    setShowWelcomePost(true);
+                } else if (status.currentStep > 0) {
+                    // Retomar tour interrumpido en un paso específico
                     setStepIndex(status.currentStep);
                     setRun(true);
                 } else {
-                    // Primera vez - mostrar mensaje del fundador
-                    setShowWelcomePost(true);
+                    // Ya vio el mensaje del fundador (currentStep === 0) 
+                    // pero no ha iniciado el tour o lo dejó al inicio
+                    setShowInitialModal(true);
                 }
             }
         } catch (error) {
@@ -38,9 +42,19 @@ export const useOnboarding = () => {
         }
     };
 
-    const handleCloseWelcomePost = () => {
+    const handleCloseWelcomePost = async () => {
+        console.log('👋 [ONBOARDING] Cerrando mensaje del fundador...');
         setShowWelcomePost(false);
         setShowInitialModal(true); // Pasar al modal tradicional de invitación al tour
+
+        // 🆕 PERSISTIR: Cambiar currentStep de null a 0 en el backend
+        // Esto evita que se vuelva a mostrar en la próxima recarga
+        try {
+            await updateOnboardingProgress({ currentStep: 0 });
+            console.log('✅ [ONBOARDING] Estado inicial persistido en servidor');
+        } catch (error) {
+            console.error('❌ Error persistiendo estado inicial de onboarding:', error);
+        }
     };
 
     const startTour = () => {

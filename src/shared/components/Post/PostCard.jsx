@@ -26,6 +26,8 @@ import { logger } from '../../utils/logger';
 import { useToast } from '../Toast/ToastProvider';
 import ReportModal from '../Report/ReportModal';
 import EditPostModal from './EditPostModal';
+import IOSAlert from '../IOSAlert'; // 🆕 Importar modal estilo iOS
+import { friendshipService as friendApi } from '../../../api'; // Alias para evitar colisión si fuera necesario
 
 const PostCard = ({
     post,
@@ -49,6 +51,11 @@ const PostCard = ({
     // Estado para edición
     const [showEditModal, setShowEditModal] = useState(false);
     const [displayContent, setDisplayContent] = useState(post.contenido);
+
+    // 🆕 Estado para restricción iOS
+    const [showRestrictionModal, setShowRestrictionModal] = useState(false);
+    const [isFriend, setIsFriend] = useState(true); // Por defecto true para no bloquear feed propio, se valida en efecto
+    const [isCheckingFriendship, setIsCheckingFriendship] = useState(false);
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -95,6 +102,34 @@ const PostCard = ({
         }
     }, [post._id, currentUser, profileContext?.savedPosts, isFeedMode, context.user]);
 
+    // 🆕 Verificar estado de amistad si es post de otro
+    useEffect(() => {
+        const checkFriendship = async () => {
+            if (!currentUser || !post.usuario) return;
+            const postOwnerId = post.usuario._id || post.usuario;
+
+            // Si es mi propio post, soy mi amigo :) 
+            if (postOwnerId === currentUser._id) {
+                setIsFriend(true);
+                return;
+            }
+
+            // Si estamos en perfil visitante, el estado ya suele estar disponible, 
+            // pero si es en Feed, necesitamos validarlo.
+            try {
+                const response = await friendshipService.getEstado(postOwnerId);
+                // Si el autor es Staff/Founder, por ahora seguimos la regla "debes ser amigo" del usuario
+                // a menos que el usuario sea Admin (bypass)
+                const isStaff = currentUser.rolSistema && ['Founder', 'admin', 'moderador'].includes(currentUser.rolSistema);
+                setIsFriend(response.success && response.estado === 'aceptado' || isStaff);
+            } catch (error) {
+                console.error('Error checking friendship in PostCard:', error);
+            }
+        };
+
+        checkFriendship();
+    }, [post.usuario, currentUser]);
+
     // ✅ SIEMPRE usar el autor del post (post.usuario) para el header
     // No importa si estamos en feed o perfil, el autor del post debe mostrarse
     const user = post.usuario;
@@ -118,6 +153,12 @@ const PostCard = ({
     const isLiked = post.likes?.includes(currentUser?._id);
 
     const handleCommentClick = () => {
+        // 🆕 Restricción
+        if (!isFriend) {
+            setShowRestrictionModal(true);
+            return;
+        }
+
         if (isFeedMode) {
             setLocalShowComments(!localShowComments);
             // If mobile, overflow hidden on body to prevent scrolling background
@@ -153,7 +194,17 @@ const PostCard = ({
         }
     };
 
+    const handleActionRestriction = () => {
+        setShowRestrictionModal(true);
+    };
+
     const handleLikeClick = () => {
+        // 🆕 Restricción
+        if (!isFriend) {
+            handleActionRestriction();
+            return;
+        }
+
         if (isFeedMode) {
             onLike?.(post._id);
         } else {
@@ -162,6 +213,12 @@ const PostCard = ({
     };
 
     const handleShareClick = () => {
+        // 🆕 Restricción
+        if (!isFriend) {
+            handleActionRestriction();
+            return;
+        }
+
         if (isFeedMode) {
             onShare?.(post._id);
         }
@@ -238,6 +295,23 @@ const PostCard = ({
             }
         } catch (error) {
             console.error('❌ [PostCard] Error in wrapper:', error);
+        }
+    };
+
+    // 🆕 Handler para enviar solicitud desde el modal iOS
+    const handleSendRequestFromModal = async () => {
+        try {
+            setIsCheckingFriendship(true);
+            const postOwnerId = post.usuario._id || post.usuario;
+            const response = await friendshipService.sendFriendRequest(postOwnerId);
+            if (response.success) {
+                toast.success('Solicitud de amistad enviada');
+                setShowRestrictionModal(false);
+            }
+        } catch (error) {
+            toast.error('No se pudo enviar la solicitud');
+        } finally {
+            setIsCheckingFriendship(false);
         }
     };
 
@@ -647,6 +721,18 @@ const PostCard = ({
                 onClose={() => setShowEditModal(false)}
                 post={{ ...post, contenido: displayContent }} // Pass current display content to avoid revert
                 onSave={handleSaveEdit}
+            />
+
+            {/* 🆕 Modal Restricción estilo iOS */}
+            <IOSAlert
+                isOpen={showRestrictionModal}
+                title="Acción Restringida"
+                message={`Debes ser amigo de ${fullName} para poder reaccionar, comentar o compartir esta publicación.`}
+                mainActionText="Agregar como Amigo"
+                onJoin={handleSendRequestFromModal}
+                onCancel={() => setShowRestrictionModal(false)}
+                isJoining={isCheckingFriendship}
+                icon="person_add"
             />
         </>
     );
