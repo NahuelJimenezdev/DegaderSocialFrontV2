@@ -82,7 +82,7 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
         ...user,
         social: {
           ...user.social,
-          fotoBanner: response.banner
+          fotoBanner: response.data.banner
         }
       };
       updateUser(updatedUser);

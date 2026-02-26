@@ -36,19 +36,19 @@ const Leaderboard = () => {
     ];
 
     return (
-        <div className="w-full bg-slate-900/60 backdrop-blur-md rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+        <div className="w-full bg-white dark:bg-slate-900/60 backdrop-blur-md rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl">
             {/* Header & Filtros */}
-            <div className="p-6 border-b border-white/5 bg-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <div className="p-6 border-b border-gray-200 dark:border-white/5 bg-gray-50/50 dark:bg-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                     <span className="text-amber-400">🏆</span> Ranking Mundial
                 </h3>
 
-                <div className="flex bg-black/20 p-1 rounded-xl border border-white/5 overflow-x-auto max-w-full">
+                <div className="flex bg-gray-200/50 dark:bg-black/20 p-1 rounded-xl border border-gray-200 dark:border-white/5 overflow-x-auto max-w-full">
                     {filters.map((f) => (
                         <button
                             key={f.id}
                             onClick={() => setFilter(f.id)}
-                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${filter === f.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40' : 'text-white/40 hover:text-white/60'
+                            className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${filter === f.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40' : 'text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60'
                                 }`}
                         >
                             {f.label}
@@ -61,18 +61,18 @@ const Leaderboard = () => {
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="text-[10px] font-black uppercase tracking-widest text-white/30 border-b border-white/5">
+                        <tr className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-white/30 border-b border-gray-200 dark:border-white/5">
                             <th className="px-6 py-4">Puesto</th>
                             <th className="px-6 py-4">Guerrero</th>
                             <th className="px-6 py-4">Nivel</th>
                             <th className="px-6 py-4 text-right">XP Total</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                         <AnimatePresence mode="popLayout">
                             {loading ? (
                                 <tr className="animate-pulse">
-                                    <td colSpan="4" className="px-6 py-20 text-center text-white/20 italic">Cargando leyendas...</td>
+                                    <td colSpan="4" className="px-6 py-20 text-center text-gray-400 dark:text-white/20 italic font-medium">Cargando leyendas...</td>
                                 </tr>
                             ) : (
                                 ranking.map((item, index) => (
@@ -95,15 +95,15 @@ const Leaderboard = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <img src={item.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.userId}`} className="w-10 h-10 rounded-full bg-slate-800" alt={item.user?.name} />
+                                                <img src={item.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.userId}`} className="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-800" alt={item.user?.name} />
                                                 <div>
-                                                    <div className="text-white font-bold text-sm tracking-tight">{item.user?.name || 'Guerrero Anónimo'}</div>
-                                                    <div className="text-[10px] text-white/40 font-medium">{item.user?.country || 'Reino Unido'}</div>
+                                                    <div className="text-gray-900 dark:text-white font-bold text-sm tracking-tight">{item.user?.name || 'Guerrero Anónimo'}</div>
+                                                    <div className="text-[10px] text-gray-500 dark:text-white/40 font-medium">{item.user?.country || 'Reino Unido'}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-blue-400 font-bold text-xs">
+                                            <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-blue-600 dark:text-blue-400 font-bold text-xs">
                                                 Lvl {item.user?.level || 1}
                                             </span>
                                         </td>

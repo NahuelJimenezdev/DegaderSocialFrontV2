@@ -76,7 +76,7 @@ const ArenaLoading = ({ difficulty }) => {
                 <motion.h3
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-2xl font-black tracking-tight text-white"
+                    className="text-2xl font-black tracking-tight text-gray-900 dark:text-white"
                 >
                     {messages[difficulty] || "Preparando Desafío..."}
                 </motion.h3>
@@ -89,9 +89,9 @@ const ArenaLoading = ({ difficulty }) => {
 
                 <motion.p
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.4 }}
+                    animate={{ opacity: 0.6 }}
                     transition={{ delay: 1 }}
-                    className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60"
+                    className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 dark:text-white/60"
                 >
                     La Senda del Reino
                 </motion.p>

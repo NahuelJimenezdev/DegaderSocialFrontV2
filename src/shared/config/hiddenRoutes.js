@@ -10,12 +10,10 @@ export const hideAdsSidebarRoutes = [
   /^\/Mis_carpetas\/[a-zA-Z0-9]+$/,
   // /mensajes/1, /mensajes/2, etc.
   /^\/mensajes(\/.*)?$/i,
+  // /arena
+  /^\/arena$/i,
 ]
 
-/**
- * Rutas donde se debe ocultar el Sidebar global
- * Útil para páginas que tienen su propio sidebar personalizado
- */
 export const hideSidebarRoutes = [
   // Ocultar sidebar global en la sección de miembros salidos (ya tiene sidebar de iglesia)
   /^\/Mi_iglesia\/[a-zA-Z0-9_-]+\/miembros_salidos.*$/,

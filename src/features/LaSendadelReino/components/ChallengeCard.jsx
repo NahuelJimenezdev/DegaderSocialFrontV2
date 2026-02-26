@@ -22,7 +22,7 @@ const ChallengeCard = ({ challenge, onAnswer, disabled }) => {
         <motion.div
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="w-full max-w-2xl mx-auto bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[48px] border border-white/5 p-10 shadow-[0_32px_64px_rgba(0,0,0,0.4)]"
+            className="w-full max-w-2xl mx-auto bg-white/90 dark:bg-[#1c1c1e]/60 backdrop-blur-3xl rounded-[32px] md:rounded-[48px] border border-gray-200 dark:border-white/5 p-6 md:p-10 shadow-2xl dark:shadow-[0_32px_64px_rgba(0,0,0,0.4)]"
         >
             {/* Indicador de Dificultad iOS Style */}
             <div className="flex justify-center mb-8">
@@ -32,7 +32,7 @@ const ChallengeCard = ({ challenge, onAnswer, disabled }) => {
             </div>
 
             {/* Pregunta con tipografía refinada */}
-            <h2 className="text-2xl md:text-3xl font-black text-white text-center mb-12 leading-tight tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white text-center mb-12 leading-tight tracking-tight">
                 {challenge.question}
             </h2>
 
@@ -46,12 +46,12 @@ const ChallengeCard = ({ challenge, onAnswer, disabled }) => {
                         onClick={() => handleSelect(option.id)}
                         disabled={disabled}
                         className={`group relative p-6 rounded-3xl text-left transition-all border ${selected === option.id
-                            ? 'bg-white text-black border-transparent shadow-[0_12px_24px_rgba(255,255,255,0.1)]'
-                            : 'bg-white/5 border-white/5 text-white/80 hover:bg-white/10 hover:border-white/10'
+                            ? 'bg-blue-600 text-white border-transparent shadow-xl shadow-blue-500/20'
+                            : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/5 text-gray-700 dark:text-white/80 hover:bg-white hover:border-blue-300 dark:hover:bg-white/10 dark:hover:border-white/10'
                             }`}
                     >
                         <div className="flex items-center gap-6">
-                            <span className={`w-10 h-10 flex items-center justify-center rounded-2xl text-xs font-black transition-colors ${selected === option.id ? 'bg-black text-white' : 'bg-white/10 text-white/60 group-hover:bg-white/20'
+                            <span className={`w-10 h-10 flex items-center justify-center rounded-2xl text-xs font-black transition-colors ${selected === option.id ? 'bg-white text-blue-600' : 'bg-gray-200 dark:bg-white/10 text-gray-500 dark:text-white/60 group-hover:bg-gray-300 dark:group-hover:bg-white/20'
                                 }`}>
                                 {String.fromCharCode(65 + index)}
                             </span>
