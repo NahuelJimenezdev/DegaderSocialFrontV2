@@ -8,12 +8,11 @@
   /* 512px */
 }
 
-.bottom-navbar {
-  display: none;
-}
-
-.navbar-search-container {
-  display: none;
+/* Mobile (small screens) - Hide SearchBar */
+@media (max-width: 768px) {
+  .navbar-search-container {
+    display: none;
+  }
 }
 
 /* Tablet (medium screens) - Keep everything visible */

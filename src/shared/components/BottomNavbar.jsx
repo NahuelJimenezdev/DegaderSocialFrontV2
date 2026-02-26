@@ -45,7 +45,7 @@ const BottomNavbar = () => {
   };
 
   return (
-    <nav className="bottom-navbar bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-[0_-2px_8px_rgba(0,0,0,0.05)] transition-colors duration-300">
+    <nav className="bottom-navbar bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-[0_-2px_8px_rgba(0,0,0,0.1)] transition-colors duration-300">
       {navItems.map((item, index) => {
         const Icon = item.icon;
         const isActive = location.pathname === item.path;
@@ -55,8 +55,8 @@ const BottomNavbar = () => {
             key={index}
             onClick={() => handleNavigation(item.path)}
             className={`bottom-navbar-item ${item.className} ${isActive
-                ? 'text-indigo-600 dark:text-indigo-400 active'
-                : 'text-gray-500 dark:text-gray-400'
+              ? 'text-indigo-600 dark:text-indigo-400 active'
+              : 'text-gray-500 dark:text-gray-400'
               } transition-all duration-200`}
             aria-label={item.label}
           >
