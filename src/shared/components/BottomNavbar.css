@@ -15,19 +15,10 @@
     right: 0;
     z-index: 40;
     height: 60px;
-    background-color: var(--bg-card);
-    border-top: 1px solid var(--border-primary);
     align-items: center;
     justify-content: space-around;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
     padding: 0;
     margin: 0;
-  }
-
-  /* Dark mode support */
-  :global(.dark) .bottom-navbar {
-    background-color: #111827;
-    border-top-color: #1f2937;
   }
 
   .bottom-navbar-item {
