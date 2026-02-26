@@ -18,37 +18,38 @@ const ProfileHeader = ({ usuario, estadoAmistad, onAccionAmistad }) => {
       />
 
       {/* Avatar y Info */}
-      <div className="px-6 pb-6">
-        <div className="flex items-end justify-between -mt-16">
-          <div className="flex items-end gap-4">
+      <div className="px-4 pb-6 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between -mt-12 sm:-mt-16 gap-y-4">
+          {/* Bloque Izquierdo: Avatar y Nombre */}
+          <div className="flex items-end gap-3 sm:gap-4 flex-1 min-w-[200px]">
             <img
               src={fotoPerfil}
               alt={`${usuario?.nombres?.primero} ${usuario?.apellidos?.primero}`}
-              className="w-32 h-32 rounded-full border-4 border-white object-cover"
+              className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-lg"
             />
-            <div className="pb-2">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="pb-1 sm:pb-2">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
                 {usuario?.nombres?.primero} {usuario?.apellidos?.primero}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 capitalize">
                 {usuario?.seguridad?.rolSistema || 'usuario'} · {usuario?.personal?.ubicacion?.ciudad || 'Sin ubicación'}
               </p>
             </div>
           </div>
 
-          {/* Acciones */}
-          <div className="flex items-center gap-2 pb-2">
+          {/* Bloque Derecho (o Inferior en Mobile): Acciones */}
+          <div className="flex items-center gap-2 pb-1 sm:pb-2 ml-auto">
             <AmistadButton estado={estadoAmistad} onAccion={onAccionAmistad} />
             <button
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 sm:p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-all active:scale-95 border border-gray-200 dark:border-gray-700 shadow-sm"
               onClick={() => onAccionAmistad('mensaje')}
               title="Enviar mensaje"
             >
-              <MessageSquare size={20} />
+              <MessageSquare size={20} className="text-gray-700 dark:text-gray-300" />
             </button>
             {usuario?.seguridad?.rolSistema !== 'Founder' && (
               <button
-                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 sm:p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-all active:scale-95 border border-gray-200 dark:border-gray-700 shadow-sm"
                 onClick={() => setIsReportModalOpen(true)}
                 title="Reportar perfil"
               >
