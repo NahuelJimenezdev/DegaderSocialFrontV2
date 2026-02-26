@@ -48,74 +48,68 @@ const ArenaPage = () => {
                         <img src={ARENA_ASSETS.LOGO} alt="" className="w-full h-full object-contain scale-150 grayscale" />
                     </div>
 
-                    <div className="flex flex-col items-center gap-8 relative z-10 w-full text-white">
+                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14 relative z-10 w-full text-white">
 
-                        {/* 1. Avatar Central Superior */}
-                        <div className="w-full flex justify-center">
+                        {/* 1. Izquierda: Avatar (Sin info para evitar duplicado) */}
+                        <div className="shrink-0">
                             <AvatarDisplay
                                 level={user.level}
                                 rank={user.rank}
                                 avatarUrl={user.avatar}
                                 username={user.username}
+                                showInfo={false}
                             />
                         </div>
 
-                        {/* 2. Info de Identidad Centrada */}
-                        <div className="w-full space-y-4 text-center">
+                        {/* 2. Centro: Identidad y Progreso (Centrado en Mobile, Izquierda en PC) */}
+                        <div className="flex-1 space-y-4 min-w-0 w-full lg:max-w-xl text-center lg:text-left">
                             <div>
-                                <h1 className="text-4xl md:text-7xl font-black tracking-tighter drop-shadow-[0_4px_15px_rgba(0,0,0,0.6)] mb-1 uppercase italic leading-none text-white">
+                                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter drop-shadow-[0_4px_15px_rgba(0,0,0,0.6)] mb-1 uppercase italic leading-none text-white whitespace-nowrap overflow-hidden text-ellipsis">
                                     {user.username || 'VALKYRIE_07'}
                                 </h1>
-                                <p className="text-[#3ea6ff] font-black uppercase tracking-[0.35em] text-[11px] md:text-[15px] drop-shadow-md">
+                                <p className="text-[#3ea6ff] font-black uppercase tracking-[0.35em] text-[10px] md:text-[13px] drop-shadow-md">
                                     LA SENDA DEL REINO
                                 </p>
                             </div>
 
-                            <div className="w-full max-w-md mx-auto py-2">
+                            <div className="w-full py-2">
                                 <ProgressBar currentXP={user.totalXP || 0} level={user.level || 1} />
                             </div>
 
-                            {/* Línea Divisoria de Rango (Réplica Exacta) */}
-                            <div className="flex items-center justify-center gap-4 py-2 opacity-80 max-w-sm mx-auto">
-                                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/30" />
-                                <span className="text-white/60 text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em] whitespace-nowrap">
-                                    RANK {user.level}: <span className="text-white">{user.rank.label}</span>
+                            {/* Línea Divisoria de Rango (Visible en todos, sutil en PC) */}
+                            <div className="flex items-center justify-center lg:justify-start gap-4 py-2 opacity-80 max-w-sm lg:max-w-none mx-auto lg:mx-0">
+                                <div className="h-[1px] flex-1 lg:hidden bg-gradient-to-r from-transparent to-white/30" />
+                                <span className="text-white/60 text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
+                                    RANK {user.level}: <span className="text-white font-black">{user.rank.label}</span>
                                 </span>
                                 <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/30" />
                             </div>
                         </div>
 
-                        {/* 3. Panel HUD de Estadísticas (Estilo Lista Vertical) */}
-                        <div className="w-full max-w-sm bg-black/30 rounded-[28px] border border-blue-500/20 p-5 md:p-6 backdrop-blur-2xl shadow-2xl space-y-1">
+                        {/* 3. Derecha: Panel HUD de Estadísticas (Fijo en PC, Lista en Mobile) */}
+                        <div className="shrink-0 w-full lg:w-[280px] bg-black/40 rounded-[24px] border border-blue-500/20 p-5 md:p-6 backdrop-blur-3xl shadow-2xl space-y-1 lg:space-y-4">
                             {[
-                                { label: 'Arena Points:', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-white' },
-                                { label: 'Wins:', value: (user.wins || 0).toLocaleString(), icon: '🏆', color: 'text-white' },
-                                { label: 'Games Played:', value: (user.gamesPlayed || 0).toLocaleString(), icon: '⚔️', color: 'text-white' },
-                                { label: 'K/D Ratio:', value: user.kdRatio || '1.95', icon: '🎯', color: 'text-white' }
+                                { label: 'Arena Points:', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-[#3ea6ff]' },
+                                { label: 'Wins:', value: (user.wins || 0).toLocaleString(), icon: '🏆', color: 'text-gray-200' },
+                                { label: 'Games Played:', value: (user.gamesPlayed || 0).toLocaleString(), icon: '⚔️', color: 'text-gray-200' },
+                                { label: 'K/D Ratio:', value: user.kdRatio || '1.95', icon: '🎯', color: 'text-red-500' }
                             ].map((stat, i) => (
-                                <div key={i} className={`flex items-center justify-between py-3 px-2 ${i !== 3 ? 'border-b border-white/5' : ''}`}>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-lg border border-blue-400/20 shadow-inner">
-                                            {stat.icon}
-                                        </div>
-                                        <span className="text-[11px] font-bold text-white/50 uppercase tracking-wider">{stat.label}</span>
+                                <div key={i} className={`flex items-center justify-between lg:justify-start lg:gap-4 py-2.5 lg:py-0 px-2 lg:px-0 ${i !== 3 ? 'border-b border-white/5 lg:border-none' : ''}`}>
+                                    <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl bg-white/5 flex items-center justify-center text-lg lg:text-xl border border-white/10 shadow-inner">
+                                        {stat.icon}
                                     </div>
-                                    <span className={`text-[17px] font-black tracking-tight ${stat.color}`}>{stat.value}</span>
+                                    <div className="flex flex-col text-right lg:text-left">
+                                        <span className="text-[8px] lg:text-[9px] font-black text-white/30 uppercase tracking-[0.2em] leading-none mb-1">{stat.label}</span>
+                                        <span className={`text-[15px] lg:text-[17px] font-black tracking-tighter ${stat.color} leading-none`}>{stat.value}</span>
+                                    </div>
                                 </div>
                             ))}
-                        </div>
-
-                        {/* 4. Season Pass Bar (Bottom) */}
-                        <div className="w-full max-w-sm bg-gradient-to-r from-[#1a1f3c] to-[#0a0e27] rounded-xl border border-white/10 p-3 flex items-center justify-between shadow-lg">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded bg-yellow-500/20 flex items-center justify-center text-lg border border-yellow-400/20">📦</div>
-                                <span className="text-[10px] font-black text-white uppercase tracking-widest">Season Pass</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-[13px] font-black text-white italic tracking-tighter uppercase">Tier {user.level}</span>
-                                <div className="flex -space-x-1">
-                                    <div className="w-5 h-5 rounded-full bg-gray-400 border border-white/20 shadow-sm" />
-                                    <div className="w-5 h-5 rounded-full bg-yellow-400 border border-white/20 shadow-sm" />
+                            {/* Season Pass resumido para PC */}
+                            <div className="hidden lg:flex items-center gap-4 pt-2 border-t border-white/10 transition-all">
+                                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center text-xl border border-yellow-400/20">🎁</div>
+                                <div className="flex flex-col">
+                                    <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] leading-none mb-1">SEASON PASS:</span>
+                                    <span className="text-[17px] font-black tracking-tighter text-white leading-none italic uppercase">Tier {user.level}</span>
                                 </div>
                             </div>
                         </div>
