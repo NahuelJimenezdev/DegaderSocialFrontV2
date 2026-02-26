@@ -102,7 +102,7 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
   }, [user]);
 
   const coverUrl = useMemo(() => {
-    const url = getBannerUrl(user?.social?.fotoBanner);
+    const url = getBannerUrl(user?.social?.fotoBanner, 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=300&fit=crop');
     console.log('🖼️ [ProfileProvider] coverUrl recalculado:', url);
     return url;
   }, [user]);

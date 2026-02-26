@@ -40,12 +40,13 @@ const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
         style={{ backgroundImage: `url(${coverUrl})` }}
       >
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900" />
 
-        {/* Botón de cámara para el banner */}
+        {/* Botón de cámara para el banner - Movido al final y con z-index alto */}
         <button
           onClick={handleBannerClick}
           disabled={isUploading}
-          className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2.5 rounded-full backdrop-blur-sm transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50"
+          className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2.5 rounded-full backdrop-blur-md transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 z-30"
           title="Cambiar banner"
         >
           {isUploading ? (
@@ -62,8 +63,6 @@ const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
           className="hidden"
           accept="image/*"
         />
-
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900" />
       </div>
 
       <div className="max-w-3xl mx-auto px-4">

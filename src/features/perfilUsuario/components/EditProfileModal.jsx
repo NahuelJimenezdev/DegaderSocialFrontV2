@@ -143,45 +143,37 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-0 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-[#F2F2F7] dark:bg-[#1C1C1E] w-full sm:max-w-lg sm:rounded-[20px] shadow-2xl flex flex-col h-full sm:h-auto max-h-[100vh] sm:max-h-[85vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1000] p-4 animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-800">
 
-        {/* Header Estilo iOS */}
-        <div className="bg-white/80 dark:bg-black/80 backdrop-blur-md px-4 h-14 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
+        {/* Header Profesional */}
+        <div className="px-6 h-16 flex items-center justify-between border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Editar Perfil</h2>
           <button
             onClick={onClose}
-            className="text-[#007AFF] text-lg font-normal hover:opacity-70 transition"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-500"
           >
-            Cancelar
-          </button>
-          <h2 className="text-lg font-semibold text-black dark:text-white">Editar Perfil</h2>
-          <button
-            form="edit-profile-form"
-            type="submit"
-            disabled={loading}
-            className="text-[#007AFF] text-lg font-semibold hover:opacity-70 disabled:opacity-30 transition flex items-center gap-1"
-          >
-            {loading ? <Loader size={18} className="animate-spin" /> : 'Listo'}
+            <X size={24} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto pb-8">
-          <form id="edit-profile-form" onSubmit={handleSubmit} className="space-y-8 py-6">
+        <div className="flex-1 overflow-y-auto px-6 py-8">
+          <form id="edit-profile-form" onSubmit={handleSubmit} className="space-y-8">
 
-            {/* Sección Avatar */}
-            <div className="flex flex-col items-center">
+            {/* Sección Avatar - Centrada */}
+            <div className="flex flex-col items-center pb-4">
               <div className="relative group">
                 <img
                   src={avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(`${user?.nombres?.primero} ${user?.apellidos?.primero}`)}&background=3b82f6&color=fff&size=128`}
                   alt="Avatar"
-                  className="w-24 h-24 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow-md transition-transform group-hover:scale-105"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-xl transition-transform group-hover:scale-105"
                 />
                 <label
                   htmlFor="avatar-upload"
-                  className="absolute bottom-0 right-0 bg-[#007AFF] text-white p-2 rounded-full shadow-lg cursor-pointer transform translate-x-1 translate-y-1 hover:scale-110 active:scale-95 transition-all"
+                  className="absolute bottom-0 right-0 bg-blue-500 text-white p-2.5 rounded-full shadow-lg cursor-pointer transform translate-x-1 translate-y-1 hover:bg-blue-600 active:scale-95 transition-all border-4 border-white dark:border-gray-800"
                 >
-                  <Camera size={16} />
+                  <Camera size={20} />
                 </label>
                 <input
                   id="avatar-upload"
@@ -191,124 +183,142 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                   className="hidden"
                 />
               </div>
-              <p className="text-xs text-[#007AFF] font-medium mt-3 uppercase tracking-wider">Cambiar foto de perfil</p>
+              <p className="text-sm text-gray-500 font-medium mt-4">Toca el icono para cambiar tu foto</p>
             </div>
 
             {/* Alertas */}
             {(error || success) && (
-              <div className="px-4">
+              <div className="animate-in slide-in-from-top-2 duration-300">
                 {error && (
-                  <div className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-xl text-sm font-medium text-center animate-in slide-in-from-top-2">
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm font-medium">
                     {error}
                   </div>
                 )}
                 {success && (
-                  <div className="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 p-3 rounded-xl text-sm font-medium text-center animate-in slide-in-from-top-2">
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 text-green-600 dark:text-green-400 p-4 rounded-xl text-sm font-medium">
                     {success}
                   </div>
                 )}
               </div>
             )}
 
-            {/* Grupo: Información Personal */}
-            <div className="space-y-1">
-              <p className="px-8 text-[13px] text-gray-500 dark:text-gray-400 uppercase font-normal tracking-wide pb-1">INFORMACIÓN PERSONAL</p>
-              <div className="bg-white dark:bg-[#2C2C2E] border-y border-gray-200 dark:border-gray-800 overflow-hidden">
-                <div className="flex items-center px-4 h-12 border-b border-gray-200 dark:border-gray-800">
-                  <span className="w-24 text-[17px] text-gray-900 dark:text-gray-100">Nombre</span>
-                  <input
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    className="flex-1 h-full bg-transparent text-[17px] outline-none text-gray-600 dark:text-gray-400 text-right"
-                    placeholder="Tu nombre"
-                    required
-                  />
-                </div>
-                <div className="flex items-center px-4 h-12 border-b border-gray-200 dark:border-gray-800">
-                  <span className="w-24 text-[17px] text-gray-900 dark:text-gray-100">Apellido</span>
-                  <input
-                    type="text"
-                    name="apellido"
-                    value={formData.apellido}
-                    onChange={handleChange}
-                    className="flex-1 h-full bg-transparent text-[17px] outline-none text-gray-600 dark:text-gray-400 text-right"
-                    placeholder="Tu apellido"
-                    required
-                  />
-                </div>
-                <div className="flex items-start px-4 py-3 min-h-[48px]">
-                  <span className="w-24 text-[17px] text-gray-900 dark:text-gray-100 mt-1">Biografía</span>
-                  <textarea
-                    name="biografia"
-                    value={formData.biografia}
-                    onChange={handleChange}
-                    rows={3}
-                    maxLength={500}
-                    className="flex-1 bg-transparent text-[17px] outline-none text-gray-600 dark:text-gray-400 text-right resize-none"
-                    placeholder="Cuéntanos sobre ti..."
-                  />
-                </div>
+            {/* Grid de Campos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Nombre */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Nombre</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
+                  placeholder="Ej: Nahuel"
+                  required
+                />
+              </div>
+
+              {/* Apellido */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Apellido</label>
+                <input
+                  type="text"
+                  name="apellido"
+                  value={formData.apellido}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
+                  placeholder="Ej: Jimenez"
+                  required
+                />
+              </div>
+
+              {/* Biografía - Full Width */}
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Biografía</label>
+                <textarea
+                  name="biografia"
+                  value={formData.biografia}
+                  onChange={handleChange}
+                  rows={3}
+                  maxLength={500}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100 resize-none"
+                  placeholder="Cuéntanos un poco sobre ti..."
+                />
+              </div>
+
+              {/* Teléfono */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Teléfono</label>
+                <input
+                  type="tel"
+                  name="telefono"
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
+                  placeholder="+54 11 1234-5678"
+                />
+              </div>
+
+              {/* Ciudad */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Ciudad</label>
+                <input
+                  type="text"
+                  name="ciudad"
+                  value={formData.ciudad}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
+                  placeholder="Buenos Aires"
+                />
+              </div>
+
+              {/* País */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">País</label>
+                <input
+                  type="text"
+                  name="pais"
+                  value={formData.pais}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
+                  placeholder="Argentina"
+                />
+              </div>
+
+              {/* Fecha de Nacimiento */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Fecha Nac.</label>
+                <input
+                  type="date"
+                  name="fechaNacimiento"
+                  value={formData.fechaNacimiento}
+                  onChange={handleChange}
+                  max={new Date().toISOString().split('T')[0]}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
+                />
               </div>
             </div>
-
-            {/* Grupo: Contacto y Ubicación */}
-            <div className="space-y-1">
-              <p className="px-8 text-[13px] text-gray-500 dark:text-gray-400 uppercase font-normal tracking-wide pb-1">CONTACTO Y UBICACIÓN</p>
-              <div className="bg-white dark:bg-[#2C2C2E] border-y border-gray-200 dark:border-gray-800">
-                <div className="flex items-center px-4 h-12 border-b border-gray-200 dark:border-gray-800">
-                  <span className="w-24 text-[17px] text-gray-900 dark:text-gray-100">Teléfono</span>
-                  <input
-                    type="tel"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={handleChange}
-                    className="flex-1 h-full bg-transparent text-[17px] outline-none text-gray-600 dark:text-gray-400 text-right"
-                    placeholder="+54 11 1234-5678"
-                  />
-                </div>
-                <div className="flex items-center px-4 h-12 border-b border-gray-200 dark:border-gray-800">
-                  <span className="w-24 text-[17px] text-gray-900 dark:text-gray-100">Ciudad</span>
-                  <input
-                    type="text"
-                    name="ciudad"
-                    value={formData.ciudad}
-                    onChange={handleChange}
-                    className="flex-1 h-full bg-transparent text-[17px] outline-none text-gray-600 dark:text-gray-400 text-right"
-                    placeholder="Ciudad"
-                  />
-                </div>
-                <div className="flex items-center px-4 h-12 border-b border-gray-200 dark:border-gray-800">
-                  <span className="w-24 text-[17px] text-gray-900 dark:text-gray-100">País</span>
-                  <input
-                    type="text"
-                    name="pais"
-                    value={formData.pais}
-                    onChange={handleChange}
-                    className="flex-1 h-full bg-transparent text-[17px] outline-none text-gray-600 dark:text-gray-400 text-right"
-                    placeholder="País"
-                  />
-                </div>
-                <div className="flex items-center px-4 h-12">
-                  <span className="flex-1 text-[17px] text-gray-900 dark:text-gray-100">Fecha Nac.</span>
-                  <input
-                    type="date"
-                    name="fechaNacimiento"
-                    value={formData.fechaNacimiento}
-                    onChange={handleChange}
-                    max={new Date().toISOString().split('T')[0]}
-                    className="bg-transparent text-[17px] outline-none text-[#007AFF] text-right appearance-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Nota de pie estilo iOS */}
-            <p className="px-8 text-[13px] text-gray-500 dark:text-gray-400 leading-tight">
-              Toda la información proporcionada podrá ser visible por otros usuarios según tu configuración de privacidad.
-            </p>
           </form>
+        </div>
+
+        {/* Footer con botones */}
+        <div className="px-6 py-6 border-t border-gray-100 dark:border-gray-800 flex gap-4 bg-gray-50 dark:bg-gray-900/50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 px-6 py-3.5 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-white dark:hover:bg-gray-800 transition-all font-semibold active:scale-95"
+          >
+            Cancelar
+          </button>
+          <button
+            form="edit-profile-form"
+            type="submit"
+            disabled={loading}
+            className="flex-1 px-6 py-3.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center gap-2 active:scale-95"
+          >
+            {loading ? <Loader size={20} className="animate-spin" /> : <Save size={20} />}
+            {loading ? 'Guardando...' : 'Guardar Cambios'}
+          </button>
         </div>
       </div>
     </div>
