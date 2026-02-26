@@ -14,6 +14,9 @@ export const useUserStore = create((set, get) => ({
     avatar: '',
     username: '',
     location: { country: '', state: '' },
+    wins: 0,
+    gamesPlayed: 0,
+    kdRatio: 0,
     isLoading: false,
 
     /**
@@ -23,13 +26,17 @@ export const useUserStore = create((set, get) => ({
         set({ isLoading: true });
         try {
             const response = await ArenaService.getStatus();
-            // Desestructurar del wrapper { success, message, data }
             const data = response.data;
-            const { arena, economy } = data;
+            const { arena } = data;
 
             const currentXP = arena.xp || 0;
             const currentLevel = getLevelFromXP(currentXP);
             const currentRank = ARENA_RANKS.slice().reverse().find(r => currentLevel >= r.minLevel) || ARENA_RANKS[0];
+
+            // Calcular KD Ratio (Aproximación por ahora basado en victorias/juegos)
+            const wins = arena.wins || 0;
+            const games = arena.gamesPlayed || 0;
+            const kd = games > 0 ? (wins / (games - wins || 1)).toFixed(2) : '0.00';
 
             set({
                 totalXP: currentXP,
@@ -39,6 +46,9 @@ export const useUserStore = create((set, get) => ({
                 avatar: data.avatar || '',
                 username: data.username || '',
                 location: data.location || { country: '', state: '' },
+                wins: wins,
+                gamesPlayed: games,
+                kdRatio: kd,
                 achievements: arena.achievements || [],
                 isLoading: false
             });

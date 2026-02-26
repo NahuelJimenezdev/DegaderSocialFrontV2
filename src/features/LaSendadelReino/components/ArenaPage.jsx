@@ -90,10 +90,10 @@ const ArenaPage = () => {
                         {/* 3. Derecha: Panel HUD de Estadísticas */}
                         <div className="shrink-0 w-full lg:w-[280px] bg-black/40 rounded-[24px] border border-blue-500/20 p-6 space-y-5 backdrop-blur-xl shadow-inner">
                             {[
-                                { label: 'ARENA POINTS', value: user.totalXP.toLocaleString(), icon: '💠', color: 'text-[#3ea6ff]' },
-                                { label: 'WINS', value: '132', icon: '🏆', color: 'text-gray-200' },
-                                { label: 'GAMES PLAYED', value: '248', icon: '⚔️', color: 'text-gray-200' },
-                                { label: 'K/D RATIO', value: '1.95', icon: '🎯', color: 'text-red-500' },
+                                { label: 'ARENA POINTS', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-[#3ea6ff]' },
+                                { label: 'WINS', value: (user.wins || 0).toLocaleString(), icon: '🏆', color: 'text-gray-200' },
+                                { label: 'GAMES PLAYED', value: (user.gamesPlayed || 0).toLocaleString(), icon: '⚔️', color: 'text-gray-200' },
+                                { label: 'K/D RATIO', value: user.kdRatio || '0.00', icon: '🎯', color: 'text-red-500' },
                                 { label: 'SEASON PASS', value: `TIER ${user.level}`, icon: '🎁', color: 'text-white' }
                             ].map((stat, i) => (
                                 <div key={i} className="flex items-center gap-4 group cursor-default">
