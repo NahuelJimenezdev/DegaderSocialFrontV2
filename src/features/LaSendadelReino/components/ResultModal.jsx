@@ -52,10 +52,10 @@ const ResultModal = ({ result, onNext, onExit }) => {
                 <div className="space-y-4">
                     <button
                         onClick={onNext}
-                        className={`w-full py-4 rounded-xl font-black text-lg uppercase transition-all transform active:scale-95 shadow-neon flex items-center justify-center gap-2 ${
+                        className={`w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] transition-all transform active:scale-95 shadow-lg flex items-center justify-center gap-2 ${
                             result.correct
-                            ? 'bg-gradient-to-r from-[#f9c61f] to-yellow-300 text-black'
-                            : 'bg-white text-black'
+                            ? 'bg-[#f9c61f] text-black hover:bg-yellow-400'
+                            : 'bg-white text-black hover:bg-gray-100'
                         }`}
                     >
                         <span>Siguiente</span>
@@ -64,7 +64,7 @@ const ResultModal = ({ result, onNext, onExit }) => {
                     
                     <button
                         onClick={onExit}
-                        className="w-full py-3 rounded-xl bg-transparent text-white/30 font-black text-[10px] uppercase tracking-[0.3em] hover:text-white transition-colors"
+                        className="w-full py-3 rounded-xl bg-transparent text-white/60 font-black text-[10px] uppercase tracking-[0.3em] hover:text-[#f9c61f] transition-colors"
                     >
                         Finalizar por ahora
                     </button>

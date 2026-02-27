@@ -128,7 +128,7 @@ const ArenaPage = () => {
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 md:flex-none px-4 md:px-10 py-3.5 rounded-full text-[10px] md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
                                 ? 'bg-white dark:bg-white/10 text-blue-600 dark:text-white shadow-xl scale-105'
-                                : 'text-gray-500 dark:text-white/20 hover:text-gray-700 dark:hover:text-white/40'
+                                : 'text-white/60 dark:text-white/20 hover:text-white dark:hover:text-white/40'
                                 }`}
                         >
                             {tab.label}
@@ -247,7 +247,7 @@ const ArenaPage = () => {
                                                         </p>
                                                         <button
                                                             onClick={arena.resetArena}
-                                                            className="px-12 py-4 rounded-2xl bg-gradient-to-r from-[#f9c61f] to-yellow-300 text-black font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(249,198,31,0.3)] ring-1 ring-white/20"
+                                                            className="px-12 py-4 rounded-2xl bg-[#f9c61f] text-black font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(249,198,31,0.4)] border border-yellow-400/50"
                                                         >
                                                             Reiniciar Senda
                                                         </button>
