@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.44.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.43.6...v1.44.0) (2026-02-27)
+
+
+### Features
+
+* **arena:** corregir renderizado de iconos, persistencia de estado y diseño de logros ([4b4c0a3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4b4c0a30d1d55897a260e5a9e45ae2c6099adc6a))
+
 ## [1.39.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.38.0...v1.39.0) (2026-02-25)
 
 
