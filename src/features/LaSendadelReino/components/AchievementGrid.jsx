@@ -44,11 +44,11 @@ const AchievementGrid = () => {
     return (
         <div className="space-y-12">
             {/* Stats Summary */}
-            <div className="flex items-center justify-between bg-white/5 backdrop-blur-md p-6 rounded-[2rem] border border-white/5 shadow-inner">
+            <div className="flex items-center justify-between bg-gray-100 dark:bg-white/5 backdrop-blur-md p-6 rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-sm dark:shadow-inner">
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">Tu Colección</span>
-                    <span className="text-3xl font-black italic tracking-tighter text-white">
-                        {stats.unlocked} <span className="text-white/20">/ {stats.total}</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 dark:text-white/40 mb-1">Tu Colección</span>
+                    <span className="text-3xl font-black italic tracking-tighter text-gray-900 dark:text-white">
+                        {stats.unlocked} <span className="text-gray-300 dark:text-white/20">/ {stats.total}</span>
                     </span>
                 </div>
                 <div className="w-16 h-16 rounded-full border-4 border-white/5 flex items-center justify-center relative">
@@ -71,10 +71,10 @@ const AchievementGrid = () => {
             {Object.entries(groupedAchievements).map(([groupName, groupItems]) => (
                 <div key={groupName} className="space-y-6">
                     <div className="flex items-center gap-4">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 whitespace-nowrap">
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 dark:text-white/40 whitespace-nowrap">
                             {groupName}
                         </h4>
-                        <div className="h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent" />
+                        <div className="h-[1px] w-full bg-gradient-to-r from-gray-200 dark:from-white/10 to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
