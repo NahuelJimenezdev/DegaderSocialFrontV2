@@ -128,7 +128,7 @@ const ArenaPage = () => {
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 md:flex-none px-4 md:px-10 py-3.5 rounded-full text-[10px] md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
                                 ? 'bg-white dark:bg-white/10 text-blue-600 dark:text-white shadow-xl scale-105'
-                                : 'text-gray-500 dark:text-white/20 hover:text-gray-700 dark:hover:text-white/40'
+                                : 'text-white/40 dark:text-white/20 hover:text-white/60 dark:hover:text-white/40'
                                 }`}
                         >
                             {tab.label}
@@ -224,24 +224,34 @@ const ArenaPage = () => {
                                         <>
                                             {arena.currentChallenge && (
                                                 <ChallengeCard
+                                                    key={arena.currentChallenge._id}
                                                     challenge={arena.currentChallenge}
                                                     onAnswer={handleAnswer}
                                                     disabled={arena.gameStatus === 'result'}
                                                 />
                                             )}
                                             {arena.gameStatus === 'finished' && (
-                                                <div className="text-center py-24 bg-white dark:bg-[#1c1c1e] rounded-[56px] w-full border border-gray-200 dark:border-white/5 shadow-2xl">
-                                                    <div className="w-28 h-28 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                                                        <span className="text-7xl">🏆</span>
+                                                <div className="text-center py-20 px-8 bg-[#282832]/60 backdrop-blur-2xl rounded-[3rem] w-full border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] relative overflow-hidden">
+                                                    {/* Glow effect */}
+                                                    <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]"></div>
+                                                    
+                                                    <div className="relative z-10">
+                                                        <div className="w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-yellow-500/20 shadow-lg">
+                                                            <span className="text-6xl filter drop-shadow-lg">🏆</span>
+                                                        </div>
+                                                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4 italic text-transparent bg-clip-text bg-gradient-to-r from-[#f9c61f] via-yellow-200 to-[#f9c61f] drop-shadow-sm">
+                                                            Misión Cumplida
+                                                        </h2>
+                                                        <p className="text-white/70 font-bold max-w-sm mx-auto mb-10 text-[10px] uppercase tracking-[0.3em] leading-relaxed drop-shadow-md">
+                                                            Tu sabiduría ha sido probada una vez más en los caminos del Reino.
+                                                        </p>
+                                                        <button
+                                                            onClick={arena.resetArena}
+                                                            className="px-12 py-4 rounded-2xl bg-gradient-to-r from-[#f9c61f] to-yellow-300 text-black font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(249,198,31,0.3)] ring-1 ring-white/20"
+                                                        >
+                                                            Reiniciar Senda
+                                                        </button>
                                                     </div>
-                                                    <h2 className="text-5xl font-black uppercase tracking-tighter mb-4 text-gray-900 dark:text-white">Misión Cumplida</h2>
-                                                    <p className="text-gray-500 dark:text-white/30 font-bold max-w-sm mx-auto mb-12 text-sm uppercase tracking-widest leading-relaxed">Tu sabiduría ha sido probada una vez más en los caminos del Reino.</p>
-                                                    <button
-                                                        onClick={arena.resetArena}
-                                                        className="px-14 py-5 rounded-[24px] bg-blue-600 dark:bg-white text-white dark:text-black font-black text-xs uppercase tracking-[0.3em] hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(37,99,235,0.2)] dark:shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
-                                                    >
-                                                        Reiniciar Senda
-                                                    </button>
                                                 </div>
                                             )}
                                         </>
