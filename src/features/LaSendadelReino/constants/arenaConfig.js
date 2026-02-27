@@ -68,6 +68,11 @@ export const ARENA_ACHIEVEMENTS = [
     { id: 'top_rank', title: 'En la Cima', description: 'Entra en el Top 3 del ranking global', icon: '👑' }
 ];
 
+import bgFacil from '../assets/bg-facil.png';
+import bgMedio from '../assets/bg-medio.png';
+import bgDificil from '../assets/bg-dificil.png';
+import bgExperto from '../assets/bg-experto.png';
+
 /**
  * Activos Visuales
  */
@@ -78,6 +83,12 @@ export const ARENA_ASSETS = {
         medio: logoImg,
         dificil: logoImg,
         experto: logoImg
+    },
+    BACKGROUNDS: {
+        facil: bgFacil,
+        medio: bgMedio,
+        dificil: bgDificil,
+        experto: bgExperto
     }
 };
 

@@ -156,7 +156,20 @@ const ArenaPage = () => {
                                             onClick={() => handleLevelDifficulty(diff)}
                                             className="group relative h-64 rounded-[44px] overflow-hidden bg-white dark:bg-[#1c1c1e] border border-gray-200 dark:border-white/5 p-8 flex flex-col justify-between transition-all shadow-xl hover:shadow-blue-500/10"
                                         >
-                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            {/* Imagen de Fondo Temática */}
+                                            <div
+                                                className="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity duration-500"
+                                                style={{
+                                                    backgroundImage: `url(${ARENA_ASSETS.BACKGROUNDS[diff]})`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center'
+                                                }}
+                                            />
+
+                                            {/* Superposición para legibilidad */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/20 z-0" />
+
+                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-0" />
 
                                             <div className="relative z-10 text-left">
                                                 <div className="w-14 h-14 rounded-[20px] bg-white/5 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors shadow-inner">
