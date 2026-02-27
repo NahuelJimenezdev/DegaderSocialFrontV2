@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.44.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.3...v1.44.4) (2026-02-27)
+
+
+### Bug Fixes
+
+* **design:** unificar fondo de tarjeta de misión cumplida con el estilo del juego ([6dfbcc3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6dfbcc33563087306bafa7f700152c43733bedd9))
+
 ### [1.44.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.2...v1.44.3) (2026-02-27)
 
 
