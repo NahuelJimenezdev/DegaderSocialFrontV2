@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.46.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.46.0...v1.46.1) (2026-02-27)
+
+
+### Bug Fixes
+
+* importación faltante de ARENA_ACHIEVEMENTS en ArenaPage ([ef54304](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ef543044ee88411472d7a6359ab83ba49c3b904f))
+
 ## [1.46.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.45.0...v1.46.0) (2026-02-27)
 
 
