@@ -58,14 +58,69 @@ export const ARENA_RANKS = [
 ];
 
 /**
- * Logros del Sistema
+ * Logros del Sistema - Nivel Fácil
+ * Estructura optimizada para evitar duplicados y facilitar el check de lógica.
  */
 export const ARENA_ACHIEVEMENTS = [
-    { id: 'first_win', title: 'Primer Paso', description: 'Gana tu primer desafío en la arena', icon: '🏆' },
-    { id: 'streak_5', title: 'Imparable', description: 'Logra una racha de 5 aciertos consecutivos', icon: '🔥' },
-    { id: 'expert_win', title: 'Sabiduría Maestra', description: 'Completa un desafío nivel Experto', icon: '🧠' },
-    { id: 'loyal_user', title: 'Fiel Guerrero', description: 'Juega 10 partidas en la arena', icon: '🛡️' },
-    { id: 'top_rank', title: 'En la Cima', description: 'Entra en el Top 3 del ranking global', icon: '👑' }
+    // --- PROGRESIÓN POR PUNTOS (Puntos acumulados) ---
+    { id: 'points_50', type: 'xp', value: 50, title: 'Semilla Plantada', description: 'Acumula 50 puntos', icon: '🌱' },
+    { id: 'points_100', type: 'xp', value: 100, title: 'Primer Centenar', description: 'Acumula 100 puntos', icon: '💯' },
+    { id: 'points_150', type: 'xp', value: 150, title: 'Buscador de Tesoros', description: 'Acumula 150 puntos', icon: '💎' },
+    { id: 'points_200', type: 'xp', value: 200, title: 'Cimientos Fuertes', description: 'Acumula 200 puntos', icon: '🧱' },
+    { id: 'points_250', type: 'xp', value: 250, title: 'Copa Rebosante', description: 'Acumula 250 puntos', icon: '🍷' },
+    { id: 'points_300', type: 'xp', value: 300, title: 'Luz en Ascenso', description: 'Acumula 300 puntos', icon: '🕯️' },
+    { id: 'points_350', type: 'xp', value: 350, title: 'Camino de Fe', description: 'Acumula 350 puntos', icon: '🛤️' },
+    { id: 'points_400', type: 'xp', value: 400, title: 'Cuarto Creciente', description: 'Acumula 400 puntos', icon: '🌙' },
+    { id: 'points_450', type: 'xp', value: 450, title: 'Tesoro Escondido', description: 'Acumula 450 puntos', icon: '🗝️' },
+    { id: 'points_500', type: 'xp', value: 500, title: 'Hito del Camino', description: 'Punto medio del nivel fácil', icon: '🚩' },
+    { id: 'points_550', type: 'xp', value: 550, title: 'Grano de Mostaza', description: 'Sigue acumulando sabiduría', icon: '🔘' },
+    { id: 'points_600', type: 'xp', value: 600, title: 'Mitad de la Senda', description: '600 puntos alcanzados', icon: '🌗' },
+    { id: 'points_650', type: 'xp', value: 650, title: 'Roca Firme', description: 'Tu conocimiento es sólido', icon: '🪨' },
+    { id: 'points_700', type: 'xp', value: 700, title: 'Septuagésimo', description: '700 puntos acumulados', icon: '�️' },
+    { id: 'points_750', type: 'xp', value: 750, title: 'Antorcha de Oro', description: 'Brillando en la arena', icon: '🔦' },
+    { id: 'points_850', type: 'xp', value: 850, title: 'Escalador', description: 'Superando la montaña', icon: '🧗' },
+    { id: 'points_950', type: 'xp', value: 950, title: 'Cerca de la Meta', description: 'Casi desbloqueas el nivel Medio', icon: '🏁' },
+    { id: 'points_1000', type: 'xp', value: 1000, title: 'Milenario', description: '¡1000 puntos de pura verdad!', icon: '🎇' },
+    { id: 'points_1100', type: 'xp', value: 1100, title: 'Umbral del Reino', description: 'A un paso del siguiente nivel', icon: '⛩️' },
+    { id: 'points_1150', type: 'xp', value: 1150, title: 'Último Aliento', description: 'La meta está a la vista', icon: '🌬️' },
+    { id: 'easy_master', type: 'xp', value: 1200, title: 'Consumado Es', description: 'Nivel Medio Desbloqueado', icon: '👑' },
+
+    // --- RACHAS (Aciertos seguidos) ---
+    { id: 'first_step', type: 'streak', value: 1, title: 'Primer Paso', description: 'Acierta tu primera pregunta', icon: '👣' },
+    { id: 'streak_3', type: 'streak', value: 3, title: 'Triple Alianza', description: '3 aciertos consecutivos', icon: '☘️' },
+    { id: 'streak_5', type: 'streak', value: 5, title: 'Imparable', description: '5 aciertos consecutivos', icon: '🔥' },
+    { id: 'streak_7', type: 'streak', value: 7, title: 'Número Perfecto', description: '7 aciertos consecutivos', icon: '🌈' },
+    { id: 'streak_10', type: 'streak', value: 10, title: 'Decálogo', description: '10 aciertos consecutivos', icon: '📜' },
+    { id: 'streak_12', type: 'streak', value: 12, title: 'Doce Columnas', description: '12 aciertos consecutivos', icon: '🏛️' },
+    { id: 'streak_15', type: 'streak', value: 15, title: 'Fuego Vivo', description: '15 aciertos consecutivos', icon: '💥' },
+    { id: 'streak_18', type: 'streak', value: 18, title: 'Voz de Mando', description: '18 aciertos consecutivos', icon: '📢' },
+    { id: 'streak_20', type: 'streak', value: 20, title: 'Visión Clara', description: '20 aciertos consecutivos', icon: '👁️' },
+    { id: 'streak_25', type: 'streak', value: 25, title: 'Inquebrantable', description: 'Racha de 25 (Leyenda en Fácil)', icon: '⛓️' },
+
+    // --- CANTIDAD TOTAL (Esfuerzo acumulado) ---
+    { id: 'total_10', type: 'total_questions', value: 10, title: 'Pequeño Rebaño', description: 'Responde 10 preguntas', icon: '🐑' },
+    { id: 'total_25', type: 'total_questions', value: 25, title: 'Estudiante Fiel', description: 'Responde 25 preguntas', icon: '📚' },
+    { id: 'total_50', type: 'total_questions', value: 50, title: 'Medio Centenar', description: 'Responde 50 preguntas', icon: '📝' },
+    { id: 'total_75', type: 'total_questions', value: 75, title: 'Vigilante', description: 'Responde 75 preguntas', icon: '🕵️' },
+    { id: 'total_100', type: 'total_questions', value: 100, title: 'Centurión', description: 'Responde 100 preguntas', icon: '🛡️' },
+    { id: 'total_150', type: 'total_questions', value: 150, title: 'Escriba', description: 'Responde 150 preguntas', icon: '✒️' },
+    { id: 'total_200', type: 'total_questions', value: 200, title: 'Erudito Iniciante', description: 'Responde 200 preguntas', icon: '🎓' },
+
+    // --- VELOCIDAD Y PRECISIÓN ---
+    { id: 'fast_5', type: 'speed', value: 5, title: 'Reflejo de Luz', description: 'Responde en menos de 5 segundos', icon: '⚡' },
+    { id: 'fast_3', type: 'speed', value: 3, title: 'Relámpago Sagrado', description: 'Responde en menos de 3 segundos', icon: '🌩️' },
+    { id: 'fast_2', type: 'speed', value: 2, title: 'Relámpago de Fe', description: 'Responde en menos de 2 segundos', icon: '⚡' },
+    { id: 'perfect_5', type: 'perfect_game', value: 5, title: 'Mano Limpia', description: 'Partida de 5 preguntas sin fallar', icon: '✨' },
+    { id: 'perfect_10', type: 'perfect_game', value: 10, title: 'Sabiduría Plena', description: 'Partida de 10 preguntas sin fallar', icon: '🌟' },
+
+    // --- PERSISTENCIA (Días seguidos) ---
+    { id: 'daily_2', type: 'days_streak', value: 2, title: 'Caminante', description: 'Juega 2 días seguidos', icon: '👟' },
+    { id: 'daily_3', type: 'days_streak', value: 3, title: 'Tres Dobleces', description: 'Juega 3 días seguidos', icon: '🧶' },
+    { id: 'daily_5', type: 'days_streak', value: 5, title: 'Fidelidad Semanal', description: 'Juega 5 días seguidos', icon: '🗓️' },
+
+    // --- OTROS ---
+    { id: 'first_victory', type: 'misc', value: 1, title: 'Victoria Inicial', description: 'Completa tu primera partida', icon: '🏆' },
+    { id: 'time_30', type: 'time_played', value: 1800, title: 'Constancia', description: 'Juega 30 minutos totales', icon: '⏳' }
 ];
 
 import bgFacil from '../assets/bg-facil.png';

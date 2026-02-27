@@ -9,13 +9,24 @@ import ResultModal from './ResultModal';
 import Leaderboard from './Leaderboard';
 import AchievementGrid from './AchievementGrid';
 import ArenaLoading from './ArenaLoading';
+import LevelUnlockedModal from './LevelUnlockedModal';
 import { ARENA_ASSETS } from '../constants/arenaConfig';
+import { Toaster } from 'react-hot-toast';
 import '../styles/ArenaMobile.css';
 
 const ArenaPage = () => {
     const [activeTab, setActiveTab] = useState('arena');
     const user = useUserStore();
     const arena = useArenaStore();
+    const [showLevelModal, setShowLevelModal] = useState(false);
+
+    useEffect(() => {
+        // Mostrar modal si se acaba de desbloquear easy_master
+        if (user.achievements.includes('easy_master') && !localStorage.getItem('saw_medio_unlock')) {
+            setShowLevelModal(true);
+            localStorage.setItem('saw_medio_unlock', 'true');
+        }
+    }, [user.achievements]);
 
     useEffect(() => {
         user.fetchStatus();
@@ -148,63 +159,69 @@ const ArenaPage = () => {
                         >
                             {arena.gameStatus === 'idle' ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                                    {['facil', 'medio', 'dificil', 'experto'].map((diff) => (
-                                        <motion.button
-                                            key={diff}
-                                            whileHover={{ y: -8, scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={() => handleLevelDifficulty(diff)}
-                                            className="group relative h-64 rounded-[44px] overflow-hidden bg-white dark:bg-[#1c1c1e] border border-gray-200 dark:border-white/5 p-8 flex flex-col justify-between transition-all shadow-xl hover:shadow-blue-500/10"
-                                        >
-                                            {/* Imagen de Fondo Temática */}
-                                            <div
-                                                className="absolute inset-0 z-0 opacity-80 dark:opacity-40 group-hover:opacity-90 dark:group-hover:opacity-60 transition-opacity duration-500"
-                                                style={{
-                                                    backgroundImage: `url(${ARENA_ASSETS.BACKGROUNDS[diff]})`,
-                                                    backgroundSize: 'cover',
-                                                    backgroundPosition: 'center'
-                                                }}
-                                            />
+                                    {['facil', 'medio', 'dificil', 'experto'].map((diff) => {
+                                        const isLocked = diff !== 'facil' && !user.achievements.includes('easy_master');
+                                        
+                                        return (
+                                            <motion.button
+                                                key={diff}
+                                                whileHover={!isLocked ? { y: -8, scale: 1.02 } : {}}
+                                                whileTap={!isLocked ? { scale: 0.98 } : {}}
+                                                onClick={() => !isLocked && handleLevelDifficulty(diff)}
+                                                disabled={isLocked}
+                                                className={`group relative h-64 rounded-[44px] overflow-hidden bg-white dark:bg-[#1c1c1e] border p-8 flex flex-col justify-between transition-all shadow-xl ${isLocked 
+                                                    ? 'opacity-80 grayscale cursor-not-allowed border-gray-200 dark:border-white/5' 
+                                                    : 'border-gray-200 dark:border-white/5 hover:shadow-blue-500/10'}`}
+                                            >
+                                                {/* Imagen de Fondo Temática */}
+                                                <div
+                                                    className={`absolute inset-0 z-0 transition-opacity duration-500 ${isLocked ? 'opacity-20' : 'opacity-80 dark:opacity-40 group-hover:opacity-90 dark:group-hover:opacity-60'}`}
+                                                    style={{
+                                                        backgroundImage: `url(${ARENA_ASSETS.BACKGROUNDS[diff]})`,
+                                                        backgroundSize: 'cover',
+                                                        backgroundPosition: 'center'
+                                                    }}
+                                                />
 
-                                            {/* Superposición para legibilidad - Más fuerte en modo claro para imitar el look oscuro */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/20 to-black/40 dark:from-black/40 dark:via-transparent dark:to-black/20 z-0" />
+                                                <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/20 to-black/40 dark:from-black/40 dark:via-transparent dark:to-black/20 z-0" />
 
-                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-0" />
-
-                                            <div className="relative z-10 text-left">
-                                                <div className="w-14 h-14 rounded-[20px] bg-black/20 dark:bg-white/5 backdrop-blur-md flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-white/20 shadow-lg ring-1 ring-white/10">
-                                                    <span className="text-3xl filter drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
-                                                        {diff === 'facil' ? '🕯️' : diff === 'medio' ? '📜' : diff === 'dificil' ? '🔥' : '⚔️'}
-                                                    </span>
-                                                </div>
-                                                <h3 className="font-black text-3xl uppercase tracking-tighter capitalize leading-none text-white font-display drop-shadow-md">
-                                                    {diff}
-                                                </h3>
-                                                <p className="text-[9px] text-white/50 font-black uppercase tracking-[0.3em] mt-3">
-                                                    Dificultad
-                                                </p>
-                                            </div>
-
-                                            <div className="relative z-10 flex justify-between items-end pt-4 border-t border-white/10">
-                                                <div className="text-left">
-                                                    <p className="text-[9px] text-blue-400 dark:text-blue-300 font-black uppercase tracking-[0.2em] mb-1 opacity-80">
-                                                        Multiplicador
-                                                    </p>
-                                                    <div className="flex items-baseline gap-1">
-                                                        <span className="font-black text-3xl text-white tracking-tighter">
-                                                            {diff === 'facil' ? '1.0' : diff === 'medio' ? '1.5' : diff === 'dificil' ? '2.5' : '5.0'}
+                                                <div className="relative z-10 text-left">
+                                                    <div className="w-14 h-14 rounded-[20px] bg-black/20 dark:bg-white/5 backdrop-blur-md flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-white/20 shadow-lg ring-1 ring-white/10">
+                                                        <span className="text-3xl filter drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
+                                                            {isLocked ? '🔒' : (diff === 'facil' ? '🕯️' : diff === 'medio' ? '📜' : diff === 'dificil' ? '🔥' : '⚔️')}
                                                         </span>
-                                                        <span className="text-xs font-black text-blue-400/80">X</span>
                                                     </div>
+                                                    <h3 className="font-black text-3xl uppercase tracking-tighter capitalize leading-none text-white font-display drop-shadow-md">
+                                                        {diff}
+                                                    </h3>
+                                                    <p className="text-[9px] text-white/50 font-black uppercase tracking-[0.3em] mt-3">
+                                                        {isLocked ? 'Próximamente' : 'Dificultad'}
+                                                    </p>
                                                 </div>
-                                                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all shadow-lg">
-                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                                                    </svg>
+
+                                                <div className="relative z-10 flex justify-between items-end pt-4 border-t border-white/10">
+                                                    <div className="text-left">
+                                                        <p className="text-[9px] text-blue-400 dark:text-blue-300 font-black uppercase tracking-[0.2em] mb-1 opacity-80">
+                                                            Multiplicador
+                                                        </p>
+                                                        <div className="flex items-baseline gap-1">
+                                                            <span className="font-black text-3xl text-white tracking-tighter">
+                                                                {diff === 'facil' ? '1.0' : diff === 'medio' ? '1.5' : diff === 'dificil' ? '2.5' : '5.0'}
+                                                            </span>
+                                                            <span className="text-xs font-black text-blue-400/80">X</span>
+                                                        </div>
+                                                    </div>
+                                                    {!isLocked && (
+                                                        <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all shadow-lg">
+                                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                                                            </svg>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
-                                        </motion.button>
-                                    ))}
+                                            </motion.button>
+                                        );
+                                    })}
                                 </div>
                             ) : (
                                 <div className="w-full flex flex-col items-center">
@@ -245,6 +262,29 @@ const ArenaPage = () => {
                                                         <p className="text-white font-bold max-w-sm mx-auto mb-10 text-[10px] uppercase tracking-[0.3em] leading-relaxed drop-shadow-md">
                                                             Tu sabiduría ha sido probada una vez más en los caminos del Reino.
                                                         </p>
+
+                                                        {/* Logros de la sesión */}
+                                                        {arena.lastSessionAchievements.length > 0 && (
+                                                            <div className="flex flex-wrap justify-center gap-4 mb-10">
+                                                                {arena.lastSessionAchievements.map(id => {
+                                                                    const ach = ARENA_ACHIEVEMENTS.find(a => a.id === id);
+                                                                    if (!ach) return null;
+                                                                    return (
+                                                                        <motion.div 
+                                                                            key={id}
+                                                                            initial={{ scale: 0, rotate: -30 }}
+                                                                            animate={{ scale: 1, rotate: 0 }}
+                                                                            className="flex flex-col items-center gap-2"
+                                                                        >
+                                                                            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl border border-white/20 shadow-lg">
+                                                                                {ach.icon}
+                                                                            </div>
+                                                                            <span className="text-[7px] font-black uppercase text-yellow-500 tracking-widest">{ach.title}</span>
+                                                                        </motion.div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        )}
                                                         <button
                                                             onClick={arena.resetArena}
                                                             className="px-12 py-4 rounded-2xl bg-[#f9c61f] text-black font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(249,198,31,0.4)] border border-yellow-400/50"
@@ -295,6 +335,14 @@ const ArenaPage = () => {
                     />
                 )}
             </AnimatePresence>
+
+            <LevelUnlockedModal 
+                isOpen={showLevelModal} 
+                levelName="Medio" 
+                onClose={() => setShowLevelModal(false)} 
+            />
+
+            <Toaster position="bottom-center" reverseOrder={false} />
         </div>
     );
 };

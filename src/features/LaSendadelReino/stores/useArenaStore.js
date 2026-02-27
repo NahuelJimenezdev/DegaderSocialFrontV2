@@ -4,6 +4,7 @@
 import { create } from 'zustand';
 import { ArenaService } from '../services/arenaService';
 import { calculateGainedXP } from '../utils/progression';
+import { ARENA_ACHIEVEMENTS } from '../constants/arenaConfig';
 
 export const useArenaStore = create((set, get) => ({
     currentChallenge: null,
@@ -17,6 +18,9 @@ export const useArenaStore = create((set, get) => ({
     accumulatedXP: 0,
     accumulatedScore: 0,
     correctQuestionIds: [],
+    fastestAnswer: 999, // Segundos
+    lastQuestionStartTime: null,
+    lastSessionAchievements: [],
 
     /**
      * Inicia una sesión de desafíos
@@ -28,7 +32,9 @@ export const useArenaStore = create((set, get) => ({
             streak: 0,
             currentIndex: 0,
             lastResult: null,
-            selectedDifficulty: difficulty
+            selectedDifficulty: difficulty,
+            fastestAnswer: 999,
+            lastQuestionStartTime: Date.now()
         });
         const response = await ArenaService.getChallenges(difficulty);
         const challenges = response.data || [];
@@ -42,9 +48,12 @@ export const useArenaStore = create((set, get) => ({
     /**
      * Procesa la respuesta de un usuario
      */
-    submitAnswer: (answerId, addXPCallback) => {
-        const { currentChallenge, streak, bestStreak, challenges, currentIndex, accumulatedXP = 0, accumulatedScore = 0 } = get();
+    submitAnswer: async (answerId, addXPCallback) => {
+        const { currentChallenge, streak, bestStreak, challenges, currentIndex, accumulatedXP = 0, accumulatedScore = 0, fastestAnswer } = get();
+        const userStore = (await import('./useUserStore')).useUserStore;
+
         const isCorrect = currentChallenge.correctAnswer === answerId;
+        const timeTaken = (Date.now() - get().lastQuestionStartTime) / 1000;
 
         let newStreak = isCorrect ? streak + 1 : 0;
         let newBestStreak = Math.max(bestStreak, newStreak);
@@ -58,8 +67,28 @@ export const useArenaStore = create((set, get) => ({
         const result = {
             correct: isCorrect,
             gainedXP,
-            correctAnswer: currentChallenge.correctAnswer
+            correctAnswer: currentChallenge.correctAnswer,
+            timeTaken
         };
+
+        const currentAchievements = userStore.getState().achievements || [];
+        const newUnlocked = ARENA_ACHIEVEMENTS.filter(a => {
+            if (currentAchievements.includes(a.id)) return false;
+
+            if (a.type === 'streak' && newBestStreak >= a.value) return true;
+            if (a.type === 'speed' && isCorrect && timeTaken <= a.value) return true;
+            if (a.type === 'xp' && (userStore.getState().totalXP + gainedXP) >= a.value) return true;
+
+            return false;
+        });
+
+        if (newUnlocked.length > 0) {
+            const { showAchievementToast } = await import('../components/AchievementNotification');
+            newUnlocked.forEach(a => {
+                userStore.getState().unlockAchievement(a.id);
+                showAchievementToast(a);
+            });
+        }
 
         set((state) => ({
             streak: newStreak,
@@ -68,6 +97,7 @@ export const useArenaStore = create((set, get) => ({
             gameStatus: 'result',
             accumulatedXP: state.accumulatedXP + gainedXP,
             accumulatedScore: state.accumulatedScore + (isCorrect ? 1 : 0),
+            fastestAnswer: isCorrect ? Math.min(state.fastestAnswer, timeTaken) : state.fastestAnswer,
             correctQuestionIds: isCorrect
                 ? [...state.correctQuestionIds, currentChallenge._id]
                 : state.correctQuestionIds
@@ -86,7 +116,8 @@ export const useArenaStore = create((set, get) => ({
                 currentIndex: nextIndex,
                 currentChallenge: challenges[nextIndex],
                 gameStatus: 'playing',
-                lastResult: null
+                lastResult: null,
+                lastQuestionStartTime: Date.now()
             });
         } else {
             // FIN DE LA ARENA - Enviar resultados al backend
@@ -98,10 +129,13 @@ export const useArenaStore = create((set, get) => ({
                     xpEarned: get().accumulatedXP || 0,
                     correctQuestionIds: get().correctQuestionIds || [],
                     duration: 60, // Mock de duración
-                    totalQuestions: challenges.length
+                    totalQuestions: challenges.length,
+                    bestStreak: get().bestStreak,
+                    fastestAnswer: get().fastestAnswer
                 };
 
-                await ArenaService.submitResult(sessionData);
+                const response = await ArenaService.submitResult(sessionData);
+                const unlocked = response.data?.unlockedAchievements || [];
 
                 // IMPORTANTE: Refrescar el perfil global para mostrar los puntos reales persistidos
                 const userStore = (await import('./useUserStore')).useUserStore;
@@ -109,7 +143,12 @@ export const useArenaStore = create((set, get) => ({
                     await userStore.getState().fetchStatus();
                 }
 
-                set({ gameStatus: 'finished', currentChallenge: null, isLoading: false });
+                set({
+                    gameStatus: 'finished',
+                    currentChallenge: null,
+                    isLoading: false,
+                    lastSessionAchievements: unlocked
+                });
             } catch (error) {
                 console.error('Error enviando resultados:', error);
                 const msg = error.response?.data?.message || 'Error de conexión con el servidor de Arena';
@@ -133,7 +172,8 @@ export const useArenaStore = create((set, get) => ({
             isLoading: false,
             accumulatedXP: 0,
             accumulatedScore: 0,
-            correctQuestionIds: []
+            correctQuestionIds: [],
+            lastSessionAchievements: []
         });
     }
 }));
