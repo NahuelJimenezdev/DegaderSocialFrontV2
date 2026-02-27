@@ -231,7 +231,7 @@ const ArenaPage = () => {
                                                 />
                                             )}
                                             {arena.gameStatus === 'finished' && (
-                                                <div className="text-center py-20 px-8 bg-[#282832]/60 backdrop-blur-2xl rounded-[3rem] w-full border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] relative overflow-hidden">
+                                                <div className="text-center py-20 px-8 bg-[#0a1128] rounded-[3rem] w-full border border-blue-500/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden">
                                                     {/* Glow effect */}
                                                     <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]"></div>
                                                     
