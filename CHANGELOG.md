@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.45.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.4...v1.45.0) (2026-02-27)
+
+
+### Features
+
+* implementado sistema de logros expandido (+40), notificaciones premium estilo iOS y modal de desbloqueo de nivel ([4e1464d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4e1464dada342439a5f0f2f9be1415973203a35c))
+
 ### [1.44.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.3...v1.44.4) (2026-02-27)
 
 
