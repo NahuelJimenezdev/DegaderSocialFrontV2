@@ -11,7 +11,7 @@ import AchievementGrid from './AchievementGrid';
 import ArenaLoading from './ArenaLoading';
 import LevelUnlockedModal from './LevelUnlockedModal';
 import ArenaSplashScreen from './ArenaSplashScreen';
-import { ARENA_ASSETS } from '../constants/arenaConfig';
+import { ARENA_ASSETS, ARENA_ACHIEVEMENTS } from '../constants/arenaConfig';
 import { Toaster } from 'react-hot-toast';
 import '../styles/ArenaMobile.css';
 
