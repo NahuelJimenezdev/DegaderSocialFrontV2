@@ -158,7 +158,7 @@ const ArenaPage = () => {
                                         >
                                             {/* Imagen de Fondo Temática */}
                                             <div
-                                                className="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity duration-500"
+                                                className="absolute inset-0 z-0 opacity-80 dark:opacity-40 group-hover:opacity-90 dark:group-hover:opacity-60 transition-opacity duration-500"
                                                 style={{
                                                     backgroundImage: `url(${ARENA_ASSETS.BACKGROUNDS[diff]})`,
                                                     backgroundSize: 'cover',
@@ -166,8 +166,8 @@ const ArenaPage = () => {
                                                 }}
                                             />
 
-                                            {/* Superposición para legibilidad */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/20 z-0" />
+                                            {/* Superposición para legibilidad - Más fuerte en modo claro para imitar el look oscuro */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/20 to-black/40 dark:from-black/40 dark:via-transparent dark:to-black/20 z-0" />
 
                                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-0" />
 
