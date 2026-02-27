@@ -128,7 +128,7 @@ const ArenaPage = () => {
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 md:flex-none px-4 md:px-10 py-3.5 rounded-full text-[10px] md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
                                 ? 'bg-white dark:bg-white/10 text-blue-600 dark:text-white shadow-xl scale-105'
-                                : 'text-white/40 dark:text-white/20 hover:text-white/60 dark:hover:text-white/40'
+                                : 'text-gray-500 dark:text-white/20 hover:text-gray-700 dark:hover:text-white/40'
                                 }`}
                         >
                             {tab.label}
