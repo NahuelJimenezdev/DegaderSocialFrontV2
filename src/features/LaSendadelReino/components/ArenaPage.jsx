@@ -10,6 +10,7 @@ import Leaderboard from './Leaderboard';
 import AchievementGrid from './AchievementGrid';
 import ArenaLoading from './ArenaLoading';
 import LevelUnlockedModal from './LevelUnlockedModal';
+import ArenaSplashScreen from './ArenaSplashScreen';
 import { ARENA_ASSETS } from '../constants/arenaConfig';
 import { Toaster } from 'react-hot-toast';
 import '../styles/ArenaMobile.css';
@@ -19,6 +20,20 @@ const ArenaPage = () => {
     const user = useUserStore();
     const arena = useArenaStore();
     const [showLevelModal, setShowLevelModal] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [showChallenge, setShowChallenge] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setIsInitialLoading(false), 2500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
+        // Al resetear la arena, ocultar el desafío para el próximo loader
+        if (arena.gameStatus === 'idle') {
+            setShowChallenge(false);
+        }
+    }, [arena.gameStatus]);
 
     useEffect(() => {
         // Mostrar modal si se acaba de desbloquear easy_master
@@ -33,6 +48,7 @@ const ArenaPage = () => {
     }, []);
 
     const handleLevelDifficulty = (diff) => {
+        setShowChallenge(false);
         arena.startArena(diff);
     };
 
@@ -41,8 +57,18 @@ const ArenaPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-[#0a0e27] text-gray-900 dark:text-white p-4 pb-28 md:p-8 md:pt-24 md:pb-8 pt-24 selection:bg-blue-500/30">
-            <div className="max-w-6xl mx-auto space-y-12">
+        <>
+            <AnimatePresence mode="wait">
+                {isInitialLoading ? (
+                    <ArenaSplashScreen key="splash" onFinish={() => setIsInitialLoading(false)} />
+                ) : (
+                    <motion.div
+                        key="main-content"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="min-h-screen bg-gray-50 dark:bg-[#0a0e27] text-gray-900 dark:text-white p-4 pb-28 md:p-8 md:pt-24 md:pb-8 pt-24 selection:bg-blue-500/30"
+                    >
+                        <div className="max-w-6xl mx-auto space-y-12">
 
                 {/* Header - Réplica Exacta Battle Pass (Opción 2) */}
                 <motion.div
@@ -235,9 +261,7 @@ const ArenaPage = () => {
                                         </button>
                                     )}
 
-                                    {arena.isLoading ? (
-                                        <ArenaLoading difficulty={arena.selectedDifficulty} />
-                                    ) : (
+                                    {(!arena.isLoading && showChallenge) ? (
                                         <>
                                             {arena.currentChallenge && (
                                                 <ChallengeCard
@@ -295,6 +319,11 @@ const ArenaPage = () => {
                                                 </div>
                                             )}
                                         </>
+                                    ) : (
+                                        <ArenaLoading 
+                                            difficulty={arena.selectedDifficulty} 
+                                            onReady={() => setShowChallenge(true)} 
+                                        />
                                     )}
                                 </div>
                             )}
@@ -324,8 +353,8 @@ const ArenaPage = () => {
                     )}
                 </AnimatePresence>
             </div>
+            {/* Navigations and content already closed above */}
 
-            {/* Modales Compartidos */}
             <AnimatePresence>
                 {arena.gameStatus === 'result' && (
                     <ResultModal
@@ -343,7 +372,10 @@ const ArenaPage = () => {
             />
 
             <Toaster position="bottom-center" reverseOrder={false} />
-        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 
