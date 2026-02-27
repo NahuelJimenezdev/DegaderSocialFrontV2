@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.46.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.45.0...v1.46.0) (2026-02-27)
+
+
+### Features
+
+* implementado splash screen de marca y cargador con barra de progreso para la arena ([f22acee](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f22acee6525401ecb7898878af666cdc5d4123cf))
+
+
+### Bug Fixes
+
+* corregida visibilidad en modo claro de la lista de logros y añadida verificación proactiva de logros para jugadores veteranos ([acc9c0f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/acc9c0f73741b46c2b8fb9cc638df77a3dffadc2))
+
 ## [1.45.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.4...v1.45.0) (2026-02-27)
 
 
