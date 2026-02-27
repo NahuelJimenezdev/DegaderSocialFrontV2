@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.44.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.2...v1.44.3) (2026-02-27)
+
+
+### Bug Fixes
+
+* **design:** refinamiento final de visibilidad en pestañas y pantalla de misión cumplida ([76dc652](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/76dc6522a8fb92d6e868bfc21992d62f7b3ce4a5))
+
 ### [1.44.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.44.1...v1.44.2) (2026-02-27)
 
 
