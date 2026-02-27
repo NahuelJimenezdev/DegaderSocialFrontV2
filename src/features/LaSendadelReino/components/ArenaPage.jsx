@@ -128,7 +128,7 @@ const ArenaPage = () => {
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 md:flex-none px-4 md:px-10 py-3.5 rounded-full text-[10px] md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
                                 ? 'bg-white dark:bg-white/10 text-blue-600 dark:text-white shadow-xl scale-105'
-                                : 'text-white/60 dark:text-white/20 hover:text-white dark:hover:text-white/40'
+                                : 'text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60'
                                 }`}
                         >
                             {tab.label}
@@ -242,7 +242,7 @@ const ArenaPage = () => {
                                                         <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4 italic text-transparent bg-clip-text bg-gradient-to-r from-[#f9c61f] via-yellow-200 to-[#f9c61f] drop-shadow-sm">
                                                             Misión Cumplida
                                                         </h2>
-                                                        <p className="text-white/70 font-bold max-w-sm mx-auto mb-10 text-[10px] uppercase tracking-[0.3em] leading-relaxed drop-shadow-md">
+                                                        <p className="text-white font-bold max-w-sm mx-auto mb-10 text-[10px] uppercase tracking-[0.3em] leading-relaxed drop-shadow-md">
                                                             Tu sabiduría ha sido probada una vez más en los caminos del Reino.
                                                         </p>
                                                         <button
