@@ -172,22 +172,35 @@ const ArenaPage = () => {
                                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-0" />
 
                                             <div className="relative z-10 text-left">
-                                                <div className="w-14 h-14 rounded-[20px] bg-white/5 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors shadow-inner">
-                                                    <span className="text-3xl">{diff === 'facil' ? '🕯️' : diff === 'medio' ? '📜' : diff === 'dificil' ? '🔥' : '⚔️'}</span>
+                                                <div className="w-14 h-14 rounded-[20px] bg-black/20 dark:bg-white/5 backdrop-blur-md flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-white/20 shadow-lg ring-1 ring-white/10">
+                                                    <span className="text-3xl filter drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
+                                                        {diff === 'facil' ? '🕯️' : diff === 'medio' ? '📜' : diff === 'dificil' ? '🔥' : '⚔️'}
+                                                    </span>
                                                 </div>
-                                                <h3 className="font-black text-2xl uppercase tracking-tighter capitalize leading-none text-gray-900 dark:text-white font-display">{diff}</h3>
-                                                <p className="text-[10px] text-gray-400 dark:text-white/20 font-bold uppercase tracking-[0.2em] mt-3">Dificultad</p>
+                                                <h3 className="font-black text-3xl uppercase tracking-tighter capitalize leading-none text-white font-display drop-shadow-md">
+                                                    {diff}
+                                                </h3>
+                                                <p className="text-[9px] text-white/50 font-black uppercase tracking-[0.3em] mt-3">
+                                                    Dificultad
+                                                </p>
                                             </div>
 
-                                            <div className="relative z-10 flex justify-between items-end">
+                                            <div className="relative z-10 flex justify-between items-end pt-4 border-t border-white/10">
                                                 <div className="text-left">
-                                                    <p className="text-[10px] text-blue-400 font-black uppercase tracking-widest mb-1.5 opacity-60">Multiplicador</p>
-                                                    <div className="font-mono font-black text-2xl text-gray-900 dark:text-white tracking-tighter">
-                                                        {diff === 'facil' ? '1.0x' : diff === 'medio' ? '1.5x' : diff === 'dificil' ? '2.5x' : '5.0x'}
+                                                    <p className="text-[9px] text-blue-400 dark:text-blue-300 font-black uppercase tracking-[0.2em] mb-1 opacity-80">
+                                                        Multiplicador
+                                                    </p>
+                                                    <div className="flex items-baseline gap-1">
+                                                        <span className="font-black text-3xl text-white tracking-tighter">
+                                                            {diff === 'facil' ? '1.0' : diff === 'medio' ? '1.5' : diff === 'dificil' ? '2.5' : '5.0'}
+                                                        </span>
+                                                        <span className="text-xs font-black text-blue-400/80">X</span>
                                                     </div>
                                                 </div>
-                                                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white text-black transition-all">
-                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
+                                                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all shadow-lg">
+                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                                                    </svg>
                                                 </div>
                                             </div>
                                         </motion.button>
