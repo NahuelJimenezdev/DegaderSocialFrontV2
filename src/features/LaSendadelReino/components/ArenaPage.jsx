@@ -13,6 +13,8 @@ import LevelUnlockedModal from './LevelUnlockedModal';
 import ArenaSplashScreen from './ArenaSplashScreen';
 import { ARENA_ASSETS, ARENA_ACHIEVEMENTS } from '../constants/arenaConfig';
 import { Toaster } from 'react-hot-toast';
+import AchievementDetailModal from './AchievementDetailModal';
+import confetti from 'canvas-confetti';
 import '../styles/ArenaMobile.css';
 
 const ArenaPage = () => {
@@ -22,6 +24,8 @@ const ArenaPage = () => {
     const [showLevelModal, setShowLevelModal] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [showChallenge, setShowChallenge] = useState(false);
+    const [viewedAchievements, setViewedAchievements] = useState([]);
+    const [selectedAchievement, setSelectedAchievement] = useState(null);
 
     useEffect(() => {
         const timer = setTimeout(() => setIsInitialLoading(false), 4500);
@@ -50,10 +54,30 @@ const ArenaPage = () => {
     const handleLevelDifficulty = (diff) => {
         setShowChallenge(false);
         arena.startArena(diff);
+        // Asegurarse de que el overlay esté marcado como visible para ocultar navbars
+        useArenaStore.setState({ isOverlayVisible: true });
     };
 
     const handleAnswer = (optionId) => {
         arena.submitAnswer(optionId, user.addXP);
+    };
+
+    const handleAchievementClick = (ach) => {
+        // Confetti explosion
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#f9c61f', '#ffffff', '#3b82f6']
+        });
+
+        // Show detail modal
+        setSelectedAchievement(ach);
+        
+        // Mark as viewed to pass the pulse to the next one
+        if (!viewedAchievements.includes(ach.id)) {
+            setViewedAchievements(prev => [...prev, ach.id]);
+        }
     };
 
     return (
@@ -272,11 +296,11 @@ const ArenaPage = () => {
                                                 />
                                             )}
                                             {arena.gameStatus === 'finished' && (
-                                                <div className="text-center py-20 px-8 bg-[#0a1128] rounded-[3rem] w-full border border-blue-500/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                                                <div className="fixed inset-0 z-[100] bg-[#0a0e27]/80 backdrop-blur-xl flex items-center justify-center p-6 text-center overflow-y-auto">
                                                     {/* Glow effect */}
-                                                    <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]"></div>
+                                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-[120px] pointer-events-none"></div>
                                                     
-                                                    <div className="relative z-10">
+                                                    <div className="relative z-10 w-full max-w-lg bg-white/5 backdrop-blur-md rounded-[3rem] p-12 border border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] transition-all">
                                                         <div className="w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-yellow-500/20 shadow-lg">
                                                             <span className="text-6xl filter drop-shadow-lg">🏆</span>
                                                         </div>
@@ -289,32 +313,83 @@ const ArenaPage = () => {
 
                                                         {/* Logros de la sesión */}
                                                         {arena.lastSessionAchievements.length > 0 && (
-                                                            <div className="flex flex-wrap justify-center gap-4 mb-10">
-                                                                {arena.lastSessionAchievements.map(id => {
+                                                            <div className="flex flex-wrap justify-center gap-6 mb-12">
+                                                                {arena.lastSessionAchievements.map((id, index) => {
                                                                     const ach = ARENA_ACHIEVEMENTS.find(a => a.id === id);
                                                                     if (!ach) return null;
+                                                                    
+                                                                    const isViewed = viewedAchievements.includes(id);
+                                                                    const isCurrentToClick = !isViewed && (index === 0 || viewedAchievements.includes(arena.lastSessionAchievements[index - 1]));
+
                                                                     return (
                                                                         <motion.div 
                                                                             key={id}
                                                                             initial={{ scale: 0, rotate: -30 }}
-                                                                            animate={{ scale: 1, rotate: 0 }}
-                                                                            className="flex flex-col items-center gap-2"
+                                                                            animate={{ 
+                                                                                scale: 1, 
+                                                                                rotate: 0,
+                                                                            }}
+                                                                            className="flex flex-col items-center gap-3 relative group"
                                                                         >
-                                                                            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl border border-white/20 shadow-lg">
+                                                                            <motion.div
+                                                                                animate={isCurrentToClick ? {
+                                                                                    scale: [1, 1.15, 1],
+                                                                                    boxShadow: [
+                                                                                        "0 0 0px rgba(249,198,31,0)",
+                                                                                        "0 0 20px rgba(249,198,31,0.5)",
+                                                                                        "0 0 0px rgba(249,198,31,0)"
+                                                                                    ]
+                                                                                } : {}}
+                                                                                transition={isCurrentToClick ? {
+                                                                                    duration: 2,
+                                                                                    repeat: Infinity,
+                                                                                    ease: "easeInOut"
+                                                                                } : {}}
+                                                                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                                                                whileTap={{ scale: 1.3 }}
+                                                                                onClick={() => handleAchievementClick(ach)}
+                                                                                className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center text-3xl cursor-pointer transition-all duration-300 border-2 ${
+                                                                                    isViewed 
+                                                                                    ? 'bg-blue-500/20 border-blue-400/30' 
+                                                                                    : 'bg-white/5 border-white/10 hover:border-yellow-500/50'
+                                                                                } shadow-lg relative`}
+                                                                            >
                                                                                 {ach.icon}
-                                                                            </div>
-                                                                            <span className="text-[7px] font-black uppercase text-yellow-500 tracking-widest">{ach.title}</span>
+                                                                                
+                                                                                {/* Pulse ring for attention */}
+                                                                                {isCurrentToClick && (
+                                                                                    <div className="absolute inset-0 rounded-[1.5rem] border-2 border-yellow-500/50 animate-ping opacity-75" />
+                                                                                )}
+                                                                                
+                                                                                {/* Checkmark for viewed */}
+                                                                                {isViewed && (
+                                                                                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center border-2 border-[#0a0e27]">
+                                                                                        <span className="material-symbols-outlined text-[14px] text-white font-black">check</span>
+                                                                                    </div>
+                                                                                )}
+                                                                            </motion.div>
+                                                                            <span className={`text-[8px] font-black uppercase tracking-widest transition-colors ${isViewed ? 'text-blue-400' : 'text-yellow-500'}`}>
+                                                                                {ach.title}
+                                                                            </span>
                                                                         </motion.div>
                                                                     );
                                                                 })}
                                                             </div>
                                                         )}
-                                                        <button
-                                                            onClick={arena.resetArena}
-                                                            className="px-12 py-4 rounded-2xl bg-[#f9c61f] text-black font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_rgba(249,198,31,0.4)] border border-yellow-400/50"
-                                                        >
-                                                            Reiniciar Senda
-                                                        </button>
+                                                        <div className="flex flex-col items-center gap-4 w-full max-w-xs mx-auto">
+                                                            <button
+                                                                onClick={() => handleLevelDifficulty(arena.selectedDifficulty)}
+                                                                className="w-full px-12 py-5 rounded-2xl bg-[#f9c61f] text-black font-black text-sm uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_15px_40px_rgba(249,198,31,0.3)] border border-yellow-400/50"
+                                                            >
+                                                                Continuar Senda
+                                                            </button>
+                                                            <button
+                                                                onClick={arena.resetArena}
+                                                                className="w-full px-8 py-4 rounded-2xl bg-white/5 text-white/40 font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white/10 hover:text-white transition-all border border-white/5"
+                                                            >
+                                                                Volver al Menú
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
@@ -325,6 +400,13 @@ const ArenaPage = () => {
                                             onReady={() => setShowChallenge(true)} 
                                         />
                                     )}
+
+                                    {/* Achievement Detail Overlay */}
+                                    <AchievementDetailModal 
+                                        achievement={selectedAchievement}
+                                        isOpen={!!selectedAchievement}
+                                        onClose={() => setSelectedAchievement(null)}
+                                    />
                                 </div>
                             )}
                         </motion.div>

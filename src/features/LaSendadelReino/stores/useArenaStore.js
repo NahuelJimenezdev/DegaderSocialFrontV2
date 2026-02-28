@@ -21,6 +21,7 @@ export const useArenaStore = create((set, get) => ({
     fastestAnswer: 999, // Segundos
     lastQuestionStartTime: null,
     lastSessionAchievements: [],
+    isOverlayVisible: false, // New: track if a full-screen overlay is showing
 
     /**
      * Inicia una sesión de desafíos
@@ -41,7 +42,8 @@ export const useArenaStore = create((set, get) => ({
         set({
             challenges,
             currentChallenge: challenges[0],
-            isLoading: false
+            isLoading: false,
+            isOverlayVisible: false
         });
     },
 
@@ -147,7 +149,8 @@ export const useArenaStore = create((set, get) => ({
                     gameStatus: 'finished',
                     currentChallenge: null,
                     isLoading: false,
-                    lastSessionAchievements: unlocked
+                    lastSessionAchievements: unlocked,
+                    isOverlayVisible: true
                 });
             } catch (error) {
                 console.error('Error enviando resultados:', error);
@@ -170,6 +173,7 @@ export const useArenaStore = create((set, get) => ({
             gameStatus: 'idle',
             lastResult: null,
             isLoading: false,
+            isOverlayVisible: false,
             accumulatedXP: 0,
             accumulatedScore: 0,
             correctQuestionIds: [],

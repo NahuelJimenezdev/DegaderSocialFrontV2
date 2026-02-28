@@ -11,10 +11,12 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { hideAdsSidebarRoutes, hideSidebarRoutes } from '../../shared/config/hiddenRoutes';
 import Navbar from '../../shared/components/Navbar';
 import { useSuspensionCheck } from '../../shared/hooks/useSuspensionCheck';
+import { useArenaStore } from '../../features/LaSendadelReino/stores/useArenaStore';
 
 const AppLayout = () => {
   const location = useLocation();
   const { suspended, suspensionInfo, loading } = useSuspensionCheck();
+  const isArenaOverlay = useArenaStore(state => state.isOverlayVisible);
 
   // Rutas permitidas para usuarios suspendidos: notificaciones y detalles del sistema
   const allowedSuspendedRoutes = ['/notificaciones', '/Sistema'];
@@ -29,10 +31,13 @@ const AppLayout = () => {
     pattern.test(location.pathname)
   );
 
+  // Determinar si debemos ocultar COMPLETAMENTE las navbars (caso Arena Success/Loading)
+  const hideNavbars = isArenaOverlay && location.pathname === '/arena';
+
   return (
     <div className="app-container">
       {/* Navbar fijo arriba */}
-      <Navbar />
+      {!hideNavbars && <Navbar />}
 
       <div className="app-content">
         {/* Sidebar fijo a la izquierda - se oculta en ciertas rutas */}
@@ -53,7 +58,7 @@ const AppLayout = () => {
       </div>
 
       {/* Bottom navbar - only visible on mobile */}
-      <BottomNavbar />
+      {!hideNavbars && <BottomNavbar />}
     </div>
   );
 };
