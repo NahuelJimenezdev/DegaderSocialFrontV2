@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.47.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.46.2...v1.47.0) (2026-02-28)
+
+
+### Features
+
+* **arena:** mejoras en UI/UX, logros interactivos y ocultamiento de navbars ([e9320d2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e9320d2e604759dd866ee9a2b5e2476fbd585941))
+
 ### [1.46.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.2.1-arena-ui...v1.46.2) (2026-02-28)
 
 ### [1.46.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.46.0...v1.46.1) (2026-02-27)
