@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.48.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.48.0...v1.48.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* **arena:** corregir detección de scroll y visibilidad de cabecera sticky en mobile ([d7bb65c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d7bb65ce455ae5c4b40595a16131bac40ba1c1b2))
+
 ## [1.48.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.47.0...v1.48.0) (2026-02-28)
 
 
