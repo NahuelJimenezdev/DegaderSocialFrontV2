@@ -14,6 +14,7 @@ import ArenaSplashScreen from './ArenaSplashScreen';
 import { ARENA_ASSETS, ARENA_ACHIEVEMENTS } from '../constants/arenaConfig';
 import { Toaster } from 'react-hot-toast';
 import AchievementDetailModal from './AchievementDetailModal';
+import StickyArenaHeader from './StickyArenaHeader';
 import confetti from 'canvas-confetti';
 import '../styles/ArenaMobile.css';
 
@@ -26,6 +27,20 @@ const ArenaPage = () => {
     const [showChallenge, setShowChallenge] = useState(false);
     const [viewedAchievements, setViewedAchievements] = useState([]);
     const [selectedAchievement, setSelectedAchievement] = useState(null);
+    const [showStickyHeader, setShowStickyHeader] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 250) {
+                setShowStickyHeader(true);
+            } else {
+                setShowStickyHeader(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => setIsInitialLoading(false), 4500);
@@ -82,6 +97,13 @@ const ArenaPage = () => {
 
     return (
         <>
+            {/* Cabecera Sticky Móvil (Solo Mobile) */}
+            <StickyArenaHeader 
+                user={user} 
+                progress={user.getProgress()} 
+                isVisible={showStickyHeader && !isInitialLoading && arena.gameStatus === 'idle'} 
+            />
+
             <AnimatePresence mode="wait">
                 {isInitialLoading ? (
                     <ArenaSplashScreen key="splash" onFinish={() => setIsInitialLoading(false)} />
