@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.46.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.2.1-arena-ui...v1.46.2) (2026-02-28)
+
 ### [1.46.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.46.0...v1.46.1) (2026-02-27)
 
 
