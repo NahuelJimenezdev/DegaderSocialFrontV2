@@ -233,7 +233,7 @@ const ArenaPage = () => {
                             </div>
 
                 {/* Pestañas de Navegación - siempre en el flujo del documento */}
-                <div className="arena-nav-container">
+                <div className="arena-nav-container" style={{ visibility: showStickyHeader ? 'hidden' : 'visible', pointerEvents: showStickyHeader ? 'none' : 'auto' }}>
                     <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
                         {[
                             { id: 'arena', label: '🏟️ Arena' },
