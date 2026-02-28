@@ -182,7 +182,7 @@ const ArenaPage = () => {
                                                     top: '50%',
                                                     left: '50%',
                                                     transform: 'translate(-50%, -50%)',
-                                                    width: '70%',
+                                                    width: '100%',
                                                     height: 'auto',
                                                     objectFit: 'contain',
                                                     opacity: isDark ? 0.28 : 0.07,
