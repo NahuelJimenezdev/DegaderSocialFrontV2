@@ -594,25 +594,15 @@
 .arena-nav-container.is-sticky {
     position: fixed !important;
     top: 108px !important;
-    /* Tight align with header (110px - 2px overlap) */
     left: 0 !important;
     right: 0 !important;
     padding: 8px 20px !important;
-    /* More compact */
-    background: rgba(255, 255, 255, 0.98) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
-    border-radius: 0 0 16px 16px !important;
     z-index: 9998 !important;
-    /* Below header */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    /* Sin fondo adicional - el diseño es idéntico al nav en flujo */
 }
 
 :global(.dark) .arena-nav-container.is-sticky {
-    background: rgba(13, 22, 50, 0.98) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    /* Sin overrides - mismo diseño */
 }
 
 .arena-nav-container.is-sticky>div {
@@ -622,14 +612,9 @@
     background: transparent !important;
 }
 
-/* Ajuste de Contenido para evitar el espacio Fantasma */
+/* Ajuste del area de contenido */
 .arena-content-area {
-    transition: all 0.3s ease;
-}
-
-.arena-content-area.has-sticky-nav {
-    padding-top: 130px !important;
-    /* Higher value because our header is taller (110px + nav space) */
+    transition: padding-top 0.3s ease;
 }
 
 /* Transición de la Card Vertical para no dejar hueco */

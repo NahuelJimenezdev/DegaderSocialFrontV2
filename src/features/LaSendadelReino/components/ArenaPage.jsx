@@ -232,9 +232,9 @@ const ArenaPage = () => {
                                     </motion.div>
                             </div>
 
-                {/* Navegación Refinada - AHORA STICKY Y TIGHT */}
-                <div className={`arena-nav-container ${showStickyHeader ? 'is-sticky' : ''}`}>
-                    <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full md:rounded-[28px] w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
+                {/* Pestañas de Navegación - siempre en el flujo del documento */}
+                <div className="arena-nav-container">
+                    <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
                         {[
                             { id: 'arena', label: '🏟️ Arena' },
                             { id: 'ranking', label: '🏆 Ranking' },
@@ -243,7 +243,7 @@ const ArenaPage = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex-1 md:flex-none px-6 py-2.5 rounded-full md:rounded-[22px] text-xs md:text-sm font-black transition-all duration-300 ${
+                                className={`flex-1 md:flex-none px-6 py-2.5 rounded-full text-xs md:text-sm font-black transition-all duration-300 ${
                                     activeTab === tab.id 
                                         ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-[1.02]' 
                                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-300/50 dark:hover:bg-white/5'
@@ -255,8 +255,43 @@ const ArenaPage = () => {
                     </div>
                 </div>
 
+                {/* Pestañas fijas animadas (se deslizan cuando la cabecera sticky está activa) */}
+                <AnimatePresence>
+                    {showStickyHeader && (
+                        <motion.div
+                            key="sticky-nav"
+                            initial={{ y: -56, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -56, opacity: 0 }}
+                            transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.8 }}
+                            className="fixed left-0 right-0 z-[9998] px-4 py-2"
+                            style={{ top: '110px' }}
+                        >
+                            <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
+                                {[
+                                    { id: 'arena', label: '🏟️ Arena' },
+                                    { id: 'ranking', label: '🏆 Ranking' },
+                                    { id: 'logros', label: '✨ Logros' }
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`flex-1 md:flex-none px-6 py-2.5 rounded-full text-xs md:text-sm font-black transition-all duration-300 ${
+                                            activeTab === tab.id 
+                                                ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-[1.02]' 
+                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-300/50 dark:hover:bg-white/5'
+                                        }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 {/* Contenido Dinámico de Pestañas */}
-                <div className={`arena-content-area ${showStickyHeader ? 'has-sticky-nav' : ''}`}>
+                <div className="arena-content-area">
                     <AnimatePresence mode="wait" initial={false}>
                         <div className={activeTab === 'arena' ? "arena-tab-content" : ""}>
                         {activeTab === 'arena' ? (
