@@ -27,7 +27,7 @@ const ArenaSplashScreen = ({ onFinish }) => {
                         stiffness: 100,
                         duration: 1 
                     }}
-                    className="w-64 h-64 md:w-96 md:h-96 mb-8"
+                    className="w-[85vw] h-[85vw] md:w-[480px] md:h-[480px] mb-8"
                 >
                     <img 
                         src={ARENA_ASSETS.LOGO} 
