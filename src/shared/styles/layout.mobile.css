@@ -364,27 +364,30 @@
     border-bottom: 1px solid rgba(58, 141, 255, 0.2) !important;
 }
 
-/* Marca de Agua (Grabado/Sutil) */
+/* Marca de Agua - visible con colores naturales */
 .sticky-arena-watermark {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.08 !important;
-    mix-blend-mode: soft-light !important;
-}
-
-:global(.dark) .sticky-arena-watermark {
-    filter: invert(1) brightness(1.5) !important;
+    overflow: hidden;
 }
 
 .sticky-arena-watermark img {
-    height: 150% !important;
+    height: 140% !important;
+    width: auto !important;
     object-fit: contain !important;
-    transform: rotate(-10deg) scale(1.2) !important;
+    opacity: 0.18;
+    mix-blend-mode: soft-light;
+}
+
+:global(.dark) .sticky-arena-watermark img {
+    opacity: 0.22;
+    mix-blend-mode: soft-light;
+    filter: none;
 }
 
 /* -- SECCIÓN IZQUIERDA: AVATAR -- */

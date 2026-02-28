@@ -28,9 +28,17 @@ const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
                     }}
                     className="sticky-arena-header lg:hidden"
                 >
-                    {/* Marca de Agua (Textura de fondo) */}
+                    {/* Logo marca de agua centrado y visible */}
                     <div className="sticky-arena-watermark">
-                        <img src={ARENA_ASSETS.LOGO} alt="" />
+                        <img 
+                            src={ARENA_ASSETS.LOGO} 
+                            alt="" 
+                            style={{ 
+                                opacity: 0.18,
+                                mixBlendMode: 'soft-light',
+                                filter: 'none'
+                            }}
+                        />
                     </div>
 
                     {/* SECCIÓN IZQUIERDA: Avatar */}

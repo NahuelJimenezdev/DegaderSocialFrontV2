@@ -172,8 +172,19 @@ const ArenaPage = () => {
                                     >
                                         {/* Textura de puntos de fondo */}
                                         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: isDark ? 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)' : 'radial-gradient(circle at 2px 2px, rgba(0,0,0,0.07) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-                                        {/* Logo marca de agua visible */}
-                                        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: `url(${ARENA_ASSETS.LOGO})`, backgroundSize: '40%', backgroundPosition: 'center right -20px', backgroundRepeat: 'no-repeat', opacity: isDark ? 0.12 : 0.06, filter: isDark ? 'brightness(2) grayscale(1)' : 'grayscale(1) brightness(0)' }} />
+                                        {/* Logo marca de agua - centrado y visible */}
+                                        <div 
+                                            className="absolute inset-0 pointer-events-none"
+                                            style={{ 
+                                                backgroundImage: `url(${ARENA_ASSETS.LOGO})`,
+                                                backgroundSize: '65%',
+                                                backgroundPosition: 'center',
+                                                backgroundRepeat: 'no-repeat',
+                                                opacity: isDark ? 0.25 : 0.08,
+                                                mixBlendMode: isDark ? 'soft-light' : 'multiply',
+                                                filter: isDark ? 'none' : 'grayscale(1)'
+                                            }} 
+                                        />
                                         {/* Gradiente decorativo */}
                                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 via-transparent to-purple-600/10 pointer-events-none" />
 
