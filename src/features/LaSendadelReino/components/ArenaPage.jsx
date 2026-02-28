@@ -31,6 +31,17 @@ const ArenaPage = () => {
     const [showStickyHeader, setShowStickyHeader] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0); // 0 at top, 1 at threshold
     const cardRef = useRef(null);
+    const rafRef = useRef(null);
+    const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
+
+    // Detectar cambios de tema
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDark(document.documentElement.classList.contains('dark'));
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         const handleScroll = (e) => {
@@ -40,24 +51,25 @@ const ArenaPage = () => {
             
             if (!isMainContent && !isWindow) return;
 
-            const scrollTop = target.scrollTop !== undefined ? target.scrollTop : window.scrollY;
-            
-            // Umbral de transición ajustado para sincronizar con la nav sticky (104px)
-            const cardHeight = cardRef.current?.offsetHeight || 240;
-            const threshold = cardHeight - 104; 
-            
-            const progress = Math.min(scrollTop / threshold, 1);
-            setScrollProgress(progress);
-
-            if (scrollTop > threshold) {
-                setShowStickyHeader(true);
-            } else {
-                setShowStickyHeader(false);
-            }
+            // Throttle con requestAnimationFrame para no bloquear el hilo principal en mobile
+            if (rafRef.current) return;
+            rafRef.current = requestAnimationFrame(() => {
+                rafRef.current = null;
+                const scrollTop = target.scrollTop !== undefined ? target.scrollTop : window.scrollY;
+                const cardHeight = cardRef.current?.offsetHeight || 240;
+                const threshold = Math.max(cardHeight - 104, 1);
+                
+                const progress = Math.min(scrollTop / threshold, 1);
+                setScrollProgress(progress);
+                setShowStickyHeader(scrollTop > threshold);
+            });
         };
 
-        window.addEventListener('scroll', handleScroll, true);
-        return () => window.removeEventListener('scroll', handleScroll, true);
+        window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+        return () => {
+            window.removeEventListener('scroll', handleScroll, { capture: true });
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        };
     }, []);
 
     useEffect(() => {
@@ -156,11 +168,13 @@ const ArenaPage = () => {
                                             scale: 1 - (scrollProgress * 0.05),
                                             translateY: -scrollProgress * 20
                                         }}
-                                        className="relative overflow-hidden bg-white/95 dark:bg-[#0a1128]/95 backdrop-blur-3xl rounded-[24px] border border-gray-200 dark:border-blue-500/30 p-6 md:p-10 shadow-xl dark:shadow-[0_0_80px_rgba(0,0,0,0.8)] ring-1 ring-black/5 dark:ring-white/10"
+                                        className={`relative overflow-hidden backdrop-blur-3xl rounded-[24px] border p-6 md:p-10 shadow-xl ring-1 ${isDark ? 'bg-[#0a1128]/95 border-blue-500/30 shadow-[0_0_80px_rgba(0,0,0,0.8)] ring-white/10' : 'bg-white/95 border-gray-200 ring-black/5'}`}
                                     >
-                                        {/* Efectos de fondo premium */}
-                                        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" style={{ backgroundImage: `url(${ARENA_ASSETS.LOGO})`, backgroundSize: '70%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', filter: 'grayscale(1) brightness(2)' }} />
+                                        {/* Textura de puntos de fondo */}
+                                        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: isDark ? 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)' : 'radial-gradient(circle at 2px 2px, rgba(0,0,0,0.07) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+                                        {/* Logo marca de agua visible */}
+                                        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: `url(${ARENA_ASSETS.LOGO})`, backgroundSize: '40%', backgroundPosition: 'center right -20px', backgroundRepeat: 'no-repeat', opacity: isDark ? 0.12 : 0.06, filter: isDark ? 'brightness(2) grayscale(1)' : 'grayscale(1) brightness(0)' }} />
+                                        {/* Gradiente decorativo */}
                                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 via-transparent to-purple-600/10 pointer-events-none" />
 
                                         <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-12">
@@ -178,7 +192,7 @@ const ArenaPage = () => {
 
                                             <div className="flex-1 space-y-6 w-full text-center md:text-left">
                                                 <div className="space-y-1">
-                                                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-gray-900 dark:text-white uppercase italic leading-none drop-shadow-[0_5px_15px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+                                                    <h1 className={`text-5xl md:text-7xl font-black tracking-tighter uppercase italic leading-none drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                                         {user.username}
                                                     </h1>
                                                     <div className="flex items-center justify-center md:justify-start gap-3">
@@ -202,10 +216,10 @@ const ArenaPage = () => {
                                                         { label: 'GAMES', value: user.gamesPlayed || 0, icon: '⚔️', color: 'text-gray-300' },
                                                         { label: 'K/D', value: user.kdRatio || '0.00', icon: '🎯', color: 'text-red-400' }
                                                     ].map((stat, i) => (
-                                                        <div key={i} className="bg-gray-100 dark:bg-white/5 backdrop-blur-md px-4 py-3 rounded-2xl border border-gray-200 dark:border-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group">
+                                                        <div key={i} className={`backdrop-blur-md px-4 py-3 rounded-2xl border transition-colors group ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-gray-100 border-gray-200 hover:bg-gray-200'}`}>
                                                             <div className="flex items-center gap-2 mb-1">
                                                                 <span className="text-xs group-hover:scale-110 transition-transform">{stat.icon}</span>
-                                                                <span className="text-[9px] text-gray-500 dark:text-white/40 font-bold uppercase tracking-widest">{stat.label}</span>
+                                                                <span className={`text-[9px] font-bold uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-gray-500'}`}>{stat.label}</span>
                                                             </div>
                                                             <span className={`text-xl font-black italic tracking-tighter ${stat.color}`}>
                                                                 {stat.value}
