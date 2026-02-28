@@ -30,16 +30,20 @@ const ArenaPage = () => {
     const [showStickyHeader, setShowStickyHeader] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 250) {
+        const handleScroll = (e) => {
+            // Documentamos: el scroll ocurre en .main-content
+            const target = e.target;
+            const scrollTop = target.scrollTop !== undefined ? target.scrollTop : window.scrollY;
+            
+            if (scrollTop > 200) { // Reducimos un poco el umbral para que se note antes
                 setShowStickyHeader(true);
             } else {
                 setShowStickyHeader(false);
             }
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, true);
+        return () => window.removeEventListener('scroll', handleScroll, true);
     }, []);
 
     useEffect(() => {
