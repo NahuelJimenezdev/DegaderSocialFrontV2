@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.48.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.47.0...v1.48.0) (2026-02-28)
+
+
+### Features
+
+* **arena:** implementar cabecera sticky móvil compacta ([4d683d4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4d683d422b089ac932414e7f86956c4682f1c574))
+
 ## [1.47.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.46.2...v1.47.0) (2026-02-28)
 
 
