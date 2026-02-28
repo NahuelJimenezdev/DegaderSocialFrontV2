@@ -27,7 +27,7 @@ const ArenaSplashScreen = ({ onFinish }) => {
                         stiffness: 100,
                         duration: 1 
                     }}
-                    className="w-[85vw] h-[85vw] md:w-[480px] md:h-[480px] mb-8"
+                    className="w-[150vw] h-[150vw] md:w-[480px] md:h-[480px] -mb-26 md:-mb-16"
                 >
                     <img 
                         src={ARENA_ASSETS.LOGO} 
@@ -43,7 +43,7 @@ const ArenaSplashScreen = ({ onFinish }) => {
                     transition={{ delay: 0.5, duration: 0.8 }}
                     className="text-center"
                 >
-                    <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase mb-2">
+                    <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter text-white uppercase mb-2">
                         La Senda <span className="text-blue-500">del Reino</span>
                     </h1>
                     <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/40">
