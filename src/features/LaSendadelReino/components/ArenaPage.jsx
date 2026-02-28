@@ -55,6 +55,15 @@ const ArenaPage = () => {
             if (rafRef.current) return;
             rafRef.current = requestAnimationFrame(() => {
                 rafRef.current = null;
+
+                // Solo activar efecto sticky en mobile (< 1024px)
+                if (window.innerWidth >= 1024) {
+                    // En desktop siempre mostrar card, nunca sticky header
+                    setScrollProgress(0);
+                    setShowStickyHeader(false);
+                    return;
+                }
+
                 const scrollTop = target.scrollTop !== undefined ? target.scrollTop : window.scrollY;
                 const cardHeight = cardRef.current?.offsetHeight || 240;
                 const threshold = Math.max(cardHeight - 104, 1);
@@ -182,10 +191,10 @@ const ArenaPage = () => {
                                                     top: '50%',
                                                     left: '50%',
                                                     transform: 'translate(-50%, -50%)',
-                                                    width: '100%',
+                                                    width: '130%',
                                                     height: 'auto',
                                                     objectFit: 'contain',
-                                                    opacity: isDark ? 0.28 : 0.07,
+                                                    opacity: isDark ? 0.28 : 0.04,
                                                     filter: isDark ? 'none' : 'grayscale(1) brightness(0)',
                                                 }}
                                             />
