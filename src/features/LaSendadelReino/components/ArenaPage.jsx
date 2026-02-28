@@ -123,7 +123,13 @@ const ArenaPage = () => {
                 {/* Header - Réplica Exacta Battle Pass (Opción 2) */}
                 <motion.div
                     initial={{ scale: 0.98, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
+                    animate={{ 
+                        scale: showStickyHeader ? 0.9 : 1, 
+                        opacity: showStickyHeader ? 0 : 1,
+                        y: showStickyHeader ? -40 : 0,
+                        display: showStickyHeader ? 'none' : 'block'
+                    }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="relative overflow-hidden bg-[#0a1128]/95 backdrop-blur-3xl rounded-[24px] border border-blue-500/30 p-8 md:p-10 shadow-[0_0_80px_rgba(0,0,0,1)] ring-1 ring-white/10"
                 >
                     {/* Fondo Estrellado/Grid Estilo Gaming */}
