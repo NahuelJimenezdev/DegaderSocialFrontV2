@@ -41,7 +41,7 @@ export default function FundacionPage() {
                     </div>
                     <div className="section-header__content">
                         <h1 className="section-header__title section-header__title--heavy">
-                            Fundación Sol y Luna
+                            Fundación Humanitaria Internacional Sol y Luna
                         </h1>
                         <p className="section-header__subtitle">
                             Gestiona tu participación y perfil institucional
