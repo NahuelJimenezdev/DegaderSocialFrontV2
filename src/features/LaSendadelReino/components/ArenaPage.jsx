@@ -24,7 +24,7 @@ const ArenaPage = () => {
     const [showChallenge, setShowChallenge] = useState(false);
 
     useEffect(() => {
-        const timer = setTimeout(() => setIsInitialLoading(false), 2500);
+        const timer = setTimeout(() => setIsInitialLoading(false), 4500);
         return () => clearTimeout(timer);
     }, []);
 
