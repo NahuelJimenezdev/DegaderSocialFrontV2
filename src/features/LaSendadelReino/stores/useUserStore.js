@@ -26,8 +26,9 @@ export const useUserStore = create((set, get) => ({
         set({ isLoading: true });
         try {
             const response = await ArenaService.getStatus();
+            if (!response || !response.data) throw new Error('No status data received');
             const data = response.data;
-            const { arena } = data;
+            const arena = data.arena || {};
 
             const currentXP = arena.xp || 0;
             const currentLevel = getLevelFromXP(currentXP);

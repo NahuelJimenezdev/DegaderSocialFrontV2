@@ -43,10 +43,41 @@
     animation: star-ring 3s infinite ease-in-out;
 }
 
+/* Transiciones de Cabecera */
+.arena-vertical-card-wrapper {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    will-change: transform, opacity;
+}
+
+.arena-vertical-card-wrapper.fading {
+    pointer-events: none;
+}
+
+/* Navegación Sticky */
+.arena-nav-container {
+    position: sticky;
+    top: 104px;
+    /* Justo debajo del StickyArenaHeader */
+    z-index: 40;
+    transition: all 0.3s ease;
+    padding: 1rem 0;
+}
+
+
+/* Ajustes de margen para contenido de pestañas */
+.arena-tab-content {
+    padding-top: 20px;
+}
+
 /* Responsive fixes */
 @media (max-width: 640px) {
     .arena-page-container {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .arena-nav-container {
+        top: 94px;
+        /* Ajuste para mobile */
     }
 }

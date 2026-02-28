@@ -12,19 +12,25 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const fetchRanking = async () => {
-            setLoading(true);
-            let response;
-
-            if (filter === 'global') {
-                response = await ArenaService.getRanking('global');
-            } else if (filter === 'country') {
-                response = await ArenaService.getRanking('country', location.country);
-            } else if (filter === 'state') {
-                response = await ArenaService.getRanking('state', location.country, location.state);
+            try {
+                setLoading(true);
+                const response = await ArenaService.getRanking(filter, location.country, location.state);
+                
+                // Extra robust check for array
+                if (response && response.data && Array.isArray(response.data)) {
+                    setRanking(response.data);
+                } else if (Array.isArray(response)) {
+                    setRanking(response);
+                } else {
+                    console.error('Ranking data is not an array:', response);
+                    setRanking([]);
+                }
+            } catch (error) {
+                console.error('Error fetching ranking:', error);
+                setRanking([]);
+            } finally {
+                setLoading(false);
             }
-
-            setRanking(response?.data || []);
-            setLoading(false);
         };
         fetchRanking();
     }, [filter, location]);
@@ -95,10 +101,18 @@ const Leaderboard = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <img src={item.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.userId}`} className="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-800" alt={item.user?.name} />
+                                                <img 
+                                                    src={item.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.userId}`} 
+                                                    className="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-800" 
+                                                    alt={item.user?.name || 'Guerrero'} 
+                                                />
                                                 <div>
-                                                    <div className="text-gray-900 dark:text-white font-bold text-sm tracking-tight">{item.user?.name || 'Guerrero Anónimo'}</div>
-                                                    <div className="text-[10px] text-gray-500 dark:text-white/40 font-medium">{item.user?.country || 'Reino Unido'}</div>
+                                                    <div className="text-gray-900 dark:text-white font-bold text-sm tracking-tight">
+                                                        {item.user?.name || 'Guerrero Anónimo'}
+                                                    </div>
+                                                    <div className="text-[10px] text-gray-500 dark:text-white/40 font-medium">
+                                                        {item.user?.country || 'Desconocido'}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>

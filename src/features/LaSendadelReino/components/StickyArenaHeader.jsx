@@ -1,81 +1,89 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ARENA_ASSETS } from '../constants/arenaConfig';
+import { getXPForLevel } from '../utils/progression';
 
 /**
- * StickyArenaHeader - Rediseño premium basado en ejemplo_cardStiky.png
- * Versión horizontal 110px de alto para máxima visibilidad estadística.
+ * StickyArenaHeader - Perfección 1:1 basada en promp detallado
+ * Estructura de 3 secciones: [Avatar] [Identidad/Progreso] [Stats/Rango]
  */
-const StickyArenaHeader = ({ user, isVisible }) => {
+const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
+    const nextLevelXP = getXPForLevel(user.level + 1);
+
     return (
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ y: -120, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -120, opacity: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ 
+                        opacity: opacity !== undefined ? opacity : 1 
+                    }}
+                    exit={{ opacity: 0 }}
                     transition={{ 
-                        type: "spring",
-                        stiffness: 100,
-                        damping: 20,
-                        opacity: { duration: 0.3 }
+                        duration: 0.4,
+                        ease: "easeInOut"
+                    }}
+                    style={{
+                        pointerEvents: (opacity > 0.8 || isVisible) ? 'auto' : 'none'
                     }}
                     className="sticky-arena-header lg:hidden"
                 >
-                    {/* Marca de agua del Logo central */}
+                    {/* Marca de Agua (Textura de fondo) */}
                     <div className="sticky-arena-watermark">
-                        <img src={ARENA_ASSETS.LOGO} alt="Fondo" />
+                        <img src={ARENA_ASSETS.LOGO} alt="" />
                     </div>
 
-                    {/* Izquierda: Avatar con Brillo */}
-                    <div className="sticky-avatar-wrapper">
-                        <div className="sticky-avatar-glow" />
-                        <div className="sticky-avatar-container">
-                            <img 
-                                src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`} 
-                                alt={user.username} 
-                            />
+                    {/* SECCIÓN IZQUIERDA: Avatar */}
+                    <div className="sticky-avatar-container">
+                        <img 
+                            src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`} 
+                            alt={user.username} 
+                        />
+                    </div>
+
+                    {/* SECCIÓN CENTRAL: Identidad y Progresión */}
+                    <div className="sticky-center-section">
+                        <div className="flex flex-col">
+                            <h2 className="sticky-user-name">{user.username}</h2>
+                            <span className="sticky-sub-label">LA SENDA DEL REINO</span>
+                        </div>
+                        
+                        <div className="sticky-progression-row">
+                            <div className="sticky-progress-bar-bg">
+                                <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${progress}%` }}
+                                    transition={{ duration: 1, ease: "easeOut" }}
+                                    className="sticky-progress-fill" 
+                                />
+                            </div>
+                            <span className="sticky-xp-text">
+                                {user.totalXP} / {nextLevelXP || 1200} XP
+                            </span>
+                            
+                            <div className="sticky-ap-pill">
+                                <span className="sticky-ap-icon">💎</span>
+                                <span className="sticky-ap-value">{user.totalXP} AP</span>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Centro/Derecha: Datos agrupados en 2 filas */}
-                    <div className="sticky-info-main">
-                        {/* Fila Superior: Nivel y AP */}
-                        <div className="sticky-top-row">
-                            <div className="sticky-level-info">
-                                Level {user.level} <span className="sticky-level-star">⭐</span>
+                    {/* SECCIÓN DERECHA: Estadísticas y Rango */}
+                    <div className="sticky-right-section">
+                        <div className="sticky-stats-grid-mini">
+                            <div className="sticky-stat-mini-pill wins">
+                                <span>🏆</span> <span className="sticky-stat-value">{user.wins}</span>
                             </div>
-                            <div className="sticky-ap-info">
-                                <span className="sticky-ap-diamond">💎</span>
-                                <span className="sticky-ap-text-large">{user.totalXP} AP</span>
+                            <div className="sticky-stat-mini-pill games">
+                                <span>⚔️</span> <span className="sticky-stat-value">{user.gamesPlayed}</span>
+                            </div>
+                            <div className="sticky-stat-mini-pill kd">
+                                <span>🎯</span> <span className="sticky-stat-value kd-value">{user.kdRatio}</span>
                             </div>
                         </div>
-
-                        {/* Fila Inferior: Stats Circulares */}
-                        <div className="sticky-bottom-row">
-                            <div className="sticky-stat-item-redesign">
-                                <div className="sticky-stat-icon-circle">🏆</div>
-                                <div className="sticky-stat-content">
-                                    <span className="sticky-stat-label-new">Wins</span>
-                                    <span className="sticky-stat-value-new">{user.wins}</span>
-                                </div>
-                            </div>
-
-                            <div className="sticky-stat-item-redesign">
-                                <div className="sticky-stat-icon-circle">⚔️</div>
-                                <div className="sticky-stat-content">
-                                    <span className="sticky-stat-label-new">Games</span>
-                                    <span className="sticky-stat-value-new">{user.gamesPlayed}</span>
-                                </div>
-                            </div>
-
-                            <div className="sticky-stat-item-redesign">
-                                <div className="sticky-stat-icon-circle">🎯</div>
-                                <div className="sticky-stat-content">
-                                    <span className="sticky-stat-label-new">K/D</span>
-                                    <span className="sticky-stat-value-new kd-color">{user.kdRatio}</span>
-                                </div>
-                            </div>
+                        
+                        <div className="sticky-rank-box">
+                            <span>🛡️</span> RANK {user.level}: {user.rank.label}
                         </div>
                     </div>
                 </motion.div>
