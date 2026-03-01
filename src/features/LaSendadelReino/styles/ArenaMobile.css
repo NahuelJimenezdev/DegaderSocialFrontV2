@@ -4,6 +4,25 @@
     background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 60%);
 }
 
+/* Modo Claro Premium: Gradiente Marfil a Gris Azulado */
+html:not(.dark) .arena-main-wrapper {
+    background: radial-gradient(circle, #FFFFF0 0%, #F0F8FF 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Textura de cuadrícula de puntos fina para fondo principal */
+html:not(.dark) .arena-main-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    pointer-events: none;
+    background-image: radial-gradient(#D1D9E6 1px, transparent 0);
+    background-size: 24px 24px;
+    z-index: 0;
+}
+
 /* Efecto Brillo Arena Points */
 .arena-stat-value {
     text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
@@ -15,6 +34,7 @@
     letter-spacing: -0.05em;
     background: linear-gradient(180deg, #f3e3b4 0%, #b4934d 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -47,6 +67,13 @@
 .arena-vertical-card-wrapper {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
     will-change: transform, opacity;
+}
+
+/* Sombreado profundo y difuso para modo claro */
+html:not(.dark) .arena-vertical-card-wrapper>div {
+    box-shadow: 0 25px 50px -12px rgba(209, 217, 230, 0.6),
+        0 10px 20px -5px rgba(209, 217, 230, 0.4) !important;
+    border: 1px solid rgba(59, 130, 246, 0.1) !important;
 }
 
 .arena-vertical-card-wrapper.fading {

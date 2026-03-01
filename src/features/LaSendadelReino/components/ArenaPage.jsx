@@ -221,8 +221,8 @@ const ArenaPage = () => {
                                                 width: '150%',
                                                 height: 'auto',
                                                 objectFit: 'contain',
-                                                opacity: isDark ? 0.28 : 0.15,
-                                                filter: isDark ? 'none' : 'grayscale(1)',
+                                                opacity: isDark ? 0.28 : 0.45,
+                                                filter: isDark ? 'none' : 'sepia(0.2) saturate(0.5) brightness(1.1) hue-rotate(180deg)', // Ajuste para tono gris azulado #E1E8ED
                                             }}
                                         />
                                     </div>
@@ -249,7 +249,7 @@ const ArenaPage = () => {
                                                 </h1>
                                                 <div className="flex items-center justify-center md:justify-start gap-3">
                                                     <div className="h-[2px] w-8 bg-blue-500/50" />
-                                                    <p className="text-[#3ea6ff] font-black uppercase tracking-[0.4em] text-[10px]">
+                                                    <p className={`${isDark ? 'text-[#3ea6ff]' : 'text-blue-900'} font-black uppercase tracking-[0.4em] text-[10px]`}>
                                                         LA SENDA DEL REINO
                                                     </p>
                                                     <div className="h-[2px] w-8 bg-blue-500/50" />
@@ -268,12 +268,24 @@ const ArenaPage = () => {
                                                     { label: 'GAMES', value: user.gamesPlayed || 0, icon: '⚔️', color: 'text-gray-300' },
                                                     { label: 'K/D', value: user.kdRatio || '0.00', icon: '🎯', color: 'text-red-400' }
                                                 ].map((stat, i) => (
-                                                    <div key={i} className={`backdrop-blur-md px-4 py-3 rounded-2xl border transition-colors group ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-gray-100 border-gray-200 hover:bg-gray-200'}`}>
+                                                    <div
+                                                        key={i}
+                                                        className={`backdrop-blur-xl px-4 py-3 rounded-2xl border transition-all duration-300 group ${isDark
+                                                            ? 'bg-white/5 border-white/5 hover:bg-white/10'
+                                                            : 'border-blue-500/20 hover:border-blue-500/40 shadow-sm hover:shadow-md'
+                                                            }`}
+                                                        style={{
+                                                            background: !isDark
+                                                                ? `radial-gradient(circle at center, #ffffff 0%, ${stat.label === 'WINS' ? '#FFFBEB' : '#F0F9FF'} 100%)`
+                                                                : undefined
+                                                        }}
+                                                    >
                                                         <div className="flex items-center gap-2 mb-1">
                                                             <span className="text-xs group-hover:scale-110 transition-transform">{stat.icon}</span>
-                                                            <span className={`text-[9px] font-bold uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-gray-500'}`}>{stat.label}</span>
+                                                            <span className={`text-[9px] font-bold uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-blue-900/60'}`}>{stat.label}</span>
                                                         </div>
-                                                        <span className={`text-xl font-black italic tracking-tighter ${stat.color}`}>
+                                                        <span className={`text-xl font-black italic tracking-tighter ${!isDark && stat.label === 'K/D' ? 'text-red-700' : stat.color
+                                                            }`}>
                                                             {stat.value}
                                                         </span>
                                                     </div>
