@@ -147,8 +147,8 @@ export default function NotificationsDropdown() {
       const rawId = notificacion.referencia?.id;
       const iglesiaId = typeof rawId === 'object' ? rawId?._id : rawId;
 
-      if (iglesiaId) {
-        navigate(`/Mis_Iglesias/${iglesiaId}`);
+      if (iglesiaId && String(iglesiaId) !== '[object Object]') {
+        navigate(`/Mi_iglesia/${iglesiaId}`);
         setOpen(false);
         return;
       }

@@ -88,8 +88,9 @@ export default function IglesiaPage() {
 
   // Si es miembro, redirigir INMEDIATAMENTE a su iglesia con navigate()
   useEffect(() => {
-    if (user?.esMiembroIglesia && user?.eclesiastico?.iglesia) {
-      navigate(`/Mi_iglesia/${user.eclesiastico.iglesia}`, { replace: true });
+    const churchId = user?.eclesiastico?.iglesia?._id || user?.eclesiastico?.iglesia;
+    if (user?.esMiembroIglesia && churchId && String(churchId) !== '[object Object]') {
+      navigate(`/Mi_iglesia/${churchId}`, { replace: true });
     }
   }, [user?.esMiembroIglesia, user?.eclesiastico?.iglesia, navigate]);
 

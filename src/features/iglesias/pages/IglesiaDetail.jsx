@@ -20,22 +20,26 @@ const IglesiaDetail = ({ churchId }) => {
   const navigate = useNavigate();
   const { id: paramId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useAuth();
 
   // Resolver el ID de iglesia de forma segura
   let resolvedId = null;
+
   if (churchId) {
     // Si churchId es un objeto, extraer el _id
     resolvedId = typeof churchId === 'object' ? churchId?._id : churchId;
-  } else if (paramId) {
+  } else if (paramId && paramId !== '[object Object]' && paramId !== 'undefined') {
     resolvedId = paramId;
+  } else if (user?.eclesiastico?.iglesia) {
+    // Si el ID en URL es inválido, intentar fallback al ID del usuario
+    resolvedId = user.eclesiastico.iglesia?._id || user.eclesiastico.iglesia;
+    console.warn('⚠️ [IglesiaDetail] ID inválido en URL, usando fallback del usuario:', resolvedId);
   }
 
   // Convertir a string para asegurar que siempre sea válido
-  const id = resolvedId ? String(resolvedId) : null;
+  const id = resolvedId && String(resolvedId) !== '[object Object]' ? String(resolvedId) : null;
 
   console.log('🔍 [IglesiaDetail] IDs:', { churchId, paramId, resolvedId, finalId: id });
-
-  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('info');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
