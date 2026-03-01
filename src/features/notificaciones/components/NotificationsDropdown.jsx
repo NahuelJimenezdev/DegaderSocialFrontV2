@@ -134,13 +134,21 @@ export default function NotificationsDropdown() {
       return;
     }
 
-    if (['solicitud_grupo', 'solicitud_grupo_aprobada', 'solicitud_grupo_rechazada', 'promocion_admin_grupo', 'nuevo_miembro_grupo'].includes(notificacion.tipo)) {
-      const groupId = notificacion.referencia?.id?._id || notificacion.referencia?.id;
-      if (groupId) {
-        navigate(`/Mis_grupos/${groupId}`, { state: { openMembersTab: true } });
+    if (['solicitud_grupo', 'solicitud_grupo_aprobada', 'solicitud_grupo_rechazada', 'promocion_admin_grupo', 'nuevo_miembro_grupo', 'mensaje_grupo'].includes(notificacion.tipo)) {
+      const rawId = notificacion.referencia?.id;
+      const groupId = typeof rawId === 'object' ? rawId?._id : rawId;
+
+      if (groupId && String(groupId) !== '[object Object]') {
+        navigate(`/Mis_grupos/${groupId}`, { state: { openMembersTab: !['mensaje_grupo'].includes(notificacion.tipo) } });
         setOpen(false);
         return;
       }
+    }
+
+    if (notificacion.tipo === 'mensaje_pendiente') {
+      navigate('/mensajes?tab=pending');
+      setOpen(false);
+      return;
     }
 
     if (['solicitud_iglesia', 'solicitud_iglesia_aprobada', 'solicitud_iglesia_rechazada', 'nuevo_mensaje'].includes(notificacion.tipo)) {
