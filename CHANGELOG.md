@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.52.11](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.10...v1.52.11) (2026-03-01)
+
+
+### Bug Fixes
+
+* Aislamiento absoluto de z-index para móvil (Solución regresión PC) ([88d6625](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/88d66250758c66c651a4dc1a642fb6ee916e7ccd))
+
 ### [1.52.10](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.9...v1.52.10) (2026-03-01)
 
 ### [1.52.9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.8...v1.52.9) (2026-03-01)
