@@ -110,3 +110,203 @@ html:not(.dark) .md\:hidden>.motion-div {
         /* Ajuste para mobile */
     }
 }
+
+/* ESTILOS PREMIUM PARA STICKY ARENA HEADER */
+.sticky-arena-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 0.5rem;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.4s ease;
+}
+
+html:not(.dark) .sticky-arena-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.12);
+}
+
+.dark .sticky-arena-header {
+    background: rgba(8, 12, 20, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+.sticky-arena-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: auto;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.sticky-avatar-container {
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.sticky-avatar-container img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid #3b82f6;
+    padding: 2px;
+    background: white;
+}
+
+.sticky-center-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 10;
+    min-width: 0;
+    padding-left: 2px;
+}
+
+html:not(.dark) .sticky-user-name {
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html:not(.dark) .sticky-sub-label {
+    color: #64748b;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.sticky-progression-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.sticky-progress-bar-bg {
+    height: 4px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 99px;
+    overflow: hidden;
+    width: 80%;
+}
+
+.sticky-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+    border-radius: 99px;
+}
+
+.sticky-xp-text {
+    font-size: 8px;
+    font-weight: 800;
+    color: #3b82f6;
+    letter-spacing: 0.05em;
+}
+
+/* POSICIONAMIENTO DE LOS PUNTOS (AP) */
+.sticky-ap-pill {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 2px 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    margin-top: 2px;
+}
+
+.sticky-ap-icon {
+    font-size: 10px;
+}
+
+.sticky-ap-value {
+    font-size: 10px;
+    font-weight: 900;
+    color: #1d4ed8;
+    font-style: italic;
+}
+
+.sticky-right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    z-index: 10;
+}
+
+.sticky-stats-grid-mini {
+    display: flex;
+    gap: 6px;
+}
+
+.sticky-stat-mini-pill {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+}
+
+html:not(.dark) .sticky-stat-mini-pill .sticky-stat-value {
+    font-weight: 900;
+    color: #475569;
+}
+
+html:not(.dark) .kd-value {
+    color: #dc2626 !important;
+}
+
+.sticky-rank-box {
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 7px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #64748b;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .sticky-arena-header {
+        padding: 0 0.5rem;
+        height: 90px;
+    }
+
+    .sticky-avatar-container img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sticky-progress-bar-bg {
+        width: 90%;
+    }
+}

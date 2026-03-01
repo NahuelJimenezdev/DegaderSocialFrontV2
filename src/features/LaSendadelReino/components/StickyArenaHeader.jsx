@@ -9,6 +9,8 @@ import { getXPForLevel } from '../utils/progression';
  */
 const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) => {
     const nextLevelXP = getXPForLevel(user.level + 1);
+    const isDark = document.documentElement.classList.contains('dark');
+
 
     return (
         <AnimatePresence>
@@ -34,9 +36,8 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                             src={ARENA_ASSETS.LOGO}
                             alt=""
                             style={{
-                                opacity: 0.18,
-                                mixBlendMode: 'soft-light',
-                                filter: 'none'
+                                opacity: isDark ? 0.25 : 0.4,
+                                filter: isDark ? 'invert(1) brightness(0.2)' : 'sepia(0.2) saturate(0.5) brightness(1.2) hue-rotate(185deg)',
                             }}
                         />
                     </div>
@@ -57,21 +58,33 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                         </div>
 
                         <div className="sticky-progression-row">
-                            <div className="sticky-progress-bar-bg">
+                            <div className="flex items-center justify-between w-[95%] mb-1 px-1">
+                                <span className="sticky-xp-text">
+                                    {user.totalXP.toLocaleString()} / {nextLevelXP?.toLocaleString() || 1200} XP
+                                </span>
+                                <div className="sticky-ap-pill shadow-sm">
+                                    <span className="sticky-ap-icon">💠</span>
+                                    <span className="sticky-ap-value">{(user.totalXP || 0).toLocaleString()} AP</span>
+                                </div>
+                            </div>
+                            <div className={`sticky-progress-bar-bg relative ${isDark ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${progress}%` }}
-                                    transition={{ duration: 1, ease: "easeOut" }}
-                                    className="sticky-progress-fill"
-                                />
-                            </div>
-                            <span className="sticky-xp-text">
-                                {user.totalXP} / {nextLevelXP || 1200} XP
-                            </span>
-
-                            <div className="sticky-ap-pill">
-                                <span className="sticky-ap-icon">💎</span>
-                                <span className="sticky-ap-value">{user.totalXP} AP</span>
+                                    transition={{ duration: 1.5, ease: [0.23, 1, 0.32, 1] }}
+                                    className={`sticky-progress-fill relative overflow-hidden ${isDark ? 'border-r border-white/40' : 'border-r border-white/50'}`}
+                                    style={{
+                                        boxShadow: isDark
+                                            ? '0 0 15px rgba(59, 130, 246, 0.4)'
+                                            : '0 2px 8px rgba(37, 99, 235, 0.2)'
+                                    }}
+                                >
+                                    <motion.div
+                                        animate={{ x: ['-200%', '300%'] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-full skew-x-12"
+                                    />
+                                </motion.div>
                             </div>
                         </div>
                     </div>
@@ -90,8 +103,8 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                             </div>
                         </div>
 
-                        <div className="sticky-rank-box">
-                            <span>🛡️</span> RANK {user.level}: {user.rank.label}
+                        <div className="sticky-rank-box shadow-sm">
+                            <span className="mr-1">🛡️</span> {user.rank?.label || 'Novato'}
                         </div>
                     </div>
                 </motion.div>
