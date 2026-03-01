@@ -7,7 +7,7 @@ import { getXPForLevel } from '../utils/progression';
  * StickyArenaHeader - Perfección 1:1 basada en promp detallado
  * Estructura de 3 secciones: [Avatar] [Identidad/Progreso] [Stats/Rango]
  */
-const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
+const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) => {
     const nextLevelXP = getXPForLevel(user.level + 1);
 
     return (
@@ -15,11 +15,11 @@ const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
             {isVisible && (
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ 
-                        opacity: opacity !== undefined ? opacity : 1 
+                    animate={{
+                        opacity: opacity !== undefined ? opacity : 1
                     }}
                     exit={{ opacity: 0 }}
-                    transition={{ 
+                    transition={{
                         duration: 0.4,
                         ease: "easeInOut"
                     }}
@@ -30,10 +30,10 @@ const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
                 >
                     {/* Logo marca de agua centrado y visible */}
                     <div className="sticky-arena-watermark">
-                        <img 
-                            src={ARENA_ASSETS.LOGO} 
-                            alt="" 
-                            style={{ 
+                        <img
+                            src={ARENA_ASSETS.LOGO}
+                            alt=""
+                            style={{
                                 opacity: 0.18,
                                 mixBlendMode: 'soft-light',
                                 filter: 'none'
@@ -43,32 +43,32 @@ const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
 
                     {/* SECCIÓN IZQUIERDA: Avatar */}
                     <div className="sticky-avatar-container">
-                        <img 
-                            src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`} 
-                            alt={user.username} 
+                        <img
+                            src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
+                            alt={user.username}
                         />
                     </div>
 
                     {/* SECCIÓN CENTRAL: Identidad y Progresión */}
                     <div className="sticky-center-section">
                         <div className="flex flex-col">
-                            <h2 className="sticky-user-name">{user.username}</h2>
+                            <h2 className="sticky-user-name">{displayName || user.username}</h2>
                             <span className="sticky-sub-label">LA SENDA DEL REINO</span>
                         </div>
-                        
+
                         <div className="sticky-progression-row">
                             <div className="sticky-progress-bar-bg">
-                                <motion.div 
+                                <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${progress}%` }}
                                     transition={{ duration: 1, ease: "easeOut" }}
-                                    className="sticky-progress-fill" 
+                                    className="sticky-progress-fill"
                                 />
                             </div>
                             <span className="sticky-xp-text">
                                 {user.totalXP} / {nextLevelXP || 1200} XP
                             </span>
-                            
+
                             <div className="sticky-ap-pill">
                                 <span className="sticky-ap-icon">💎</span>
                                 <span className="sticky-ap-value">{user.totalXP} AP</span>
@@ -89,7 +89,7 @@ const StickyArenaHeader = ({ user, progress, isVisible, opacity }) => {
                                 <span>🎯</span> <span className="sticky-stat-value kd-value">{user.kdRatio}</span>
                             </div>
                         </div>
-                        
+
                         <div className="sticky-rank-box">
                             <span>🛡️</span> RANK {user.level}: {user.rank.label}
                         </div>

@@ -34,6 +34,17 @@ const ArenaPage = () => {
     const rafRef = useRef(null);
     const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
 
+    // Función para formatear el nombre: Primer Nombre + Primer Apellido
+    const formatDisplayName = (name) => {
+        if (!name) return 'VALKYRIE_07';
+        // Limpiar puntos y separar por espacios
+        const parts = name.replace(/\./g, ' ').split(' ').filter(p => p.length > 0);
+        if (parts.length <= 1) return name;
+        return `${parts[0]} ${parts[parts.length - 1]}`;
+    };
+
+    const displayName = formatDisplayName(user.username);
+
     // Detectar cambios de tema
     useEffect(() => {
         const observer = new MutationObserver(() => {
@@ -147,6 +158,7 @@ const ArenaPage = () => {
             {/* Cabecera Sticky Móvil (Solo Mobile) */}
             <StickyArenaHeader
                 user={user}
+                displayName={displayName}
                 progress={((user.totalXP / (getXPForLevel(user.level + 1) || 1200)) * 100)}
                 isVisible={showStickyHeader}
                 opacity={scrollProgress}
@@ -218,7 +230,7 @@ const ArenaPage = () => {
                                         <div className="flex-1 space-y-6 w-full text-center md:text-left">
                                             <div className="space-y-1">
                                                 <h1 className={`text-xl md:text-3xl lg:text-5xl font-black tracking-tighter uppercase italic leading-tight drop-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                                    {user.username}
+                                                    {displayName}
                                                 </h1>
                                                 <div className="flex items-center justify-center md:justify-start gap-3">
                                                     <div className="h-[2px] w-8 bg-blue-500/50" />
