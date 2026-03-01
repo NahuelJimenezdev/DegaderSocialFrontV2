@@ -202,7 +202,7 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
 
           {/* Botones de acción */}
           {tipo === 'solicitud_iglesia' && (
-            <div className="flex items-center gap-2 mt-3">
+            <div className="flex flex-wrap items-center gap-2 mt-3">
               <button
                 onClick={() => handleAction('aprobar')}
                 disabled={loading}
