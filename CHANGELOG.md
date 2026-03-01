@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.55.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.55.1...v1.55.2) (2026-03-01)
+
+
+### Bug Fixes
+
+* **arena:** refactoriza avatar en sticky header aislando css del contenedor para bordes perfectos ([0fbe454](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0fbe45474fc6a9d5ab1c419beb1947492dfb1ad9))
+
 ### [1.55.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.55.0...v1.55.1) (2026-03-01)
 
 
