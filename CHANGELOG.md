@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.54.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.53.2...v1.54.0) (2026-03-01)
+
+
+### Features
+
+* restaurar animación de confeti premium en sistema de logros de Arena ([c6b947b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c6b947bc04545a778336f897838556f2d0dd68d3))
+
 ### [1.53.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.53.1...v1.53.2) (2026-03-01)
 
 
