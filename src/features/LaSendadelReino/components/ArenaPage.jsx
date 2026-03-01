@@ -389,8 +389,8 @@ const ArenaPage = () => {
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -56, opacity: 0 }}
                             transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.8 }}
-                            className="fixed left-0 right-0 z-[9998] px-4 py-2"
-                            style={{ top: '110px' }}
+                            className="sticky z-[44] px-4 py-2"
+                            style={{ top: '68px' }} // 100px (header) - 32px (padding offset)
                         >
                             <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
                                 {[

@@ -113,12 +113,12 @@ html:not(.dark) .md\:hidden>.motion-div {
 
 /* ESTILOS PREMIUM PARA STICKY ARENA HEADER */
 .sticky-arena-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: sticky;
+    top: -2rem;
+    /* Compensa el padding-top de 2rem de .main-content */
+    z-index: 45;
+    /* Por debajo del Navbar global (z-150) */
     height: 100px;
-    z-index: 50;
     display: flex;
     align-items: center;
     padding: 0 1rem;
@@ -127,8 +127,17 @@ html:not(.dark) .md\:hidden>.motion-div {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     transition: all 0.4s ease;
-    max-width: 1280px;
-    margin: 0 auto;
+    max-width: 1400px;
+    margin: -2rem -2rem 1rem -2rem;
+    /* Se expande sobre el padding de .main-content */
+}
+
+/* Ajuste móvil para el padding diferente */
+@media (max-width: 768px) {
+    .sticky-arena-header {
+        top: -1rem;
+        margin: -1rem -1rem 1rem -1rem;
+    }
 }
 
 html:not(.dark) .sticky-arena-header {
