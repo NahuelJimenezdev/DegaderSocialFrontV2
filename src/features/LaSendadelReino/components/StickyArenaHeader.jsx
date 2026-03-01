@@ -28,7 +28,7 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                     style={{
                         pointerEvents: (opacity > 0.8 || isVisible) ? 'auto' : 'none'
                     }}
-                    className="sticky-arena-header"
+                    className="sticky-arena-header !overflow-visible"
                 >
                     {/* Logo marca de agua centrado y visible */}
                     <div className="sticky-arena-watermark">
