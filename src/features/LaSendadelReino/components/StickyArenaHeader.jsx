@@ -43,10 +43,11 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                     </div>
 
                     {/* SECCIÓN IZQUIERDA: Avatar */}
-                    <div className="sticky-avatar-container">
+                    <div className="shrink-0 relative flex items-center justify-center w-[64px] h-[64px] rounded-full border-2 border-blue-500 bg-white p-[2px] shadow-[0_0_15px_rgba(59,130,246,0.4)] z-10">
                         <img
                             src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
                             alt={user.username}
+                            className="w-full h-full object-cover rounded-full"
                         />
                     </div>
 

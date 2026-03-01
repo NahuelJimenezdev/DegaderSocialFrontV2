@@ -165,21 +165,7 @@ html:not(.dark) .sticky-arena-header {
     z-index: 0;
 }
 
-.sticky-avatar-container {
-    position: relative;
-    z-index: 10;
-    flex-shrink: 0;
-}
-
-.sticky-avatar-container img {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    border: 2px solid #3b82f6;
-    padding: 2px;
-    background: white;
-    object-fit: cover;
-}
+/* Las reglas de sticky-avatar-container fueron migradas a Tailwind en StickyArenaHeader.jsx */
 
 .sticky-center-section {
     flex: 1;
