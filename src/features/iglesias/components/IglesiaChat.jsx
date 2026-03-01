@@ -169,7 +169,7 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
   return (
     <div className={`
       flex flex-col bg-white dark:bg-gray-900 overflow-hidden
-      ${isMobile ? 'fixed inset-0 z-[300]' : 'h-full'}
+      ${isMobile ? 'fixed inset-0 z-[2000]' : 'h-full'}
     `}>
       {/* Header Estilo Mensajes - Altura fija para evitar saltos */}
       <div className="h-[70px] border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 bg-white dark:bg-gray-900 shadow-sm shrink-0">

@@ -247,14 +247,16 @@ body {
 /* En mobile, eliminar margin-top porque main-content ya tiene padding-top */
 @media (max-width: 768px) {
   .app-content {
-    margin-top: 0 !important;
-    height: 100vh !important;
+    margin-top: 64px !important;
+    height: calc(100vh - 64px) !important;
+    flex: 1;
   }
 
-  /* Cambiar navbar de fixed a relative para que ocupe espacio natural */
+  /* Mantener navbar fixed en mobile para evitar que desplace el layout principal */
   nav.fixed {
-    position: relative !important;
-    top: auto !important;
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 1000;
   }
 }
 

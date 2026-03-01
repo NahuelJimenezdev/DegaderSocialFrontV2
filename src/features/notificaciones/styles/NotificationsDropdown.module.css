@@ -249,13 +249,16 @@
 @media (max-width: 640px) {
   .dropdownMenu {
     position: fixed;
-    top: 60px !important;
+    top: 64px !important;
+    /* Ajustado para coincidir con el navbar fijo */
     left: 8px;
     right: 8px;
     min-width: unset;
-    max-width: unset;
+    max-width: calc(100vw - 16px);
     width: auto;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 140px);
+    /* Más espacio abajo para el bottom navbar */
+    z-index: 2000;
   }
 
   .dropdownContainer {
