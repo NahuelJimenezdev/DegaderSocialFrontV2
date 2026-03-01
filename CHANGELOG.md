@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.52.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.5...v1.52.6) (2026-03-01)
+
+
+### Bug Fixes
+
+* corrección de navegación object Object y optimización responsiva de iglesias ([9aa8ad9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9aa8ad95de8325933ea31695056b36258095c558))
+
 ### [1.52.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.4...v1.52.5) (2026-03-01)
 
 ### [1.52.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.3...v1.52.4) (2026-03-01)
