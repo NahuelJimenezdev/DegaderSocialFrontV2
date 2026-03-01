@@ -75,6 +75,10 @@ const ArenaPage = () => {
 
     useEffect(() => {
         const handleScroll = (e) => {
+            // Si no estamos en la pestaña arena, no procesar scroll para el header
+            // El header se fuerza mediante el useEffect de activeTab
+            if (activeTab !== 'arena') return;
+
             const target = e.target;
             const isMainContent = target.classList?.contains('main-content');
             const isWindow = target === window || target === document || target === document.documentElement;
@@ -86,9 +90,8 @@ const ArenaPage = () => {
             rafRef.current = requestAnimationFrame(() => {
                 rafRef.current = null;
 
-                // Solo activar efecto sticky en mobile (< 1024px)
+                // Solo activar efecto sticky en mobile (< 1024px) para la pestaña arena
                 if (window.innerWidth >= 1024) {
-                    // En desktop siempre mostrar card, nunca sticky header
                     setScrollProgress(0);
                     setShowStickyHeader(false);
                     return;
@@ -109,7 +112,7 @@ const ArenaPage = () => {
             window.removeEventListener('scroll', handleScroll, { capture: true });
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, []);
+    }, [activeTab]); // Dependencia added para re-evaluar la condición de arena
 
     useEffect(() => {
         const timer = setTimeout(() => setIsInitialLoading(false), 4500);
@@ -135,12 +138,38 @@ const ArenaPage = () => {
         // Al cambiar de pestaña, resetear el scroll de .main-content
         const mainContent = document.querySelector('.main-content');
         if (mainContent) mainContent.scrollTop = 0;
+
+        // Lógica de visibilidad del header según la pestaña
+        if (activeTab === 'arena') {
+            // En arena vuelve al comportamiento dinámico (reseteamos por ahora, el scroll se encargará)
+            setShowStickyHeader(false);
+            setScrollProgress(0);
+        } else {
+            // En Ranking y Logros forzamos cabecera
+            setShowStickyHeader(true);
+            setScrollProgress(1);
+        }
     }, [activeTab]);
 
     useEffect(() => {
         // Cargar datos reales del usuario al entrar a la Arena
         user.fetchStatus();
     }, []);
+
+    const handleLevelDifficulty = (diff) => {
+        arena.startArena(diff);
+    };
+
+    const handleAnswer = (optionId) => {
+        arena.submitAnswer(optionId, user.addXP);
+    };
+
+    const handleAchievementClick = (ach) => {
+        setSelectedAchievement(ach);
+        if (!viewedAchievements.includes(ach.id)) {
+            setViewedAchievements(prev => [...prev, ach.id]);
+        }
+    };
 
     return (
         <div className="arena-main-wrapper min-h-screen bg-gray-50 dark:bg-[#080c14] transition-colors duration-500 font-inter pb-24 md:pb-0 overflow-x-hidden">
@@ -163,8 +192,9 @@ const ArenaPage = () => {
                     CABECERA PRINCIPAL: 
                     En Desktop es una Hero Card Premium.
                     En Mobile es el Avatar + Stats Banner.
+                    Solo visible si la pestaña activa es 'arena' para evitar duplicidad con la cabecera sticky.
                 */}
-                <div className="relative mb-8 md:mb-12">
+                <div className={`relative mb-8 md:mb-12 ${activeTab !== 'arena' ? 'hidden' : ''}`}>
                     {/* Hero Card Premium (Hidden on Mobile, special handling) */}
                     <div className="hidden md:block">
                         <motion.div

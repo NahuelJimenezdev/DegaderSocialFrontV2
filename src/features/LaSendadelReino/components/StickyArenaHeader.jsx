@@ -28,7 +28,7 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                     style={{
                         pointerEvents: (opacity > 0.8 || isVisible) ? 'auto' : 'none'
                     }}
-                    className="sticky-arena-header lg:hidden"
+                    className="sticky-arena-header"
                 >
                     {/* Logo marca de agua centrado y visible */}
                     <div className="sticky-arena-watermark">
