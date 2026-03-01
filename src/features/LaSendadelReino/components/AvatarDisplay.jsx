@@ -46,7 +46,7 @@ const AvatarDisplay = ({ level, rank, avatarUrl, username, showInfo = true }) =>
             {/* 3. Info de Identidad (Opcional para evitar duplicidad en ArenaPage) */}
             {showInfo && (
                 <div className="mt-6 text-center space-y-1">
-                    <h4 className="text-white font-black text-2xl md:text-4xl tracking-tighter uppercase italic leading-none drop-shadow-lg">
+                    <h4 className="text-white font-black text-xl md:text-3xl tracking-tighter uppercase italic leading-tight drop-shadow-lg whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
                         {username || 'VALKYRIE_07'}
                     </h4>
                     <div className="flex items-center gap-2 justify-center">
