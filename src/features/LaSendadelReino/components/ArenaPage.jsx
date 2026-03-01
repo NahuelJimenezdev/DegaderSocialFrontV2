@@ -34,31 +34,35 @@ const ArenaPage = () => {
     const rafRef = useRef(null);
     const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
 
-    // Función para formatear el nombre: Solo Primer Nombre + Primer Apellido
-    const formatDisplayName = (name) => {
-        if (!name) return 'VALKYRIE_07';
+    // Función para formatear el nombre: Solo Primer Nombre + Primer Apellido con Capitalización
+    const formatDisplayName = (inputName) => {
+        if (!inputName) return 'VALKYRIE_07';
 
-        // 1. Reemplazar puntos por espacios y separar por mayúsculas (CamelCase)
-        // Ejemplo: "NahuelEdgardo.JimenezMatiz" -> "Nahuel Edgardo Jimenez Matiz"
-        const cleanName = name.replace(/\./g, ' ')
-            .replace(/([A-Z])/g, ' $1')
+        // 1. Reemplazar puntos, guiones y separar por mayúsculas (CamelCase)
+        const cleanName = inputName.replace(/[\.\-_]/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
             .trim();
 
-        const parts = cleanName.split(' ').filter(p => p.length > 0);
+        let parts = cleanName.split(/\s+/).filter(p => p.length > 0);
 
-        if (parts.length <= 1) return name;
+        if (parts.length === 0) return inputName;
 
-        // Si detectamos un nombre largo (4 o más partes), asumimos [Nombre1, Nombre2, Apellido1, Apellido2]
+        // 2. Capitalizar cada palabra (ej: 'nahuel' -> 'Nahuel')
+        parts = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase());
+
+        if (parts.length === 1) return parts[0];
+
+        // 3. Si detectamos un nombre largo (4 o más partes), asumimos [Nombre1, Nombre2, Apellido1, Apellido2]
         if (parts.length >= 4) {
             return `${parts[0]} ${parts[2]}`;
         }
 
         // Para nombres de 2 o 3 partes (ej: "Nahuel Jimenez" o "Nahuel Edgardo Jimenez")
-        // Devolvemos el primero y el último
         return `${parts[0]} ${parts[parts.length - 1]}`;
     };
 
-    const displayName = formatDisplayName(user.username);
+    // Priorizar user.name (nombre real) sobre user.username para un mejor parseo
+    const displayName = formatDisplayName(user.name || user.username);
 
     // Detectar cambios de tema
     useEffect(() => {

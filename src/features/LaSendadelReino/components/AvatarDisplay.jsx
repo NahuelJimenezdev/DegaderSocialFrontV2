@@ -3,6 +3,19 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
 const AvatarDisplay = ({ level, rank, avatarUrl, username, showInfo = true }) => {
+    // Función de formateo rápida para consistencia visual
+    const formatName = (name) => {
+        if (!name) return '';
+        const clean = name.replace(/[\.\-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').trim();
+        const parts = clean.split(/\s+/).filter(p => p.length > 0)
+            .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase());
+        if (parts.length <= 1) return parts[0] || name;
+        if (parts.length >= 4) return `${parts[0]} ${parts[2]}`;
+        return `${parts[0]} ${parts[parts.length - 1]}`;
+    };
+
+    const displayName = formatName(username);
+
     return (
         <div className="relative flex flex-col items-center">
             {/* 1. Cabecera de Nivel (Estilo Battle Pass) */}
@@ -47,7 +60,7 @@ const AvatarDisplay = ({ level, rank, avatarUrl, username, showInfo = true }) =>
             {showInfo && (
                 <div className="mt-6 text-center space-y-1">
                     <h4 className="text-white font-black text-xl md:text-3xl tracking-tighter uppercase italic leading-tight drop-shadow-lg whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
-                        {username || 'VALKYRIE_07'}
+                        {displayName || 'VALKYRIE_07'}
                     </h4>
                     <div className="flex items-center gap-2 justify-center">
                         <span className="text-[#3ea6ff] text-[10px] md:text-[12px] font-black uppercase tracking-[0.3em] drop-shadow-md">
