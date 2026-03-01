@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.55.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.54.0...v1.55.0) (2026-03-01)
+
+
+### Features
+
+* restringir botones de continuación hasta visualización de todos los logros obtenidos ([1ee352d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1ee352d1890ceef8bd69f71306724b7dc503e304))
+
 ## [1.54.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.53.2...v1.54.0) (2026-03-01)
 
 
