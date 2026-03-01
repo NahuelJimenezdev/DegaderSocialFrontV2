@@ -7,6 +7,13 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
 COPY . .
+
+# Definir variables de entorno para el build de Vite
+ARG VITE_API_URL
+ARG VITE_ENV=production
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_ENV=$VITE_ENV
+
 RUN npm run build
 
 # Stage 2: Serve the application with Nginx
