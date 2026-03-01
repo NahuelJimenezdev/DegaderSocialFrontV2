@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.50.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.2...v1.50.3) (2026-03-01)
+
+
+### Bug Fixes
+
+* format username to show only first and last name in Arena ([45b6031](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/45b6031ba401d0bec82a9ee9de6f7d3acb42d147))
+
 ### [1.50.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.1...v1.50.2) (2026-03-01)
 
 
