@@ -179,51 +179,134 @@ const ArenaPage = () => {
                 )}
             </AnimatePresence>
 
-            <StickyArenaHeader
-                user={user}
-                displayName={displayName}
-                progress={scrollProgress * 100}
-                isVisible={showStickyHeader}
-                opacity={scrollProgress}
-            />
+            {arena.gameStatus === 'idle' && (
+                <StickyArenaHeader
+                    user={user}
+                    displayName={displayName}
+                    progress={scrollProgress * 100}
+                    isVisible={showStickyHeader}
+                    opacity={scrollProgress}
+                />
+            )}
 
-            <div className="container mx-auto px-4 pt-4 md:pt-8 md:px-6 max-w-7xl">
+            <div className={`container mx-auto px-4 pt-4 md:pt-8 md:px-6 max-w-7xl transition-all duration-500 ${arena.gameStatus !== 'idle' ? 'pt-0 px-0' : ''}`}>
                 {/* 
                     CABECERA PRINCIPAL: 
-                    En Desktop es una Hero Card Premium.
-                    En Mobile es el Avatar + Stats Banner.
-                    Solo visible si la pestaña activa es 'arena' para evitar duplicidad con la cabecera sticky.
+                    Oculta si el juego no está en modo 'idle'
                 */}
-                <div className={`relative mb-8 md:mb-12 ${activeTab !== 'arena' ? 'hidden' : ''}`}>
-                    {/* Hero Card Premium (Hidden on Mobile, special handling) */}
-                    <div className="hidden md:block">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`relative overflow-hidden p-8 rounded-[2.5rem] border transition-all duration-700 ${isDark
-                                ? 'bg-[#0f172a]/80 border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'
-                                : 'bg-white/90 border-blue-500/10 shadow-[0_25px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl'
-                                }`}
-                        >
-                            {/* Watermark de Fondo Integrada */}
-                            <div className="absolute right-[-10%] top-[-20%] pointer-events-none opacity-40 select-none z-0">
-                                <motion.img
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-                                    src="/arena/watermark-logo.png" // Asumimos que esta imagen existe
-                                    onError={(e) => e.target.style.display = 'none'}
-                                    className="w-[800px] h-auto"
-                                    style={{
-                                        filter: isDark ? 'invert(1) brightness(0.2)' : 'sepia(0.2) saturate(0.5) brightness(1.2) hue-rotate(185deg)',
-                                        opacity: isDark ? 0.3 : 0.5
-                                    }}
-                                />
-                            </div>
+                {arena.gameStatus === 'idle' && (
+                    <div className="relative mb-8 md:mb-12">
+                        {/* 
+                            CABECERA PRINCIPAL: 
+                            En Desktop es una Hero Card Premium.
+                            En Mobile es el Avatar + Stats Banner.
+                            Solo visible si la pestaña activa es 'arena' para evitar duplicidad con la cabecera sticky.
+                        */}
+                        {/* Hero Card Premium (Hidden on Mobile, special handling) */}
+                        <div className="hidden md:block">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className={`relative overflow-hidden p-8 rounded-[2.5rem] border transition-all duration-700 ${isDark
+                                    ? 'bg-[#0f172a]/80 border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'
+                                    : 'bg-white/90 border-blue-500/10 shadow-[0_25px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl'
+                                    }`}
+                            >
+                                {/* Watermark de Fondo Integrada */}
+                                <div className="absolute right-[-10%] top-[-20%] pointer-events-none opacity-40 select-none z-0">
+                                    <motion.img
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+                                        src="/arena/watermark-logo.png" // Asumimos que esta imagen existe
+                                        onError={(e) => e.target.style.display = 'none'}
+                                        className="w-[800px] h-auto"
+                                        style={{
+                                            filter: isDark ? 'invert(1) brightness(0.2)' : 'sepia(0.2) saturate(0.5) brightness(1.2) hue-rotate(185deg)',
+                                            opacity: isDark ? 0.3 : 0.5
+                                        }}
+                                    />
+                                </div>
 
-                            <div className="relative z-10 flex items-center gap-10">
-                                {/* Avatar con más presencia */}
-                                <div className="relative group">
-                                    <div className={`absolute inset-[-8px] rounded-full blur-2xl transition-opacity duration-500 ${isDark ? 'bg-blue-500/20' : 'bg-blue-600/10 opacity-0 group-hover:opacity-100'}`} />
+                                <div className="relative z-10 flex items-center gap-10">
+                                    {/* Avatar con más presencia */}
+                                    <div className="relative group">
+                                        <div className={`absolute inset-[-8px] rounded-full blur-2xl transition-opacity duration-500 ${isDark ? 'bg-blue-500/20' : 'bg-blue-600/10 opacity-0 group-hover:opacity-100'}`} />
+                                        <AvatarDisplay
+                                            level={user.level}
+                                            rank={user.rank?.name}
+                                            avatarUrl={user.avatar}
+                                            username={displayName}
+                                            showInfo={false}
+                                        />
+                                    </div>
+
+                                    <div className="flex-1 space-y-6">
+                                        <div>
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'}`}>
+                                                    RANK: {user.rank?.name || 'BRONCE'}
+                                                </span>
+                                            </div>
+                                            <h1 className={`text-5xl lg:text-7xl font-black italic tracking-tighter uppercase mb-2 ${isDark ? 'text-white' : 'text-slate-900'} drop-shadow-sm`}>
+                                                {displayName}
+                                            </h1>
+                                            <div className="flex items-center gap-4">
+                                                <div className={`h-[3px] w-12 rounded-full ${isDark ? 'bg-blue-500' : 'bg-blue-600'}`} />
+                                                <p className={`${isDark ? 'text-blue-400' : 'text-slate-500'} font-bold uppercase tracking-[0.5em] text-xs`}>
+                                                    LA SENDA DEL REINO
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Barra de XP Premium */}
+                                        <div className="max-w-2xl">
+                                            <div className="flex justify-between items-end mb-2">
+                                                <span className={`text-[11px] font-black uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-slate-400'}`}>Progreso de Nivel</span>
+                                                <span className={`text-sm font-black italic ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>LVL {user.level}</span>
+                                            </div>
+                                            <ProgressBar currentXP={user.totalXP || 0} level={user.level || 1} />
+                                        </div>
+                                    </div>
+
+                                    {/* Stats Column Desktop */}
+                                    <div className="grid grid-cols-2 gap-4 min-w-[300px]">
+                                        {[
+                                            { label: 'Puntos', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-blue-500' },
+                                            { label: 'Victorias', value: user.wins || 0, icon: '🏆', color: 'text-amber-500' }
+                                        ].map((s, i) => (
+                                            <div key={i} className={`p-4 rounded-3xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-100 shadow-sm shadow-slate-200/50'}`}>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-sm">{s.icon}</span>
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-white/30' : 'text-slate-400'}`}>{s.label}</span>
+                                                </div>
+                                                <div className={`text-2xl font-black italic ${s.color}`}>{s.value}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* Mobile Version (Ajustada para Alta Fidelidad) */}
+                        <div className="md:hidden">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className={`p-6 rounded-[2rem] border relative overflow-hidden transition-all duration-500 ${isDark
+                                    ? 'bg-[#0f172a]/90 border-white/10 shadow-2xl'
+                                    : 'bg-white/95 border-blue-500/10 shadow-[0_20px_40px_rgba(15,23,42,0.1)] backdrop-blur-xl'
+                                    }`}
+                            >
+                                {/* Watermark sutil en Mobile */}
+                                <div className="absolute right-[-20%] bottom-[-10%] opacity-20 pointer-events-none select-none z-0">
+                                    <img
+                                        src="/arena/watermark-logo.png"
+                                        className="w-[400px]"
+                                        style={{ filter: isDark ? 'invert(1)' : 'sepia(0.2) saturate(0.5) brightness(1.2)' }}
+                                    />
+                                </div>
+
+                                <div className="relative z-10 flex flex-col items-center">
                                     <AvatarDisplay
                                         level={user.level}
                                         rank={user.rank?.name}
@@ -231,154 +314,81 @@ const ArenaPage = () => {
                                         username={displayName}
                                         showInfo={false}
                                     />
-                                </div>
 
-                                <div className="flex-1 space-y-6">
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'}`}>
-                                                RANK: {user.rank?.name || 'BRONCE'}
-                                            </span>
-                                        </div>
-                                        <h1 className={`text-5xl lg:text-7xl font-black italic tracking-tighter uppercase mb-2 ${isDark ? 'text-white' : 'text-slate-900'} drop-shadow-sm`}>
+                                    <div className="mt-6 w-full text-center">
+                                        <h1 className={`text-4xl font-black italic tracking-tighter uppercase leading-none mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                                             {displayName}
                                         </h1>
-                                        <div className="flex items-center gap-4">
-                                            <div className={`h-[3px] w-12 rounded-full ${isDark ? 'bg-blue-500' : 'bg-blue-600'}`} />
-                                            <p className={`${isDark ? 'text-blue-400' : 'text-slate-500'} font-bold uppercase tracking-[0.5em] text-xs`}>
+                                        <div className="flex items-center justify-center gap-3 mb-6">
+                                            <div className="h-[2px] w-6 bg-blue-500/40" />
+                                            <p className={`${isDark ? 'text-blue-400' : 'text-slate-500'} font-black uppercase tracking-[0.4em] text-[9px]`}>
                                                 LA SENDA DEL REINO
                                             </p>
+                                            <div className="h-[2px] w-6 bg-blue-500/40" />
                                         </div>
-                                    </div>
 
-                                    {/* Barra de XP Premium */}
-                                    <div className="max-w-2xl">
-                                        <div className="flex justify-between items-end mb-2">
-                                            <span className={`text-[11px] font-black uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-slate-400'}`}>Progreso de Nivel</span>
-                                            <span className={`text-sm font-black italic ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>LVL {user.level}</span>
-                                        </div>
-                                        <ProgressBar currentXP={user.totalXP || 0} level={user.level || 1} />
-                                    </div>
-                                </div>
+                                        <div className="space-y-4">
+                                            <ProgressBar currentXP={user.totalXP || 0} level={user.level || 1} />
 
-                                {/* Stats Column Desktop */}
-                                <div className="grid grid-cols-2 gap-4 min-w-[300px]">
-                                    {[
-                                        { label: 'Puntos', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: 'text-blue-500' },
-                                        { label: 'Victorias', value: user.wins || 0, icon: '🏆', color: 'text-amber-500' }
-                                    ].map((s, i) => (
-                                        <div key={i} className={`p-4 rounded-3xl border ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-100 shadow-sm shadow-slate-200/50'}`}>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-sm">{s.icon}</span>
-                                                <span className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-white/30' : 'text-slate-400'}`}>{s.label}</span>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {[
+                                                    { label: 'POINTS', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: isDark ? 'text-blue-400' : 'text-blue-600' },
+                                                    { label: 'WINS', value: user.wins || 0, icon: '🏆', color: 'text-amber-500' },
+                                                    { label: 'GAMES', value: user.gamesPlayed || 0, icon: '⚔️', color: isDark ? 'text-slate-400' : 'text-slate-500' },
+                                                    { label: 'K/D', value: user.kdRatio || '0.00', icon: '🎯', color: 'text-red-600' }
+                                                ].map((stat, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className={`backdrop-blur-xl px-2 py-2.5 rounded-2xl border transition-all duration-300 ${isDark
+                                                            ? 'bg-white/5 border-white/5'
+                                                            : 'bg-white/80 border-slate-100 shadow-sm'
+                                                            }`}
+                                                        style={{
+                                                            background: !isDark
+                                                                ? `radial-gradient(circle at top left, #ffffff 0%, #f1f5f9 100%)`
+                                                                : undefined
+                                                        }}
+                                                    >
+                                                        <div className="flex items-center justify-center gap-1 mb-1">
+                                                            <span className="text-[9px]">{stat.icon}</span>
+                                                            <span className={`text-[7px] md:text-[8px] font-black uppercase tracking-widest ${isDark ? 'text-white/30' : 'text-slate-400'}`}>{stat.label}</span>
+                                                        </div>
+                                                        <div className={`text-base md:text-lg font-black italic tracking-tighter ${stat.color}`}>
+                                                            {stat.value}
+                                                        </div>
+                                                    </div>
+                                                ))}
                                             </div>
-                                            <div className={`text-2xl font-black italic ${s.color}`}>{s.value}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-
-                    {/* Mobile Version (Ajustada para Alta Fidelidad) */}
-                    <div className="md:hidden">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className={`p-6 rounded-[2rem] border relative overflow-hidden transition-all duration-500 ${isDark
-                                ? 'bg-[#0f172a]/90 border-white/10 shadow-2xl'
-                                : 'bg-white/95 border-blue-500/10 shadow-[0_20px_40px_rgba(15,23,42,0.1)] backdrop-blur-xl'
-                                }`}
-                        >
-                            {/* Watermark sutil en Mobile */}
-                            <div className="absolute right-[-20%] bottom-[-10%] opacity-20 pointer-events-none select-none z-0">
-                                <img
-                                    src="/arena/watermark-logo.png"
-                                    className="w-[400px]"
-                                    style={{ filter: isDark ? 'invert(1)' : 'sepia(0.2) saturate(0.5) brightness(1.2)' }}
-                                />
-                            </div>
-
-                            <div className="relative z-10 flex flex-col items-center">
-                                <AvatarDisplay
-                                    level={user.level}
-                                    rank={user.rank?.name}
-                                    avatarUrl={user.avatar}
-                                    username={displayName}
-                                    showInfo={false}
-                                />
-
-                                <div className="mt-6 w-full text-center">
-                                    <h1 className={`text-4xl font-black italic tracking-tighter uppercase leading-none mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                                        {displayName}
-                                    </h1>
-                                    <div className="flex items-center justify-center gap-3 mb-6">
-                                        <div className="h-[2px] w-6 bg-blue-500/40" />
-                                        <p className={`${isDark ? 'text-blue-400' : 'text-slate-500'} font-black uppercase tracking-[0.4em] text-[9px]`}>
-                                            LA SENDA DEL REINO
-                                        </p>
-                                        <div className="h-[2px] w-6 bg-blue-500/40" />
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <ProgressBar currentXP={user.totalXP || 0} level={user.level || 1} />
-
-                                        <div className="grid grid-cols-2 gap-2">
-                                            {[
-                                                { label: 'POINTS', value: (user.totalXP || 0).toLocaleString(), icon: '💠', color: isDark ? 'text-blue-400' : 'text-blue-600' },
-                                                { label: 'WINS', value: user.wins || 0, icon: '🏆', color: 'text-amber-500' },
-                                                { label: 'GAMES', value: user.gamesPlayed || 0, icon: '⚔️', color: isDark ? 'text-slate-400' : 'text-slate-500' },
-                                                { label: 'K/D', value: user.kdRatio || '0.00', icon: '🎯', color: 'text-red-600' }
-                                            ].map((stat, i) => (
-                                                <div
-                                                    key={i}
-                                                    className={`backdrop-blur-xl px-3 py-3 rounded-2xl border transition-all duration-300 ${isDark
-                                                        ? 'bg-white/5 border-white/5'
-                                                        : 'bg-white/80 border-slate-100 shadow-sm'
-                                                        }`}
-                                                    style={{
-                                                        background: !isDark
-                                                            ? `radial-gradient(circle at top left, #ffffff 0%, #f1f5f9 100%)`
-                                                            : undefined
-                                                    }}
-                                                >
-                                                    <div className="flex items-center justify-center gap-1.5 mb-1">
-                                                        <span className="text-[10px]">{stat.icon}</span>
-                                                        <span className={`text-[8px] font-black uppercase tracking-widest ${isDark ? 'text-white/30' : 'text-slate-400'}`}>{stat.label}</span>
-                                                    </div>
-                                                    <div className={`text-lg font-black italic tracking-tighter ${stat.color}`}>
-                                                        {stat.value}
-                                                    </div>
-                                                </div>
-                                            ))}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </motion.div>
+                            </motion.div>
+                        </div>
                     </div>
-                </div>
-                {/* Pestañas de Navegación - siempre en el flujo del documento */}
-                <div className="arena-nav-container" style={{ visibility: showStickyHeader ? 'hidden' : 'visible', pointerEvents: showStickyHeader ? 'none' : 'auto' }}>
-                    <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
-                        {[
-                            { id: 'arena', label: '🏟️ Arena' },
-                            { id: 'ranking', label: '🏆 Ranking' },
-                            { id: 'logros', label: '✨ Logros' }
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`flex-1 md:flex-none px-6 py-2.5 rounded-full text-xs md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
-                                    ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-[1.02]'
-                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-300/50 dark:hover:bg-white/5'
-                                    }`}
-                            >
-                                {tab.label}
-                            </button>
-                        ))}
+                )}
+                {/* Pestañas de Navegación - ocultas si el juego está activo */}
+                {arena.gameStatus === 'idle' && (
+                    <div className="arena-nav-container" style={{ visibility: showStickyHeader ? 'hidden' : 'visible', pointerEvents: showStickyHeader ? 'none' : 'auto' }}>
+                        <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
+                            {[
+                                { id: 'arena', label: '🏟️ Arena' },
+                                { id: 'ranking', label: '🏆 Ranking' },
+                                { id: 'logros', label: '✨ Logros' }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`flex-1 md:flex-none px-6 py-2.5 rounded-full text-xs md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
+                                        ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-[1.02]'
+                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-300/50 dark:hover:bg-white/5'
+                                        }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Pestañas fijas animadas (se deslizan cuando la cabecera sticky está activa) */}
                 <AnimatePresence>

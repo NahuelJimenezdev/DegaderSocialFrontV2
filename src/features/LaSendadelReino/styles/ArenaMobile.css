@@ -308,16 +308,34 @@ html:not(.dark) .kd-value {
 
 @media (max-width: 640px) {
     .sticky-arena-header {
-        padding: 0 0.5rem;
-        height: 90px;
+        padding: 0 0.25rem;
+        height: 80px;
+        gap: 0.25rem;
     }
 
     .sticky-avatar-container img {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
     }
 
     .sticky-progress-bar-bg {
-        width: 90%;
+        width: 95%;
+    }
+
+    .sticky-stats-grid-mini {
+        gap: 3px;
+    }
+
+    .sticky-user-name {
+        font-size: 0.85rem !important;
+    }
+
+    .sticky-ap-pill {
+        padding: 1px 4px;
+        gap: 2px;
+    }
+
+    .sticky-ap-value {
+        font-size: 8px;
     }
 }

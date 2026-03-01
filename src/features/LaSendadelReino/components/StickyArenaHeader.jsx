@@ -93,18 +93,18 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                     <div className="sticky-right-section">
                         <div className="sticky-stats-grid-mini">
                             <div className="sticky-stat-mini-pill wins">
-                                <span>🏆</span> <span className="sticky-stat-value">{user.wins}</span>
+                                <span className="text-[9px] md:text-xs">🏆</span> <span className="sticky-stat-value text-[9px] md:text-xs">{user.wins}</span>
                             </div>
                             <div className="sticky-stat-mini-pill games">
-                                <span>⚔️</span> <span className="sticky-stat-value">{user.gamesPlayed}</span>
+                                <span className="text-[9px] md:text-xs">⚔️</span> <span className="sticky-stat-value text-[9px] md:text-xs">{user.gamesPlayed}</span>
                             </div>
                             <div className="sticky-stat-mini-pill kd">
-                                <span>🎯</span> <span className="sticky-stat-value kd-value">{user.kdRatio}</span>
+                                <span className="text-[9px] md:text-xs">🎯</span> <span className="sticky-stat-value kd-value text-[9px] md:text-xs">{user.kdRatio}</span>
                             </div>
                         </div>
 
-                        <div className="sticky-rank-box shadow-sm">
-                            <span className="mr-1">🛡️</span> {user.rank?.label || 'Novato'}
+                        <div className="sticky-rank-box shadow-sm text-[6px] md:text-[7px]">
+                            <span className="mr-0.5">🛡️</span> {user.rank?.label || 'Novato'}
                         </div>
                     </div>
                 </motion.div>
