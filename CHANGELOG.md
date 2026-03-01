@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.52.14](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.13...v1.52.14) (2026-03-01)
+
+
+### Bug Fixes
+
+* Restaurar sincronización de datos de usuario y progreso en la Arena ([9afac67](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9afac6745f106c3e9949bd82a0fe78c0e2d5e1fe))
+
 ### [1.52.13](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.12...v1.52.13) (2026-03-01)
 
 
