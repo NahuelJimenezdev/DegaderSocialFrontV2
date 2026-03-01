@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.52.15](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.14...v1.52.15) (2026-03-01)
+
+
+### Bug Fixes
+
+* Corregir navegación de notificaciones de grupo y marcado como leído ([8196662](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/81966624858813797ba661b19ec1351845bc72da))
+
 ### [1.52.14](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.13...v1.52.14) (2026-03-01)
 
 
