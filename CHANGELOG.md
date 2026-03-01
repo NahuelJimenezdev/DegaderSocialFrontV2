@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.51.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.51.0...v1.51.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* definitive smart name formatting with capitalization ([da80d26](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/da80d2693b861a9602b4cf12131ba575c1dac96a))
+
 ## [1.51.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.4...v1.51.0) (2026-03-01)
 
 
