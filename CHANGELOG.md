@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.55.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.55.0...v1.55.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* **arena:** centraliza avatar de sticky header y repara circulo de progreso SVG recortado ([2920da8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2920da86d811760ca45623982d5a2b55565234bc))
+
 ## [1.55.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.54.0...v1.55.0) (2026-03-01)
 
 
