@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.53.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.53.0...v1.53.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* arena layout pc ([48e4c81](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/48e4c8182363f37bf88a238c66e47f61afce72b6))
+
 ## [1.53.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.16...v1.53.0) (2026-03-01)
 
 
