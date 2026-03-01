@@ -34,12 +34,27 @@ const ArenaPage = () => {
     const rafRef = useRef(null);
     const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
 
-    // Función para formatear el nombre: Primer Nombre + Primer Apellido
+    // Función para formatear el nombre: Solo Primer Nombre + Primer Apellido
     const formatDisplayName = (name) => {
         if (!name) return 'VALKYRIE_07';
-        // Limpiar puntos y separar por espacios
-        const parts = name.replace(/\./g, ' ').split(' ').filter(p => p.length > 0);
+
+        // 1. Reemplazar puntos por espacios y separar por mayúsculas (CamelCase)
+        // Ejemplo: "NahuelEdgardo.JimenezMatiz" -> "Nahuel Edgardo Jimenez Matiz"
+        const cleanName = name.replace(/\./g, ' ')
+            .replace(/([A-Z])/g, ' $1')
+            .trim();
+
+        const parts = cleanName.split(' ').filter(p => p.length > 0);
+
         if (parts.length <= 1) return name;
+
+        // Si detectamos un nombre largo (4 o más partes), asumimos [Nombre1, Nombre2, Apellido1, Apellido2]
+        if (parts.length >= 4) {
+            return `${parts[0]} ${parts[2]}`;
+        }
+
+        // Para nombres de 2 o 3 partes (ej: "Nahuel Jimenez" o "Nahuel Edgardo Jimenez")
+        // Devolvemos el primero y el último
         return `${parts[0]} ${parts[parts.length - 1]}`;
     };
 
