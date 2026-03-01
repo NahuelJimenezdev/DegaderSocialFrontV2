@@ -137,6 +137,11 @@ const ArenaPage = () => {
         if (mainContent) mainContent.scrollTop = 0;
     }, [activeTab]);
 
+    useEffect(() => {
+        // Cargar datos reales del usuario al entrar a la Arena
+        user.fetchStatus();
+    }, []);
+
     return (
         <div className="arena-main-wrapper min-h-screen bg-gray-50 dark:bg-[#080c14] transition-colors duration-500 font-inter pb-24 md:pb-0 overflow-x-hidden">
             <StickyArenaHeader
