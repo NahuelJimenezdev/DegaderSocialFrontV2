@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.51.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.4...v1.51.0) (2026-03-01)
+
+
+### Features
+
+* ultimate premium light mode redesign and name formatting ([de62ab4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/de62ab43e22d8fcb44af351b1485ecc20009253c))
+
 ### [1.50.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.3...v1.50.4) (2026-03-01)
 
 
