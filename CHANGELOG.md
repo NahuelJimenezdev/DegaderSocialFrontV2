@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.53.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.53.1...v1.53.2) (2026-03-01)
+
+
+### Bug Fixes
+
+* **arena:** restaura diseno original de Hero Card con escudo y stats correcta ([c507d15](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c507d153cddd0e287147a89f1ec6eb10bfc493a4))
+* mejorar responsividad en Arena y ocultar cabecera durante el juego ([b46f50c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b46f50cda57985e62958d8745359f2f57726904c))
+
 ### [1.53.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.53.0...v1.53.1) (2026-03-01)
 
 
