@@ -5,6 +5,7 @@ import FilePreview from './FilePreview';
 import FormatToolbar from './FormatToolbar';
 import MentionAutocomplete from '../MentionAutocomplete/MentionAutocomplete';
 import { Send } from 'lucide-react';
+import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
 
 /**
  * CreatePostCard - Componente refactorizado para crear posts
@@ -193,8 +194,11 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                 <div className="flex gap-3">
                     {/* ... same avatar code ... */}
                     {showAvatar && (
-                        <img
+                        <ProgressiveImage
                             src={userAvatar}
+                            medium={currentUser?.social?.fotoPerfilObj?.medium}
+                            large={currentUser?.social?.fotoPerfilObj?.large}
+                            blurHash={currentUser?.social?.fotoPerfilObj?.blurHash}
                             alt="Tu perfil"
                             className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                             onError={(e) => {
@@ -223,10 +227,13 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
 
                     <div className="flex gap-3 mb-3">
                         {showAvatar && (
-                            <img
+                            <ProgressiveImage
                                 src={userAvatar}
+                                medium={currentUser?.social?.fotoPerfilObj?.medium}
+                                large={currentUser?.social?.fotoPerfilObj?.large}
+                                blurHash={currentUser?.social?.fotoPerfilObj?.blurHash}
                                 alt="Tu perfil"
-                                className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                                className="w-10 h-10 rounded-full object-cover flex-shrink-0 block"
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     const name = currentUser?.nombreCompleto || currentUser?.email?.split('@')[0] || 'Usuario';

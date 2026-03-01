@@ -3,6 +3,7 @@ import { logger } from '../../shared/utils/logger';
 import { X, CheckCircle, XCircle, Calendar, Target, Users, MapPin, DollarSign } from 'lucide-react';
 import adService from '../../api/adService';
 import { AlertDialog } from '../../shared/components/AlertDialog';
+import ProgressiveImage from '../../shared/components/ProgressiveImage';
 
 export default function CampaignReviewModal({ campaign, onClose, onApprove, onReject }) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -148,14 +149,15 @@ export default function CampaignReviewModal({ campaign, onClose, onApprove, onRe
               overflow: 'hidden',
               border: '1px solid var(--border-primary)'
             }}>
-              <img
+              <ProgressiveImage
                 src={campaign.imagenUrl}
                 alt={campaign.textoAlternativo}
                 style={{
                   width: '100%',
                   maxHeight: '400px',
                   objectFit: 'contain',
-                  backgroundColor: '#000'
+                  backgroundColor: '#000',
+                  display: 'block'
                 }}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/800x400?text=Imagen+no+disponible';

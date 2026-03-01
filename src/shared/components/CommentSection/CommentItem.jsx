@@ -6,6 +6,7 @@ import { Image as ImageIcon, X, Heart, MoreHorizontal, Flag, Trash2 } from 'luci
 import postService from '../../../features/feed/services/postService';
 import ReportModal from '../Report/ReportModal';
 import { useToast } from '../Toast/ToastProvider';
+import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
 
 const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMobileFormat = false, level = 0, highlightCommentId }) => {
     const [isReplying, setIsReplying] = useState(false);
@@ -150,10 +151,13 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <div className="flex-shrink-0 cursor-pointer">
-                                    <img
+                                    <ProgressiveImage
                                         src={avatar}
+                                        medium={user.social?.fotoPerfilObj?.medium}
+                                        large={user.social?.fotoPerfilObj?.large}
+                                        blurHash={user.social?.fotoPerfilObj?.blurHash}
                                         alt={fullName}
-                                        className="w-6 h-6 rounded-full object-cover ring-1 ring-gray-100 dark:ring-gray-800"
+                                        className="w-6 h-6 rounded-full object-cover ring-1 ring-gray-100 dark:ring-gray-800 block"
                                     />
                                 </div>
                                 <span className="font-semibold text-gray-900 dark:text-white text-[13px] cursor-pointer hover:text-gray-600 dark:hover:text-gray-300">
@@ -225,7 +229,7 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
 
                         {comment.image && (
                             <div className="mt-2 pl-8">
-                                <img
+                                <ProgressiveImage
                                     src={comment.image}
                                     alt="Imagen adjunta"
                                     className="max-h-48 rounded-lg object-cover"

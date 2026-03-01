@@ -28,6 +28,7 @@ import ReportModal from '../Report/ReportModal';
 import EditPostModal from './EditPostModal';
 import IOSAlert from '../IOSAlert'; // 🆕 Importar modal estilo iOS
 import { friendshipService as friendApi } from '../../../api'; // Alias para evitar colisión si fuera necesario
+import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
 
 const PostCard = ({
     post,
@@ -453,10 +454,13 @@ const PostCard = ({
                     <div className="flex items-start gap-3 pr-8">
                         {/* Avatar - Perfect Circle */}
                         <div onClick={handleProfileClick} className="relative group cursor-pointer flex-shrink-0">
-                            <img
+                            <ProgressiveImage
                                 src={avatar}
+                                medium={user?.social?.fotoPerfilObj?.medium}
+                                large={user?.social?.fotoPerfilObj?.large}
+                                blurHash={user?.social?.fotoPerfilObj?.blurHash}
                                 alt={fullName}
-                                className="w-10 h-10 rounded-full object-cover aspect-square ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
+                                className="w-10 h-10 rounded-full object-cover aspect-square ring-2 ring-transparent group-hover:ring-indigo-500 transition-all block"
                                 style={{ clipPath: 'circle(50%)' }}
                                 onError={(e) => {
                                     e.target.onerror = null;
@@ -604,10 +608,11 @@ const PostCard = ({
                                 className="w-full rounded-lg mb-3 max-h-96"
                             />
                         ) : (
-                            <img
+                            <ProgressiveImage
                                 src={`${API_BASE_URL}${post.imagen}`}
                                 alt="Post"
-                                className="w-full rounded-lg mb-3 max-h-96 object-cover"
+                                className="w-full rounded-lg mb-3 object-cover"
+                                containerClass="max-h-96"
                             />
                         )}
                     </>

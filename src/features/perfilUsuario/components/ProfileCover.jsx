@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useRef, useState } from 'react';
 import { Camera, Loader2 } from 'lucide-react';
 import { useProfileContext } from '../context/ProfileContext';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 
 /**
@@ -35,10 +36,15 @@ const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
   return (
     <div className="relative group">
       {/* Banner con botón de cámara */}
-      <div
-        className="h-32 md:h-48 bg-cover bg-center relative transition-all duration-300"
-        style={{ backgroundImage: `url(${coverUrl})` }}
-      >
+      <div className="h-32 md:h-48 relative transition-all duration-300 overflow-hidden group">
+        <ProgressiveImage
+          src={coverUrl}
+          medium={user?.social?.portadaObj?.medium}
+          large={user?.social?.portadaObj?.large}
+          blurHash={user?.social?.portadaObj?.blurHash}
+          alt="Banner Cover"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900" />
 
@@ -69,10 +75,13 @@ const ProfileCover = ({ user, avatarUrl, coverUrl, onEditClick }) => {
         <div className="relative -mt-12 md:-mt-16">
           <div className="flex flex-col md:flex-row md:items-end gap-4">
             <div className="relative">
-              <img
+              <ProgressiveImage
                 src={avatarUrl}
+                medium={user?.social?.fotoPerfilObj?.medium}
+                large={user?.social?.fotoPerfilObj?.large}
+                blurHash={user?.social?.fotoPerfilObj?.blurHash}
                 alt={`${user?.nombres?.primero || ''} ${user?.apellidos?.primero || ''}`.trim() || user?.email}
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-50 dark:border-gray-900 object-cover shadow-xl"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-50 dark:border-gray-900 object-cover shadow-xl block relative z-10"
                 onError={(e) => {
                   e.target.onerror = null;
                   const name = `${user?.nombres?.primero || ''} ${user?.apellidos?.primero || ''}`.trim() || user?.email?.split('@')[0] || 'Usuario';

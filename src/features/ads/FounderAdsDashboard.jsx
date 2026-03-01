@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BarChart3, DollarSign, TrendingUp, Users, Eye, MousePointer, Filter, Search, CheckCircle, XCircle } from 'lucide-react';
 import adService from '../../api/adService';
 import CampaignReviewModal from './CampaignReviewModal';
+import ProgressiveImage from '../../shared/components/ProgressiveImage';
 
 /**
  * Dashboard de Founder para administrar todas las campañas
@@ -343,10 +344,10 @@ const FounderAdsDashboard = () => {
                   >
                     <td style={{ padding: '1rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <img
+                        <ProgressiveImage
                           src={campaign.imagenUrl}
                           alt={campaign.nombreCliente}
-                          style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }}
+                          style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover', display: 'block' }}
                           onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }}
                         />
                         <div>

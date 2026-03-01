@@ -16,6 +16,7 @@ import { es } from 'date-fns/locale';
 import { userService } from '../../../api';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { logger } from '../../../shared/utils/logger';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import '../../../shared/styles/layout.mobile.css';
 
 
@@ -174,10 +175,13 @@ const UserInfoPage = () => {
                     {/* User Header */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
                         <div className="flex items-center gap-4">
-                            <img
+                            <ProgressiveImage
                                 src={avatar}
+                                medium={userInfo?.social?.fotoPerfilObj?.medium}
+                                large={userInfo?.social?.fotoPerfilObj?.large}
+                                blurHash={userInfo?.social?.fotoPerfilObj?.blurHash}
                                 alt={fullName}
-                                className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-500/20"
+                                className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-500/20 block"
                             />
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">

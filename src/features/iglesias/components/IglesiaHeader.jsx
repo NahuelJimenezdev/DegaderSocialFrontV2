@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Share2, MapPin, Users, Calendar, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import { getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import { getChurchEvents } from '../services/churchEventService';
 import meetingService from '../../reuniones/services/meetingService';
 
@@ -70,8 +71,11 @@ const IglesiaHeader = ({ iglesia, user, onJoin, setActiveSection }) => {
       {/* Cover Photo */}
       <div className="h-48 md:h-64 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
         {iglesia.portada ? (
-          <img
-            src={getBannerUrl(iglesia.portada)}
+          <ProgressiveImage
+            src={getBannerUrl(iglesia.portadaObj?.url || iglesia.portada)}
+            medium={iglesia.portadaObj?.medium}
+            large={iglesia.portadaObj?.large}
+            blurHash={iglesia.portadaObj?.blurHash}
             alt="Cover"
             className="w-full h-full object-cover opacity-90"
           />
@@ -106,7 +110,14 @@ const IglesiaHeader = ({ iglesia, user, onJoin, setActiveSection }) => {
           {/* Logo */}
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl border-4 border-white dark:border-gray-800 shadow-lg bg-white dark:bg-gray-700 overflow-hidden flex-shrink-0 z-10">
             {iglesia.logo ? (
-              <img src={getAvatarUrl(iglesia.logo)} alt={iglesia.nombre} className="w-full h-full object-cover" />
+              <ProgressiveImage
+                src={getAvatarUrl(iglesia.logoObj?.url || iglesia.logo)}
+                medium={iglesia.logoObj?.medium}
+                large={iglesia.logoObj?.large}
+                blurHash={iglesia.logoObj?.blurHash}
+                alt={iglesia.nombre}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/30">
                 <span className="material-symbols-outlined text-4xl colorMarcaDegader dark:text-indigo-400">

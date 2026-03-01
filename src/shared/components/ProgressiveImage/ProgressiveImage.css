@@ -1,0 +1,49 @@
+.progressive-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #e4e6eb;
+    /* Color de fondo tipo esqueleto de Facebook */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* La imagen borrosa está siempre debajo */
+.progressive-image-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(10px);
+    /* El scale(1.1) previene que los bordes borrosos revelen el color de fondo */
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+/* La imagen real se posiciona exactamente encima la borrosa */
+.progressive-image-real {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+
+    /* Estado inicial: transparente */
+    opacity: 0;
+
+    /* Transición suave (fade-in) */
+    transition: opacity 0.4s ease-out;
+
+    /* Esto ayuda a forzar el renderizado por hardware y mejora los FPS en móviles */
+    will-change: opacity;
+}
+
+/* Cuando se completa la carga, se vuelve totalmente opaca */
+.progressive-image-real.is-loaded {
+    opacity: 1;
+}

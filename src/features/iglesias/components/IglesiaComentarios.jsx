@@ -4,6 +4,7 @@ import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
 import iglesiaService from '../../../api/iglesiaService';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog/ConfirmDialog';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const IglesiaComentarios = ({ iglesiaData }) => {
     const { user } = useAuth();
@@ -199,7 +200,14 @@ const IglesiaComentarios = ({ iglesiaData }) => {
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center overflow-hidden">
                                         {testimonio.usuario.social?.fotoPerfil ? (
-                                            <img src={getAvatarUrl(testimonio.usuario.social.fotoPerfil)} alt={testimonio.usuario.nombres.primero} className="w-full h-full object-cover" />
+                                            <ProgressiveImage
+                                                src={getAvatarUrl(testimonio.usuario.social.fotoPerfilObj?.url || testimonio.usuario.social.fotoPerfil)}
+                                                medium={testimonio.usuario.social.fotoPerfilObj?.medium}
+                                                large={testimonio.usuario.social.fotoPerfilObj?.large}
+                                                blurHash={testimonio.usuario.social.fotoPerfilObj?.blurHash}
+                                                alt={testimonio.usuario.nombres.primero}
+                                                className="w-full h-full object-cover"
+                                            />
                                         ) : (
                                             <span className="colorMarcaDegader dark:text-indigo-400 font-bold">
                                                 {testimonio.usuario.nombres.primero.charAt(0)}

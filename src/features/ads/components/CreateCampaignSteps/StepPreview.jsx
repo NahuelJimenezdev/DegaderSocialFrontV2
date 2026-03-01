@@ -1,4 +1,5 @@
 import React from 'react';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
 const StepPreview = ({ formData, onSubmit, loading, errors }) => {
     return (
@@ -16,10 +17,10 @@ const StepPreview = ({ formData, onSubmit, loading, errors }) => {
                     </p>
                     <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
                         <div className="relative">
-                            <img
+                            <ProgressiveImage
                                 src={formData.imagenUrl}
                                 alt={formData.textoAlternativo || formData.nombreCliente}
-                                className="w-full h-48 object-cover"
+                                className="w-full h-48 object-cover block"
                             />
                             <div className="absolute top-2 left-2 px-2 py-1 bg-black/80 rounded text-white text-[10px] font-semibold">
                                 PUBLICIDAD

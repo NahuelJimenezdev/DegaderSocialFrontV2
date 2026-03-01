@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MoreVertical, Mail, User, ChevronDown } from 'lucide-react';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import { MINISTERIOS_DISPONIBLES } from '../hooks/useMinisterios';
 
 const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
@@ -111,8 +112,11 @@ const MemberCard = ({ member, iglesiaId, isPastor, isCurrentUser }) => {
 
       {/* Avatar */}
       <div className="w-24 h-24 rounded-full border-4 border-white dark:border-gray-700 shadow-md overflow-hidden mb-4 bg-gray-100 dark:bg-gray-700 mt-2">
-        <img
+        <ProgressiveImage
           src={getUserAvatar(member)}
+          medium={member?.social?.fotoPerfilObj?.medium}
+          large={member?.social?.fotoPerfilObj?.large}
+          blurHash={member?.social?.fotoPerfilObj?.blurHash}
           alt={fullName}
           className="w-full h-full object-cover"
           onError={(e) => e.target.src = '/avatars/default-avatar.png'}

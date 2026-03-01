@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { API_BASE_URL } from '../../../../shared/config/env';
 import AudioPlayer from '../../../../shared/components/AudioPlayer/AudioPlayer';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage/ProgressiveImage';
 import { getUserAvatar } from '../../../../shared/utils/avatarUtils';
 
 // URL base para archivos estáticos (sin /api)
@@ -187,12 +188,14 @@ const GroupMessageBubble = ({
                                 {msg.attachments.map((att, idx) => (
                                     <div key={`${msg._id}-att-${idx}-${att.name || ''}`}>
                                         {att.type === 'image' && (
-                                            <img
-                                                src={getAttachmentUrl(att.url)}
-                                                alt={att.name || 'Imagen'}
-                                                className="max-w-[240px] sm:max-w-xs rounded-2xl cursor-pointer hover:opacity-95 transition-opacity shadow-md w-full h-auto"
-                                                onClick={() => window.open(getAttachmentUrl(att.url), '_blank')}
-                                            />
+                                            <div onClick={() => window.open(getAttachmentUrl(att.url), '_blank')} className="cursor-pointer max-w-[240px] sm:max-w-xs w-full">
+                                                <ProgressiveImage
+                                                    src={getAttachmentUrl(att.medium || att.large || att.url)}
+                                                    blurHash={att.blurHash}
+                                                    alt={att.name || 'Imagen'}
+                                                    className="rounded-2xl hover:opacity-95 transition-opacity shadow-md w-full h-auto"
+                                                />
+                                            </div>
                                         )}
                                         {att.type === 'video' && (
                                             <video

@@ -9,6 +9,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog/ConfirmDialog';
 import { useNavigate } from 'react-router-dom';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 // Helper to format time
 const formatTime = (dateString) => {
@@ -216,10 +217,13 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
               <div key={msg._id} className={`flex gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'} group animate-in fade-in slide-in-from-bottom-2 duration-300`}>
                 {!isMe && (
                   <div className="flex-shrink-0 self-end mb-1">
-                    <img
+                    <ProgressiveImage
                       src={getUserAvatar(msg.author)}
+                      medium={msg.author?.social?.fotoPerfilObj?.medium}
+                      large={msg.author?.social?.fotoPerfilObj?.large}
+                      blurHash={msg.author?.social?.fotoPerfilObj?.blurHash}
                       alt={authorName}
-                      className="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800 shadow-sm cursor-pointer"
+                      className="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800 shadow-sm cursor-pointer block"
                       onClick={() => navigate(`/perfil/${msg.author?._id}`)}
                     />
                   </div>
@@ -240,6 +244,28 @@ const IglesiaChat = ({ iglesiaData, setSidebarOpen, setActiveSection, isMobile }
                     }
                   `}>
                     <p className="text-sm whitespace-pre-wrap break-words">{msg.content}</p>
+
+                    {/* Render attached files using ProgressiveImage */}
+                    {msg.files && msg.files.map((file, index) => {
+                      if (file.tipo?.startsWith('video/')) {
+                        return (
+                          <video key={index} src={file.url} controls className="mt-2 max-w-full rounded-lg max-h-60" />
+                        );
+                      }
+                      return (
+                        <div key={index} className="mt-2 rounded-lg overflow-hidden relative group">
+                          <ProgressiveImage
+                            src={file.url}
+                            medium={file.medium}
+                            large={file.large}
+                            blurHash={file.blurHash}
+                            alt={file.nombre || 'Archivo adjunto'}
+                            className="max-w-full rounded-lg object-contain max-h-60"
+                          />
+                        </div>
+                      );
+                    })}
+
                     <div className={`text-[9px] mt-1 text-right ${isMe ? 'text-indigo-200' : 'text-gray-400'}`}>
                       {formatTime(msg.createdAt)}
                     </div>

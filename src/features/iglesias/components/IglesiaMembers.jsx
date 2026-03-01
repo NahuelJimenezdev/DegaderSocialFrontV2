@@ -8,6 +8,7 @@ import { churchColors } from '../utils/colors';
 import MemberCard from './MemberCard';
 import { getSocket } from '../../../shared/lib/socket';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
   const navigate = useNavigate();
@@ -199,8 +200,11 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800">
-                        <img
+                        <ProgressiveImage
                           src={getUserAvatar(usuario)}
+                          medium={usuario?.social?.fotoPerfilObj?.medium}
+                          large={usuario?.social?.fotoPerfilObj?.large}
+                          blurHash={usuario?.social?.fotoPerfilObj?.blurHash}
                           alt={fullName}
                           className="w-full h-full object-cover"
                           onError={(e) => e.target.src = '/avatars/default-avatar.png'}
@@ -292,9 +296,12 @@ const IglesiaMembers = ({ iglesiaData, refetch, user }) => {
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <img
-                            className="h-10 w-10 rounded-full object-cover mr-4 border-2 border-indigo-300 dark:border-indigo-700"
+                          <ProgressiveImage
+                            className="h-10 w-10 rounded-full object-cover mr-4 border-2 border-indigo-300 dark:border-indigo-700 block"
                             src={getUserAvatar(miembro)}
+                            medium={miembro?.social?.fotoPerfilObj?.medium}
+                            large={miembro?.social?.fotoPerfilObj?.large}
+                            blurHash={miembro?.social?.fotoPerfilObj?.blurHash}
                             alt={fullName}
                             onError={(e) => e.target.src = '/avatars/default-avatar.png'}
                           />

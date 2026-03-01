@@ -3,6 +3,7 @@ import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { churchColors } from '../utils/colors';
 import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItems, isMobile }) => {
   const navigate = useNavigate();
@@ -42,7 +43,14 @@ const IglesiaSidebar = ({ iglesiaData, activeSection, setActiveSection, menuItem
             </button>
             <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center colorMarcaDegader dark:text-indigo-400 flex-shrink-0">
               {iglesiaData?.logo ? (
-                <img src={getAvatarUrl(iglesiaData.logo)} alt="Logo" className="w-full h-full object-cover rounded-lg" />
+                <ProgressiveImage
+                  src={getAvatarUrl(iglesiaData.logoObj?.url || iglesiaData.logo)}
+                  medium={iglesiaData.logoObj?.medium}
+                  large={iglesiaData.logoObj?.large}
+                  blurHash={iglesiaData.logoObj?.blurHash}
+                  alt="Logo"
+                  className="w-full h-full object-cover rounded-lg"
+                />
               ) : (
                 <span className="material-symbols-outlined text-xl">church</span>
               )}

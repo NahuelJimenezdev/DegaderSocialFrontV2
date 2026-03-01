@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import { useIglesiaSettings } from '../hooks/useIglesiaSettings';
 import iglesiaService from '../../../api/iglesiaService'; // Importar servicio
 import { useState } from 'react'; // Importar useState
@@ -113,7 +114,14 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
               <div className="flex items-center gap-4">
                 <div className="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center overflow-hidden">
                   {logoPreview || iglesiaData?.logo ? (
-                    <img src={logoPreview || getAvatarUrl(iglesiaData.logo)} alt="Logo" className="w-full h-full object-cover" />
+                    <ProgressiveImage
+                      src={logoPreview || getAvatarUrl(iglesiaData?.logoObj?.url || iglesiaData.logo)}
+                      medium={!logoPreview ? iglesiaData?.logoObj?.medium : undefined}
+                      large={!logoPreview ? iglesiaData?.logoObj?.large : undefined}
+                      blurHash={!logoPreview ? iglesiaData?.logoObj?.blurHash : undefined}
+                      alt="Logo"
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <span className="material-symbols-outlined text-4xl colorMarcaDegader dark:text-indigo-400">church</span>
                   )}
@@ -147,7 +155,14 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
               <div className="space-y-3">
                 <div className="w-full h-48 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center overflow-hidden">
                   {bannerPreview || iglesiaData?.portada ? (
-                    <img src={bannerPreview || getBannerUrl(iglesiaData.portada)} alt="Banner" className="w-full h-full object-cover" />
+                    <ProgressiveImage
+                      src={bannerPreview || getBannerUrl(iglesiaData?.portadaObj?.url || iglesiaData.portada)}
+                      medium={!bannerPreview ? iglesiaData?.portadaObj?.medium : undefined}
+                      large={!bannerPreview ? iglesiaData?.portadaObj?.large : undefined}
+                      blurHash={!bannerPreview ? iglesiaData?.portadaObj?.blurHash : undefined}
+                      alt="Banner"
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <span className="text-white text-lg font-medium">Banner de la Iglesia</span>
                   )}
@@ -433,21 +448,31 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                   {/* Fotos Existentes */}
-                  {existingGaleria.map((url, index) => (
-                    <div key={`existing-${index}`} className="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
-                      <img src={getAvatarUrl(url)} alt={`Foto ${index}`} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveGaleriaImage(index, true)}
-                          className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
-                          title="Eliminar foto"
-                        >
-                          <span className="material-symbols-outlined text-[20px]">delete</span>
-                        </button>
+                  {existingGaleria.map((url, index) => {
+                    const obj = iglesiaData?.galeriaObjs?.[index];
+                    return (
+                      <div key={`existing-${index}`} className="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                        <ProgressiveImage
+                          src={getAvatarUrl(obj?.url || url)}
+                          medium={obj?.medium}
+                          large={obj?.large}
+                          blurHash={obj?.blurHash}
+                          alt={`Foto ${index}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveGaleriaImage(index, true)}
+                            className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                            title="Eliminar foto"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                   {/* Previews de Nuevas Fotos */}
                   {galeriaPreviews.map((preview, index) => (

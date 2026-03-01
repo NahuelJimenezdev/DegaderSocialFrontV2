@@ -4,6 +4,7 @@ import { churchColors } from '../utils/colors';
 import InfoCard from './shared/InfoCard';
 import ServiceTime from './shared/ServiceTime';
 import { getAvatarUrl } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const IglesiaInfo = ({ iglesiaData }) => {
   const [showGalleryModal, setShowGalleryModal] = useState(false);
@@ -112,8 +113,11 @@ const IglesiaInfo = ({ iglesiaData }) => {
                 className="col-span-2 row-span-2 rounded-xl overflow-hidden shadow-lg relative group cursor-pointer"
                 onClick={() => { setCurrentImageIndex(0); setShowGalleryModal(true); }}
               >
-                <img
-                  src={getAvatarUrl(galeria[0])}
+                <ProgressiveImage
+                  src={getAvatarUrl(iglesiaData?.galeriaObjs?.[0]?.url || galeria[0])}
+                  medium={iglesiaData?.galeriaObjs?.[0]?.medium}
+                  large={iglesiaData?.galeriaObjs?.[0]?.large}
+                  blurHash={iglesiaData?.galeriaObjs?.[0]?.blurHash}
                   alt="Principal"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -134,8 +138,11 @@ const IglesiaInfo = ({ iglesiaData }) => {
                 >
                   {galeria[idx] ? (
                     <>
-                      <img
-                        src={getAvatarUrl(galeria[idx])}
+                      <ProgressiveImage
+                        src={getAvatarUrl(iglesiaData?.galeriaObjs?.[idx]?.url || galeria[idx])}
+                        medium={iglesiaData?.galeriaObjs?.[idx]?.medium}
+                        large={iglesiaData?.galeriaObjs?.[idx]?.large}
+                        blurHash={iglesiaData?.galeriaObjs?.[idx]?.blurHash}
                         alt={`Galeria ${idx}`}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -155,8 +162,11 @@ const IglesiaInfo = ({ iglesiaData }) => {
                 className="rounded-xl overflow-hidden shadow-md relative group bg-gray-900 flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
               >
                 {galeria.length > 4 && (
-                  <img
-                    src={getAvatarUrl(galeria[4])}
+                  <ProgressiveImage
+                    src={getAvatarUrl(iglesiaData?.galeriaObjs?.[4]?.url || galeria[4])}
+                    medium={iglesiaData?.galeriaObjs?.[4]?.medium}
+                    large={iglesiaData?.galeriaObjs?.[4]?.large}
+                    blurHash={iglesiaData?.galeriaObjs?.[4]?.blurHash}
                     className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm"
                     alt="Background"
                   />
@@ -205,8 +215,11 @@ const IglesiaInfo = ({ iglesiaData }) => {
               )}
 
               <div className="flex flex-col items-center gap-4 w-full h-full justify-center">
-                <img
-                  src={getAvatarUrl(galeria[currentImageIndex])}
+                <ProgressiveImage
+                  src={getAvatarUrl(iglesiaData?.galeriaObjs?.[currentImageIndex]?.url || galeria[currentImageIndex])}
+                  medium={iglesiaData?.galeriaObjs?.[currentImageIndex]?.medium}
+                  large={iglesiaData?.galeriaObjs?.[currentImageIndex]?.large}
+                  blurHash={iglesiaData?.galeriaObjs?.[currentImageIndex]?.blurHash}
                   alt={`Foto ${currentImageIndex}`}
                   className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
                 />
@@ -238,7 +251,14 @@ const IglesiaInfo = ({ iglesiaData }) => {
                     <div className="flex items-center gap-3 mt-auto">
                       <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-700 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {testimonio.usuario.social?.fotoPerfil ? (
-                          <img src={getAvatarUrl(testimonio.usuario.social.fotoPerfil)} alt="Avatar" className="w-full h-full object-cover" />
+                          <ProgressiveImage
+                            src={getAvatarUrl(testimonio.usuario.social.fotoPerfilObj?.url || testimonio.usuario.social.fotoPerfil)}
+                            medium={testimonio.usuario.social.fotoPerfilObj?.medium}
+                            large={testimonio.usuario.social.fotoPerfilObj?.large}
+                            blurHash={testimonio.usuario.social.fotoPerfilObj?.blurHash}
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <span className="colorMarcaDegader dark:text-indigo-200 font-bold">{testimonio.usuario.nombres.primero.charAt(0)}</span>
                         )}
@@ -406,8 +426,11 @@ const IglesiaInfo = ({ iglesiaData }) => {
               <div className="w-32 h-32 md:w-36 md:h-36 rounded-full p-1 bg-gradient-to-tr from-purple-500 to-indigo-500 shadow-lg">
                 <div className="w-full h-full rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                   {iglesiaData?.pastorPrincipal?.social?.fotoPerfil ? (
-                    <img
-                      src={getAvatarUrl(iglesiaData.pastorPrincipal.social.fotoPerfil)}
+                    <ProgressiveImage
+                      src={getAvatarUrl(iglesiaData.pastorPrincipal.social.fotoPerfilObj?.url || iglesiaData.pastorPrincipal.social.fotoPerfil)}
+                      medium={iglesiaData.pastorPrincipal.social?.fotoPerfilObj?.medium}
+                      large={iglesiaData.pastorPrincipal.social?.fotoPerfilObj?.large}
+                      blurHash={iglesiaData.pastorPrincipal.social?.fotoPerfilObj?.blurHash}
                       alt="Pastor Principal"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />

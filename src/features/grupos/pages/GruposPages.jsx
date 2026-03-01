@@ -8,6 +8,7 @@ import { getAvatarUrl } from "../../../shared/utils/avatarUtils";
 import { getSocket } from "../../../shared/lib/socket";
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import GruposPageSkeleton from '../skeleton/GruposPageSkeleton';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 import '../../../shared/styles/headers.style.css';
 import '../../../shared/styles/layout.mobile.css';
 
@@ -256,8 +257,9 @@ const GruposPages = () => {
           {/* Imagen o gradiente */}
           <div className={`h-32 ${hasImage ? '' : `bg-gradient-to-br ${getGroupColor(group._id)}`}`}>
             {hasImage ? (
-              <img
+              <ProgressiveImage
                 src={getAvatarUrl(groupImage)}
+                blurHash={group.avatar?.blurHash}
                 alt={group.nombre}
                 className="w-full h-full object-cover"
               />
@@ -304,8 +306,9 @@ const GruposPages = () => {
           {/* Avatar */}
           <div className={`w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 ${hasImage ? '' : `bg-gradient-to-br ${getGroupColor(group._id)}`}`}>
             {hasImage ? (
-              <img
+              <ProgressiveImage
                 src={getAvatarUrl(groupImage)}
+                blurHash={group.avatar?.blurHash}
                 alt={group.nombre}
                 className="w-full h-full object-cover"
               />

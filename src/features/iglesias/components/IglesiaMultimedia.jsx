@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import iglesiaService from '../../../api/iglesiaService';
 import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
   const { user } = useAuth();
@@ -47,6 +48,10 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
   const photos = multimedia.filter(m => m.tipo === 'image').map((m, index) => ({
     id: m._id || index,
     url: m.url,
+    small: m.small,
+    medium: m.medium,
+    large: m.large,
+    blurHash: m.blurHash,
     caption: m.caption || 'Foto',
     date: m.fecha
   })).reverse();
@@ -181,8 +186,11 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
                   onClick={() => openMedia(photo)}
                   className="relative group rounded-xl overflow-hidden cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800"
                 >
-                  <img
+                  <ProgressiveImage
                     src={photo.url}
+                    medium={photo.medium}
+                    large={photo.large}
+                    blurHash={photo.blurHash}
                     alt={photo.caption || 'Foto de galería'}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
@@ -284,8 +292,11 @@ const IglesiaMultimedia = ({ iglesiaData, refetch }) => {
             onClick={(e) => e.stopPropagation()}
           >
             {activeTab === 'photos' ? (
-              <img
+              <ProgressiveImage
                 src={selectedMedia.url}
+                medium={selectedMedia.medium}
+                large={selectedMedia.large}
+                blurHash={selectedMedia.blurHash}
                 alt={selectedMedia.caption || 'Imagen ampliada'}
                 className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
               />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const ImageGallery = ({ images = [] }) => {
   const [showLightbox, setShowLightbox] = useState(false);
@@ -33,13 +34,14 @@ const ImageGallery = ({ images = [] }) => {
     // 1 Image
     if (count === 1) {
       return (
-        <div 
+        <div
           className="w-full aspect-video md:aspect-auto md:max-h-[600px] overflow-hidden rounded-xl cursor-pointer"
           onClick={() => openLightbox(0)}
         >
-          <img 
-            src={images[0].url} 
-            alt="Post content" 
+          <ProgressiveImage
+            src={images[0].medium || images[0].large || images[0].url}
+            blurHash={images[0].blurHash}
+            alt="Post content"
             className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-300"
           />
         </div>
@@ -51,14 +53,15 @@ const ImageGallery = ({ images = [] }) => {
       return (
         <div className="grid grid-cols-2 gap-1 h-64 md:h-80 rounded-xl overflow-hidden">
           {images.map((img, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="relative h-full cursor-pointer overflow-hidden"
               onClick={() => openLightbox(idx)}
             >
-              <img 
-                src={img.url} 
-                alt={`Post content ${idx + 1}`} 
+              <ProgressiveImage
+                src={img.medium || img.large || img.url}
+                blurHash={img.blurHash}
+                alt={`Post content ${idx + 1}`}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
             </div>
@@ -71,26 +74,28 @@ const ImageGallery = ({ images = [] }) => {
     if (count === 3) {
       return (
         <div className="grid grid-cols-2 gap-1 h-64 md:h-96 rounded-xl overflow-hidden">
-          <div 
+          <div
             className="relative h-full cursor-pointer overflow-hidden"
             onClick={() => openLightbox(0)}
           >
-            <img 
-              src={images[0].url} 
-              alt="Post content 1" 
+            <ProgressiveImage
+              src={images[0].medium || images[0].large || images[0].url}
+              blurHash={images[0].blurHash}
+              alt="Post content 1"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="grid grid-rows-2 gap-1 h-full">
             {images.slice(1).map((img, idx) => (
-              <div 
-                key={idx + 1} 
+              <div
+                key={idx + 1}
                 className="relative h-full cursor-pointer overflow-hidden"
                 onClick={() => openLightbox(idx + 1)}
               >
-                <img 
-                  src={img.url} 
-                  alt={`Post content ${idx + 2}`} 
+                <ProgressiveImage
+                  src={img.medium || img.large || img.url}
+                  blurHash={img.blurHash}
+                  alt={`Post content ${idx + 2}`}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
@@ -105,14 +110,15 @@ const ImageGallery = ({ images = [] }) => {
       return (
         <div className="grid grid-cols-2 grid-rows-2 gap-1 h-64 md:h-96 rounded-xl overflow-hidden">
           {images.map((img, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="relative h-full cursor-pointer overflow-hidden"
               onClick={() => openLightbox(idx)}
             >
-              <img 
-                src={img.url} 
-                alt={`Post content ${idx + 1}`} 
+              <ProgressiveImage
+                src={img.medium || img.large || img.url}
+                blurHash={img.blurHash}
+                alt={`Post content ${idx + 1}`}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
             </div>
@@ -125,25 +131,27 @@ const ImageGallery = ({ images = [] }) => {
     return (
       <div className="grid grid-cols-2 grid-rows-2 gap-1 h-64 md:h-96 rounded-xl overflow-hidden">
         {images.slice(0, 3).map((img, idx) => (
-          <div 
-            key={idx} 
+          <div
+            key={idx}
             className="relative h-full cursor-pointer overflow-hidden"
             onClick={() => openLightbox(idx)}
           >
-            <img 
-              src={img.url} 
-              alt={`Post content ${idx + 1}`} 
+            <ProgressiveImage
+              src={img.medium || img.large || img.url}
+              blurHash={img.blurHash}
+              alt={`Post content ${idx + 1}`}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />
           </div>
         ))}
-        <div 
+        <div
           className="relative h-full cursor-pointer overflow-hidden group"
           onClick={() => openLightbox(3)}
         >
-          <img 
-            src={images[3].url} 
-            alt="Post content 4" 
+          <ProgressiveImage
+            src={images[3].medium || images[3].large || images[3].url}
+            blurHash={images[3].blurHash}
+            alt="Post content 4"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center transition-colors group-hover:bg-black/40">
@@ -163,7 +171,7 @@ const ImageGallery = ({ images = [] }) => {
       {/* Lightbox Modal */}
       {showLightbox && createPortal(
         <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center backdrop-blur-sm" onClick={closeLightbox}>
-          <button 
+          <button
             className="absolute top-4 right-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors z-50"
             onClick={closeLightbox}
           >
@@ -174,13 +182,13 @@ const ImageGallery = ({ images = [] }) => {
             {/* Navigation Buttons */}
             {images.length > 1 && (
               <>
-                <button 
+                <button
                   className="absolute left-4 text-white p-3 hover:bg-white/10 rounded-full transition-colors hidden md:block"
                   onClick={prevImage}
                 >
                   <span className="material-symbols-outlined text-4xl">chevron_left</span>
                 </button>
-                <button 
+                <button
                   className="absolute right-4 text-white p-3 hover:bg-white/10 rounded-full transition-colors hidden md:block"
                   onClick={nextImage}
                 >
@@ -191,8 +199,9 @@ const ImageGallery = ({ images = [] }) => {
 
             {/* Main Image */}
             <div className="w-full h-full max-w-7xl max-h-[90vh] flex items-center justify-center p-4">
-              <img 
-                src={images[currentImageIndex].url} 
+              <ProgressiveImage
+                src={images[currentImageIndex].large || images[currentImageIndex].url}
+                blurHash={images[currentImageIndex].blurHash}
                 alt={`Gallery view ${currentImageIndex + 1}`}
                 className="max-w-full max-h-full object-contain select-none"
               />
@@ -208,11 +217,10 @@ const ImageGallery = ({ images = [] }) => {
                       e.stopPropagation();
                       setCurrentImageIndex(idx);
                     }}
-                    className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${
-                      currentImageIndex === idx 
-                        ? 'bg-white scale-125' 
-                        : 'bg-white/40 hover:bg-white/60'
-                    }`}
+                    className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${currentImageIndex === idx
+                      ? 'bg-white scale-125'
+                      : 'bg-white/40 hover:bg-white/60'
+                      }`}
                   />
                 ))}
               </div>

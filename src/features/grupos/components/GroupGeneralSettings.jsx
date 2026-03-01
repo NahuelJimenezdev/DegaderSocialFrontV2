@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../../shared/config/env';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 /**
  * Componente para mostrar/editar información general del grupo
@@ -51,11 +52,11 @@ const GroupGeneralSettings = ({
                                     {imagePreview ? (
                                         <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                                     ) : groupData?.imagePerfilGroup && !imageError ? (
-                                        <img
+                                        <ProgressiveImage
                                             src={`${API_BASE_URL}${groupData.imagePerfilGroup}`}
+                                            blurHash={groupData.avatar?.blurHash}
                                             alt={groupData.nombre}
                                             className="w-full h-full object-cover"
-                                            onError={() => setImageError(true)}
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center">
@@ -182,11 +183,11 @@ const GroupGeneralSettings = ({
                         <div className="w-full md:w-auto flex justify-center md:block flex-shrink-0">
                             <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden shadow-md ring-4 ring-white dark:ring-gray-700 flex items-center justify-center">
                                 {groupData?.imagePerfilGroup && !imageError ? (
-                                    <img
+                                    <ProgressiveImage
                                         src={`${API_BASE_URL}${groupData.imagePerfilGroup}`}
+                                        blurHash={groupData.avatar?.blurHash}
                                         alt={groupData.nombre}
                                         className="w-full h-full object-cover"
-                                        onError={() => setImageError(true)}
                                     />
                                 ) : (
                                     <span className="material-symbols-outlined text-white text-6xl">groups</span>

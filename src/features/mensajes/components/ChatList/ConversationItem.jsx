@@ -3,6 +3,7 @@ import { Star, MoreVertical, Trash2, Archive, Eraser } from 'lucide-react';
 import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatarUtils';
 import { useChatContext } from '../../context/ChatContext';
 import { ConfirmDialog } from '../../../../shared/components/ConfirmDialog/ConfirmDialog';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
 /**
  * ConversationItem - Item individual de conversación en la lista
@@ -49,10 +50,13 @@ const ConversationItem = ({ conversacion }) => {
                 className="flex items-center gap-3 flex-1 min-w-0"
                 onClick={() => handleSeleccionarConversacion(conversacion)}
             >
-                <img
+                <ProgressiveImage
                     src={getUserAvatar(otro)}
+                    medium={otro?.social?.fotoPerfilObj?.medium}
+                    large={otro?.social?.fotoPerfilObj?.large}
+                    blurHash={otro?.social?.fotoPerfilObj?.blurHash}
                     alt={`${otro.nombres?.primero} ${otro.apellidos?.primero}`}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover block"
                     onError={handleImageError}
                 />
                 <div className="flex-1 min-w-0">

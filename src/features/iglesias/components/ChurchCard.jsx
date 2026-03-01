@@ -3,6 +3,7 @@ import { logger } from '../../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Users, Award, Check, Briefcase, Calendar, X, Building2 } from 'lucide-react';
 import { getUserAvatar, getAvatarUrl, getBannerUrl } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import { getSocket } from '../../../shared/lib/socket';
 import iglesiaService from '../../../api/iglesiaService';
 
@@ -190,8 +191,11 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
         {/* Portada Horizontal */}
         <div className="w-full md:w-64 h-48 md:h-auto relative flex-shrink-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
           {iglesia.portada ? (
-            <img
-              src={getBannerUrl(iglesia.portada)}
+            <ProgressiveImage
+              src={getBannerUrl(iglesia.portadaObj?.url || iglesia.portada)}
+              medium={iglesia.portadaObj?.medium}
+              large={iglesia.portadaObj?.large}
+              blurHash={iglesia.portadaObj?.blurHash}
               alt={iglesia.nombre}
               className="w-full h-full object-cover opacity-90"
             />
@@ -204,7 +208,14 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
           {/* Logo Superpuesto */}
           <div className="absolute top-4 left-4 w-16 h-16 rounded-full border-2 border-white dark:border-gray-800 shadow-md bg-white dark:bg-gray-700 overflow-hidden">
             {iglesia.logo ? (
-              <img src={getAvatarUrl(iglesia.logo)} alt={iglesia.nombre} className="w-full h-full object-cover" />
+              <ProgressiveImage
+                src={getAvatarUrl(iglesia.logoObj?.url || iglesia.logo)}
+                medium={iglesia.logoObj?.medium}
+                large={iglesia.logoObj?.large}
+                blurHash={iglesia.logoObj?.blurHash}
+                alt={iglesia.nombre}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/30">
                 <span className="material-symbols-outlined text-xl colorMarcaDegader dark:text-indigo-400">church</span>
@@ -267,8 +278,11 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
       {/* Cover Image/Gradient */}
       <div className="h-32 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 relative">
         {iglesia.portada ? (
-          <img
-            src={getBannerUrl(iglesia.portada)}
+          <ProgressiveImage
+            src={getBannerUrl(iglesia.portadaObj?.url || iglesia.portada)}
+            medium={iglesia.portadaObj?.medium}
+            large={iglesia.portadaObj?.large}
+            blurHash={iglesia.portadaObj?.blurHash}
             alt={iglesia.nombre}
             className="w-full h-full object-cover opacity-80"
           />
@@ -298,8 +312,11 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
       <div className="absolute top-20 left-4">
         <div className="w-20 h-20 rounded-full border-4 border-white dark:border-gray-800 shadow-lg bg-white dark:bg-gray-700 overflow-hidden">
           {iglesia.logo ? (
-            <img
-              src={getAvatarUrl(iglesia.logo)}
+            <ProgressiveImage
+              src={getAvatarUrl(iglesia.logoObj?.url || iglesia.logo)}
+              medium={iglesia.logoObj?.medium}
+              large={iglesia.logoObj?.large}
+              blurHash={iglesia.logoObj?.blurHash}
               alt={iglesia.nombre}
               className="w-full h-full object-cover"
             />
@@ -342,8 +359,11 @@ const ChurchCard = ({ iglesia, user, onJoin, viewMode = 'grid' }) => {
                   key={member._id || index}
                   className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 overflow-hidden bg-gray-200 dark:bg-gray-700"
                 >
-                  <img
+                  <ProgressiveImage
                     src={getUserAvatar(member)}
+                    medium={member.social?.fotoPerfilObj?.medium}
+                    large={member.social?.fotoPerfilObj?.large}
+                    blurHash={member.social?.fotoPerfilObj?.blurHash}
                     alt="Member"
                     className="w-full h-full object-cover"
                     onError={(e) => e.target.src = '/avatars/default-avatar.png'}

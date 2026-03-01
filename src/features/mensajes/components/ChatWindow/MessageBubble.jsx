@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, CheckCheck } from 'lucide-react';
 import api from '../../../../api/config';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 // Función auxiliar para formatear tiempo (copiada para encapsulamiento)
 // Podría moverse a shared/utils en el futuro
@@ -59,16 +60,14 @@ const MessageBubble = ({ msg, currentUserId }) => {
                 {tieneArchivo && (
                     <div className="mb-2">
                         {esImagen ? (
-                            <img
-                                src={getMediaUrl(msg.archivo.url)}
-                                alt={msg.archivo.nombre || 'Imagen'}
-                                className="max-w-full rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={handleImageClick}
-                                onError={(e) => {
-                                    console.error('Error cargando imagen:', msg.archivo.url);
-                                    e.target.style.display = 'none';
-                                }}
-                            />
+                            <div onClick={handleImageClick} className="cursor-pointer">
+                                <ProgressiveImage
+                                    src={getMediaUrl(msg.archivo.medium || msg.archivo.large || msg.archivo.url)}
+                                    blurHash={msg.archivo.blurHash}
+                                    alt={msg.archivo.nombre || 'Imagen'}
+                                    className="max-w-full rounded-lg hover:opacity-90 transition-opacity"
+                                />
+                            </div>
                         ) : esVideo ? (
                             <video
                                 src={getMediaUrl(msg.archivo.url)}

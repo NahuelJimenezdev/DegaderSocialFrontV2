@@ -4,6 +4,7 @@ import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatar
 import { getSocket } from '../../../../shared/lib/socket';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
 const ChatWindow = ({
     conversacionActual,
@@ -157,10 +158,13 @@ const ChatWindow = ({
 
                         {otroUsuario && (
                             <>
-                                <img
+                                <ProgressiveImage
                                     src={getUserAvatar(otroUsuario)}
+                                    medium={otroUsuario?.social?.fotoPerfilObj?.medium}
+                                    large={otroUsuario?.social?.fotoPerfilObj?.large}
+                                    blurHash={otroUsuario?.social?.fotoPerfilObj?.blurHash}
                                     alt={`${otroUsuario.nombres?.primero} ${otroUsuario.apellidos?.primero}`}
-                                    className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                                    className="w-10 h-10 rounded-full object-cover cursor-pointer block"
                                     onClick={() => navigate(`/perfil/${otroUsuario._id}`)}
                                     onError={handleImageError}
                                 />

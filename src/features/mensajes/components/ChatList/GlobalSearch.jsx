@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Loader, User } from 'lucide-react';
 import { getUserAvatar, handleImageError } from '../../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
 /**
  * GlobalSearch - Búsqueda global de usuarios para iniciar conversaciones
@@ -61,10 +62,13 @@ const GlobalSearch = ({
                                     if (e.key === 'Enter') seleccionarUsuarioBusqueda(usuario);
                                 }}
                             >
-                                <img
+                                <ProgressiveImage
                                     src={getUserAvatar(usuario)}
+                                    medium={usuario?.social?.fotoPerfilObj?.medium}
+                                    large={usuario?.social?.fotoPerfilObj?.large}
+                                    blurHash={usuario?.social?.fotoPerfilObj?.blurHash}
                                     alt={`${usuario?.nombres?.primero} ${usuario?.apellidos?.primero}`}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    className="w-10 h-10 rounded-full object-cover block"
                                     onError={handleImageError}
                                 />
                                 <div className="flex-1">

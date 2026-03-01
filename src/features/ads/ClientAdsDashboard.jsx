@@ -18,6 +18,7 @@ import CreateCampaignModal from './CreateCampaignModal';
 import EditCampaignModal from './EditCampaignModal';
 import { AlertDialog } from '../../shared/components/AlertDialog';
 import { ConfirmDialog } from '../../shared/components/ConfirmDialog';
+import ProgressiveImage from '../../shared/components/ProgressiveImage';
 
 /**
  * Dashboard de Cliente para gestionar campañas publicitarias
@@ -260,10 +261,10 @@ const ClientAdsDashboard = () => {
                   <tr key={campaign._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-4">
-                        <img
+                        <ProgressiveImage
                           src={campaign.imagenUrl}
                           alt={campaign.nombreCliente}
-                          className="w-12 h-12 rounded-lg object-cover"
+                          className="w-12 h-12 rounded-lg object-cover block"
                           onError={(e) => { e.target.src = 'https://via.placeholder.com/48'; }}
                         />
                         <div>
