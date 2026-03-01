@@ -1,6 +1,6 @@
 {
   "name": "Degader Social",
-  "short_name": "Degader",
+  "short_name": "Degader Social",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#1e3a5f",
-  "background_color": "#1e3a5f",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone"
 }

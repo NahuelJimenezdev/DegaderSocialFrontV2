@@ -144,6 +144,12 @@ const ArenaPage = () => {
 
     return (
         <div className="arena-main-wrapper min-h-screen bg-gray-50 dark:bg-[#080c14] transition-colors duration-500 font-inter pb-24 md:pb-0 overflow-x-hidden">
+            <AnimatePresence>
+                {isInitialLoading && (
+                    <ArenaSplashScreen key="splash" onFinish={() => setIsInitialLoading(false)} />
+                )}
+            </AnimatePresence>
+
             <StickyArenaHeader
                 user={user}
                 displayName={displayName}
