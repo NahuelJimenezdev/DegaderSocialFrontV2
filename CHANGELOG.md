@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.52.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.2...v1.52.3) (2026-03-01)
+
+
+### Bug Fixes
+
+* resolve jsx syntax errors and hook violations in ArenaPage ([78ade29](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/78ade295647d45b5c221324170f1c340ff8bf5f7))
+
 ### [1.52.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.1...v1.52.2) (2026-03-01)
 
 
