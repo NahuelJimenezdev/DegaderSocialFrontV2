@@ -404,8 +404,31 @@ const ArenaPage = () => {
                                                                         </div>
                                                                     )}
                                                                     <div className="flex flex-col items-center gap-4 w-full max-w-xs mx-auto">
-                                                                        <button onClick={() => handleLevelDifficulty(arena.selectedDifficulty)} className="w-full px-12 py-5 rounded-2xl bg-[#f9c61f] text-black font-black text-sm uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-[0_15px_40px_rgba(249,198,31,0.3)] border border-yellow-400/50">Continuar Senda</button>
-                                                                        <button onClick={arena.resetArena} className="w-full px-8 py-4 rounded-2xl bg-white/5 text-white/40 font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white/10 hover:text-white transition-all border border-white/5">Volver al Menú</button>
+                                                                        {(() => {
+                                                                            const allAchievementsViewed = arena.lastSessionAchievements.every(id => viewedAchievements.includes(id));
+                                                                            const hasUnseenAchievements = arena.lastSessionAchievements.length > 0 && !allAchievementsViewed;
+                                                                            return (
+                                                                                <>
+                                                                                    {hasUnseenAchievements && (
+                                                                                        <p className="text-yellow-500 font-bold text-[9px] uppercase tracking-[0.2em] text-center animate-pulse mb-1">
+                                                                                            ⚠️ Toca tus nuevos logros para continuar
+                                                                                        </p>
+                                                                                    )}
+                                                                                    <button
+                                                                                        onClick={() => handleLevelDifficulty(arena.selectedDifficulty)}
+                                                                                        disabled={hasUnseenAchievements}
+                                                                                        className={`w-full px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all border ${hasUnseenAchievements ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed border-gray-500/30 shadow-none' : 'bg-[#f9c61f] text-black hover:scale-105 active:scale-95 shadow-[0_15px_40px_rgba(249,198,31,0.3)] border-yellow-400/50'}`}>
+                                                                                        Continuar Senda
+                                                                                    </button>
+                                                                                    <button
+                                                                                        onClick={arena.resetArena}
+                                                                                        disabled={hasUnseenAchievements}
+                                                                                        className={`w-full px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all border ${hasUnseenAchievements ? 'bg-gray-800/50 text-gray-500 cursor-not-allowed border-gray-700/30' : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white border-white/5'}`}>
+                                                                                        Volver al Menú
+                                                                                    </button>
+                                                                                </>
+                                                                            );
+                                                                        })()}
                                                                     </div>
                                                                 </div>
                                                             </div>
