@@ -143,7 +143,7 @@ export default function NotificationsDropdown() {
       }
     }
 
-    if (['solicitud_iglesia', 'solicitud_iglesia_aprobada', 'solicitud_iglesia_rechazada'].includes(notificacion.tipo)) {
+    if (['solicitud_iglesia', 'solicitud_iglesia_aprobada', 'solicitud_iglesia_rechazada', 'nuevo_mensaje'].includes(notificacion.tipo)) {
       const rawId = notificacion.referencia?.id;
       const iglesiaId = typeof rawId === 'object' ? rawId?._id : rawId;
 
