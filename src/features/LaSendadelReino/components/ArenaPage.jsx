@@ -139,7 +139,13 @@ const ArenaPage = () => {
 
     return (
         <div className="arena-main-wrapper min-h-screen bg-gray-50 dark:bg-[#080c14] transition-colors duration-500 font-inter pb-24 md:pb-0 overflow-x-hidden">
-            <ArenaNavigation />
+            <StickyArenaHeader
+                user={user}
+                displayName={displayName}
+                progress={scrollProgress * 100}
+                isVisible={showStickyHeader}
+                opacity={scrollProgress}
+            />
 
             <div className="container mx-auto px-4 pt-4 md:pt-8 md:px-6 max-w-7xl">
                 {/* 
