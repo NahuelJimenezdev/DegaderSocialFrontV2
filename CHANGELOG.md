@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.53.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.16...v1.53.0) (2026-03-01)
+
+
+### Features
+
+* **arena:** ajustar visibilidad de cabecera en pestañas de Ranking y Logros ([deb18e8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/deb18e82c4f8586e2cd94c0d25143d5421053f0f))
+* restaurar loading inicial (Splash Screen) en ArenaPage y actualizar assets de marca ([a291b6a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a291b6a42e0a3bb6738f36236ab61689e2285266))
+
 ### [1.52.15](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.14...v1.52.15) (2026-03-01)
 
 
