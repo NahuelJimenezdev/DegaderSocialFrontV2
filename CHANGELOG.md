@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.50.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.3...v1.50.4) (2026-03-01)
+
+
+### Bug Fixes
+
+* smarter name formatting to handle CamelCase in Arena ([cc72637](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cc726370746e1b9e480eb7b1f6ef0ca4d45b134b))
+
 ### [1.50.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.50.2...v1.50.3) (2026-03-01)
 
 
