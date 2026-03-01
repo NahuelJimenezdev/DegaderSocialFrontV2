@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.56.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.55.2...v1.56.0) (2026-03-01)
+
+
+### Features
+
+* integrar componente ProgressiveImage ([e1d262a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e1d262a1ba068bd1d200992a1a7e639b1fc22b6c))
+
 ### [1.55.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.55.1...v1.55.2) (2026-03-01)
 
 
