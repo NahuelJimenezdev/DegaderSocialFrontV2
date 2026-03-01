@@ -16,10 +16,11 @@ html:not(.dark) .arena-main-wrapper::before {
     content: '';
     position: absolute;
     inset: 0;
-    opacity: 0.4;
+    opacity: 0.6;
+    /* Aumentamos opacidad para calidad artesanal */
     pointer-events: none;
-    background-image: radial-gradient(#D1D9E6 1px, transparent 0);
-    background-size: 24px 24px;
+    background-image: radial-gradient(#D1D9E6 1.5px, transparent 0);
+    background-size: 32px 32px;
     z-index: 0;
 }
 
@@ -69,11 +70,12 @@ html:not(.dark) .arena-main-wrapper::before {
     will-change: transform, opacity;
 }
 
-/* Sombreado profundo y difuso para modo claro */
-html:not(.dark) .arena-vertical-card-wrapper>div {
-    box-shadow: 0 25px 50px -12px rgba(209, 217, 230, 0.6),
-        0 10px 20px -5px rgba(209, 217, 230, 0.4) !important;
-    border: 1px solid rgba(59, 130, 246, 0.1) !important;
+/* Sombreado tridimensional profundo para modo claro */
+html:not(.dark) .arena-vertical-card-wrapper>div,
+html:not(.dark) .md\:hidden>.motion-div {
+    box-shadow: 0 40px 80px -20px rgba(15, 23, 42, 0.15),
+        0 20px 40px -10px rgba(15, 23, 42, 0.1) !important;
+    border: 1px solid rgba(15, 23, 42, 0.05) !important;
 }
 
 .arena-vertical-card-wrapper.fading {
