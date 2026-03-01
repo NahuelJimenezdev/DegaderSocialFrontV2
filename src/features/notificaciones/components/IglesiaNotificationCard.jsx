@@ -88,12 +88,8 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
           : 'Solicitud rechazada'
       );
 
-      // Eliminar la notificación del backend para que no vuelva a aparecer
-      try {
-        await notificationService.deleteNotification(notification._id);
-      } catch (deleteError) {
-        logger.warn('⚠️ Error al eliminar notificación (puede que ya no exista):', deleteError);
-      }
+      // Ya no llamamos a deleteNotification aquí porque el backend lo hace automáticamente
+      // en gestionarSolicitud (iglesiaController.js) para evitar el error 404 redundante.
 
       // Notificar al componente padre para actualizar la lista
       if (onAction) {
