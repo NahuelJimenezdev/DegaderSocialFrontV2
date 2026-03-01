@@ -33,33 +33,46 @@
     transition: color 0.2s, background-color 0.2s;
     cursor: pointer;
     border: none;
-    background: transparent;
+    background: transparent !important;
+    background-color: transparent !important;
     font-size: 11px;
     font-weight: 500;
     padding: 0;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
 
-  .bottom-navbar-item:hover {
+  .bottom-navbar-item:hover,
+  .bottom-navbar-item:focus,
+  .bottom-navbar-item:active {
     color: #4f46e5;
-    background-color: #f9fafb;
+    background: transparent !important;
+    background-color: transparent !important;
+    outline: none !important;
   }
 
   .bottom-navbar-item.active {
     color: #4f46e5;
-    background-color: transparent;
+    background: transparent !important;
+    background-color: transparent !important;
   }
 
   :global(.dark) .bottom-navbar-item {
     color: #9ca3af;
   }
 
-  :global(.dark) .bottom-navbar-item:hover {
+  :global(.dark) .bottom-navbar-item:hover,
+  :global(.dark) .bottom-navbar-item:focus,
+  :global(.dark) .bottom-navbar-item:active {
     color: #818cf8;
-    background-color: #1f2937;
+    background: transparent !important;
+    background-color: transparent !important;
+    outline: none !important;
   }
 
   :global(.dark) .bottom-navbar-item.active {
     color: #818cf8;
+    background: #A1B2C3 !important;
     background-color: #A1B2C3 !important;
   }
 }
