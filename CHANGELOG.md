@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.52.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.3...v1.52.4) (2026-03-01)
+
+
+### Bug Fixes
+
+* increase nginx client_max_body_size to 100M ([aca637a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/aca637a4be4c465ef9cc498593656ec5bc674a9c))
+
 ### [1.52.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.52.2...v1.52.3) (2026-03-01)
 
 
