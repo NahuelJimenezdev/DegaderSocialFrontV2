@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.52.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.51.4...v1.52.0) (2026-03-01)
+
+
+### Features
+
+* add multi-device favicon system and app metadata ([cf9be2e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cf9be2e3e549c012f234929d36dce7603d8f75e6))
+
 ### [1.51.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.51.3...v1.51.4) (2026-03-01)
 
 ### [1.51.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.51.2...v1.51.3) (2026-03-01)
