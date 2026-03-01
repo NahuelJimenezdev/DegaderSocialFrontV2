@@ -172,6 +172,15 @@ const ArenaPage = () => {
         setSelectedAchievement(ach);
         if (!viewedAchievements.includes(ach.id)) {
             setViewedAchievements(prev => [...prev, ach.id]);
+
+            // Disparar confeti premium solo la primera vez que se abre el detalle
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#f9c61f', '#fef08a', '#3b82f6', '#ffffff'],
+                zIndex: 999999 // Asegurar que quede por encima del modal de logros (z-150+)
+            });
         }
     };
 
