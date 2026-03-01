@@ -161,7 +161,7 @@ const IglesiaDetail = ({ churchId }) => {
       {/* Main Content */}
       <div className={`w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin ${activeSection === 'chat' ? '' : 'mb-mobile-67'}`}>
         {activeSection === 'info' && <IglesiaHeader iglesia={iglesiaData} user={user} setActiveSection={setActiveSection} />}
-        <div className={activeSection === 'chat' ? 'h-full relative z-[100]' : 'p-4 md:p-8 pt-0'}>
+        <div className={activeSection === 'chat' ? 'h-full relative z-[250]' : 'p-4 md:p-8 pt-0'}>
           {activeSection === 'chat' ? (
             <IglesiaChat
               iglesiaData={iglesiaData}
