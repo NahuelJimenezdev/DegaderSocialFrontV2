@@ -178,6 +178,7 @@ html:not(.dark) .sticky-arena-header {
     border: 2px solid #3b82f6;
     padding: 2px;
     background: white;
+    object-fit: cover;
 }
 
 .sticky-center-section {
