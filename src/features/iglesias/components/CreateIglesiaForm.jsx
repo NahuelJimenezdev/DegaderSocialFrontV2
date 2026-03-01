@@ -25,7 +25,7 @@ const CreateIglesiaForm = ({
     return (
         <div ref={formRef} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
             <h4 className="font-semibold mb-4 text-gray-900 dark:text-white">Nueva Iglesia</h4>
-            <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={onSubmit} className="flex flex-col md:grid md:grid-cols-2 gap-4">
                 <input
                     type="text"
                     placeholder="Nombre de la Iglesia"
