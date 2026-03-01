@@ -46,6 +46,7 @@
 
   .bottom-navbar-item.active {
     color: #4f46e5;
+    background-color: transparent;
   }
 
   :global(.dark) .bottom-navbar-item {
@@ -59,5 +60,6 @@
 
   :global(.dark) .bottom-navbar-item.active {
     color: #818cf8;
+    background-color: #A1B2C3 !important;
   }
 }
