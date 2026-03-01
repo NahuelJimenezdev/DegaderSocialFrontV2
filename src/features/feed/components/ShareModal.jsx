@@ -59,16 +59,28 @@ const ShareModal = ({ isOpen, onClose, post }) => {
     try {
       setSending(true);
 
-      // Copy link to clipboard
-      const postUrl = `${window.location.origin}/post/${post._id}`;
-      await navigator.clipboard.writeText(postUrl);
+      // 1. Obtener o crear conversación
+      const convResponse = await api.post(`/conversaciones/with/${friendId}`);
+      const convData = convResponse.data.data;
+      const convId = convData._id;
 
-      // Show success message with instructions
-      setAlertConfig({ isOpen: true, variant: 'success', message: '¡Enlace copiado al portapapeles!\n\nAhora puedes enviarlo a tu amigo por mensaje privado.' });
-      onClose();
+      // 2. Enviar mensaje con metadatos
+      const message = {
+        contenido: shareMessage || `Compartió una publicación: ${post.contenido?.substring(0, 50)}...`,
+        tipo: 'texto',
+        metadata: {
+          sharedPostId: post._id,
+          postUrl: `${window.location.origin}/post/${post._id}`
+        }
+      };
+
+      await api.post(`/conversaciones/${convId}/message`, message);
+
+      setAlertConfig({ isOpen: true, variant: 'success', message: '¡Publicación enviada por mensaje privado!' });
+      setTimeout(() => onClose(), 1500);
     } catch (error) {
       logger.error('Error sharing to user:', error);
-      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al copiar enlace. Por favor intenta de nuevo.' });
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al enviar. Intenta de nuevo.' });
     } finally {
       setSending(false);
     }
@@ -79,7 +91,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       setSending(true);
       // Enviar mensaje al grupo con el enlace
       const message = {
-        contenido: shareMessage || `Compartió una publicación: ${post.contenido?.substring(0, 100)}...`,
+        content: shareMessage || `Compartió una publicación: ${post.contenido?.substring(0, 100)}...`,
         tipo: 'texto',
         metadata: {
           sharedPost: post._id,
@@ -89,7 +101,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
 
       await api.post(`/grupos/${groupId}/mensajes`, message);
       setAlertConfig({ isOpen: true, variant: 'success', message: '¡Publicación compartida en el grupo!' });
-      onClose();
+      setTimeout(() => onClose(), 1500);
     } catch (error) {
       logger.error('Error sharing to group:', error);
       setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al compartir. Intenta de nuevo.' });
@@ -98,9 +110,30 @@ const ShareModal = ({ isOpen, onClose, post }) => {
     }
   };
 
+  const handleRepost = async () => {
+    try {
+      setSending(true);
+      await api.post(`/publicaciones/${post._id}/share`, { contenido: shareMessage });
+      setAlertConfig({ isOpen: true, variant: 'success', message: '¡Publicación compartida en tu perfil!' });
+      setTimeout(() => onClose(), 1500);
+    } catch (error) {
+      logger.error('Error reposting:', error);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al compartir en tu perfil. Intenta de nuevo.' });
+    } finally {
+      setSending(false);
+    }
+  };
+
   if (!isOpen || !post) return null;
 
   const shareOptions = [
+    {
+      id: 'repost',
+      name: 'En mi perfil',
+      icon: '🔄',
+      color: 'bg-indigo-500 hover:bg-indigo-600',
+      action: handleRepost
+    },
     {
       id: 'whatsapp',
       name: 'WhatsApp',
@@ -119,7 +152,7 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       action: () => {
         navigator.clipboard.writeText(`${window.location.origin}/post/${post._id}`);
         setAlertConfig({ isOpen: true, variant: 'success', message: '¡Enlace copiado al portapapeles!' });
-        onClose();
+        setTimeout(() => onClose(), 1500);
       }
     },
     {

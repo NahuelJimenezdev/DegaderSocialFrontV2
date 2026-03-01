@@ -109,6 +109,25 @@ const MessageBubble = ({ msg, currentUserId }) => {
                     <p className="text-sm break-words">{msg.contenido}</p>
                 )}
 
+                {/* Previsualización de Publicación Compartida */}
+                {msg.metadata && (msg.metadata.sharedPostId || msg.metadata.postUrl) && (
+                    <div className={`mt-2 p-3 rounded-xl border ${esMio ? 'bg-indigo-700/50 border-indigo-500' : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600'}`}>
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="material-symbols-outlined text-[18px] text-blue-400">share</span>
+                            <span className="text-[11px] font-bold uppercase tracking-wider opacity-80">Publicación Compartida</span>
+                        </div>
+                        <a
+                            href={msg.metadata.postUrl || `/post/${msg.metadata.sharedPostId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-400 hover:underline flex items-center gap-1 mt-1 font-medium"
+                        >
+                            Ver publicación original
+                            <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                        </a>
+                    </div>
+                )}
+
                 <div className={`flex items-center justify-end gap-1 mt-1`}>
                     <p className={`text-xs ${esMio ? 'text-indigo-100' : 'text-gray-500 dark:text-gray-400'}`}>
                         {formatearTiempo(msg.createdAt)}
