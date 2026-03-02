@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.6...v1.57.7) (2026-03-02)
+
+
+### Bug Fixes
+
+* **arena:** fix useState ReferenceError and remove logo white background via CSS ([67050cc](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/67050cc6da079801d8a0c1bb9cf00a352c174142))
+
 ### [1.57.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.5...v1.57.6) (2026-03-02)
 
 
