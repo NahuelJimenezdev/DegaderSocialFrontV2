@@ -293,7 +293,7 @@ const ArenaPage = () => {
                     </div>
                 )}
                 {/* Pestañas de Navegación Unificadas */}
-                {arena.gameStatus === 'idle' && (
+                {arena.gameStatus === 'idle' && !arena.isGaming && (
                     <div
                         className={`arena-nav-wrapper transition-all duration-300 ${isStickyTabs ? 'sticky-nav-desktop' : 'relative-nav-desktop'} mobile-bottom-nav`}
                     >

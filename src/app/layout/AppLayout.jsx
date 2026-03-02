@@ -15,8 +15,14 @@ import { useArenaStore } from '../../features/LaSendadelReino/stores/useArenaSto
 
 const AppLayout = () => {
   const location = useLocation();
-  const { suspended, suspensionInfo, loading } = useSuspensionCheck();
   const isArenaOverlay = useArenaStore(state => state.isOverlayVisible);
+  const isGaming = useArenaStore(state => state.isGaming);
+  const gameStatus = useArenaStore(state => state.gameStatus);
+
+  // Determinar si debemos ocultar COMPLETAMENTE las navbars (caso Arena Success/Loading/Playing)
+  const hideNavbars = (isArenaOverlay || isGaming || gameStatus !== 'idle') && location.pathname === '/arena';
+
+  const { suspended, suspensionInfo, loading } = useSuspensionCheck();
 
   // Rutas permitidas para usuarios suspendidos: notificaciones y detalles del sistema
   const allowedSuspendedRoutes = ['/notificaciones', '/Sistema'];
@@ -30,9 +36,6 @@ const AppLayout = () => {
   const shouldHideSidebar = hideSidebarRoutes.some(pattern =>
     pattern.test(location.pathname)
   );
-
-  // Determinar si debemos ocultar COMPLETAMENTE las navbars (caso Arena Success/Loading)
-  const hideNavbars = isArenaOverlay && location.pathname === '/arena';
 
   return (
     <div className="app-container">

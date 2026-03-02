@@ -112,18 +112,17 @@
   }
 }
 
-/* Force Landscape Suggestion */
-@media (orientation: portrait) {
-  .tug-arena-container::before {
-    content: "Gira el teléfono 📱🔄";
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 0, 0, 0.8);
-    padding: 5px 15px;
-    border-radius: 8px;
-    z-index: 1000;
+/* Forced Landscape via Rotation on Mobile/Tablets */
+@media (max-width: 1024px) and (orientation: portrait) {
+  .tug-arena-container {
+    transform: rotate(90deg);
+    transform-origin: top left;
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 100vh;
+    height: 100vw;
+    z-index: 9999999;
   }
 }
 

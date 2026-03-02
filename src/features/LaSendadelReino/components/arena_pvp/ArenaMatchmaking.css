@@ -14,18 +14,17 @@
   z-index: 100;
 }
 
-/* Landscape Force Suggestion (If user is on portrait, we can show a warning elsewhere, but here we assume landscape) */
-@media (orientation: portrait) {
-  .arena-matchmaking-container::before {
-    content: "Por favor, gira tu dispositivo 📱🔄";
-    position: absolute;
-    top: 20px;
-    background: rgba(255, 0, 0, 0.8);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    z-index: 1000;
-    animation: pulse 2s infinite;
+/* Forced Landscape via Rotation on Mobile/Tablets */
+@media (max-width: 1024px) and (orientation: portrait) {
+  .arena-matchmaking-container {
+    transform: rotate(90deg);
+    transform-origin: top left;
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 100vh;
+    height: 100vw;
+    z-index: 9999999;
   }
 }
 
@@ -45,6 +44,7 @@
   text-transform: uppercase;
   background: linear-gradient(90deg, #ff8a00, #e52e71);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0;
   letter-spacing: 2px;

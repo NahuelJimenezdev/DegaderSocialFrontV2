@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { ArenaMatchmaking } from './ArenaMatchmaking';
 import { ArenaTugOfWar } from './ArenaTugOfWar';
+import { useArenaStore } from '../../stores/useArenaStore';
 
 export const ArenaPvpContainer = ({ onExit }) => {
     const [matchData, setMatchData] = useState(null);
+    const setIsGaming = useArenaStore(state => state.setIsGaming);
 
     const handleMatchFound = (data) => {
         setMatchData(data);
+        setIsGaming(true);
     };
 
     const handleExitGame = () => {
         setMatchData(null);
+        setIsGaming(false);
         if (onExit) onExit();
     };
 

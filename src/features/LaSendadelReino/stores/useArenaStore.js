@@ -21,7 +21,12 @@ export const useArenaStore = create((set, get) => ({
     fastestAnswer: 999, // Segundos
     lastQuestionStartTime: null,
     lastSessionAchievements: [],
-    isOverlayVisible: false, // New: track if a full-screen overlay is showing
+    lastSessionAchievements: [],
+    isOverlayVisible: false,
+    isGaming: false, // Track if any game mode is active (single or pvp)
+
+    setIsGaming: (value) => set({ isGaming: value }),
+    setIsOverlayVisible: (value) => set({ isOverlayVisible: value }),
 
     /**
      * Inicia una sesión de desafíos
@@ -30,6 +35,7 @@ export const useArenaStore = create((set, get) => ({
         set({
             isLoading: true,
             gameStatus: 'playing',
+            isGaming: true,
             streak: 0,
             currentIndex: 0,
             lastResult: null,
@@ -149,6 +155,7 @@ export const useArenaStore = create((set, get) => ({
                     gameStatus: 'finished',
                     currentChallenge: null,
                     isLoading: false,
+                    isGaming: false,
                     lastSessionAchievements: unlocked,
                     isOverlayVisible: true
                 });
@@ -174,6 +181,7 @@ export const useArenaStore = create((set, get) => ({
             lastResult: null,
             isLoading: false,
             isOverlayVisible: false,
+            isGaming: false,
             accumulatedXP: 0,
             accumulatedScore: 0,
             correctQuestionIds: [],
