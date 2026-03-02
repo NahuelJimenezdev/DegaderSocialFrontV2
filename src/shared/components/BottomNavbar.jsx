@@ -44,6 +44,8 @@ const BottomNavbar = () => {
     navigate(path);
   };
 
+  if (location.pathname === '/arena') return null;
+
   return (
     <nav className="bottom-navbar bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-[0_-2px_8px_rgba(0,0,0,0.1)] transition-colors duration-300">
       {navItems.map((item, index) => {

@@ -5,12 +5,111 @@
   width: 100vw;
   height: 100vh;
   z-index: 999999;
-  background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
+  background: #0a0b1e url('../../assets/background_1vs1.png') no-repeat center center;
+  background-size: cover;
   color: #fff;
   font-family: 'Inter', sans-serif;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* Stage Avatars Positioning */
+.stage-avatars-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.player-avatar-wrapper {
+  position: absolute;
+  top: 50%;
+  /* Default vertical centering */
+  transform: translateY(-50%);
+  width: clamp(80px, 15vw, 150px);
+  height: clamp(80px, 15vw, 150px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid;
+}
+
+.p1-wrapper {
+  left: 10%;
+  /* Ajuste inicial para el círculo azul */
+  border-color: #3b82f6;
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+.p2-wrapper {
+  right: 10%;
+  /* Ajuste inicial para el círculo rojo */
+  border-color: #ef4444;
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
+}
+
+.stage-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RESPONSIVE POSITIONS PARA FIT EN LOS CÍRCULOS DEL SVG/PNG */
+
+/* Desktop / PC */
+@media (min-width: 1024px) {
+  .p1-wrapper {
+    left: 12%;
+    top: 52%;
+  }
+
+  .p2-wrapper {
+    right: 12%;
+    top: 52%;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .p1-wrapper {
+    left: 8%;
+    top: 50%;
+  }
+
+  .p2-wrapper {
+    right: 8%;
+    top: 50%;
+  }
+}
+
+/* Móviles (Vertical) */
+@media (max-width: 767px) {
+  .p1-wrapper {
+    left: 5%;
+    top: 48%;
+  }
+
+  .p2-wrapper {
+    right: 5%;
+    top: 48%;
+  }
+}
+
+/* Móviles (Horizontal - recomendado para el juego) */
+@media (max-height: 500px) {
+  .p1-wrapper {
+    left: 15%;
+    top: 50%;
+  }
+
+  .p2-wrapper {
+    right: 15%;
+    top: 50%;
+  }
 }
 
 /* Force Landscape Suggestion */

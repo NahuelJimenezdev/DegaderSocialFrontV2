@@ -82,32 +82,44 @@ html:not(.dark) .md\:hidden>.motion-div {
     pointer-events: none;
 }
 
-/* Navegación Sticky */
-.arena-nav-container {
-    position: sticky;
-    top: 104px;
-    /* Justo debajo del StickyArenaHeader */
-    z-index: 40;
-    transition: all 0.3s ease;
-    padding: 1rem 0;
+/* Navegación Sticky para Desktop */
+@media (min-width: 769px) {
+    .sticky-nav-desktop {
+        position: sticky;
+        top: 100px;
+        z-index: 100;
+    }
+
+    .relative-nav-desktop {
+        position: relative;
+        z-index: 10;
+    }
 }
 
+/* Navegación al fondo para Mobile */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+        background: linear-gradient(to top, rgba(8, 12, 20, 0.95), transparent);
+        pointer-events: none;
+    }
 
-/* Ajustes de margen para contenido de pestañas */
-.arena-tab-content {
-    padding-top: 20px;
-}
+    .mobile-bottom-nav .arena-nav-container {
+        pointer-events: auto;
+        padding: 10px 16px;
+    }
 
-/* Responsive fixes */
-@media (max-width: 640px) {
-    .arena-page-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
+    .arena-main-wrapper {
+        padding-bottom: 80px !important;
     }
 
     .arena-nav-container {
-        top: 94px;
-        /* Ajuste para mobile */
+        top: auto !important;
     }
 }
 

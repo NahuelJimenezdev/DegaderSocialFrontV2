@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
 import { useUserStore } from '../../stores/useUserStore';
+import RotationAnnouncement from './RotationAnnouncement';
 import './ArenaMatchmaking.css';
 
 export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
@@ -8,19 +9,26 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
   const user = useUserStore();
   const [isSearching, setIsSearching] = useState(false);
   const [matchData, setMatchData] = useState(null);
+  const [showRotationPrompt, setShowRotationPrompt] = useState(false);
 
   useEffect(() => {
     if (!socket) return;
 
     const handleMatchFound = (data) => {
       console.log('⚔️ [ARENA] ¡Partida Encontrada!', data);
-      setMatchData(data);
       setIsSearching(false);
+      setShowRotationPrompt(true);
       
-      // Esperar 3 segundos para mostrar la pantalla de VS antes de iniciar el juego
+      // Mostrar el anuncio de giro por 4 segundos
       setTimeout(() => {
-        if (onMatchFound) onMatchFound(data);
-      }, 3000);
+        setShowRotationPrompt(false);
+        setMatchData(data);
+        
+        // Esperar 3 segundos para mostrar la pantalla de VS antes de iniciar el juego
+        setTimeout(() => {
+          if (onMatchFound) onMatchFound(data);
+        }, 3000);
+      }, 4000);
     };
 
     socket.on('arena:matchFound', handleMatchFound);
@@ -42,6 +50,11 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
     setIsSearching(false);
     socket.emit('arena:cancelSearch');
   };
+
+  // Anuncio de Rotación
+  if (showRotationPrompt) {
+    return <RotationAnnouncement />;
+  }
 
   // Pantalla de VS (Match Encontrado)
   if (matchData) {

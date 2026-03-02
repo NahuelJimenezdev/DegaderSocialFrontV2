@@ -295,11 +295,10 @@ const ArenaPage = () => {
                 {/* Pestañas de Navegación Unificadas */}
                 {arena.gameStatus === 'idle' && (
                     <div
-                        className={`arena-nav-wrapper transition-all duration-300 ${isStickyTabs ? 'sticky z-[100]' : 'relative z-10'}`}
-                        style={isStickyTabs ? { top: '100px' } : {}}
+                        className={`arena-nav-wrapper transition-all duration-300 ${isStickyTabs ? 'sticky-nav-desktop' : 'relative-nav-desktop'} mobile-bottom-nav`}
                     >
-                        <div className="arena-nav-container py-2">
-                            <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
+                        <div className="arena-nav-container py-2 md:py-4">
+                            <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full md:rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl shadow-xl">
                                 {[
                                     { id: 'arena', label: '🏟️ Arena' },
                                     { id: 'pvp', label: '⚔️ Competitivo' },
@@ -309,7 +308,7 @@ const ArenaPage = () => {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
-                                        className={`flex-1 md:flex-none px-6 py-2.5 rounded-full text-xs md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
+                                        className={`flex-1 md:flex-none px-3 md:px-6 py-2.5 rounded-full text-[10px] md:text-sm font-black transition-all duration-300 ${activeTab === tab.id
                                             ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-[1.02]'
                                             : 'text-gray-600 dark:text-gray-400 hover:bg-gray-300/50 dark:hover:bg-white/5'
                                             }`}

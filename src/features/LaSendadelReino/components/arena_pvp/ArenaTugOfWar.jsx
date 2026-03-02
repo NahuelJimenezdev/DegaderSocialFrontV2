@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
 import { useUserStore } from '../../stores/useUserStore';
+import background1vs1 from '../../assets/background_1vs1.png';
 import './ArenaTugOfWar.css';
 
 // Componente Radial para las respuestas (No vertical)
@@ -197,6 +198,24 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
 
             {/* Escenario Central */}
             <main className="tug-main-stage">
+                {/* Avatares en Círculos (Fondo background_1vs1.png) */}
+                <div className="stage-avatars-container">
+                    <div className="player-avatar-wrapper p1-wrapper animate-slide-in-left">
+                        <img 
+                            src={user?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                            alt="Mí" 
+                            className="stage-avatar p1-avatar"
+                        />
+                    </div>
+                    <div className="player-avatar-wrapper p2-wrapper animate-slide-in-right">
+                        <img 
+                            src={matchData.opponent?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                            alt="Rival" 
+                            className="stage-avatar p2-avatar"
+                        />
+                    </div>
+                </div>
+
                 {!currentQuestion ? (
                     <h2 className="animate-pulse">Preparando ronda...</h2>
                 ) : (
