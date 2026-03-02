@@ -226,6 +226,7 @@ const ArenaPage = () => {
                                     src={ARENA_ASSETS.LOGO}
                                     alt="Arena Logo"
                                     className="w-full h-full object-contain scale-150 grayscale"
+                                    noBackground={true}
                                 />
                             </div>
 

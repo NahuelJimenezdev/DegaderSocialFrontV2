@@ -41,6 +41,7 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                                 filter: isDark ? 'brightness(0.8)' : 'sepia(0.2) saturate(0.5) brightness(1.2) hue-rotate(185deg)',
                                 mixBlendMode: 'multiply'
                             }}
+                            noBackground={true}
                         />
                     </div>
 
