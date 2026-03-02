@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.3...v1.57.4) (2026-03-02)
+
+
+### Bug Fixes
+
+* REVERT Tailwind and index.html to restore original design ([7ccf6c1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7ccf6c19d0fbe1c58e0bf8f8636727d76d1c6d16))
+
 ### [1.57.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.2...v1.57.3) (2026-03-02)
 
 ### [1.57.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.1...v1.57.2) (2026-03-02)
