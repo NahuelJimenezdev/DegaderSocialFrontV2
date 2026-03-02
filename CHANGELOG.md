@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.58.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.10...v1.58.0) (2026-03-02)
+
+
+### Features
+
+* **arena:** preload logo.svg on app initialization to prevent flicker ([b87c6a5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b87c6a555a1cf6a0667cb2ffe7a94481d220a89d))
+* **reuniones:** rediseno sistema con tipos Publica/Capacitacion/Grupal, flujo de asistencia con aprobacion y modal de gestion del creador ([3b8e097](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3b8e097900b904249b521ad6de0548c2bc11deba))
+
+
+### Bug Fixes
+
+* corregir fondo cuadrado del logo en pantalla de login mobile y desktop ([3712093](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3712093ee96f83d7b0b6de721a99e392472c0a5e))
+
 ### [1.57.10](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.9...v1.57.10) (2026-03-02)
 
 ### [1.57.9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.8...v1.57.9) (2026-03-02)
