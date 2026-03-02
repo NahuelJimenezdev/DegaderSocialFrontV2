@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.57.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.56.0...v1.57.0) (2026-03-02)
+
+
+### Features
+
+* auditoría global de imágenes progresivas e integración en múltiples módulos ([6082b16](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6082b16cba0af947eb3e76ab47864871b690bfe0))
+
+
+### Bug Fixes
+
+* corregir error de resolución de ProgressiveImage en build de producción ([ffbd4e2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ffbd4e20016c9c0a4fe7d72273b3af6de6443ccc))
+* importación de ProgressiveImage y corrección de auditoría ([1207c42](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1207c42e21a6840a7818d252ca5500a7eaf3dde7))
+
 ## [1.56.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.55.2...v1.56.0) (2026-03-01)
 
 
