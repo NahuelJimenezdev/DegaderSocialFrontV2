@@ -105,6 +105,7 @@ export default function NotificationCard({
           blurHash={avatarObj?.blurHash}
           alt={`Foto de perfil de ${nombre}`}
           className={styles.avatar}
+          aspectRatio="1/1"
         />
       </div>
 

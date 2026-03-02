@@ -212,6 +212,7 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                     alt="Tu perfil"
                     className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                     style={{ clipPath: 'circle(50%)' }}
+                    aspectRatio="1/1"
                 />
             )}
 
@@ -253,6 +254,7 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                             blurHash={currentUser?.social?.fotoPerfilObj?.blurHash}
                             alt="Tu perfil"
                             className="w-8 h-8 rounded-full object-cover flex-shrink-0 mr-2"
+                            aspectRatio="1/1"
                         />
                     )}
 

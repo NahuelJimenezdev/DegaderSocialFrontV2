@@ -87,6 +87,7 @@ const IglesiaExMiembrosContent = ({ iglesiaId }) => {
                                                     alt={`${registro.usuario?.nombres?.primero || 'Usuario'} ${registro.usuario?.apellidos?.primero || ''}`}
                                                     className="w-10 h-10 rounded-full object-cover bg-gray-200 dark:bg-gray-700 flex-shrink-0"
                                                     style={{ clipPath: 'circle(50%)' }}
+                                                    aspectRatio="1/1"
                                                 />
                                                 <div className="overflow-hidden">
                                                     <p className="font-semibold text-gray-900 dark:text-white truncate max-w-[180px]">

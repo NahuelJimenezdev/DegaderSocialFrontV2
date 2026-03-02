@@ -158,6 +158,7 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                                         blurHash={user.social?.fotoPerfilObj?.blurHash}
                                         alt={fullName}
                                         className="w-6 h-6 rounded-full object-cover ring-1 ring-gray-100 dark:ring-gray-800 block"
+                                        aspectRatio="1/1"
                                     />
                                 </div>
                                 <span className="font-semibold text-gray-900 dark:text-white text-[13px] cursor-pointer hover:text-gray-600 dark:hover:text-gray-300">

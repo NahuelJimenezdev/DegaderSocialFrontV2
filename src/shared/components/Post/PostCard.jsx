@@ -462,6 +462,7 @@ const PostCard = ({
                                 alt={fullName}
                                 className="w-10 h-10 rounded-full object-cover aspect-square ring-2 ring-transparent group-hover:ring-indigo-500 transition-all block"
                                 style={{ clipPath: 'circle(50%)' }}
+                                aspectRatio="1/1"
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`;

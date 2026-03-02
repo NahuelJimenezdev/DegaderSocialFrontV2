@@ -24,6 +24,7 @@ const UserItem = ({
         blurHash={user.avatarObj?.blurHash}
         alt={nombreCompleto}
         className="w-10 h-10 rounded-full object-cover"
+        aspectRatio="1/1"
       />
       <div className="flex-1">
         <div className="font-bold text-sm text-[#1F2937] dark:text-[#F9FAFB]">
