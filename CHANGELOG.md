@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.64.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.63.0...v1.64.0) (2026-03-02)
+
+
+### Features
+
+* rediseño exacto de card competitiva con nuevo copy y botón ([9f74a19](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9f74a1903a767c6792cc4c0bd456ab588e01679a))
+
 ## [1.63.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.62.2...v1.63.0) (2026-03-02)
 
 
