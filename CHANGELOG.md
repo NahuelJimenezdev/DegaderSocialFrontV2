@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.0...v1.57.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* **arena:** restaurar importaciones faltantes en StickyArenaHeader ([807e8c5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/807e8c55841b6b77e37dd135f7a60dd4dd9f68a7))
+* refactorización de ProgressiveImage para auto-height y visibilidad ([fb8ec2c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/fb8ec2cfb03867f23c612d57566a75cac4b6b407))
+
 ## [1.57.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.56.0...v1.57.0) (2026-03-02)
 
 
