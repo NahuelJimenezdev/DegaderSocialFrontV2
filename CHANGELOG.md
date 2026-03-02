@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.62.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.61.4...v1.62.0) (2026-03-02)
+
+
+### Features
+
+* mejoras mobile arena, anuncio de rotación y rediseño 1vs1 ([f37b29e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f37b29e5825536293aa89f02b677575461e1776a))
+
 ### [1.61.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.61.3...v1.61.4) (2026-03-02)
 
 ### [1.61.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.61.2...v1.61.3) (2026-03-02)
