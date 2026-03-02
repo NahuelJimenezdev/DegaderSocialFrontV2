@@ -67,28 +67,38 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
     return (
       <div className={`arena-matchmaking-container ${theme}`}>
         <div className="vs-screen">
-          <div className="vs-player vs-player-left animate-slide-in-left">
-            <img 
-              src={user?.social?.fotoPerfil || '/assets/default-avatar.png'} 
-              alt="You" 
-              className="vs-avatar"
-            />
-            <h2 className="vs-name">Tú</h2>
-            <div className="vs-league">LIGA {user?.arena?.league?.toUpperCase() || 'DISCÍPULO'}</div>
-          </div>
-          
-          <div className="vs-center animate-pulse-fast">
-            <h1 className="vs-text glitch" data-text="VS">VS</h1>
+          {/* Jugador Izquierda (Tú) */}
+          <div className="vs-player-container vs-p1 animate-slide-in-left">
+            <div className="vs-avatar-wrapper">
+              <img 
+                src={user?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                alt="Yo" 
+                className="vs-avatar"
+              />
+            </div>
+            <div className="vs-player-badge">
+              <span className="vs-label">TÚ</span>
+              <span className="vs-sublabel">LIGA {user?.arena?.league?.toUpperCase() || 'DISCÍPULO'}</span>
+            </div>
           </div>
 
-          <div className="vs-player vs-player-right animate-slide-in-right">
-            <img 
-              src={opponent.social?.fotoPerfil || '/assets/default-avatar.png'} 
-              alt="Opponent" 
-              className="vs-avatar"
-            />
-            <h2 className="vs-name">{opponentName}</h2>
-            <div className="vs-league">LIGA {opponent.arena?.league?.toUpperCase() || 'DISCÍPULO'}</div>
+          <div className="vs-center-decoration animate-pulse-fast">
+            <div className="vs-text-glow">VS</div>
+          </div>
+
+          {/* Jugador Derecha (Rival) */}
+          <div className="vs-player-container vs-p2 animate-slide-in-right">
+            <div className="vs-avatar-wrapper">
+              <img 
+                src={opponent.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                alt="Rival" 
+                className="vs-avatar"
+              />
+            </div>
+            <div className="vs-player-badge">
+              <span className="vs-label">{opponentName}</span>
+              <span className="vs-sublabel">LIGA {opponent.arena?.league?.toUpperCase() || 'DISCÍPULO'}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -100,11 +110,17 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
     <div className={`arena-matchmaking-container ${theme}`}>
       {!isSearching ? (
         <div className="matchmaking-idle">
-          <h2>ARENA COMPETITIVA</h2>
-          <p>Encuentra un oponente digno y domina el campo de batalla.</p>
-          <button className="btn-search-match pulse-button" onClick={handleStartSearch}>
-            BUSCAR RIVAL
-          </button>
+          <div className="arena-competitive-card">
+            <div className="card-main-content">
+              <p className="matchmaking-hint">Encuentra un oponente digno y domina el campo de batalla.</p>
+              <button className="btn-search-rival pulse-button" onClick={handleStartSearch}>
+                BUSCAR RIVAL
+              </button>
+            </div>
+            <div className="card-vertical-title">
+              <h2>ARENA COMPETITIVA</h2>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="matchmaking-searching">

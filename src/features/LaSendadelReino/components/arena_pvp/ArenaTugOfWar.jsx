@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
 import { useUserStore } from '../../stores/useUserStore';
-import background1vs1 from '../../assets/background_1vs1.png';
+import competitiveBG from '../../assets/fondo_competitivo_one.png';
 import './ArenaTugOfWar.css';
 
 // Componente Radial para las respuestas (No vertical)

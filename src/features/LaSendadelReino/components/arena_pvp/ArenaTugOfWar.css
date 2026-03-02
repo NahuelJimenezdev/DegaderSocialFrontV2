@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 999999;
-  background: #0a0b1e url('../../assets/background_1vs1.png') no-repeat center center;
+  background: #0a0b1e url('../../assets/fondo_competitivo_one.png') no-repeat center center;
   background-size: cover;
   color: #fff;
   font-family: 'Inter', sans-serif;
@@ -63,43 +63,43 @@
 /* Desktop / PC */
 @media (min-width: 1024px) {
   .p1-wrapper {
-    left: 16.5%;
-    top: 51.5%;
+    left: 10%;
+    top: 50%;
   }
 
   .p2-wrapper {
-    right: 16.5%;
-    top: 51.5%;
+    right: 10%;
+    top: 50%;
   }
 }
 
 /* Tablets */
 @media (min-width: 768px) and (max-width: 1023px) {
   .p1-wrapper {
-    left: 15.5%;
-    top: 50.5%;
+    left: 8%;
+    top: 50%;
   }
 
   .p2-wrapper {
-    right: 15.5%;
-    top: 50.5%;
+    right: 8%;
+    top: 50%;
   }
 }
 
-/* Móviles (Vertical/Rotated) - Ajuste para S8 y similares */
+/* Móviles (Vertical/Rotated) */
 @media (max-width: 950px) {
   .p1-wrapper {
-    left: 17.5%;
-    top: 50.5%;
-    width: clamp(70px, 18vh, 120px);
-    height: clamp(70px, 18vh, 120px);
+    left: 8%;
+    top: 50%;
+    width: clamp(60px, 15vh, 100px);
+    height: clamp(60px, 15vh, 100px);
   }
 
   .p2-wrapper {
-    right: 17.5%;
-    top: 50.5%;
-    width: clamp(70px, 18vh, 120px);
-    height: clamp(70px, 18vh, 120px);
+    right: 8%;
+    top: 50%;
+    width: clamp(60px, 15vh, 100px);
+    height: clamp(60px, 15vh, 100px);
   }
 }
 
