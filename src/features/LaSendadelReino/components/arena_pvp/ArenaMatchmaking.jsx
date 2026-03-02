@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
 import { useUserStore } from '../../stores/useUserStore';
 import RotationAnnouncement from './RotationAnnouncement';
+import { useArenaStore } from '../../stores/useArenaStore';
 import './ArenaMatchmaking.css';
 
 export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
@@ -10,6 +11,7 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [matchData, setMatchData] = useState(null);
   const [showRotationPrompt, setShowRotationPrompt] = useState(false);
+  const setIsRotationRequired = useArenaStore(state => state.setIsRotationRequired);
 
   useEffect(() => {
     if (!socket) return;
@@ -18,6 +20,7 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
       console.log('⚔️ [ARENA] ¡Partida Encontrada!', data);
       setIsSearching(false);
       setShowRotationPrompt(true);
+      setIsRotationRequired(true);
       
       // Mostrar el anuncio de giro por 4 segundos
       setTimeout(() => {

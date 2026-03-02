@@ -21,11 +21,12 @@ export const useArenaStore = create((set, get) => ({
     fastestAnswer: 999, // Segundos
     lastQuestionStartTime: null,
     lastSessionAchievements: [],
-    lastSessionAchievements: [],
     isOverlayVisible: false,
     isGaming: false, // Track if any game mode is active (single or pvp)
+    isRotationRequired: false, // Track if 90deg rotation should be applied
 
     setIsGaming: (value) => set({ isGaming: value }),
+    setIsRotationRequired: (value) => set({ isRotationRequired: value }),
     setIsOverlayVisible: (value) => set({ isOverlayVisible: value }),
 
     /**
@@ -156,6 +157,7 @@ export const useArenaStore = create((set, get) => ({
                     currentChallenge: null,
                     isLoading: false,
                     isGaming: false,
+                    isRotationRequired: false,
                     lastSessionAchievements: unlocked,
                     isOverlayVisible: true
                 });
@@ -182,6 +184,7 @@ export const useArenaStore = create((set, get) => ({
             isLoading: false,
             isOverlayVisible: false,
             isGaming: false,
+            isRotationRequired: false,
             accumulatedXP: 0,
             accumulatedScore: 0,
             correctQuestionIds: [],

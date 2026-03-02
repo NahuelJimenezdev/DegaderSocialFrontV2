@@ -17,6 +17,7 @@ const AppLayout = () => {
   const location = useLocation();
   const isArenaOverlay = useArenaStore(state => state.isOverlayVisible);
   const isGaming = useArenaStore(state => state.isGaming);
+  const isRotationRequired = useArenaStore(state => state.isRotationRequired);
   const gameStatus = useArenaStore(state => state.gameStatus);
 
   // Determinar si debemos ocultar COMPLETAMENTE las navbars (caso Arena Success/Loading/Playing)
@@ -38,7 +39,7 @@ const AppLayout = () => {
   );
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${isRotationRequired && location.pathname === '/arena' ? 'arena-rotation-active' : ''}`}>
       {/* Navbar fijo arriba */}
       {!hideNavbars && <Navbar />}
 
