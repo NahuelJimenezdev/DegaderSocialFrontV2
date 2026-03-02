@@ -42,7 +42,7 @@ const ArenaLoading = ({ difficulty, onReady }) => {
             </div>
 
             <div className="relative z-10 flex flex-col items-center w-full max-w-lg px-6">
-                <div className="relative w-[55vw] max-w-[200px] max-h-[35vh] aspect-square mx-auto mb-4">
+                <div style={{ width: '55vw', maxWidth: '200px', maxHeight: '35vh', aspectRatio: '1/1', margin: '0 auto 1rem', position: 'relative' }}>
                     {/* Aura circular */}
                     <motion.div
                         animate={{
@@ -65,13 +65,18 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                             scale: { duration: 0.5 },
                             y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         }}
-                        className="relative z-10 w-full h-full"
+                        style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%' }}
                     >
                         <ProgressiveImage
                             src={ARENA_ASSETS.LOGO}
                             alt="Loading..."
-                            className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
                             noBackground={true}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                filter: 'drop-shadow(0 10px 30px rgba(59,130,246,0.3))'
+                            }}
                         />
                     </motion.div>
                 </div>
