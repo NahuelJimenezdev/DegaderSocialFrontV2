@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.59.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.5...v1.59.0) (2026-03-02)
+
+
+### Features
+
+* **iglesia:** agregar opciones de eliminar y transferir administracion ([10ecffc](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/10ecffc6840d7ead8d9bc6d80dfb9715db23eded))
+
 ### [1.58.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.4...v1.58.5) (2026-03-02)
 
 
