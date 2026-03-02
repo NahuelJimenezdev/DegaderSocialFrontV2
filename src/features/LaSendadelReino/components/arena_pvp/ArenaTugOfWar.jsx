@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
-import { useAuth } from '../../../../hooks/useAuth';
+import { useUserStore } from '../../stores/useUserStore';
 import './ArenaTugOfWar.css';
 
 // Componente Radial para las respuestas (No vertical)
@@ -34,7 +34,7 @@ const RadialAnswers = ({ options, onSelect, disabled }) => {
 
 export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
     const { socket } = useSocket();
-    const { user } = useAuth();
+    const user = useUserStore();
     
     // Estados del Juego
     const [gameState, setGameState] = useState({

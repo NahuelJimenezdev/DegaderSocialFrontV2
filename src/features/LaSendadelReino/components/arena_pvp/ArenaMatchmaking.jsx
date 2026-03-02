@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
-import { useAuth } from '../../../../hooks/useAuth';
+import { useUserStore } from '../../stores/useUserStore';
 import './ArenaMatchmaking.css';
 
 export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
   const { socket } = useSocket();
-  const { user } = useAuth();
+  const user = useUserStore();
   const [isSearching, setIsSearching] = useState(false);
   const [matchData, setMatchData] = useState(null);
 
