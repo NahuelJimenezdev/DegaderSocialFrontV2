@@ -93,6 +93,7 @@ const Login = () => {
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Logo"
                 className="loader-logo"
+                noBackground={true}
                 style={{ width: '75%', height: '75%', objectFit: 'contain' }}
               />
             </div>
@@ -107,6 +108,7 @@ const Login = () => {
               <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Degader Logo"
+                noBackground={true}
                 style={{ width: '80%', height: '80%', objectFit: 'contain' }}
               />
             </div>
@@ -145,6 +147,7 @@ const Login = () => {
                 <ProgressiveImage
                   src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                   alt="Logo"
+                  noBackground={true}
                   style={{ width: '100%', objectFit: 'contain' }}
                 />
               </div>
@@ -232,6 +235,7 @@ const Login = () => {
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Degader Logo"
                 className="logo-img"
+                noBackground={true}
                 style={{ width: '100%', objectFit: 'contain' }}
               />
             </div>
