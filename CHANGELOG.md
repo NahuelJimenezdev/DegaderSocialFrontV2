@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.58.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.0...v1.58.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* reducir logo de loading arena al 70%, ajustar watermark cabecera y corregir modo oscuro ([027c2c2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/027c2c2538b9203ef0725ba6ee360317fe564038))
+
 ## [1.58.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.10...v1.58.0) (2026-03-02)
 
 
