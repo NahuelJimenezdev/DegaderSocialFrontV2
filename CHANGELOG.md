@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.58.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.3...v1.58.4) (2026-03-02)
+
+
+### Bug Fixes
+
+* corregir logo splash screen arena de w-150vw a min(60vw,280px) ([2169fee](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2169feee9a40f638021f65caa5a7a2fd1fe9c975))
+
 ### [1.58.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.2...v1.58.3) (2026-03-02)
 
 
