@@ -27,7 +27,11 @@ export function ReunionesPage() {
     isLoading,
     error,
     createNewMeeting,
-    cancelMeeting
+    cancelMeeting,
+    requestAttendance,
+    respondAttendance,
+    updateMeeting,
+    refetch,
   } = useMeetings();
 
   // Obtener ID del usuario actual
@@ -203,6 +207,10 @@ export function ReunionesPage() {
               <MeetingCard
                 meeting={meeting}
                 onCancel={cancelMeeting}
+                onRequestAttendance={requestAttendance}
+                onRespondAttendance={respondAttendance}
+                onUpdateMeeting={updateMeeting}
+                onRefetch={refetch}
                 currentUserId={currentUserId}
               />
             </div>

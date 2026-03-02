@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { X, Calendar, Clock, Users, Link, Video, Tag, Check, Send, Plus } from 'lucide-react';
+import { X, Calendar, Clock, Users, Link, Video, Tag, Check, Send, Plus, Globe, BookOpen, UsersRound } from 'lucide-react';
 import { useUserSearch } from '../hooks/useUserSearch';
+import api from '../../../api/config';
 
-// Opciones para contexto de IGLESIA
-const churchMeetingTypes = [
-  { value: 'oracion', label: 'Oración', color: 'text-purple-600' },
-  { value: 'estudio_biblico', label: 'Estudio de la Palabra', color: 'text-blue-600' },
-  { value: 'culto', label: 'Culto General', color: 'colorMarcaDegader' },
-  { value: 'escuela_dominical', label: 'Escuela Dominical', color: 'text-orange-600' },
-  { value: 'capacitacion', label: 'Capacitación', color: 'text-teal-600' },
-  { value: 'grupal', label: 'Grupal', color: 'text-pink-600' },
-];
-
-// Opciones para contexto GLOBAL (Mis Reuniones)
+// Tipos para contexto GLOBAL
 const globalMeetingTypes = [
-  { value: 'personal', label: 'Personal', color: 'text-gray-600' },
-  { value: 'capacitacion', label: 'Capacitación', color: 'text-teal-600' },
-  { value: 'grupal', label: 'Grupal', color: 'text-pink-600' },
-  { value: 'comercial', label: 'Comercial', color: 'text-emerald-600' },
+  { value: 'publica',     label: 'Pública',       icon: Globe,       color: 'text-sky-600',  desc: 'Visible para todos tus amigos. Sin notificación al crearla.' },
+  { value: 'capacitacion',label: 'Capacitación',  icon: BookOpen,    color: 'text-teal-600', desc: 'Visible para amigos. Notifica a los usuarios que selecciones.' },
+  { value: 'grupal',      label: 'Grupal',         icon: UsersRound,  color: 'text-pink-600', desc: 'Solo visible para miembros de un grupo. Notifica a los miembros.' },
 ];
 
-const meetingDurations = [
-  '30 minutos', '1 hora', '1.5 horas', '2 horas', '3 horas', 'Más de 3 horas'
+// Tipos para contexto IGLESIA
+const churchMeetingTypes = [
+  { value: 'oracion',           label: 'Oración',              color: 'text-purple-600' },
+  { value: 'estudio_biblico',   label: 'Estudio de la Palabra', color: 'text-blue-600' },
+  { value: 'culto',             label: 'Culto General',         color: 'colorMarcaDegader' },
+  { value: 'escuela_dominical', label: 'Escuela Dominical',     color: 'text-orange-600' },
+  { value: 'capacitacion',      label: 'Capacitación',          color: 'text-teal-600' },
+  { value: 'grupal',            label: 'Grupal',                color: 'text-pink-600' },
 ];
+
+const meetingDurations = ['30 minutos', '1 hora', '1.5 horas', '2 horas', '3 horas', 'Más de 3 horas'];
+
+const MINISTERIOS = [
+  "musica", "caballeros", "damas", "escuela_dominical", "evangelismo",
+  "limpieza", "cocina", "medios", "juventud", "intercesion",
+  "consejeria", "visitacion", "seguridad", "protocolo"
+];
+const formatMinistryName = (name) =>
+  name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+    .replace('Musica', 'Música').replace('Intercesion', 'Intercesión')
+    .replace('Consejeria', 'Consejería').replace('Visitacion', 'Visitación');
 
 export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext = false }) {
   if (!isOpen) return null;
 
-  // Determinar qué tipos usar
   const availableTypes = isChurchContext ? churchMeetingTypes : globalMeetingTypes;
 
   const [formData, setFormData] = useState({
@@ -38,47 +45,57 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
     duration: meetingDurations[1],
     type: availableTypes[0].value,
     meetLink: 'https://meet.google.com/',
-    attendees: [],
-    targetMinistry: 'todos', // Default para iglesias
+    attendees: [],   // IDs de invitados (capacitacion)
+    group: '',       // ID de grupo (grupal)
+    targetMinistry: 'todos',
   });
-
-  // Resetear el tipo cuando cambia el contexto o se abre el modal
-  useEffect(() => {
-    if (isOpen) {
-      setFormData(prev => ({
-        ...prev,
-        type: availableTypes[0].value
-      }));
-    }
-  }, [isOpen, isChurchContext]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [submitError, setSubmitError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [myGroups, setMyGroups] = useState([]);
 
-  // Hook REAL - obtiene searchResults del custom hook
-  const {
-    searchResults,
-    searchLoading,
-    searchError,
-    searchParticipants
-  } = useUserSearch();
+  const { searchResults, searchLoading, searchError, searchParticipants } = useUserSearch();
 
-  // Buscar usuarios reales cada 500ms
+  // Resetear al abrir
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(prev => ({ ...prev, type: availableTypes[0].value, attendees: [], group: '' }));
+      setSubmitError(null);
+    }
+  }, [isOpen, isChurchContext]);
+
+  // Cargar grupos del usuario cuando el tipo es grupal
+  useEffect(() => {
+    if (formData.type === 'grupal') {
+      api.get('/grupos/mis-grupos').then(r => setMyGroups(r.data?.data || [])).catch(() => setMyGroups([]));
+    }
+  }, [formData.type]);
+
+  // Búsqueda de usuarios con debounce
   useEffect(() => {
     const delay = setTimeout(() => {
       if (searchTerm.length >= 2) searchParticipants(searchTerm);
     }, 500);
-
     return () => clearTimeout(delay);
   }, [searchTerm]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectAttendee = (user) => {
+    setFormData(prev => {
+      const isSelected = prev.attendees.some(u => u.id === user.id);
+      return {
+        ...prev,
+        attendees: isSelected
+          ? prev.attendees.filter(u => u.id !== user.id)
+          : [...prev.attendees, user]
+      };
+    });
+    setSearchTerm('');
   };
 
   const handleSubmit = async (e) => {
@@ -86,16 +103,20 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
     setSubmitError(null);
     setIsSubmitting(true);
 
+    // Validación de grupo
+    if (formData.type === 'grupal' && !formData.group) {
+      setSubmitError('Debes seleccionar un grupo para este tipo de reunión.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      // Enviar solo los IDs
       const payload = {
         ...formData,
-        attendees: formData.attendees.map(u => u.id)
+        attendees: formData.attendees.map(u => u.id),
+        group: formData.group || null,
       };
-
       const result = await onCreate(payload);
-
-      // Solo cerrar si fue exitoso
       if (result && result.success !== false) {
         onClose();
       } else if (result && result.error) {
@@ -108,301 +129,220 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
     }
   };
 
-  // Selección de usuarios REALES del backend
-  // En src/features/reuniones/components/CreateMeetingModal.jsx
-
-  const handleSelectAttendee = (user) => {
-    setFormData(prev => {
-      const isSelected = prev.attendees.some(u => u.id === user.id);
-
-      if (isSelected) {
-        // Eliminar usuario
-        return {
-          ...prev,
-          attendees: prev.attendees.filter(u => u.id !== user.id)
-        };
-      } else {
-        // Agregar usuario completo
-        return {
-          ...prev,
-          attendees: [...prev.attendees, user]
-        };
-      }
-    });
-    // Limpiar el input de búsqueda
-    setSearchTerm('');
-  };
-
-
-
-
-  const selectedTypeColor = availableTypes.find(t => t.value === formData.type)?.color || 'text-gray-600';
-
-  // Lista de ministerios definidos en el sistema
-  const MINISTERIOS = [
-    "musica", "caballeros", "damas", "escuela_dominical", "evangelismo",
-    "limpieza", "cocina", "medios", "juventud", "intercesion",
-    "consejeria", "visitacion", "seguridad", "protocolo"
-  ];
-
-  /* 
-   * Formatear nombre del ministerio para mostrar
-   * musica -> Música
-   * escuela_dominical -> Escuela Dominical
-   */
-  const formatMinistryName = (name) => {
-    return name
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-      .replace('Musica', 'Música')
-      .replace('Intercesion', 'Intercesión')
-      .replace('Consejeria', 'Consejería')
-      .replace('Visitacion', 'Visitación');
-  };
+  const selectedType = globalMeetingTypes.find(t => t.value === formData.type);
+  const showUserSearch = !isChurchContext && (formData.type === 'capacitacion');
+  const showGroupSelect = !isChurchContext && formData.type === 'grupal';
 
   return (
     <div className="fixed inset-0 z-[10000] bg-black bg-opacity-40 flex items-center justify-center p-4 text-gray-700 dark:text-gray-300" style={{ margin: 0, padding: '1rem' }}>
       <div className="bg-white dark:bg-[#1a1f3a] rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col border dark:border-gray-700">
 
-        {/* Encabezado - FIJO */}
+        {/* Encabezado */}
         <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-[#1a1f3a]">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2">
             <Video className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <span>Programar Nueva Reunión {isChurchContext ? '(Eclesiástica)' : ''}</span>
+            <span>Programar Reunión {isChurchContext ? '(Eclesiástica)' : ''}</span>
           </h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-          >
+          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Formulario - CON SCROLL */}
+        {/* Formulario */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto flex-1 scrollbar-hide">
+
+          {/* Tipo de reunión — como cards visuales (solo contexto global) */}
+          {!isChurchContext && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                <Tag className="w-4" /> Tipo de Reunión
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {globalMeetingTypes.map(t => {
+                  const Icon = t.icon;
+                  const isSelected = formData.type === t.value;
+                  return (
+                    <button
+                      key={t.value}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, type: t.value, attendees: [], group: '' }))}
+                      className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all text-center
+                        ${isSelected
+                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}`}
+                    >
+                      <Icon className={`w-5 h-5 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <span className={`text-xs font-semibold ${isSelected ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400'}`}>
+                        {t.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedType && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{selectedType.desc}</p>
+              )}
+            </div>
+          )}
+
+          {/* Tipo iglesia — select simple */}
+          {isChurchContext && (
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                <Tag className="w-4" /> Tipo
+              </label>
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
+              >
+                {churchMeetingTypes.map(t => (
+                  <option key={t.value} value={t.value} className="dark:bg-[#1a1f3a]">{t.label}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Título */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Título de la Reunión</label>
-            <input
-              name="title"
-              type="text"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Ej: Reunión Mensual de Directores"
-              required
-              className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none transition-all"
-            />
+            <input name="title" type="text" value={formData.title} onChange={handleChange}
+              placeholder="Ej: Reunión Mensual de Capacitación" required
+              className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
           </div>
 
           {/* Descripción */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descripción (Opcional)</label>
-            <textarea
-              name="description"
-              rows="2"
-              value={formData.description}
-              onChange={handleChange}
+            <textarea name="description" rows="2" value={formData.description} onChange={handleChange}
               placeholder="Agenda o propósito"
-              className="w-full border dark:border-gray-700 rounded-lg p-3 resize-none bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none transition-all"
-            />
+              className="w-full border dark:border-gray-700 rounded-lg p-3 resize-none bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
           </div>
 
           {/* Fecha - Hora - Duración */}
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Calendar className="w-4" /> Fecha</label>
-              <input
-                name="date"
-                type="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
-              />
+              <input name="date" type="date" value={formData.date} onChange={handleChange} required
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none" />
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Clock className="w-4" /> Hora</label>
-              <input
-                name="time"
-                type="time"
-                value={formData.time}
-                onChange={handleChange}
-                required
-                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
-              />
+              <input name="time" type="time" value={formData.time} onChange={handleChange} required
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none" />
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Duración</label>
-              <select
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none"
-              >
+              <select name="duration" value={formData.duration} onChange={handleChange}
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none">
                 {meetingDurations.map(d => <option key={d} className="dark:bg-[#1a1f3a]">{d}</option>)}
               </select>
             </div>
           </div>
 
-          {/* Enlace y Tipo */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Link className="w-4" /> Enlace</label>
-              <input
-                name="meetLink"
-                type="url"
-                value={formData.meetLink}
-                onChange={handleChange}
-                required
-                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Tag className="w-4" /> Tipo</label>
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className={`w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] ${selectedTypeColor} outline-none`}
-              >
-                {availableTypes.map(t => (
-                  <option key={t.value} value={t.value} className="dark:bg-[#1a1f3a]">{t.label}</option>
-                ))}
-              </select>
-            </div>
+          {/* Enlace */}
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Link className="w-4" /> Enlace de reunión</label>
+            <input name="meetLink" type="url" value={formData.meetLink} onChange={handleChange} required
+              className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none" />
           </div>
 
-          {/* Selector de Ministerio (SOLO SI HAY IGLESIA) */}
-          {/* Asumimos que parentId o similar indica contexto de Iglesia, o pasamos prop isChurchContext */}
-          {/* Voy a agregar un campo "targetMinistry" al formData siempre, pero visible solo si se requiere */}
-
+          {/* Selector de ministerio (iglesia) */}
           {isChurchContext && (
             <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
                 <Users className="w-4" /> Dirigido A:
               </label>
-              <select
-                name="targetMinistry"
-                value={formData.targetMinistry || 'todos'}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-3 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-medium outline-none"
-              >
+              <select name="targetMinistry" value={formData.targetMinistry || 'todos'} onChange={handleChange}
+                className="w-full border rounded-lg p-3 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-medium outline-none">
                 <option value="todos" className="dark:bg-[#1a1f3a]">Todos</option>
                 <optgroup label="Ministerios" className="dark:bg-[#1a1f3a]">
-                  {MINISTERIOS.map(m => (
-                    <option key={m} value={m} className="dark:bg-[#1a1f3a]">{formatMinistryName(m)}</option>
-                  ))}
+                  {MINISTERIOS.map(m => <option key={m} value={m} className="dark:bg-[#1a1f3a]">{formatMinistryName(m)}</option>)}
                 </optgroup>
               </select>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {formData.targetMinistry && formData.targetMinistry !== 'todos'
-                  ? `Se notificará solo a los miembros del ministerio de ${formatMinistryName(formData.targetMinistry)}.`
-                  : 'Se notificará a toda la congregación.'}
-              </p>
             </div>
           )}
 
-          {/* Participantes */}
-          <div className="space-y-3 p-4 bg-gray-50 dark:bg-[#0a0e27] rounded-lg border dark:border-gray-700">
-            <h3 className="flex items-center font-semibold text-gray-900 dark:text-white"><Users className="w-5 mr-2" /> Participantes ({formData.attendees.length})</h3>
-
-            {/* Búsqueda */}
-            <input
-              type="text"
-              placeholder="Buscar usuarios (min 2 letras)..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-[#1a1f3a] dark:text-white placeholder-gray-400 outline-none"
-            />
-
-            {/* Resultados */}
-            <div className="max-h-32 overflow-y-auto space-y-1 scrollbar-hide">
-              {searchLoading && <p className="text-sm text-blue-500 dark:text-blue-400">Buscando...</p>}
-              {searchError && <p className="text-sm text-red-500 dark:text-red-400">{searchError}</p>}
-
-              {(searchResults && searchResults.length > 0) && (
-                searchResults
-                  // Filtrar los que NO estén seleccionados
-                  .filter(user => !(formData?.attendees || []).some(a => a.id === user.id))
-                  .map(user => (
-                    <div
-                      key={user.id}
-                      className={`flex justify-between p-2 rounded cursor-pointer
-          ${(formData?.attendees || []).some(a => a.id === user.id)
-                          ? 'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-700 text-gray-900 dark:text-white'
-                          : 'hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'}
-        `}
-                      onClick={() => {
-                        handleSelectAttendee(user);
-                        setSearchTerm('');
-                      }}
-                    >
-                      <span className="text-sm">{user.name}</span>
-
-                      {(formData?.attendees || []).some(a => a.id === user.id)
-                        ? <Check className="w-4 text-blue-600 dark:text-blue-400" />
-                        : <Plus className="w-4 text-gray-500 dark:text-gray-400" />}
-                    </div>
-                  ))
-              )}
-
-              {!searchLoading && searchTerm.length >= 2 && searchResults.length === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">No se encontraron usuarios.</p>
+          {/* Selector de grupo (solo tipo grupal) */}
+          {showGroupSelect && (
+            <div className="space-y-2 p-4 bg-pink-50 dark:bg-pink-900/20 rounded-lg border border-pink-200 dark:border-pink-800">
+              <h3 className="flex items-center font-semibold text-pink-800 dark:text-pink-300">
+                <UsersRound className="w-4 mr-2" /> Seleccionar Grupo
+              </h3>
+              {myGroups.length === 0 ? (
+                <p className="text-sm text-pink-600 dark:text-pink-400">No pertenecés a ningún grupo todavía.</p>
+              ) : (
+                <select name="group" value={formData.group} onChange={handleChange}
+                  className="w-full border border-pink-300 dark:border-pink-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none">
+                  <option value="">Seleccioná un grupo...</option>
+                  {myGroups.map(g => <option key={g._id} value={g._id} className="dark:bg-[#1a1f3a]">{g.nombre}</option>)}
+                </select>
               )}
             </div>
+          )}
 
-            {/* Chips reales */}
-            <div className="flex flex-wrap gap-2 pt-3 border-t dark:border-gray-700">
-              {formData.attendees.map(user => (
-                <span
-                  key={user.id}
-                  onClick={() => handleSelectAttendee(user)}
-                  className="px-3 py-1 bg-blue-500 dark:bg-blue-600 text-white rounded-full text-xs flex items-center gap-1 cursor-pointer hover:bg-red-500 dark:hover:bg-red-600 transition-colors"
-                >
-                  {user.name}
-                  <X className="w-3" />
-                </span>
-              ))}
+          {/* Buscador de usuarios (solo tipo capacitacion) */}
+          {showUserSearch && (
+            <div className="space-y-3 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
+              <h3 className="flex items-center font-semibold text-teal-800 dark:text-teal-300">
+                <Users className="w-4 mr-2" /> Invitar usuarios específicos ({formData.attendees.length})
+              </h3>
+              <input type="text" placeholder="Buscar por nombre (min 2 letras)..."
+                value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+                className="w-full border dark:border-gray-600 rounded-lg p-2 bg-white dark:bg-[#1a1f3a] dark:text-white placeholder-gray-400 outline-none" />
+
+              <div className="max-h-32 overflow-y-auto space-y-1 scrollbar-hide">
+                {searchLoading && <p className="text-sm text-blue-500">Buscando...</p>}
+                {searchError && <p className="text-sm text-red-500">{searchError}</p>}
+                {searchResults?.filter(u => !formData.attendees.some(a => a.id === u.id)).map(user => (
+                  <div key={user.id}
+                    className="flex justify-between p-2 rounded cursor-pointer hover:bg-teal-100 dark:hover:bg-teal-800/30 text-gray-700 dark:text-gray-300"
+                    onClick={() => handleSelectAttendee(user)}>
+                    <span className="text-sm">{user.name}</span>
+                    <Plus className="w-4 text-teal-600" />
+                  </div>
+                ))}
+                {!searchLoading && searchTerm.length >= 2 && searchResults?.length === 0 && (
+                  <p className="text-sm text-gray-500 text-center">No se encontraron usuarios.</p>
+                )}
+              </div>
+
+              {/* Chips de seleccionados */}
+              {formData.attendees.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-teal-200 dark:border-teal-800">
+                  {formData.attendees.map(user => (
+                    <span key={user.id} onClick={() => handleSelectAttendee(user)}
+                      className="px-3 py-1 bg-teal-500 dark:bg-teal-600 text-white rounded-full text-xs flex items-center gap-1 cursor-pointer hover:bg-red-500 dark:hover:bg-red-600 transition-colors">
+                      {user.name}<X className="w-3" />
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
+          )}
 
-          </div>
-
-          {/* Mensaje de error */}
+          {/* Error */}
           {submitError && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-sm text-red-600">{submitError}</p>
             </div>
           )}
 
-          {/* Botón */}
+          {/* Botones */}
           <div className="pt-4 flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold transition-colors"
-            >
+            <button type="button" onClick={onClose}
+              className="px-6 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold transition-colors">
               Cancelar
             </button>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-yellow-500 text-black dark:text-gray-900 px-6 py-3 rounded-lg shadow-lg text-lg font-semibold hover:from-blue-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
-            >
+            <button type="submit" disabled={isSubmitting}
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-yellow-500 text-black dark:text-gray-900 px-6 py-3 rounded-lg shadow-lg text-lg font-semibold hover:from-blue-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">
               <Send className="w-5" />
               {isSubmitting ? 'Creando...' : 'Programar Reunión'}
             </button>
           </div>
-
         </form>
       </div>
     </div>
   );
 }
-
-

@@ -10,7 +10,6 @@ export function useMeetings() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Función para obtener las reuniones del usuario
   const fetchMeetings = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -25,15 +24,10 @@ export function useMeetings() {
     }
   }, []);
 
-  // Función para crear una nueva reunión
   const createNewMeeting = useCallback(async (meetingData) => {
     try {
-      // 1. Crear la reunión en el backend
       const newMeeting = await meetingService.createMeeting(meetingData);
-
-      // 2. Refrescar la lista completa desde el backend (evita duplicados)
       await fetchMeetings();
-
       return { success: true, meeting: newMeeting };
     } catch (err) {
       const errMsg = err.response?.data?.error || err.message || 'Fallo al crear la reunión.';
@@ -42,147 +36,127 @@ export function useMeetings() {
     }
   }, [fetchMeetings]);
 
-  // Función para cancelar una reunión
   const cancelMeeting = useCallback(async (meetingId) => {
-    logger.log('🔴 [useMeetings] cancelMeeting llamado con ID:', meetingId);
-
     try {
-      logger.log('🔴 [useMeetings] Llamando a meetingService.cancelMeeting...');
       const result = await meetingService.cancelMeeting(meetingId);
-      logger.log('🔴 [useMeetings] Respuesta del servicio:', result);
-
-      // Refrescar la lista después de cancelar
-      logger.log('🔴 [useMeetings] Refrescando lista de reuniones...');
       await fetchMeetings();
-      logger.log('✅ [useMeetings] Lista refrescada exitosamente');
-
       return { success: true };
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || 'Fallo al cancelar la reunión.';
-      logger.error('❌ [useMeetings] Error al cancelar:', {
-        message: errMsg,
-        error: err,
-        response: err.response?.data
-      });
       setError(errMsg);
       return { success: false, error: errMsg };
     }
   }, [fetchMeetings]);
 
-  // Efecto inicial: Cargar reuniones
+  /** Usuario presiona "Asistiré" */
+  const requestAttendance = useCallback(async (meetingId) => {
+    try {
+      const result = await meetingService.requestAttendance(meetingId);
+      await fetchMeetings();
+      return { success: true, ...result };
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || 'Error al enviar solicitud.';
+      return { success: false, error: errMsg };
+    }
+  }, [fetchMeetings]);
+
+  /** Creador aprueba o deniega a un usuario */
+  const respondAttendance = useCallback(async (meetingId, userId, action) => {
+    try {
+      const result = await meetingService.respondAttendance(meetingId, userId, action);
+      await fetchMeetings();
+      return { success: true, ...result };
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || 'Error al responder solicitud.';
+      return { success: false, error: errMsg };
+    }
+  }, [fetchMeetings]);
+
+  /** Obtener detalle completo (solo creador) */
+  const getMeetingDetail = useCallback(async (meetingId) => {
+    try {
+      const data = await meetingService.getMeetingDetail(meetingId);
+      return { success: true, data };
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || 'Error al obtener detalle.';
+      return { success: false, error: errMsg };
+    }
+  }, []);
+
+  /** Editar reunión */
+  const updateMeeting = useCallback(async (meetingId, data) => {
+    try {
+      const updated = await meetingService.updateMeeting(meetingId, data);
+      await fetchMeetings();
+      return { success: true, data: updated };
+    } catch (err) {
+      const errMsg = err.response?.data?.error || err.message || 'Error al actualizar.';
+      return { success: false, error: errMsg };
+    }
+  }, [fetchMeetings]);
+
+  // Carga inicial
   useEffect(() => {
     fetchMeetings();
   }, [fetchMeetings]);
 
-  // Efecto Socket.IO: Suscribirse a actualizaciones de reuniones
+  // Socket.IO
   useEffect(() => {
-    // Obtener userId del contexto de auth (solo el ID, no el objeto completo)
     const userId = user?._id || user?.id;
+    if (!userId) return;
 
-    if (!userId) {
-      // Solo mostrar warning una vez
-      if (user !== undefined) {
-        logger.warn('⚠️ userId no disponible para reuniones, esperando autenticación...');
-      }
-      return;
-    }
-
-    // Esperar a que el socket esté disponible
     const socket = getSocket();
     if (!socket) {
-      logger.warn('⚠️ Socket no inicializado aún, esperando conexión...');
-      // Reintentar después de un breve delay
       const timer = setTimeout(() => {
         const retrySocket = getSocket();
-        if (!retrySocket) {
-          logger.error('❌ Socket no pudo inicializarse para reuniones');
-          return;
-        }
-        logger.log('♻️ Socket inicializado, recargando componente...');
+        if (!retrySocket) return;
         window.location.reload();
       }, 1000);
       return () => clearTimeout(timer);
     }
 
-    // Listener para actualizaciones de reuniones en tiempo real
     const handleMeetingUpdate = (data) => {
-      logger.log('📅 Actualización de reunión recibida:', data);
-
       const { type, meeting } = data;
-
       switch (type) {
         case 'create':
-          // Nueva reunión creada
-          setMeetings((prev) => {
-            // Evitar duplicados
-            if (prev.find((m) => m._id === meeting._id)) {
-              return prev;
-            }
-            return [meeting, ...prev];
-          });
+          setMeetings(prev =>
+            prev.find(m => m._id === meeting._id) ? prev : [meeting, ...prev]
+          );
           break;
-
         case 'update':
         case 'statusChange':
-          // Reunión actualizada o cambio de estado
-          setMeetings((prev) =>
-            prev.map((m) => (m._id === meeting._id ? meeting : m))
-          );
+          setMeetings(prev => prev.map(m => m._id === meeting._id ? meeting : m));
           break;
-
         case 'cancel':
-          // Reunión cancelada
-          setMeetings((prev) =>
-            prev.map((m) =>
-              m._id === meeting._id ? { ...m, status: 'cancelled' } : m
-            )
+          setMeetings(prev =>
+            prev.map(m => m._id === meeting._id ? { ...m, status: 'cancelled' } : m)
           );
           break;
-
         default:
           logger.warn('Tipo de evento desconocido:', type);
       }
     };
 
-    // Función para suscribirse cuando el socket esté conectado
-    const suscribirseAReuniones = () => {
-      if (socket.connected) {
-        socket.emit('subscribeMeetings', { userId });
-        logger.log('📅 Suscrito a reuniones para userId:', userId);
-      } else {
-        logger.warn('⚠️ Socket no conectado aún, esperando...');
-      }
+    const suscribirse = () => {
+      if (socket.connected) socket.emit('subscribeMeetings', { userId });
     };
 
-    // Listener para cuando el socket se conecte
-    const handleConnect = () => {
-      logger.log('🔌 Socket conectado, suscribiendo a reuniones');
-      suscribirseAReuniones();
-    };
+    const handleConnect = () => suscribirse();
 
-    // Si ya está conectado, suscribirse inmediatamente
     if (socket.connected) {
-      suscribirseAReuniones();
+      suscribirse();
     } else {
-      // Si no está conectado, esperar al evento connect
       socket.on('connect', handleConnect);
     }
 
-    // Registrar listener para actualizaciones
     socket.on('meetingUpdate', handleMeetingUpdate);
 
-    // Cleanup: Desuscribirse al desmontar (pero NO desconectar el socket)
     return () => {
-      logger.log('🧹 Limpiando listeners de reuniones');
       socket.off('meetingUpdate', handleMeetingUpdate);
       socket.off('connect', handleConnect);
-
-      // Desuscribirse de la sala (opcional, pero recomendado)
-      if (socket.connected) {
-        socket.emit('unsubscribeMeetings', { userId });
-      }
+      if (socket.connected) socket.emit('unsubscribeMeetings', { userId });
     };
-  }, [user?._id, user?.id]); // Solo depende del ID del usuario, no del objeto completo
+  }, [user?._id, user?.id]);
 
   return {
     meetings,
@@ -190,8 +164,10 @@ export function useMeetings() {
     error,
     createNewMeeting,
     cancelMeeting,
-    refetch: fetchMeetings, // Permite recargar la lista manualmente
+    requestAttendance,
+    respondAttendance,
+    getMeetingDetail,
+    updateMeeting,
+    refetch: fetchMeetings,
   };
 }
-
-
