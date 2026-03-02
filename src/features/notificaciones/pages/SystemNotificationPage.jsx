@@ -4,6 +4,7 @@ import { ArrowLeft, AlertTriangle } from 'lucide-react';
 import notificationService from '../../../api/notificationService';
 import { logger } from '../../../shared/utils/logger';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 /**
  * SystemNotificationPage - Página para mostrar contenido moderado

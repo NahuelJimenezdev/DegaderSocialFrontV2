@@ -13,8 +13,11 @@ const FileGrid = ({ files, onPreview, onDelete, canEdit }) => {
                     {/* Preview Area */}
                     <div className="aspect-video bg-gray-100 dark:bg-gray-900/50 flex items-center justify-center p-6 relative overflow-hidden">
                         {archivo.tipo === 'image' ? (
-                            <img
+                            <ProgressiveImage
                                 src={archivo.url}
+                                medium={archivo.medium}
+                                large={archivo.large}
+                                blurHash={archivo.blurHash}
                                 alt={archivo.originalName}
                                 className="w-full h-full object-cover"
                             />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, X, Users } from 'lucide-react';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { useOnlineUsers } from '../../../contexts/OnlineUsersContext';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const FavoriteUserCard = ({ user, onRemove }) => {
     const navigate = useNavigate();
@@ -68,8 +69,11 @@ const FavoriteUserCard = ({ user, onRemove }) => {
             {/* Imagen Cuadrada Estilo Álbum */}
             <div className="relative w-full aspect-square rounded-md overflow-hidden shadow-md group-hover:shadow-xl transition-shadow bg-gray-100 dark:bg-[#333]">
                 {avatar ? (
-                    <img
+                    <ProgressiveImage
                         src={avatar}
+                        medium={user?.social?.fotoPerfilObj?.medium}
+                        large={user?.social?.fotoPerfilObj?.large}
+                        blurHash={user?.social?.fotoPerfilObj?.blurHash}
                         alt={fullName}
                         className="w-full h-full object-cover"
                     />

@@ -108,7 +108,7 @@ const CreateGroupModal = ({ onClose, onSuccess }) => {
             <div className="flex items-center gap-4">
               <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
                 {imagePreview ? (
-                  <img
+                  <ProgressiveImage
                     src={imagePreview}
                     alt="Preview"
                     className="absolute inset-0 w-full h-full object-cover"

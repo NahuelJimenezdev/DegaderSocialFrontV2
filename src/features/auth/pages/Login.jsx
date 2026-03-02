@@ -4,6 +4,7 @@ import { useAuth } from '../../../context/AuthContext';
 
 import "../styles/loginStyles.css";
 import "../styles/loginStylesMobile.css";
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -88,10 +89,11 @@ const Login = () => {
         {sessionLoading && (
           <div className="mobile-session-loader">
             <div className="loader-logo-circle">
-              <img
+              <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Logo"
                 className="loader-logo"
+                style={{ width: '75%', height: '75%', objectFit: 'contain' }}
               />
             </div>
             <span className="loader-text">Degader Social</span>
@@ -102,9 +104,10 @@ const Login = () => {
         <div className={`mobile-welcome-container ${mobileView !== 'welcome' ? 'hidden' : ''}`}>
           <div className="mobile-welcome-logo-section">
             <div className="mobile-logo-circle">
-              <img
+              <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Degader Logo"
+                style={{ width: '80%', height: '80%', objectFit: 'contain' }}
               />
             </div>
             <div className="mobile-welcome-text">
@@ -139,9 +142,10 @@ const Login = () => {
           <div className="mobile-login-header">
             <div className="header-logo-container">
               <div className="header-logo-circle">
-                <img
+                <ProgressiveImage
                   src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                   alt="Logo"
+                  style={{ width: '100%', objectFit: 'contain' }}
                 />
               </div>
               <span className="header-brand-name">DEGADER SOCIAL</span>
@@ -224,10 +228,11 @@ const Login = () => {
         <div className="left-side">
           <div className="logo">
             <div className="logo-circle">
-              <img
+              <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Degader Logo"
                 className="logo-img"
+                style={{ width: '100%', objectFit: 'contain' }}
               />
             </div>
           </div>

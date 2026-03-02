@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../../../context/AuthContext';
 import '../styles/loginOne.module.css';
 import logo from '../assets/Degader_0.0.1.png';
+import ProgressiveImage from '../../../../../shared/components/ProgressiveImage/ProgressiveImage';
 // https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png
 // https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png
 const LoginOne = () => {

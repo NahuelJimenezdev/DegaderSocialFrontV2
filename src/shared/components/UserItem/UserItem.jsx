@@ -1,3 +1,4 @@
+import ProgressiveImage from '../ProgressiveImage';
 import { getNombreCompleto } from '../../utils/userUtils';
 
 const UserItem = ({
@@ -16,11 +17,13 @@ const UserItem = ({
       role="button"
       tabIndex={0}
     >
-      <img
+      <ProgressiveImage
         src={user.avatar}
+        medium={user.avatarObj?.medium}
+        large={user.avatarObj?.large}
+        blurHash={user.avatarObj?.blurHash}
         alt={nombreCompleto}
         className="w-10 h-10 rounded-full object-cover"
-        onError={e => { e.currentTarget.src = '/avatars/default-avatar.png' }}
       />
       <div className="flex-1">
         <div className="font-bold text-sm text-[#1F2937] dark:text-[#F9FAFB]">

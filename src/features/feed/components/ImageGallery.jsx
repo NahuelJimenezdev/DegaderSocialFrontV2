@@ -39,7 +39,9 @@ const ImageGallery = ({ images = [] }) => {
           onClick={() => openLightbox(0)}
         >
           <ProgressiveImage
-            src={images[0].medium || images[0].large || images[0].url}
+            src={images[0].url}
+            medium={images[0].medium}
+            large={images[0].large}
             blurHash={images[0].blurHash}
             alt="Post content"
             className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-300"
@@ -59,7 +61,9 @@ const ImageGallery = ({ images = [] }) => {
               onClick={() => openLightbox(idx)}
             >
               <ProgressiveImage
-                src={img.medium || img.large || img.url}
+                src={img.url}
+                medium={img.medium}
+                large={img.large}
                 blurHash={img.blurHash}
                 alt={`Post content ${idx + 1}`}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -79,7 +83,9 @@ const ImageGallery = ({ images = [] }) => {
             onClick={() => openLightbox(0)}
           >
             <ProgressiveImage
-              src={images[0].medium || images[0].large || images[0].url}
+              src={images[0].url}
+              medium={images[0].medium}
+              large={images[0].large}
               blurHash={images[0].blurHash}
               alt="Post content 1"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -93,7 +99,9 @@ const ImageGallery = ({ images = [] }) => {
                 onClick={() => openLightbox(idx + 1)}
               >
                 <ProgressiveImage
-                  src={img.medium || img.large || img.url}
+                  src={img.url}
+                  medium={img.medium}
+                  large={img.large}
                   blurHash={img.blurHash}
                   alt={`Post content ${idx + 2}`}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -116,7 +124,9 @@ const ImageGallery = ({ images = [] }) => {
               onClick={() => openLightbox(idx)}
             >
               <ProgressiveImage
-                src={img.medium || img.large || img.url}
+                src={img.url}
+                medium={img.medium}
+                large={img.large}
                 blurHash={img.blurHash}
                 alt={`Post content ${idx + 1}`}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -137,7 +147,9 @@ const ImageGallery = ({ images = [] }) => {
             onClick={() => openLightbox(idx)}
           >
             <ProgressiveImage
-              src={img.medium || img.large || img.url}
+              src={img.url}
+              medium={img.medium}
+              large={img.large}
               blurHash={img.blurHash}
               alt={`Post content ${idx + 1}`}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -149,7 +161,9 @@ const ImageGallery = ({ images = [] }) => {
           onClick={() => openLightbox(3)}
         >
           <ProgressiveImage
-            src={images[3].medium || images[3].large || images[3].url}
+            src={images[3].url}
+            medium={images[3].medium}
+            large={images[3].large}
             blurHash={images[3].blurHash}
             alt="Post content 4"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -200,7 +214,9 @@ const ImageGallery = ({ images = [] }) => {
             {/* Main Image */}
             <div className="w-full h-full max-w-7xl max-h-[90vh] flex items-center justify-center p-4">
               <ProgressiveImage
-                src={images[currentImageIndex].large || images[currentImageIndex].url}
+                src={images[currentImageIndex].url}
+                medium={images[currentImageIndex].medium}
+                large={images[currentImageIndex].large}
                 blurHash={images[currentImageIndex].blurHash}
                 alt={`Gallery view ${currentImageIndex + 1}`}
                 className="max-w-full max-h-full object-contain select-none"

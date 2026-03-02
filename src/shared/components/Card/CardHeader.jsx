@@ -1,8 +1,10 @@
+import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
+
 const CardHeader = ({ thumbnail, color, icon, overlayText, timeAgo }) => {
   return (
     <div className={`relative h-32 bg-gradient-to-br ${color} flex items-center justify-center text-white`}>
       {thumbnail && (
-        <img
+        <ProgressiveImage
           alt="Card preview"
           className="absolute inset-0 w-full h-full object-cover opacity-30"
           src={thumbnail}

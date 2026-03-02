@@ -44,14 +44,14 @@ const IglesiaExMiembroDetalle = () => {
                     {/* Perfil del Usuario */}
                     <div className="flex flex-col items-center mb-8">
                         <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-purple-500 mb-4 shadow-lg">
-                            <img
+                            <ProgressiveImage
                                 src={getUserAvatar(registro.usuario)}
+                                medium={registro.usuario?.social?.fotoPerfilObj?.medium}
+                                large={registro.usuario?.social?.fotoPerfilObj?.large}
+                                blurHash={registro.usuario?.social?.fotoPerfilObj?.blurHash}
                                 alt={`${registro.usuario?.nombres?.primero || 'Usuario'} ${registro.usuario?.apellidos?.primero || ''}`}
                                 className="w-full h-full rounded-full object-cover border-4 border-white dark:border-gray-800 bg-white"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = getUserAvatar({ ...registro.usuario, social: { fotoPerfil: '' } });
-                                }}
+                                style={{ clipPath: 'circle(50%)' }}
                             />
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">

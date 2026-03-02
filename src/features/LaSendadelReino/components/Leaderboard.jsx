@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArenaService } from '../services/arenaService';
 import { useUserStore } from '../stores/useUserStore';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const Leaderboard = () => {
     const { location } = useUserStore();
@@ -15,7 +14,7 @@ const Leaderboard = () => {
             try {
                 setLoading(true);
                 const response = await ArenaService.getRanking(filter, location.country, location.state);
-                
+
                 // Extra robust check for array
                 if (response && response.data && Array.isArray(response.data)) {
                     setRanking(response.data);
@@ -101,10 +100,14 @@ const Leaderboard = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <img 
-                                                    src={item.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.userId}`} 
-                                                    className="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-800" 
-                                                    alt={item.user?.name || 'Guerrero'} 
+                                                <ProgressiveImage
+                                                    src={item.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.userId}`}
+                                                    medium={item.user?.social?.fotoPerfilObj?.medium}
+                                                    large={item.user?.social?.fotoPerfilObj?.large}
+                                                    blurHash={item.user?.social?.fotoPerfilObj?.blurHash}
+                                                    className="w-10 h-10 rounded-full bg-gray-200 dark:bg-slate-800"
+                                                    alt={item.user?.name || 'Guerrero'}
+                                                    style={{ clipPath: 'circle(50%)' }}
                                                 />
                                                 <div>
                                                     <div className="text-gray-900 dark:text-white font-bold text-sm tracking-tight">

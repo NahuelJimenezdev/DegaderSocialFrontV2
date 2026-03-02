@@ -193,9 +193,12 @@ const ReportDetailModal = ({ reportId, isOpen, onClose }) => {
                                     {report.contentSnapshot.content.imagenes && report.contentSnapshot.content.imagenes.length > 0 && (
                                         <div className="grid grid-cols-2 gap-2">
                                             {report.contentSnapshot.content.imagenes.map((img, idx) => (
-                                                <img
+                                                <ProgressiveImage
                                                     key={idx}
-                                                    src={img}
+                                                    src={typeof img === 'string' ? img : img.url}
+                                                    medium={typeof img === 'object' ? img.medium : undefined}
+                                                    large={typeof img === 'object' ? img.large : undefined}
+                                                    blurHash={typeof img === 'object' ? img.blurHash : undefined}
                                                     alt={`Imagen ${idx + 1}`}
                                                     className="w-full h-40 object-cover rounded-lg"
                                                 />

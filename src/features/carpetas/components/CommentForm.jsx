@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const CommentForm = ({ currentUserAvatar, onSubmit }) => {
   const [comment, setComment] = useState('')
@@ -13,10 +14,11 @@ const CommentForm = ({ currentUserAvatar, onSubmit }) => {
   return (
     <div className="mt-auto pt-6 border-t border-[#E5E7EB] dark:border-[#374151]">
       <div className="flex items-start gap-4">
-        <img
+        <ProgressiveImage
           alt="Current user avatar"
           className="w-10 h-10 rounded-full object-cover"
           src={currentUserAvatar || 'https://i.pravatar.cc/50?img=5'}
+          style={{ clipPath: 'circle(50%)' }}
         />
         <div className="flex-1 flex flex-col gap-2">
           <textarea

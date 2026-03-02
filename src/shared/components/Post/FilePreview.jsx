@@ -20,18 +20,18 @@ const FilePreview = ({ previews, onRemove }) => {
                         <video
                             src={preview.url}
                             className={`w-full object-cover rounded-lg border border-gray-200 dark:border-gray-700 ${previews.length === 1 ? 'h-64' :
-                                    previews.length === 3 && index === 0 ? 'h-48' :
-                                        'h-40'
+                                previews.length === 3 && index === 0 ? 'h-48' :
+                                    'h-40'
                                 }`}
                             controls
                         />
                     ) : (
-                        <img
+                        <ProgressiveImage
                             src={preview.url}
                             alt={`Preview ${index + 1}`}
                             className={`w-full object-cover rounded-lg border border-gray-200 dark:border-gray-700 ${previews.length === 1 ? 'h-64' :
-                                    previews.length === 3 && index === 0 ? 'h-48' :
-                                        'h-40'
+                                previews.length === 3 && index === 0 ? 'h-48' :
+                                    'h-40'
                                 }`}
                         />
                     )}

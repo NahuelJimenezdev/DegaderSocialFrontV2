@@ -7,6 +7,7 @@ import { getTerritorioString } from '../../../shared/utils/userUtils';
 import fundacionService from '../../../api/fundacionService';
 import notificationService from '../../../api/notificationService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => {
     const navigate = useNavigate();

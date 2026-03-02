@@ -204,10 +204,14 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
     const renderInputForm = () => (
         <form onSubmit={handleSubmit} className={`flex items-center gap-3 ${isMobileFormat ? 'w-full' : 'flex-1'}`}>
             {!isMobileFormat && (
-                <img
+                <ProgressiveImage
                     src={userAvatar}
+                    medium={currentUser?.social?.fotoPerfilObj?.medium}
+                    large={currentUser?.social?.fotoPerfilObj?.large}
+                    blurHash={currentUser?.social?.fotoPerfilObj?.blurHash}
                     alt="Tu perfil"
                     className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    style={{ clipPath: 'circle(50%)' }}
                 />
             )}
 
@@ -215,7 +219,7 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
                 {/* Image Preview */}
                 {imagePreview && (
                     <div className="absolute bottom-full left-0 mb-2 relative inline-block z-10">
-                        <img
+                        <ProgressiveImage
                             src={imagePreview}
                             alt="Preview"
                             className="h-20 rounded-lg border border-gray-200 dark:border-gray-700 bg-white"
@@ -242,8 +246,11 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
 
                 <div className={`relative flex items-center ${isMobileFormat ? 'bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2' : 'bg-gray-100 dark:bg-gray-800 rounded-2xl p-1'}`}>
                     {isMobileFormat && (
-                        <img
+                        <ProgressiveImage
                             src={userAvatar}
+                            medium={currentUser?.social?.fotoPerfilObj?.medium}
+                            large={currentUser?.social?.fotoPerfilObj?.large}
+                            blurHash={currentUser?.social?.fotoPerfilObj?.blurHash}
                             alt="Tu perfil"
                             className="w-8 h-8 rounded-full object-cover flex-shrink-0 mr-2"
                         />

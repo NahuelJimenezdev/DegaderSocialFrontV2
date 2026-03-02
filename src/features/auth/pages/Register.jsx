@@ -5,6 +5,7 @@ import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../..
 
 // import "../styles/loginStyles.css";
 import "../styles/loginStylesMobile.css";
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -112,9 +113,10 @@ const Register = () => {
           <div className="mobile-login-header">
             <div className="header-logo-container">
               <div className="header-logo-circle">
-                <img
+                <ProgressiveImage
                   src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                   alt="Logo"
+                  style={{ width: '100%', objectFit: 'contain' }}
                 />
               </div>
               <span className="header-brand-name">DEGADER SOCIAL</span>
@@ -314,10 +316,11 @@ const Register = () => {
         <div className="left-side">
           <div className="logo">
             <div className="logo-circle">
-              <img
+              <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Degader Logo"
                 className="logo-img"
+                style={{ width: '100%', objectFit: 'contain' }}
               />
             </div>
           </div>

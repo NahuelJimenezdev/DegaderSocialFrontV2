@@ -291,7 +291,7 @@ const CommentItem = ({ comment, postId, currentUser, onReply, onReplyClick, isMo
                         <form onSubmit={handleSubmitReply} className="flex items-start gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
                             {replyImage && (
                                 <div className="relative inline-block w-fit">
-                                    <img src={replyImage} alt="Preview" className="h-10 w-10 rounded object-cover border border-gray-200 dark:border-gray-700" />
+                                    <ProgressiveImage src={replyImage} alt="Preview" className="h-10 w-10 rounded object-cover border border-gray-200 dark:border-gray-700" />
                                     <button
                                         type="button"
                                         onClick={() => setReplyImage(null)}

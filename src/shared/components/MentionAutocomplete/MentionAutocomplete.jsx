@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import api from '../../../api/config';
 import styles from './MentionAutocomplete.module.css';
 import { getUserAvatar } from '../../utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const MentionAutocomplete = ({
     show,
@@ -116,10 +117,14 @@ const MentionAutocomplete = ({
                     onClick={() => onSelect(user)}
                     onMouseEnter={() => setSelectedIndex(index)}
                 >
-                    <img
+                    <ProgressiveImage
                         src={getUserAvatar(user)}
+                        medium={user.social?.fotoPerfilObj?.medium}
+                        large={user.social?.fotoPerfilObj?.large}
+                        blurHash={user.social?.fotoPerfilObj?.blurHash}
                         alt={user.username}
                         className={styles.avatar}
+                        style={{ clipPath: 'circle(50%)' }}
                     />
                     <div className={styles.info}>
                         <div className={styles.username}>@{user.username}</div>

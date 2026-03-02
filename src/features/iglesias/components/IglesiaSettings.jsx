@@ -477,7 +477,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                   {/* Previews de Nuevas Fotos */}
                   {galeriaPreviews.map((preview, index) => (
                     <div key={`new-${index}`} className="relative group aspect-square rounded-xl overflow-hidden border-2 border-dashed border-indigo-400">
-                      <img src={preview} alt={`Nueva ${index}`} className="w-full h-full object-cover opacity-70" />
+                      <ProgressiveImage src={preview} alt={`Nueva ${index}`} className="w-full h-full object-cover opacity-70" />
                       <div className="absolute inset-0 flex flex-col items-center justify-center bg-indigo-500/10">
                         <span className="text-[10px] font-bold colorMarcaDegader bg-white/90 px-2 py-1 rounded shadow-sm">NUEVA</span>
                         <button

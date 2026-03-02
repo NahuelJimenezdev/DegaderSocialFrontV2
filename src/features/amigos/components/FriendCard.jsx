@@ -6,6 +6,7 @@ import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import ConfirmationModal from './ConfirmationModal';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import { useFriendActions } from '../hooks/useFriendActions';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
   const navigate = useNavigate();
@@ -116,10 +117,14 @@ export const FriendCard = ({ friend, onlineUsers, onUpdate }) => {
   return (
     <div className={`${styles.item} ${showMenu ? styles.itemMenuOpen : ''} ${friend.isBlocked ? styles.blockedItem : ''}`} onClick={handleCardClick}>
       <div className={styles.avatarWrap}>
-        <img
+        <ProgressiveImage
           src={avatarUrl}
+          medium={friend?.social?.fotoPerfilObj?.medium}
+          large={friend?.social?.fotoPerfilObj?.large}
+          blurHash={friend?.social?.fotoPerfilObj?.blurHash}
           alt={fullName}
           className={`${styles.avatar} ${friend.isBlocked ? styles.avatarBlocked : ''}`}
+          style={{ clipPath: 'circle(50%)' }}
         />
         {friend.isBlocked ? (
           <div className={styles.blockedBadge} title="Usuario Bloqueado">

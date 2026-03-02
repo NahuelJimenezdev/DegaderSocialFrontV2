@@ -1,7 +1,4 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ARENA_ASSETS } from '../constants/arenaConfig';
-import { getXPForLevel } from '../utils/progression';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 /**
  * StickyArenaHeader - Perfección 1:1 basada en promp detallado
@@ -32,7 +29,7 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
                 >
                     {/* Logo marca de agua centrado y visible */}
                     <div className="sticky-arena-watermark">
-                        <img
+                        <ProgressiveImage
                             src={ARENA_ASSETS.LOGO}
                             alt=""
                             style={{
@@ -44,10 +41,11 @@ const StickyArenaHeader = ({ user, displayName, progress, isVisible, opacity }) 
 
                     {/* SECCIÓN IZQUIERDA: Avatar */}
                     <div className="shrink-0 relative flex items-center justify-center w-[64px] h-[64px] rounded-full border-2 border-blue-500 bg-white p-[2px] shadow-[0_0_15px_rgba(59,130,246,0.4)] z-10">
-                        <img
+                        <ProgressiveImage
                             src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
                             alt={user.username}
                             className="w-full h-full object-cover rounded-full"
+                            style={{ clipPath: 'circle(50%)' }}
                         />
                     </div>
 

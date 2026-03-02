@@ -38,7 +38,7 @@ const ChatInput = ({
                 <div className="mb-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-center gap-3">
                         {previsualizacionArchivo.tipo === 'imagen' ? (
-                            <img
+                            <ProgressiveImage
                                 src={previsualizacionArchivo.url}
                                 alt="Vista previa"
                                 className="w-20 h-20 object-cover rounded-lg"

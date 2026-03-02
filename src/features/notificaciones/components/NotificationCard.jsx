@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { logger } from '../../../shared/utils/logger';
-import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
-
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import styles from '../styles/NotificationCard.module.css';
 
 // Función utilitaria para tiempo relativo
@@ -83,6 +83,9 @@ export default function NotificationCard({
   const canProcessFriendRequest = isFriendRequest && !isProcessed;
   const canProcessGroupRequest = isGroupRequest && !isProcessed;
 
+  const avatarUrl = typeof avatar === 'string' ? avatar : getUserAvatar(avatar);
+  const avatarObj = typeof avatar === 'object' ? avatar?.social?.fotoPerfilObj : (notification?.remitente?.social?.fotoPerfilObj);
+
   return (
     <div
       ref={cardRef}
@@ -95,11 +98,13 @@ export default function NotificationCard({
 
       {/* Avatar del usuario */}
       <div className={styles.avatarContainer}>
-        <img
-          src={typeof avatar === 'string' ? avatar : getUserAvatar(avatar)}
+        <ProgressiveImage
+          src={avatarUrl}
+          medium={avatarObj?.medium}
+          large={avatarObj?.large}
+          blurHash={avatarObj?.blurHash}
           alt={`Foto de perfil de ${nombre}`}
           className={styles.avatar}
-          onError={handleImageError}
         />
       </div>
 

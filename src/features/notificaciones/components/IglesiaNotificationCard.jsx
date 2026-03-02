@@ -145,22 +145,28 @@ const IglesiaNotificationCard = ({ notification, onAction }) => {
           {isResponseNotif ? (
             // Si es respuesta, mostrar Logo o Icono
             logoUrl && !imgError ? (
-              <img
+              <ProgressiveImage
                 src={logoUrl}
+                medium={metadata?.iglesiaLogoObj?.medium}
+                large={metadata?.iglesiaLogoObj?.large}
+                blurHash={metadata?.iglesiaLogoObj?.blurHash}
                 alt={iglesiaNombre || 'Iglesia'}
                 className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
+                style={{ clipPath: 'circle(50%)' }}
               />
             ) : (
               <Building className="w-6 h-6 text-gray-400" />
             )
           ) : (
             // Si es solicitud, mostrar avatar del usuario
-            <img
+            <ProgressiveImage
               src={getUserAvatar(emisor)}
+              medium={emisor?.social?.fotoPerfilObj?.medium}
+              large={emisor?.social?.fotoPerfilObj?.large}
+              blurHash={emisor?.social?.fotoPerfilObj?.blurHash}
               alt={getNombreSolicitante()}
               className="w-full h-full object-cover"
-              onError={(e) => e.target.src = '/avatars/default-avatar.png'}
+              style={{ clipPath: 'circle(50%)' }}
             />
           )}
         </div>

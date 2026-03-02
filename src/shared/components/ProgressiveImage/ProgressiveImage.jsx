@@ -16,22 +16,22 @@ import './ProgressiveImage.css';
  */
 const ProgressiveImage = ({
     src,
+    medium,
+    large,
     blurHash,
     alt = "",
     className = "",
     containerClass = "",
-    aspectRatio = "auto"
+    aspectRatio = "auto",
+    style = {}
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isInView, setIsInView] = useState(false);
-    const imgRef = useRef(null);
     const containerRef = useRef(null);
 
-    // Usamos IntersectionObserver para una carga diferida (lazy loading) más controlada
-    // Solo renderiza el <img> "real" cuando el contenedor se acerca a la pantalla.
+    // IntersectionObserver logic remains the same...
     useEffect(() => {
         const currentRef = containerRef.current;
-
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -39,46 +39,47 @@ const ProgressiveImage = ({
                     observer.disconnect();
                 }
             },
-            {
-                rootMargin: '200px', // Comienza a cargar 200px antes de que entre al viewport
-                threshold: 0.01
-            }
+            { rootMargin: '200px', threshold: 0.01 }
         );
-
-        if (currentRef) {
-            observer.observe(currentRef);
-        }
-
+        if (currentRef) observer.observe(currentRef);
         return () => {
             if (currentRef) observer.unobserve(currentRef);
             observer.disconnect();
         };
     }, []);
 
+    // Construir srcset si existen versiones optimizadas
+    const srcSet = [
+        medium && `${medium} 600w`,
+        large && `${large} 1200w`
+    ].filter(Boolean).join(', ');
+
     return (
         <div
             className={`progressive-image-wrapper ${containerClass}`}
-            style={{ aspectRatio }}
+            style={{ aspectRatio, ...style }}
             ref={containerRef}
         >
-            {/* 1. Imagen Borrosa (Placeholder base64) que carga inmediatamente sin petición HTTP */}
+            {/* 1. Imagen Borrosa (Placeholder base64) */}
             {blurHash && (
                 <img
                     src={blurHash}
-                    alt="Cargando..."
+                    alt=""
                     className="progressive-image-blur"
                     aria-hidden="true"
                 />
             )}
 
-            {/* 2. Imagen Real - Solo se monta en el DOM cuando se acerca al Viewport */}
+            {/* 2. Imagen Real con Responsive Support */}
             {isInView && src && (
                 <img
-                    ref={imgRef}
                     src={src}
+                    srcSet={srcSet || undefined}
+                    sizes={srcSet ? "(max-width: 600px) 600px, (max-width: 1200px) 1200px, 1200px" : undefined}
                     alt={alt}
                     className={`progressive-image-real ${isLoaded ? 'is-loaded' : ''} ${className}`}
                     onLoad={() => setIsLoaded(true)}
+                    loading="lazy"
                 />
             )}
         </div>

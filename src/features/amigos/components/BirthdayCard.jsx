@@ -1,5 +1,4 @@
-import styles from '../styles/Birthday.module.css'
-import { getUserAvatar } from '../../../shared/utils/avatarUtils'
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage'
 
 const BirthdayCard = ({ user, formatDate, calcAge, onProfileClick, onMessageClick }) => {
   const avatarUrl = getUserAvatar(user)
@@ -12,11 +11,14 @@ const BirthdayCard = ({ user, formatDate, calcAge, onProfileClick, onMessageClic
       role="button"
       tabIndex={0}
     >
-      <img
+      <ProgressiveImage
         src={avatarUrl}
+        medium={user?.social?.fotoPerfilObj?.medium}
+        large={user?.social?.fotoPerfilObj?.large}
+        blurHash={user?.social?.fotoPerfilObj?.blurHash}
         alt={user.displayName}
         className={styles.avatar}
-        onError={e => { e.currentTarget.src = '/avatars/default-avatar.png' }}
+        style={{ clipPath: 'circle(50%)' }}
       />
       <div className={styles.info}>
         <div className={styles.name}>{user.displayName}</div>

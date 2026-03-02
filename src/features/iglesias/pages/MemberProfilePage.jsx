@@ -12,6 +12,7 @@ import IglesiaSidebar from '../components/IglesiaSidebar';
 import { useIglesiaData } from '../hooks/useIglesiaData';
 import { getIglesiaMenuItems } from '../utils/menuHelpers';
 import { MINISTERIOS_DISPONIBLES } from '../hooks/useMinisterios';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const MemberProfilePage = () => {
     const { iglesiaId, userId } = useParams();

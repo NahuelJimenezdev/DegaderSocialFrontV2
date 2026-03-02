@@ -29,10 +29,11 @@ Gracias por ser parte desde el inicio, lo mejor se construye juntos 🚀🔥`;
                 <div className="p-6 text-center">
                     {/* Avatar sutil con borde */}
                     <div className="relative mx-auto w-16 h-16 mb-4">
-                        <img
+                        <ProgressiveImage
                             src={avatarUrl}
                             alt={founderName}
                             className="w-full h-full rounded-full object-cover shadow-sm ring-2 ring-white dark:ring-gray-700"
+                            style={{ clipPath: 'circle(50%)' }}
                         />
                         <div className="absolute -bottom-0.5 -right-0.5 bg-[#1e3a5f] rounded-full p-0.5 border-2 border-white dark:border-gray-800">
                             <span className="material-symbols-outlined text-[10px] text-white">

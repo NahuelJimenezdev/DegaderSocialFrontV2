@@ -7,6 +7,7 @@ import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import IOSAlert from '../components/IOSAlert';
+import ProgressiveImage from '../components/ProgressiveImage';
 import { useOnboardingContext } from '../../features/onboarding/components/OnboardingProvider';
 import './ProfileDropdown.css';
 
@@ -129,16 +130,13 @@ const ProfileDropdown = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="profile-dropdown-trigger w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 dark:hover:border-indigo-400 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
-        <img
+        <ProgressiveImage
           src={avatarUrl}
+          medium={user?.avatarObj?.medium}
+          large={user?.avatarObj?.large}
+          blurHash={user?.avatarObj?.blurHash}
           alt={fullName}
           className="w-full h-full object-cover"
-          onError={(e) => {
-            // Si la imagen falla, usar un avatar con iniciales
-            e.target.onerror = null; // Prevenir loop infinito
-            const initials = fullName?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
-            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'Usuario')}&background=3b82f6&color=fff&size=128`;
-          }}
         />
       </button>
 
@@ -148,14 +146,13 @@ const ProfileDropdown = () => {
           {/* User Info Block */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
-              <img
+              <ProgressiveImage
                 src={avatarUrl}
+                medium={user?.avatarObj?.medium}
+                large={user?.avatarObj?.large}
+                blurHash={user?.avatarObj?.blurHash}
                 alt={fullName}
                 className="w-12 h-12 rounded-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName || 'Usuario')}&background=3b82f6&color=fff&size=128`;
-                }}
               />
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900 dark:text-white truncate">

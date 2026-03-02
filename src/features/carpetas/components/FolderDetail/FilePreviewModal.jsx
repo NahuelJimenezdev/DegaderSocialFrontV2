@@ -44,8 +44,11 @@ const FilePreviewModal = ({ file, onClose }) => {
                 {/* Modal Content */}
                 <div className="flex-1 bg-gray-900 rounded-2xl overflow-hidden flex items-center justify-center border border-gray-800">
                     {file.tipo === 'image' && (
-                        <img
+                        <ProgressiveImage
                             src={file.url}
+                            medium={file.medium}
+                            large={file.large}
+                            blurHash={file.blurHash}
                             alt={file.originalName}
                             className="max-w-full max-h-full object-contain"
                         />

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { logger } from '../utils/logger';
 import { ExternalLink } from 'lucide-react';
 import api from '../../api/config';
+import ProgressiveImage from './ProgressiveImage/ProgressiveImage';
 
 /**
  * Componente AdCard
@@ -94,13 +95,13 @@ const AdCard = ({ ad }) => {
 
       {/* Imagen del anuncio */}
       <div className="relative w-full h-48 overflow-hidden">
-        <img
+        <ProgressiveImage
           src={ad.imagenUrl}
+          medium={ad.images?.medium}
+          large={ad.images?.large}
+          blurHash={ad.images?.blurHash}
           alt={ad.textoAlternativo || ad.nombreCliente}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/400x300?text=Anuncio';
-          }}
         />
 
         {/* Overlay gradient */}

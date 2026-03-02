@@ -17,6 +17,7 @@ import { Toaster } from 'react-hot-toast';
 import AchievementDetailModal from './AchievementDetailModal';
 import StickyArenaHeader from './StickyArenaHeader';
 import confetti from 'canvas-confetti';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 import '../styles/ArenaMobile.css';
 
 const ArenaPage = () => {
@@ -221,7 +222,11 @@ const ArenaPage = () => {
 
                             {/* Marca de Agua sutil */}
                             <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-screen" style={{ maskImage: 'radial-gradient(circle, black 0%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 0%, transparent 70%)' }}>
-                                <img src={ARENA_ASSETS.LOGO} alt="Arena Logo" className="w-full h-full object-contain scale-150 grayscale" />
+                                <ProgressiveImage
+                                    src={ARENA_ASSETS.LOGO}
+                                    alt="Arena Logo"
+                                    className="w-full h-full object-contain scale-150 grayscale"
+                                />
                             </div>
 
                             <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14 relative z-10 w-full text-white">

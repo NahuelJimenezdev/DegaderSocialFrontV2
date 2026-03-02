@@ -154,14 +154,14 @@ const IglesiaExMiembros = () => {
                                         <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                             <td className="py-4 px-6">
                                                 <div className="flex items-center gap-3">
-                                                    <img
+                                                    <ProgressiveImage
                                                         src={getUserAvatar(registro.usuario)}
+                                                        medium={registro.usuario?.social?.fotoPerfilObj?.medium}
+                                                        large={registro.usuario?.social?.fotoPerfilObj?.large}
+                                                        blurHash={registro.usuario?.social?.fotoPerfilObj?.blurHash}
                                                         alt={`${registro.usuario?.nombres?.primero || 'Usuario'} ${registro.usuario?.apellidos?.primero || ''}`}
                                                         className="w-10 h-10 rounded-full object-cover bg-gray-200 dark:bg-gray-700 flex-shrink-0"
-                                                        onError={(e) => {
-                                                            e.target.onerror = null;
-                                                            e.target.src = getUserAvatar({ ...registro.usuario, social: { fotoPerfil: '' } });
-                                                        }}
+                                                        style={{ clipPath: 'circle(50%)' }}
                                                     />
                                                     <div className="overflow-hidden">
                                                         <p className="font-semibold text-gray-900 dark:text-white truncate max-w-[180px]">

@@ -1,6 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ARENA_ASSETS } from '../constants/arenaConfig';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const ArenaSplashScreen = ({ onFinish }) => {
     return (
@@ -21,18 +19,18 @@ const ArenaSplashScreen = ({ onFinish }) => {
                 <motion.div
                     initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    transition={{ 
-                        type: "spring", 
-                        damping: 10, 
+                    transition={{
+                        type: "spring",
+                        damping: 10,
                         stiffness: 100,
-                        duration: 1 
+                        duration: 1
                     }}
                     className="w-[150vw] h-[150vw] md:w-[480px] md:h-[480px] -mb-26 md:-mb-16"
                 >
-                    <img 
-                        src={ARENA_ASSETS.LOGO} 
-                        alt="Degader Logo" 
-                        className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]" 
+                    <ProgressiveImage
+                        src={ARENA_ASSETS.LOGO}
+                        alt="Degader Logo"
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"
                     />
                 </motion.div>
 
@@ -56,18 +54,18 @@ const ArenaSplashScreen = ({ onFinish }) => {
             {[...Array(15)].map((_, i) => (
                 <motion.div
                     key={i}
-                    initial={{ 
-                        x: Math.random() * window.innerWidth, 
+                    initial={{
+                        x: Math.random() * window.innerWidth,
                         y: Math.random() * window.innerHeight,
                         opacity: 0,
                         scale: 0
                     }}
-                    animate={{ 
+                    animate={{
                         opacity: [0, 0.5, 0],
                         scale: [0, 1.2, 0],
                         y: ["-20%", "120%"]
                     }}
-                    transition={{ 
+                    transition={{
                         duration: 2 + Math.random() * 3,
                         repeat: Infinity,
                         delay: Math.random() * 2

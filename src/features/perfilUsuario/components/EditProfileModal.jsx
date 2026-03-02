@@ -3,6 +3,7 @@ import { logger } from '../../../shared/utils/logger';
 import { X, Camera, Save, Loader } from 'lucide-react';
 import { API_BASE_URL } from '../../../shared/config/env';
 import { userService } from '../../../api';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -164,10 +165,14 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
             {/* Sección Avatar - Centrada */}
             <div className="flex flex-col items-center pb-4">
               <div className="relative group">
-                <img
+                <ProgressiveImage
                   src={avatarPreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(`${user?.nombres?.primero} ${user?.apellidos?.primero}`)}&background=3b82f6&color=fff&size=128`}
+                  medium={user?.social?.fotoPerfilObj?.medium}
+                  large={user?.social?.fotoPerfilObj?.large}
+                  blurHash={user?.social?.fotoPerfilObj?.blurHash}
                   alt="Avatar"
                   className="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-xl transition-transform group-hover:scale-105"
+                  style={{ clipPath: 'circle(50%)' }}
                 />
                 <label
                   htmlFor="avatar-upload"

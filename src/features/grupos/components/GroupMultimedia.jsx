@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../../../shared/config/env';
 import { logger } from '../../../shared/utils/logger';
 import { createPortal } from 'react-dom';
 import groupService from '../../../api/groupService';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
@@ -18,7 +19,7 @@ const getImageUrl = (url) => {
     return url;
   }
   // Si es una ruta relativa, concatenar con la base URL
-  return `${getBaseUrl()}${url}`;
+  return `${getBaseUrl()}${url} `;
 };
 
 const GroupMultimedia = ({ groupData }) => {
@@ -87,7 +88,7 @@ const GroupMultimedia = ({ groupData }) => {
             <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
               {images.map((img, idx) => {
                 const senderName = img.sender
-                  ? `${img.sender.nombres?.primero || ''} ${img.sender.apellidos?.primero || ''}`.trim()
+                  ? `${img.sender.nombres?.primero || ''} ${img.sender.apellidos?.primero || ''} `.trim()
                   : 'Usuario';
 
                 return (
@@ -96,11 +97,13 @@ const GroupMultimedia = ({ groupData }) => {
                     onClick={() => setSelectedImage(img)}
                     className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity group relative"
                   >
-                    <img
+                    <ProgressiveImage
                       src={getImageUrl(img.url)}
+                      medium={img.medium}
+                      large={img.large}
+                      blurHash={img.blurHash}
                       alt={img.name || 'Imagen'}
                       className="w-full h-full object-cover"
-                      loading="lazy"
                     />
                     {/* Overlay con info */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
@@ -128,8 +131,11 @@ const GroupMultimedia = ({ groupData }) => {
                 </button>
 
                 <div className="max-w-6xl max-h-[90vh] relative" onClick={(e) => e.stopPropagation()}>
-                  <img
+                  <ProgressiveImage
                     src={getImageUrl(selectedImage.url)}
+                    medium={selectedImage.medium}
+                    large={selectedImage.large}
+                    blurHash={selectedImage.blurHash}
                     alt={selectedImage.name || 'Imagen'}
                     className="max-w-full max-h-[85vh] object-contain mx-auto rounded-lg"
                   />
@@ -139,10 +145,14 @@ const GroupMultimedia = ({ groupData }) => {
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
                         {selectedImage.sender?.avatar || selectedImage.sender?.perfil?.perfilUsuario ? (
-                          <img
-                            src={`${getBaseUrl()}${selectedImage.sender.avatar || selectedImage.sender.perfil.perfilUsuario}`}
+                          <ProgressiveImage
+                            src={`${getBaseUrl()}${selectedImage.sender.avatar || selectedImage.sender.perfil.perfilUsuario} `}
+                            medium={selectedImage.sender?.social?.fotoPerfilObj?.medium}
+                            large={selectedImage.sender?.social?.fotoPerfilObj?.large}
+                            blurHash={selectedImage.sender?.social?.fotoPerfilObj?.blurHash}
                             alt="Avatar"
                             className="w-full h-full object-cover"
+                            style={{ clipPath: 'circle(50%)' }}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
@@ -153,7 +163,7 @@ const GroupMultimedia = ({ groupData }) => {
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">
                           {selectedImage.sender
-                            ? `${selectedImage.sender.nombres?.primero || ''} ${selectedImage.sender.apellidos?.primero || ''}`.trim()
+                            ? `${selectedImage.sender.nombres?.primero || ''} ${selectedImage.sender.apellidos?.primero || ''} `.trim()
                             : 'Usuario'}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">

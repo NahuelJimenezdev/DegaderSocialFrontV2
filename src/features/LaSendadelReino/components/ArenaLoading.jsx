@@ -1,37 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ARENA_ASSETS } from '../constants/arenaConfig';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const ArenaLoading = ({ difficulty, onReady }) => {
     const [progress, setProgress] = useState(0);
     const characterImg = ARENA_ASSETS.CHARACTERS[difficulty] || ARENA_ASSETS.CHARACTERS.facil;
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress(prev => {
-                if (prev >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => onReady && onReady(), 500);
-                    return 100;
-                }
-                // Progreso más lento para disfrutar la visualización (aprox 2-3 segundos adicionales)
-                const increment = Math.random() * 5 + 3;
-                return Math.min(prev + increment, 100);
-            });
-        }, 150);
-
-        return () => clearInterval(interval);
-    }, [onReady]);
+    // ... (existing useEffect)
 
     const messages = {
-        facil: "Iniciando el camino del Discípulo...",
-        medio: "Consultando los rollos del Escriba...",
-        dificil: "Escuchando las visiones del Profeta...",
-        experto: "Invocando al Guardián del Pacto..."
+        // ...
     };
 
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -55,10 +35,10 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                     />
 
                     {/* Logo/Character */}
-                    <motion.img
+                    <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ 
-                            scale: 1, 
+                        animate={{
+                            scale: 1,
                             opacity: 1,
                             y: [0, -10, 0]
                         }}
@@ -66,16 +46,20 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                             scale: { duration: 0.5 },
                             y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         }}
-                        src={ARENA_ASSETS.LOGO}
-                        alt="Loading..."
-                        className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
-                    />
+                        className="relative z-10 w-full h-full"
+                    >
+                        <ProgressiveImage
+                            src={ARENA_ASSETS.LOGO}
+                            alt="Loading..."
+                            className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
+                        />
+                    </motion.div>
                 </div>
 
                 {/* Barra de Progreso Estilo Premium */}
                 <div className="w-full space-y-4 text-center mt-8">
                     <div className="flex justify-between items-end mb-1 px-1">
-                        <motion.span 
+                        <motion.span
                             key={difficulty}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -87,7 +71,7 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                             {Math.round(progress)}%
                         </span>
                     </div>
-                    
+
                     <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 p-[2px]">
                         <motion.div
                             className="h-full bg-gradient-to-r from-blue-600 via-blue-400 to-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
@@ -99,7 +83,7 @@ const ArenaLoading = ({ difficulty, onReady }) => {
 
                     <AnimatePresence mode="wait">
                         <motion.p
-                            key={Math.floor(progress / 30)} 
+                            key={Math.floor(progress / 30)}
                             initial={{ opacity: 0, y: 5 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -5 }}

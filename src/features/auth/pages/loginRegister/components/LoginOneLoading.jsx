@@ -47,9 +47,14 @@ export default function Login() {
             <div className="contenedor">
                 {/* Left Side */}
                 <div className="left-side">
+                    <ProgressiveImage
+                        src="https://vientodevida.org/servidorimagenes/imagenes/DegaderSocialLogin.png"
+                        alt="Background"
+                        className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+                    />
                     <div className="logo">
                         <div className="logo-circle">
-                            <img
+                            <ProgressiveImage
                                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                                 alt="Degader Logo"
                                 className="logo-img"

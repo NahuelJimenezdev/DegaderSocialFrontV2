@@ -194,13 +194,14 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 overflow-hidden flex-shrink-0 ring-2 ring-white dark:ring-gray-800">
-                        <img
+                        <ProgressiveImage
                           src={getUserAvatar(requestUser)}
+                          medium={requestUser?.social?.fotoPerfilObj?.medium}
+                          large={requestUser?.social?.fotoPerfilObj?.large}
+                          blurHash={requestUser?.social?.fotoPerfilObj?.blurHash}
                           alt={fullName}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = '/avatars/default-avatar.png';
-                          }}
+                          style={{ clipPath: 'circle(50%)' }}
                         />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -282,13 +283,14 @@ const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) 
                     <div className="flex items-center gap-4 flex-1">
                       {/* Avatar */}
                       <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 overflow-hidden flex-shrink-0">
-                        <img
+                        <ProgressiveImage
                           src={getUserAvatar(memberUser)}
+                          medium={memberUser?.social?.fotoPerfilObj?.medium}
+                          large={memberUser?.social?.fotoPerfilObj?.large}
+                          blurHash={memberUser?.social?.fotoPerfilObj?.blurHash}
                           alt={fullName}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = '/avatars/default-avatar.png';
-                          }}
+                          style={{ clipPath: 'circle(50%)' }}
                         />
                       </div>
 

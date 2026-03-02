@@ -134,11 +134,14 @@ const ModalCompartirCarpeta = ({ isOpen, onClose, onCompartir, carpeta }) => {
                         onClick={() => handleSelectUser(user)}
                         className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left border-b border-gray-100 dark:border-gray-700 last:border-0"
                       >
-                        <img
+                        <ProgressiveImage
                           src={getAvatarUrl(user.social?.fotoPerfil)}
-                          onError={handleImageError}
+                          medium={user.social?.fotoPerfilObj?.medium}
+                          large={user.social?.fotoPerfilObj?.large}
+                          blurHash={user.social?.fotoPerfilObj?.blurHash}
                           alt={user.nombres?.primero}
                           className="w-8 h-8 rounded-full object-cover bg-gray-200"
+                          style={{ clipPath: 'circle(50%)' }}
                         />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -156,7 +159,7 @@ const ModalCompartirCarpeta = ({ isOpen, onClose, onCompartir, carpeta }) => {
             ) : (
               <div className="flex items-center justify-between p-3 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <img
+                  <ProgressiveImage
                     src={getAvatarUrl(usuarioSeleccionado.social?.fotoPerfil)}
                     onError={handleImageError}
                     alt={usuarioSeleccionado.nombres?.primero}
@@ -192,8 +195,8 @@ const ModalCompartirCarpeta = ({ isOpen, onClose, onCompartir, carpeta }) => {
                 <label
                   key={p.valor}
                   className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${permiso === p.valor
-                      ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                    ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
                     }`}
                 >
                   <input
@@ -220,8 +223,8 @@ const ModalCompartirCarpeta = ({ isOpen, onClose, onCompartir, carpeta }) => {
           {/* Feedback Message */}
           {mensaje && (
             <div className={`p-3 rounded-lg text-sm flex items-center gap-2 ${mensaje.type === 'success'
-                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+              : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
               }`}>
               {mensaje.type === 'success' && <Check size={16} />}
               {mensaje.text}
