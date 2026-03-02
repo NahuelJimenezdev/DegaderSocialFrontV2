@@ -42,7 +42,7 @@ const ArenaLoading = ({ difficulty, onReady }) => {
             </div>
 
             <div className="relative z-10 flex flex-col items-center w-full max-w-lg px-6">
-                <div className="relative w-[70vw] max-w-[300px] aspect-square mx-auto mb-4">
+                <div className="relative w-[55vw] max-w-[200px] max-h-[35vh] aspect-square mx-auto mb-4">
                     {/* Aura circular */}
                     <motion.div
                         animate={{
