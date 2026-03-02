@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.58.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.1...v1.58.2) (2026-03-02)
+
+
+### Bug Fixes
+
+* reducir aun mas el logo de loading arena (55vw max 200px, max-h 35vh) ([d3dc0b9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d3dc0b9f997693b97a83f16b53f3c12d905b5f50))
+
 ### [1.58.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.0...v1.58.1) (2026-03-02)
 
 
