@@ -1,17 +1,7 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --color-primary: #3B82F6;
-  --color-background-light: #1e3a5f;
-  --color-background-dark: #111827;
-
-  --font-display: "Plus Jakarta Sans", "sans-serif";
-
-  --radius-default: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
-}
 
 /* ============================================
    VARIABLES CSS GLOBALES
