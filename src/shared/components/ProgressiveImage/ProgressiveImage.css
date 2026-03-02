@@ -10,6 +10,10 @@
     align-items: center;
 }
 
+.progressive-image-wrapper.no-bg {
+    background-color: transparent !important;
+}
+
 /* La imagen borrosa está siempre debajo */
 .progressive-image-blur {
     position: absolute;

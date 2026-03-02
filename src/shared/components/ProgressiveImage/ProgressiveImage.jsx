@@ -23,6 +23,7 @@ const ProgressiveImage = ({
     className = "",
     containerClass = "",
     aspectRatio = "auto",
+    noBackground = false,
     style = {}
 }) => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -56,7 +57,7 @@ const ProgressiveImage = ({
 
     return (
         <div
-            className={`progressive-image-wrapper ${containerClass} ${className}`}
+            className={`progressive-image-wrapper ${noBackground ? 'no-bg' : ''} ${containerClass} ${className}`}
             style={{ aspectRatio, ...style }}
             ref={containerRef}
             data-aspect-auto={aspectRatio === 'auto'}

@@ -72,6 +72,7 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                             alt="Loading..."
                             className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
                             style={{ mixBlendMode: 'multiply' }}
+                            noBackground={true}
                         />
                     </motion.div>
                 </div>
