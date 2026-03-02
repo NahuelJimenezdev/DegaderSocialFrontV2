@@ -9,7 +9,7 @@ import '../../../shared/styles/layout.mobile.css';
 const ConfiguracionPage = () => {
     const navigate = useNavigate();
     const { user, login } = useAuth(); // Usamos login para actualizar el context si cambian datos
-    const { showToast } = useToast();
+    const toast = useToast();
     
     const [loading, setLoading] = useState(false);
     
@@ -79,11 +79,11 @@ const ConfiguracionPage = () => {
                 if(user) {
                      login(res.data, localStorage.getItem('token'));
                 }
-                showToast('ConfiguracionGuardada', 'success', 'Configuración actualizada');
+                toast.success('Configuración actualizada');
             }
         } catch (error) {
             console.error('Error al guardar configuración:', error);
-            showToast('ErrorConfiguracion', 'error', 'Error al guardar');
+            toast.error('Error al guardar');
         } finally {
             setLoading(false);
         }
@@ -118,28 +118,28 @@ const ConfiguracionPage = () => {
                             <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Mi Cuenta</h2>
                         </div>
                         <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                            <button onClick={() => showToast('wip', 'info', 'Función próximamente')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                            <button onClick={() => toast.info('Función próximamente')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                 <div className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-500 rounded-lg"><Mail size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">
                                     <p className="text-gray-900 dark:text-white font-medium">Cambiar Correo Electrónico</p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                                 </div>
                             </button>
-                            <button onClick={() => showToast('wip', 'info', 'Función próximamente')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                            <button onClick={() => toast.info('Función próximamente')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                 <div className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-500 rounded-lg"><Key size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">
                                     <p className="text-gray-900 dark:text-white font-medium">Cambiar Contraseña</p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">Actualiza tu clave de acceso</p>
                                 </div>
                             </button>
-                            <button onClick={() => showToast('wip', 'warning', 'Soporte procesará tu solicitud')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                            <button onClick={() => toast.warning('Soporte procesará tu solicitud')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                 <div className="p-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-lg"><Download size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">
                                     <p className="text-gray-900 dark:text-white font-medium">Exportar Mis Datos</p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">Solicitar copia de mi información</p>
                                 </div>
                             </button>
-                            <button onClick={() => showToast('wip', 'error', 'Para borrar la cuenta contacta a soporte')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/10 transition group">
+                            <button onClick={() => toast.error('Para borrar la cuenta contacta a soporte')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/10 transition group">
                                 <div className="p-2 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-lg group-hover:bg-red-100 dark:group-hover:bg-red-900/40"><Trash2 size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">
                                     <p className="text-red-600 dark:text-red-400 font-medium">Eliminar Cuenta</p>

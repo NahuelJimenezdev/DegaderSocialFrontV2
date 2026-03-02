@@ -18,6 +18,7 @@ import AchievementDetailModal from './AchievementDetailModal';
 import StickyArenaHeader from './StickyArenaHeader';
 import confetti from 'canvas-confetti';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
+import { ArenaPvpContainer } from './arena_pvp/ArenaPvpContainer';
 import '../styles/ArenaMobile.css';
 
 const ArenaPage = () => {
@@ -301,6 +302,7 @@ const ArenaPage = () => {
                             <div className="flex gap-1 bg-gray-200/50 dark:bg-[#1c1c1e]/80 p-1.5 rounded-full w-full md:w-fit mx-auto border border-gray-200 dark:border-white/5 backdrop-blur-2xl">
                                 {[
                                     { id: 'arena', label: '🏟️ Arena' },
+                                    { id: 'pvp', label: '⚔️ Competitivo' },
                                     { id: 'ranking', label: '🏆 Ranking' },
                                     { id: 'logros', label: '✨ Logros' }
                                 ].map((tab) => (
@@ -447,6 +449,18 @@ const ArenaPage = () => {
                                             </div>
                                         )}
                                     </div>
+                                </motion.div>
+                            ) : activeTab === 'pvp' ? (
+                                <motion.div
+                                    key="pvp-tab"
+                                    initial={{ opacity: 0, scale: 0.98 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.98 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="w-full h-[80vh] min-h-[500px] border border-white/10 rounded-3xl overflow-hidden shadow-2xl relative"
+                                    style={{ zIndex: 50 }}
+                                >
+                                    <ArenaPvpContainer onExit={() => setActiveTab('arena')} />
                                 </motion.div>
                             ) : activeTab === 'ranking' ? (
                                 <motion.div

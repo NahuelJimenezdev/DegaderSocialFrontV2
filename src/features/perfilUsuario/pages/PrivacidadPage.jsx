@@ -9,7 +9,7 @@ import '../../../shared/styles/layout.mobile.css';
 const PrivacidadPage = () => {
     const navigate = useNavigate();
     const { user, login } = useAuth();
-    const { showToast } = useToast();
+    const toast = useToast();
     
     const [loading, setLoading] = useState(false);
     
@@ -50,11 +50,11 @@ const PrivacidadPage = () => {
                 if(user) {
                      login(res.data, localStorage.getItem('token'));
                 }
-                showToast('PrivacidadGuardada', 'success', 'Privacidad actualizada');
+                toast.success('Privacidad actualizada');
             }
         } catch (error) {
             console.error('Error al guardar privacidad:', error);
-            showToast('ErrorPrivacidad', 'error', 'Error al guardar');
+            toast.error('Error al guardar');
         } finally {
             setLoading(false);
         }
