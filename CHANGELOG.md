@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.58.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.4...v1.58.5) (2026-03-02)
+
+
+### Bug Fixes
+
+* corregir superposicion logo/titulo en splash screen arena ([1866ee2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1866ee2f94ac84b1c79f31a61b54f40f70cf94ac))
+
 ### [1.58.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.3...v1.58.4) (2026-03-02)
 
 
