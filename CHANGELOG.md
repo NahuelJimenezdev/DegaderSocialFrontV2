@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.5...v1.57.6) (2026-03-02)
+
+
+### Bug Fixes
+
+* forzar proporción 1:1 en avatares para evitar deformación visual ([e11531e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e11531e54ee495ffa49ee9bc37491ee0953e960b))
+
 ### [1.57.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.4...v1.57.5) (2026-03-02)
 
 
