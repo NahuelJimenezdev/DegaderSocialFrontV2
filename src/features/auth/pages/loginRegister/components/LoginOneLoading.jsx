@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../../../context/AuthContext.jsx';
 import "../styles/loginOneLoading.css";
+import ProgressiveImage from '../../../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 
 export default function Login() {
