@@ -1,5 +1,6 @@
 import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert, HelpCircle } from "lucide-react";
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavItem from "../navItem/NavItem";
 import { useAuth } from '../../../context/AuthContext';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
@@ -15,6 +16,7 @@ const Sidebar = () => {
   const { canModerate, isFounder } = useUserRole();
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
   const { restartTour } = useOnboardingContext();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -84,7 +86,7 @@ const Sidebar = () => {
 
             {/* Configuración Button */}
             <button
-              onClick={() => setShowComingSoonAlert(true)}
+              onClick={() => navigate('/configuracion')}
               className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
             >
               <Settings size={20} className="items-config-tour" />

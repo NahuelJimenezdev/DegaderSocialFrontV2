@@ -39,6 +39,8 @@ import PerfilVisitantePage from './features/perfilVisitante/page/PerfilVisitante
 import IglesiaExMiembroDetalle from './features/iglesias/pages/IglesiaExMiembroDetalle'
 import SystemNotificationPage from './features/notificaciones/pages/SystemNotificationPage'
 import ArenaPage from './features/LaSendadelReino/components/ArenaPage'
+import ConfiguracionPage from './features/perfilUsuario/pages/ConfiguracionPage'
+import PrivacidadPage from './features/perfilUsuario/pages/PrivacidadPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register)
@@ -79,6 +81,8 @@ export const router = createBrowserRouter([
       { path: '/Mi_perfil', element: <ProfilePage /> },
       { path: '/perfil/:id', element: <PerfilVisitantePage /> },
       { path: '/informacionUsuario/:nombreapellido', element: <UserInfoPage /> },
+      { path: '/configuracion', element: <ConfiguracionPage /> },
+      { path: '/privacidad', element: <PrivacidadPage /> },
       { path: '/publicacion/:id', element: <PostPage /> },
       { path: '/notificaciones', element: <NotificationsPage /> },
       { path: '/Sistema/:id', element: <SystemNotificationPage /> },

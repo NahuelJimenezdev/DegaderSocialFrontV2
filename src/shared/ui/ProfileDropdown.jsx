@@ -95,10 +95,7 @@ const ProfileDropdown = () => {
     {
       icon: Settings,
       label: 'Configuración',
-      onClick: () => {
-        setIsOpen(false);
-        setShowComingSoonAlert(true);
-      }
+      onClick: () => handleMenuClick('/configuracion')
     },
     {
       icon: Bell,
@@ -108,10 +105,7 @@ const ProfileDropdown = () => {
     {
       icon: Lock,
       label: 'Privacidad',
-      onClick: () => {
-        setIsOpen(false);
-        setShowComingSoonAlert(true);
-      }
+      onClick: () => handleMenuClick('/privacidad')
     },
     {
       icon: HelpCircle,
