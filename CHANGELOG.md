@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.7...v1.57.8) (2026-03-02)
+
+
+### Bug Fixes
+
+* aplicar noBackground a marcas de agua y logos secundarios en Arena ([6520983](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6520983b845e092c5e5af243c66ba016e08c6f1a))
+* eliminar fondo gris en logos de la Arena mediante prop noBackground ([ec9c19a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ec9c19ad5ebd5060198104fe2675ba5dc8605bd8))
+
 ### [1.57.7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.6...v1.57.7) (2026-03-02)
 
 
