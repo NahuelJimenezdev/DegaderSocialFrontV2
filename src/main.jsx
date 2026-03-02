@@ -7,7 +7,7 @@ import { ToastProvider } from './shared/components/Toast/ToastProvider'
 import { OnlineUsersProvider } from './contexts/OnlineUsersContext'
 import { OnboardingProvider } from './features/onboarding/components/OnboardingProvider'
 import './shared/styles/layout.mobile.css';
-// import './index.css'
+import './shared/styles/index.css';
 // import App from './App.jsx'
 
 // 🎨 Inicializar tema ANTES de montar React

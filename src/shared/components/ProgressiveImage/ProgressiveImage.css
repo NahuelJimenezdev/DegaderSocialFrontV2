@@ -1,6 +1,7 @@
 .progressive-image-wrapper {
     position: relative;
     width: 100%;
+    min-height: 1rem;
     overflow: hidden;
     background-color: #e4e6eb;
     /* Color de fondo tipo esqueleto de Facebook */
@@ -37,6 +38,25 @@
 
     /* Esto ayuda a forzar el renderizado por hardware y mejora los FPS en móviles */
     will-change: opacity;
+}
+
+/* Soporte para auto-height: si no hay aspect-ratio, la imagen real define el tamaño */
+.progressive-image-wrapper[data-aspect-auto="true"] {
+    display: block;
+    /* Ocupar ancho completo */
+    height: auto;
+}
+
+.progressive-image-wrapper[data-aspect-auto="true"] .progressive-image-real {
+    position: relative;
+    /* Define el alto del padre */
+    display: block;
+}
+
+.progressive-image-wrapper[data-aspect-auto="true"] .progressive-image-blur {
+    /* El blur sigue siendo absoluto para cubrir el espacio que definirá la imagen real */
+    width: 100%;
+    height: 100%;
 }
 
 /* Cuando se completa la carga, se vuelve totalmente opaca */

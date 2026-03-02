@@ -59,6 +59,7 @@ const ProgressiveImage = ({
             className={`progressive-image-wrapper ${containerClass} ${className}`}
             style={{ aspectRatio, ...style }}
             ref={containerRef}
+            data-aspect-auto={aspectRatio === 'auto'}
         >
             {/* 1. Imagen Borrosa (Placeholder base64) */}
             {blurHash && (
