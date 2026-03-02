@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { userService } from '../../../api';
+import authService from '../../../api/authService';
 import { ArrowLeft, Settings, Bell, Shield, Moon, Sun, Smartphone, Download, Trash2, Mail, Key } from 'lucide-react';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import '../../../shared/styles/layout.mobile.css';
@@ -12,6 +13,10 @@ const ConfiguracionPage = () => {
     const toast = useToast();
     
     const [loading, setLoading] = useState(false);
+
+    // Estados para Modales
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     
     // Estado local para Preferencias
     const [preferencias, setPreferencias] = useState({
@@ -125,7 +130,7 @@ const ConfiguracionPage = () => {
                                     <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                                 </div>
                             </button>
-                            <button onClick={() => toast.info('Función próximamente')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                            <button onClick={() => setIsPasswordModalOpen(true)} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                 <div className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-500 rounded-lg"><Key size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">
                                     <p className="text-gray-900 dark:text-white font-medium">Cambiar Contraseña</p>
@@ -139,7 +144,7 @@ const ConfiguracionPage = () => {
                                     <p className="text-xs text-gray-500 dark:text-gray-400">Solicitar copia de mi información</p>
                                 </div>
                             </button>
-                            <button onClick={() => toast.error('Para borrar la cuenta contacta a soporte')} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/10 transition group">
+                            <button onClick={() => setIsDeleteModalOpen(true)} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/10 transition group">
                                 <div className="p-2 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-lg group-hover:bg-red-100 dark:group-hover:bg-red-900/40"><Trash2 size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">
                                     <p className="text-red-600 dark:text-red-400 font-medium">Eliminar Cuenta</p>
@@ -232,6 +237,21 @@ const ConfiguracionPage = () => {
                     <div className="h-6"></div>
                 </div>
             </div>
+
+            {/* Modos PopUps Portados */}
+            <PasswordChangeModal 
+                isOpen={isPasswordModalOpen} 
+                onClose={() => setIsPasswordModalOpen(false)} 
+                toast={toast} 
+            />
+            
+            {/* OJO: el componente de logout lo saco de useAuth(). En este archivo no estaba disponible, lo extraigo en la linea 11 actual */}
+            <DeleteAccountModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                toast={toast} 
+                logout={user?.logout} // Pasamos referencia si existe, aunque también login() sirve para redirigir si se borra de Storage. Ver linea reactiva.
+            />
         </div>
     );
 };
@@ -254,6 +274,170 @@ const ToggleRow = ({ label, description, value, onChange, disabled }) => {
                     className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${value ? 'translate-x-5' : 'translate-x-0'}`}
                 />
             </button>
+        </div>
+    );
+};
+
+// Modal para Cambiar Contraseña
+const PasswordChangeModal = ({ isOpen, onClose, toast, userId }) => {
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    if (!isOpen) return null;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (newPassword.length < 6) {
+            return toast.error('La contraseña debe tener al menos 6 caracteres');
+        }
+        if (newPassword !== confirmPassword) {
+            return toast.error('Las contraseñas nuevas no coinciden');
+        }
+
+        try {
+            setLoading(true);
+            const res = await authService.changePassword(currentPassword, newPassword);
+            if (res.success) {
+                toast.success('Contraseña actualizada correctamente');
+                onClose();
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error al actualizar contraseña. Verifica tu clave actual.');
+        } finally {
+            setLoading(false);
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-4 animate-in fade-in" onClick={onClose}>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-xl" onClick={e => e.stopPropagation()}>
+                <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Key size={18} className="text-blue-500" />
+                        Cambiar Contraseña
+                    </h3>
+                </div>
+                <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Contraseña Actual</label>
+                        <input 
+                            type="password" 
+                            required
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition" 
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Nueva Contraseña</label>
+                        <input 
+                            type="password"
+                            required
+                            minLength={6}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition" 
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">Confirmar Nueva Contraseña</label>
+                        <input 
+                            type="password"
+                            required
+                            minLength={6}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition" 
+                        />
+                    </div>
+                    
+                    <div className="pt-2 flex gap-3">
+                        <button type="button" onClick={onClose} className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                            Cancelar
+                        </button>
+                        <button disabled={loading} type="submit" className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition disabled:opacity-50">
+                            {loading ? 'Guardando...' : 'Actualizar'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+// Modal para Eliminar Cuenta
+const DeleteAccountModal = ({ isOpen, onClose, toast, logout }) => {
+    const [confirmText, setConfirmText] = useState('');
+    const [loading, setLoading] = useState(false);
+    
+    const TARGET_TEXT = 'ELIMINAR MI CUENTA';
+
+    if (!isOpen) return null;
+
+    const handleDelete = async () => {
+        if (confirmText !== TARGET_TEXT) return;
+
+        try {
+            setLoading(true);
+            const res = await userService.deactivateAccount();
+            if (res.success) {
+                toast.success('Tu cuenta ha sido eliminada. Lamentamos verte partir.');
+                onClose();
+                logout(); // Destruir token y redirigir
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Hubo un problema al eliminar tu cuenta');
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-4 animate-in fade-in" onClick={onClose}>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-xl" onClick={e => e.stopPropagation()}>
+                <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700 bg-red-50 dark:bg-red-900/10">
+                    <h3 className="text-lg font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
+                        <Trash2 size={18} />
+                        Zona de Peligro
+                    </h3>
+                </div>
+                <div className="p-5 space-y-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Esta acción es <strong className="text-red-500">irreversible</strong>. Perderás el acceso a tus publicaciones, amigos y configuraciones.
+                    </p>
+                    
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
+                            Para proceder, escribe <strong>{TARGET_TEXT}</strong> a continuación.
+                        </label>
+                        <input 
+                            type="text" 
+                            value={confirmText}
+                            onChange={(e) => setConfirmText(e.target.value)}
+                            placeholder="ELIMINAR MI CUENTA"
+                            className="w-full px-3 py-2 border border-red-200 dark:border-red-900/50 rounded-lg bg-red-50/50 dark:bg-red-900/10 text-red-600 dark:text-red-400 placeholder:text-red-300 dark:placeholder:text-red-800 focus:ring-2 focus:ring-red-500 outline-none transition font-mono text-center" 
+                        />
+                    </div>
+                    
+                    <div className="pt-2 flex flex-col gap-2">
+                        <button 
+                            disabled={loading || confirmText !== TARGET_TEXT} 
+                            onClick={handleDelete} 
+                            className="w-full px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? 'Eliminando...' : 'Eliminar Permanentemente'}
+                        </button>
+                        <button disabled={loading} onClick={onClose} className="w-full px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg font-medium transition">
+                            Mejor no, volver
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
