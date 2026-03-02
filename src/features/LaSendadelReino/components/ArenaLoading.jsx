@@ -70,8 +70,11 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                         <ProgressiveImage
                             src={ARENA_ASSETS.LOGO}
                             alt="Loading..."
-                            className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
-                            style={{ mixBlendMode: 'multiply' }}
+                            className="w-full h-full object-contain"
+                            style={{
+                                mixBlendMode: 'screen',
+                                filter: 'invert(1) drop-shadow(0 10px 30px rgba(59,130,246,0.3))'
+                            }}
                             noBackground={true}
                         />
                     </motion.div>

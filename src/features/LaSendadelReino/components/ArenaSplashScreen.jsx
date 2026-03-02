@@ -32,8 +32,11 @@ const ArenaSplashScreen = ({ onFinish }) => {
                     <ProgressiveImage
                         src={ARENA_ASSETS.LOGO}
                         alt="Degader Logo"
-                        className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"
-                        style={{ mixBlendMode: 'multiply' }}
+                        className="w-full h-full object-contain"
+                        style={{
+                            mixBlendMode: 'screen',
+                            filter: 'invert(1) drop-shadow(0 0 30px rgba(59,130,246,0.5))'
+                        }}
                         noBackground={true}
                     />
                 </motion.div>
