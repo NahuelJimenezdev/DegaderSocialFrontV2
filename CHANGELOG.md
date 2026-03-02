@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.8...v1.57.9) (2026-03-02)
+
+
+### Bug Fixes
+
+* **arena:** apply invert and screen mix-blend-mode to force logo white background transparency on dark themes ([0601dec](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0601decce7a8aec842fa4629b28727a64342e221))
+
 ### [1.57.8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.7...v1.57.8) (2026-03-02)
 
 
