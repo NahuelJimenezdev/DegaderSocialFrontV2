@@ -52,16 +52,16 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
     const [matchWinner, setMatchWinner] = useState(null);
     
     // Identificar quién es P1 y P2 para la UI local
-    const isPlayer1 = matchData.player1 === user._id; // Asumiendo que guardaste playerId al buscar partida
-    // FIXME: matchData que enviamos desde el backend sólo tiene matchId y opponent por ahora. 
-    // Necesitamos pasar isPlayer1 desde el Matchmaking para saber de qué lado pintar los colores.
-    
+    const isPlayer1 = matchData?.player1Id === user?._id;
+    console.log('👤 [ARENA_PVP] ¿Soy Player 1?:', isPlayer1, { myId: user?._id, p1Id: matchData?.player1Id });
+ 
     useEffect(() => {
         if (!socket) return;
+        console.log('🔌 [ARENA_PVP] Socket listo en TugOfWar, esperando roundStart...');
 
         // Escuchar inicio de ronda
         socket.on('arena:roundStart', (data) => {
-            console.log('⚔️ Nueva ronda: ', data);
+            console.log('⚔️ [ARENA_PVP] ¡Nueva ronda recibida!: ', data);
             
             // Mock de pregunta. En la versión real, la buscas del JSON local usando data.questionId
             setCurrentQuestion({
