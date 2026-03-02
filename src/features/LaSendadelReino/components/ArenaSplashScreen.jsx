@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+import { ARENA_ASSETS } from '../constants/arenaConfig';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const ArenaSplashScreen = ({ onFinish }) => {
