@@ -156,13 +156,17 @@ html:not(.dark) .sticky-arena-header {
 
 .sticky-arena-watermark {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 250px;
-    height: auto;
+    transform: translateX(-50%);
+    width: auto;
+    height: 100%;
     pointer-events: none;
     z-index: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Las reglas de sticky-avatar-container fueron migradas a Tailwind en StickyArenaHeader.jsx */
