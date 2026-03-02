@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.58.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.2...v1.58.3) (2026-03-02)
+
+
+### Bug Fixes
+
+* usar inline styles en ArenaLoading para evitar override de CSS del ProgressiveImage wrapper ([b36cb28](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b36cb28e684e1d668ba9cf302148b4949938ec80))
+
 ### [1.58.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.58.1...v1.58.2) (2026-03-02)
 
 
