@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.60.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.60.1...v1.60.2) (2026-03-02)
+
+
+### Bug Fixes
+
+* **perfil:** corregir error de alertas en paginas de configuracion y privacidad ([1722ad2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1722ad21962d8eab2cdf8d91a4ade72ee5641011))
+
 ### [1.60.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.60.0...v1.60.1) (2026-03-02)
 
 ## [1.60.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.59.0...v1.60.0) (2026-03-02)
