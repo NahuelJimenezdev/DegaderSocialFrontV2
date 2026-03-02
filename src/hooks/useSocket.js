@@ -12,5 +12,5 @@ export const useSocket = () => {
     }
   }, []);
 
-  return socket;
+  return { socket };
 };
