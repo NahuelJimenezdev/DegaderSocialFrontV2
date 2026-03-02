@@ -5,6 +5,7 @@ import { formatRelativeTime } from '../../../shared/utils/dateUtils';
 import { REPORT_REASONS } from '../../../shared/constants/reportConstants';
 import ReportTimeline from './ReportTimeline';
 import ModeratorActions from './ModeratorActions';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 /**
  * Modal de detalle completo de un reporte

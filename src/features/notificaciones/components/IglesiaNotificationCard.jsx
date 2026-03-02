@@ -6,6 +6,7 @@ import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import iglesiaService from '../../../api/iglesiaService';
 import notificationService from '../../../api/notificationService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const IglesiaNotificationCard = ({ notification, onAction }) => {
   const navigate = useNavigate();

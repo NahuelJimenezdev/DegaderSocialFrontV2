@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 

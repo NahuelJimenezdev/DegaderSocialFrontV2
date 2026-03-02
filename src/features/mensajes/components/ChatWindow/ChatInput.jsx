@@ -1,6 +1,7 @@
 import React from 'react';
 import { Paperclip, Smile, Send, X, Video } from 'lucide-react';
 import EmojiPicker from '../../../../shared/components/EmojiPicker/EmojiPicker';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 /**
  * ChatInput - Componente reutilizable para input de mensajes

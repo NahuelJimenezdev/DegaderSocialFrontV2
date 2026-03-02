@@ -4,6 +4,7 @@ import { getUserAvatar } from '../../utils/avatarUtils';
 import EmojiPicker from '../../components/EmojiPicker/EmojiPicker';
 import { Image as ImageIcon, X, Smile, SendHorizontal, Gift } from 'lucide-react';
 import MentionAutocomplete from '../MentionAutocomplete/MentionAutocomplete';
+import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
 
 const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMobileFormat = false, highlightCommentId }) => {
     const [newComment, setNewComment] = useState('');

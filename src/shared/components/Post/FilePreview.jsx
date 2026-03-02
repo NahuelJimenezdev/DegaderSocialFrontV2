@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
 
 /**
  * FilePreview - Preview de archivos (imágenes y videos) con opción de eliminar

@@ -1,4 +1,5 @@
 import React from 'react';
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const FounderWelcomeModal = ({ onNext }) => {
     const founderName = "Degader Social (Founder)";
