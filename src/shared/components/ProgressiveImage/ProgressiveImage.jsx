@@ -56,7 +56,7 @@ const ProgressiveImage = ({
 
     return (
         <div
-            className={`progressive-image-wrapper ${containerClass}`}
+            className={`progressive-image-wrapper ${containerClass} ${className}`}
             style={{ aspectRatio, ...style }}
             ref={containerRef}
         >
@@ -65,7 +65,7 @@ const ProgressiveImage = ({
                 <img
                     src={blurHash}
                     alt=""
-                    className="progressive-image-blur"
+                    className="progressive-image-blur w-full h-full"
                     aria-hidden="true"
                 />
             )}
@@ -77,7 +77,7 @@ const ProgressiveImage = ({
                     srcSet={srcSet || undefined}
                     sizes={srcSet ? "(max-width: 600px) 600px, (max-width: 1200px) 1200px, 1200px" : undefined}
                     alt={alt}
-                    className={`progressive-image-real ${isLoaded ? 'is-loaded' : ''} ${className}`}
+                    className={`progressive-image-real w-full h-full ${isLoaded ? 'is-loaded' : ''}`}
                     onLoad={() => setIsLoaded(true)}
                     loading="lazy"
                 />

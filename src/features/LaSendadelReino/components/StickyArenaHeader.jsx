@@ -1,3 +1,7 @@
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ARENA_ASSETS } from '../constants/arenaConfig';
+import { getXPForLevel } from '../utils/progression';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 /**
