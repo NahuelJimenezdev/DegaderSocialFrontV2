@@ -27,7 +27,11 @@ const ArenaSplashScreen = ({ onFinish }) => {
                         stiffness: 100,
                         duration: 1
                     }}
-                    className="w-[150vw] h-[150vw] md:w-[480px] md:h-[480px] -mb-26 md:-mb-16"
+                    style={{
+                        width: 'min(60vw, 280px)',
+                        height: 'min(60vw, 280px)',
+                        marginBottom: '-4rem'
+                    }}
                 >
                     <ProgressiveImage
                         src={ARENA_ASSETS.LOGO}
