@@ -30,7 +30,7 @@ const ArenaSplashScreen = ({ onFinish }) => {
                     style={{
                         width: 'min(60vw, 280px)',
                         height: 'min(60vw, 280px)',
-                        marginBottom: '-4rem'
+                        marginBottom: '1rem'
                     }}
                 >
                     <ProgressiveImage
