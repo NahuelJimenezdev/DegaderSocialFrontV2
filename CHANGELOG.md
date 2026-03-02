@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.57.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.4...v1.57.5) (2026-03-02)
+
+
+### Bug Fixes
+
+* **arena:** fix ReferenceError motion is not defined in ArenaSplashScreen ([bf1f500](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/bf1f500d2f00d7d1216e26a4a394befb4e6683b1))
+
 ### [1.57.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.57.3...v1.57.4) (2026-03-02)
 
 
