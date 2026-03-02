@@ -1,13 +1,32 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ARENA_ASSETS } from '../constants/arenaConfig';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const ArenaLoading = ({ difficulty, onReady }) => {
     const [progress, setProgress] = useState(0);
     const characterImg = ARENA_ASSETS.CHARACTERS[difficulty] || ARENA_ASSETS.CHARACTERS.facil;
 
-    // ... (existing useEffect)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setProgress(prev => {
+                const next = prev + (Math.random() * 15);
+                if (next >= 100) {
+                    clearInterval(interval);
+                    setTimeout(onReady, 500);
+                    return 100;
+                }
+                return next;
+            });
+        }, 300);
+        return () => clearInterval(interval);
+    }, [onReady]);
 
     const messages = {
-        // ...
+        facil: "Recordando enseñanzas básicas...",
+        medio: "Investigando pergaminos antiguos...",
+        dificil: "Entrando en la cámara de fuego...",
+        experto: "Afilando la espada espiritual..."
     };
 
     return (
@@ -52,6 +71,7 @@ const ArenaLoading = ({ difficulty, onReady }) => {
                             src={ARENA_ASSETS.LOGO}
                             alt="Loading..."
                             className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
+                            style={{ mixBlendMode: 'multiply' }}
                         />
                     </motion.div>
                 </div>

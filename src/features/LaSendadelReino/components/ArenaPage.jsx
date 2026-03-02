@@ -221,7 +221,7 @@ const ArenaPage = () => {
                             <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-600/10 to-transparent pointer-events-none" />
 
                             {/* Marca de Agua sutil */}
-                            <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-screen" style={{ maskImage: 'radial-gradient(circle, black 0%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 0%, transparent 70%)' }}>
+                            <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-multiply" style={{ maskImage: 'radial-gradient(circle, black 0%, transparent 70%)', WebkitMaskImage: 'radial-gradient(circle, black 0%, transparent 70%)' }}>
                                 <ProgressiveImage
                                     src={ARENA_ASSETS.LOGO}
                                     alt="Arena Logo"
