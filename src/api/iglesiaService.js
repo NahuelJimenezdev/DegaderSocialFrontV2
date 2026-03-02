@@ -79,6 +79,16 @@ const iglesiaService = {
     return response.data;
   },
 
+  deleteIglesia: async (id) => {
+    const response = await api.delete(`/iglesias/${id}`);
+    return response.data;
+  },
+
+  transferAdmin: async (id, nuevoPastorId) => {
+    const response = await api.put(`/iglesias/${id}/transferir-admin`, { nuevoPastorId });
+    return response.data;
+  },
+
   // Testimonios Methods
   getTestimonios: async (id) => {
     const response = await api.get(`/iglesias/${id}/testimonios`);

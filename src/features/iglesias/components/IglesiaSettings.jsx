@@ -16,6 +16,10 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
 
   const [showLeaveForm, setShowLeaveForm] = useState(false);
   const [leaveReason, setLeaveReason] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteInput, setDeleteInput] = useState('');
+  const [showTransferForm, setShowTransferForm] = useState(false);
+  const [selectedNewAdmin, setSelectedNewAdmin] = useState('');
 
   const handleLeaveIglesia = async () => {
     try {
@@ -54,7 +58,9 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
     handleRemoveGaleriaImage,
     handleAddHorario,
     handleRemoveHorario,
-    handleSubmit
+    handleSubmit,
+    handleDeleteIglesia,
+    handleTransferAdmin
   } = useIglesiaSettings(iglesiaData, refetch, isPastor);
 
   if (!isPastor && iglesiaData?.miembros?.some(m => m._id === user?._id || m === user?._id)) {
@@ -580,9 +586,110 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                 </p>
 
                 {isPastor ? (
-                  <p className="text-sm font-medium text-red-800 dark:text-red-200">
-                    ⚠️ Como Pastor Principal, no puedes abandonar la iglesia directamente. Debes transferir el liderazgo o eliminar la iglesia en la configuración avanzada.
-                  </p>
+                  <div className="space-y-4">
+                    <p className="text-sm font-medium text-red-800 dark:text-red-200">
+                      Como Pastor Principal, tienes la responsabilidad de transferir el liderazgo a otro miembro antes de salir, o bien eliminar la iglesia permanentemente.
+                    </p>
+                    <div className="flex gap-4">
+                      <button
+                        type="button"
+                        onClick={() => { setShowTransferForm(true); setShowDeleteConfirm(false); }}
+                        className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors font-medium"
+                      >
+                        Transferir Liderazgo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowDeleteConfirm(true); setShowTransferForm(false); }}
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
+                      >
+                        Eliminar Iglesia
+                      </button>
+                    </div>
+
+                    {showTransferForm && (
+                      <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 animate-fadeIn fade-in">
+                        <label className="block text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+                          Selecciona el nuevo Pastor Principal
+                        </label>
+                        <select
+                          value={selectedNewAdmin}
+                          onChange={(e) => setSelectedNewAdmin(e.target.value)}
+                          className="w-full px-4 py-2 border border-yellow-300 dark:border-yellow-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white mb-4"
+                        >
+                          <option value="">Selecciona un miembro...</option>
+                          {iglesiaData?.miembros
+                            ?.filter(m => {
+                               const mId = m._id || m;
+                               const pId = user?._id;
+                               return mId.toString() !== pId.toString();
+                            })
+                            .map((m) => (
+                            <option key={m._id || m} value={m._id || m}>
+                              {m.nombres ? `${m.nombres.primero} ${m.apellidos.primero}` : m}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => { setShowTransferForm(false); setSelectedNewAdmin(''); }}
+                            className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if(selectedNewAdmin) {
+                                handleTransferAdmin(iglesiaData._id, selectedNewAdmin);
+                              }
+                            }}
+                            disabled={!selectedNewAdmin}
+                            className={`px-4 py-2 bg-yellow-600 text-white rounded-lg transition-colors ${!selectedNewAdmin ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-700'}`}
+                          >
+                            Confirmar Transferencia
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {showDeleteConfirm && (
+                      <div className="mt-4 p-4 bg-red-100 dark:bg-red-900/40 rounded-lg border border-red-300 dark:border-red-700 animate-fadeIn fade-in">
+                        <label className="block text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                          Para confirmar, escribe el nombre de la iglesia: <strong className="select-none">{iglesiaData?.nombre}</strong>
+                        </label>
+                        <input
+                          type="text"
+                          value={deleteInput}
+                          onChange={(e) => setDeleteInput(e.target.value)}
+                          placeholder="Nombre de la iglesia"
+                          className="w-full px-4 py-2 border border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white mb-4 focus:ring-red-500 focus:border-red-500"
+                        />
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            type="button"
+                            onClick={() => { setShowDeleteConfirm(false); setDeleteInput(''); }}
+                            className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if(deleteInput === iglesiaData.nombre) {
+                                handleDeleteIglesia(iglesiaData._id);
+                              }
+                            }}
+                            disabled={deleteInput !== iglesiaData.nombre}
+                            className={`px-4 py-2 bg-red-600 text-white rounded-lg transition-colors ${deleteInput !== iglesiaData.nombre ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
+                          >
+                            Eliminar Permanentemente
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <>
                     <button

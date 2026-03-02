@@ -398,16 +398,12 @@ const IglesiaInfo = ({ iglesiaData }) => {
                   )}
                 </>
               ) : (
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3279.0899473167383!2d-58.56242532492178!3d-34.72812706407799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcc5f4abbd384b%3A0x38980bcbc1567b5a!2sLas%20Camelias%2035%2C%20B1778JBB%20Cdad.%20Evita%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1769093691552!5m2!1ses-419!2sar"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicación de la iglesia"
-                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 p-6 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
+                  <span className="material-symbols-outlined text-5xl text-gray-400 dark:text-gray-500 mb-3">map</span>
+                  <p className="text-gray-600 dark:text-gray-400 font-medium">
+                    El administrador aún no ha configurado el mapa GPS de esta iglesia.
+                  </p>
+                </div>
               )}
             </div>
           </div>

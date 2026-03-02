@@ -214,6 +214,33 @@ export const useIglesiaSettings = (iglesiaData, refetch, isPastor = true) => {
         }
     };
 
+    const handleDeleteIglesia = async (iglesiaId) => {
+        setLoading(true);
+        try {
+            await iglesiaService.deleteIglesia(iglesiaId);
+            window.location.href = '/';
+        } catch (error) {
+            logger.error('❌ Error al eliminar iglesia:', error);
+            setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar la iglesia' });
+            setLoading(false);
+        }
+    };
+
+    const handleTransferAdmin = async (iglesiaId, nuevoPastorId) => {
+        setLoading(true);
+        try {
+            await iglesiaService.transferAdmin(iglesiaId, nuevoPastorId);
+            setAlertConfig({ isOpen: true, variant: 'success', message: 'Liderazgo transferido exitosamente' });
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } catch (error) {
+            logger.error('❌ Error al transferir liderazgo:', error);
+            setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al transferir el liderazgo' });
+            setLoading(false);
+        }
+    };
+
     return {
         // Estado
         loading,
@@ -240,6 +267,8 @@ export const useIglesiaSettings = (iglesiaData, refetch, isPastor = true) => {
         handleRemoveGaleriaImage,
         handleAddHorario,
         handleRemoveHorario,
-        handleSubmit
+        handleSubmit,
+        handleDeleteIglesia,
+        handleTransferAdmin
     };
 };
