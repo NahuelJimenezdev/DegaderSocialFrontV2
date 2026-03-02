@@ -112,13 +112,20 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
         <div className="matchmaking-idle">
           <div className="arena-competitive-card">
             <div className="card-main-content">
-              <p className="matchmaking-hint">Encuentra un oponente digno y domina el campo de batalla.</p>
+              <div className="card-header-text">
+                <h3 className="card-title">Demuestra tu conocimiento en un duelo 1vs1.</h3>
+                <p className="card-subtitle">Responde con precisión, vence con velocidad y conquista la gloria del Reino.</p>
+              </div>
+
+              <div className="card-features">
+                <div className="feature-item"><span>🔥</span> +Puntos de Gloria en juego</div>
+                <div className="feature-item"><span>⚔️</span> Rachas activas y bonus por tiempo</div>
+                <div className="feature-item"><span>👑</span> Solo uno dominará la Arena</div>
+              </div>
+
               <button className="btn-search-rival pulse-button" onClick={handleStartSearch}>
-                BUSCAR RIVAL
+                ENFRENTAR RIVAL
               </button>
-            </div>
-            <div className="card-vertical-title">
-              <h2>ARENA COMPETITIVA</h2>
             </div>
           </div>
         </div>
