@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { logger } from '../../../shared/utils/logger';
 import groupService from "../../../api/groupService";
+import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const CreateGroupModal = ({ onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
