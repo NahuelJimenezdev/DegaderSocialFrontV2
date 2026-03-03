@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.65.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.65.1...v1.65.2) (2026-03-03)
+
 ### [1.65.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.65.0...v1.65.1) (2026-03-03)
 
 ## [1.65.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.64.5...v1.65.0) (2026-03-03)
