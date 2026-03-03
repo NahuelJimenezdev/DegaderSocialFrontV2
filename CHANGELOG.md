@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.65.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.64.5...v1.65.0) (2026-03-03)
+
+
+### Features
+
+* **auth:** implementar PublicRoute para redirección automática de usuarios autenticados ([7d60950](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7d6095094534240fef5a713ceb2c1124bcdd6f7d))
+
 ### [1.64.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.64.4...v1.64.5) (2026-03-03)
 
 ### [1.64.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.64.3...v1.64.4) (2026-03-03)
