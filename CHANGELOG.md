@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.64.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.64.1...v1.64.2) (2026-03-03)
+
+
+### Bug Fixes
+
+* **grupos:** solucionar ReferenceError de ProgressiveImage agregando importaciones faltantes ([a4c185b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a4c185b32c0355a46c94ae2c6273480009a7378d))
+
 ### [1.64.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.64.0...v1.64.1) (2026-03-02)
 
 ## [1.64.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.63.0...v1.64.0) (2026-03-02)
