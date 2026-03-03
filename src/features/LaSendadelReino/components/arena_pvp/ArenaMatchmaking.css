@@ -6,7 +6,8 @@
   justify-content: center;
   width: 100%;
   height: 100vh;
-  background: radial-gradient(circle at center, #1a1a2e 0%, #0d0d1a 100%);
+  background: #0a0b1e url('../../assets/background_arenaCompetitiva.png') no-repeat center center;
+  background-size: cover;
   color: #fff;
   font-family: 'Inter', sans-serif;
   overflow: hidden;
@@ -43,13 +44,12 @@
   width: 100%;
   max-width: 500px;
   min-height: 550px;
-  background: url('../../assets/background_arenaCompetitiva.png') no-repeat center center;
-  background-size: cover;
+  background: transparent;
   border-radius: 60px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card-main-content {
