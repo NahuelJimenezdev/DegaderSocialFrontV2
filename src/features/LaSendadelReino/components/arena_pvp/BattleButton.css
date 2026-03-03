@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+.battle-button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  /* Espacio extra para las puntas */
+}
+
+.battle-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* --- ESTILOS DE LAS PUNTAS SVG --- */
+.metal-tip {
+  position: absolute;
+  top: 50%;
+  width: 45px;
+  height: 80px;
+  z-index: 1;
+  /* Se colocan detrás del botón central */
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.8));
+  transition: transform 0.2s ease;
+}
+
+.tip-left {
+  left: -35px;
+  /* Ajusta este valor para meter o sacar más la punta */
+  transform: translateY(-50%);
+}
+
+.tip-right {
+  right: -35px;
+  /* Ajusta este valor */
+  /* El scaleX(-1) crea el efecto espejo para el lado derecho */
+  transform: translateY(-50%) scaleX(-1);
+}
+
+/* Animación de las puntas al hacer hover en el botón */
+.battle-button-container:hover .tip-left {
+  transform: translateY(-50%) translateX(-2px);
+}
+
+.battle-button-container:hover .tip-right {
+  transform: translateY(-50%) scaleX(-1) translateX(-2px);
+}
+
+/* --- ESTILOS DEL BOTÓN CENTRAL (Los mismos de antes) --- */
+.battle-button {
+  position: relative;
+  z-index: 2;
+  /* Por encima de las puntas SVG */
+  background: linear-gradient(180deg, #1f0202 0%, #4a0707 50%, #8c0c0c 85%, #d12200 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 16px 50px;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  box-shadow:
+    0 0 0 1px #3a1c00,
+    0 0 0 3px #dfb15b,
+    0 0 0 4.5px #5c3202,
+    0 10px 20px rgba(0, 0, 0, 0.8),
+    inset 0 4px 10px rgba(255, 255, 255, 0.1),
+    inset 0 -15px 30px rgba(255, 80, 0, 0.6);
+}
+
+.battle-button:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.battle-button:active {
+  transform: scale(0.98);
+}
+
+.battle-button span {
+  position: relative;
+  z-index: 2;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #ffeba1;
+  text-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.9),
+    0px 2px 8px rgba(0, 0, 0, 0.8),
+    0px 0px 4px rgba(255, 215, 0, 0.3);
+}
+
+.button-flare {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 30px;
+  background: radial-gradient(ellipse at center, rgba(255, 220, 100, 0.9) 0%, rgba(255, 100, 0, 0.5) 40%, rgba(255, 0, 0, 0) 70%);
+  filter: blur(4px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .battle-button-wrapper {
+    padding: 20px;
+  }
+
+  .battle-button-container {
+    display: flex;
+    align-items: center;
+  }
+
+  /* --- ESTILOS DE LAS PUNTAS SVG --- */
+  .metal-tip {
+    position: absolute;
+    top: 50%;
+    width: 22px;
+    height: 40px;
+    z-index: 1;
+    /* Se colocan detrás del botón central */
+    filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.8));
+    transition: transform 0.2s ease;
+  }
+
+  .tip-left {
+    left: -25px;
+    /* Ajusta este valor para meter o sacar más la punta */
+    transform: translateY(-50%);
+  }
+
+  .tip-right {
+    right: -25px;
+    /* Ajusta este valor */
+    /* El scaleX(-1) crea el efecto espejo para el lado derecho */
+    transform: translateY(-50%) scaleX(-1);
+  }
+
+  /* Animación de las puntas al hacer hover en el botón */
+  .battle-button-container:hover .tip-left {
+    transform: translateY(-50%) translateX(-2px);
+  }
+
+  .battle-button-container:hover .tip-right {
+    transform: translateY(-50%) scaleX(-1) translateX(-2px);
+  }
+
+  /* --- ESTILOS DEL BOTÓN CENTRAL (Los mismos de antes) --- */
+  .battle-button {
+    position: relative;
+    z-index: 2;
+    /* Por encima de las puntas SVG */
+    background: linear-gradient(180deg, #1f0202 0%, #4a0707 50%, #8c0c0c 85%, #d12200 100%);
+    border: none;
+    border-radius: 50px;
+    padding: 10px 25px;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    box-shadow:
+      0 0 0 1px #3a1c00,
+      0 0 0 3px #dfb15b,
+      0 0 0 4.5px #5c3202,
+      0 10px 20px rgba(0, 0, 0, 0.8),
+      inset 0 4px 10px rgba(255, 255, 255, 0.1),
+      inset 0 -15px 30px rgba(255, 80, 0, 0.6);
+  }
+
+  .battle-button:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+  }
+
+  .battle-button:active {
+    transform: scale(0.98);
+  }
+
+  .battle-button span {
+    position: relative;
+    z-index: 2;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: #ffeba1;
+    text-shadow:
+      2px 2px 4px rgba(0, 0, 0, 0.9),
+      0px 2px 8px rgba(0, 0, 0, 0.8),
+      0px 0px 4px rgba(255, 215, 0, 0.3);
+  }
+
+  .button-flare {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 30px;
+    background: radial-gradient(ellipse at center, rgba(255, 220, 100, 0.9) 0%, rgba(255, 100, 0, 0.5) 40%, rgba(255, 0, 0, 0) 70%);
+    filter: blur(4px);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 1;
+  }
+}

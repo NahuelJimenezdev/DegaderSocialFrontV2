@@ -1,0 +1,161 @@
+.arena-ui-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding-top: 15vh;
+  /* Se agregará espacio desde arriba para alinear mejor con el fondo */
+  font-family: 'EB Garamond', serif;
+}
+
+/* --- TEXTOS SUPERIORES --- */
+.arena-subtitle {
+  font-weight: 700;
+  font-size: 24px;
+  color: #fdf1d6;
+  /* Tono crema/dorado muy claro */
+  line-height: 1.3;
+  margin: 0 0 24px 0;
+  /* Doble sombra dura negra para separar del fondo brillante */
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.9), 0px 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.arena-description {
+  font-weight: 500;
+  font-size: 19px;
+  color: #f4f4f4;
+  /* Blanco roto */
+  line-height: 1.4;
+  margin: 0 0 22vh 0;
+  /* Espacio extra para bajar la lista hacia las plataformas */
+  letter-spacing: 0.3px;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9), 0px 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* --- LISTA DE CARACTERÍSTICAS --- */
+.arena-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 45px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Alinea los items a la izquierda dentro de su propio bloque */
+  width: fit-content;
+  /* El bloque se ajusta a su contenido, permitiendo centrarlo entero */
+}
+
+.arena-ui-container .feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fdf1d6;
+  /* Color base crema/oro pálido */
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.2px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  width: auto;
+  justify-content: flex-start;
+}
+
+/* Solo el primer item tiene texto amarillo/dorado vibrante */
+.arena-ui-container .feature-gold .feature-text {
+  color: #fddb71;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9), 0px 0px 10px rgba(253, 219, 113, 0.3);
+}
+
+.arena-ui-container .feature-icon {
+  margin-right: 12px;
+  font-size: 20px;
+  /* Ligero filtro sepia/sombra a los emojis para integrarlos mejor */
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.8));
+}
+
+@media screen and (max-width: 768px) {
+  .arena-ui-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 15vh;
+    /* Se agregará espacio desde arriba al igual que desktop */
+    font-family: 'EB Garamond', serif;
+  }
+
+  /* --- TEXTOS SUPERIORES --- */
+  .arena-subtitle {
+    font-weight: 700;
+    font-size: 24px;
+    color: #fdf1d6;
+    /* Tono crema/dorado muy claro */
+    line-height: 1.3;
+    margin: 0 0 24px 0;
+    /* Doble sombra dura negra para separar del fondo brillante */
+    text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.9), 0px 4px 15px rgba(0, 0, 0, 0.8);
+  }
+
+  .arena-description {
+    font-weight: 500;
+    font-size: 19px;
+    color: #f4f4f4;
+    /* Blanco roto */
+    line-height: 1.4;
+    margin: 0 0 18vh 0;
+    /* Aumentado drásticamente para empujar hacia abajo hacia las plataformas */
+    letter-spacing: 0.3px;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9), 0px 4px 10px rgba(0, 0, 0, 0.8);
+  }
+
+  /* --- LISTA DE CARACTERÍSTICAS --- */
+  .arena-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Alinea los items a la izquierda dentro de su propio bloque */
+    width: fit-content;
+    /* El bloque se ajusta a su contenido, permitiendo centrarlo entero */
+  }
+
+  .arena-ui-container .feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fdf1d6;
+    /* Color base crema/oro pálido */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9);
+    letter-spacing: 0.2px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    width: auto;
+    justify-content: flex-start;
+  }
+
+  /* Solo el primer item tiene texto amarillo/dorado vibrante */
+  .arena-ui-container .feature-gold .feature-text {
+    color: #fddb71;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9), 0px 0px 10px rgba(253, 219, 113, 0.3);
+  }
+
+  .arena-ui-container .feature-icon {
+    margin-right: 12px;
+    font-size: 20px;
+    /* Ligero filtro sepia/sombra a los emojis para integrarlos mejor */
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.8));
+  }
+}
