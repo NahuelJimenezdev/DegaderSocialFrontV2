@@ -5,7 +5,6 @@ import ProgressiveImage from '../../../shared/components/ProgressiveImage/Progre
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
-import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
 
 const GroupMembers = ({ groupData, refetch, user, userRole, isAdmin, isOwner }) => {
   const [searchTerm, setSearchTerm] = useState('');
