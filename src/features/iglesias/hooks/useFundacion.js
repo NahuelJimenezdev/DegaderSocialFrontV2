@@ -337,15 +337,17 @@ export const useFundacion = (user, updateUser) => {
 
     const CARGOS_POR_NIVEL = {
         directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva"],
-        organo_control: ["Auditor", "Miembro Comité Ético"],
-        organismo_internacional: ["Delegado Internacional"],
-        nacional: ["Director", "Director General (Pastor)"],
-        regional: ["Director", "Director General (Pastor)"],
-        departamental: ["Director", "Coordinador", "Director General (Pastor)"],
-        municipal: ["Coordinador", "Director General (Pastor)"]
+        organo_control: ["Auditor", "Secretario/a", "Miembro Comité Ético"],
+        organismo_internacional: ["Delegado Internacional", "Secretario/a"],
+        nacional: ["Director", "Secretario/a", "Director General (Pastor)"],
+        regional: ["Director", "Secretario/a", "Director General (Pastor)"],
+        departamental: ["Director", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        municipal: ["Coordinador", "Secretario/a", "Director General (Pastor)"],
+        local: ["Coordinador", "Secretario/a", "Director General (Pastor)"],
+        barrial: ["Coordinador", "Secretario/a", "Director General (Pastor)"]
     };
 
-    const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "voluntario", "pastor"];
+    const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "secretario/a", "voluntario", "pastor"];
 
     const [solicitudesPendientes, setSolicitudesPendientes] = useState([]);
     const [formData, setFormData] = useState({
@@ -393,7 +395,18 @@ export const useFundacion = (user, updateUser) => {
 
     const getCargosDisponibles = () => {
         if (!formData.nivel) return [];
-        return CARGOS_POR_NIVEL[formData.nivel] || [];
+        const cargos = CARGOS_POR_NIVEL[formData.nivel] || [];
+
+        // Ajustar género para "Secretario/a"
+        return cargos.map(cargo => {
+            if (cargo === "Secretario/a") {
+                const genero = user?.personal?.genero;
+                if (genero === 'M') return "Secretario";
+                if (genero === 'F') return "Secretaria";
+                return "Secretario/a";
+            }
+            return cargo;
+        });
     };
 
     // ==========================================
