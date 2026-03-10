@@ -124,44 +124,49 @@ const IglesiaInfo = ({ iglesiaData }) => {
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
               </div>
 
-              {/* Smaller images */}
-              {[1, 2, 3].map((idx) => (
-                <div
-                  key={idx}
-                  className={`rounded-xl overflow-hidden shadow-md relative group cursor-pointer ${idx === 3 ? 'hidden md:block' : ''}`}
-                  onClick={() => {
-                    if (idx < galeria.length) {
-                      setCurrentImageIndex(idx);
-                      setShowGalleryModal(true);
-                    }
-                  }}
-                >
-                  {galeria[idx] ? (
-                    <>
-                      <ProgressiveImage
-                        src={getAvatarUrl(iglesiaData?.galeriaObjs?.[idx]?.url || galeria[idx])}
-                        medium={iglesiaData?.galeriaObjs?.[idx]?.medium}
-                        large={iglesiaData?.galeriaObjs?.[idx]?.large}
-                        blurHash={iglesiaData?.galeriaObjs?.[idx]?.blurHash}
-                        alt={`Galeria ${idx}`}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black/5 group-hover:bg-black/15 transition-colors" />
-                    </>
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-gray-400">landscape</span>
-                    </div>
-                  )}
-                </div>
-              ))}
+              {/* Smaller images (1, 2, 3) */}
+              {[1, 2, 3].map((idx) => {
+                const img = galeria[idx];
+                const obj = iglesiaData?.galeriaObjs?.[idx];
+                
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-xl overflow-hidden shadow-md relative group cursor-pointer ${idx === 3 ? 'hidden md:block' : ''}`}
+                    onClick={() => {
+                      if (img) {
+                        setCurrentImageIndex(idx);
+                        setShowGalleryModal(true);
+                      }
+                    }}
+                  >
+                    {img ? (
+                      <>
+                        <ProgressiveImage
+                          src={getAvatarUrl(obj?.url || img)}
+                          medium={obj?.medium}
+                          large={obj?.large}
+                          blurHash={obj?.blurHash}
+                          alt={`Galeria ${idx}`}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-black/5 group-hover:bg-black/15 transition-colors" />
+                      </>
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center border border-gray-100 dark:border-gray-700">
+                        <span className="material-symbols-outlined text-gray-400">landscape</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
 
               {/* View More Button */}
               <div
                 onClick={() => setShowGalleryModal(true)}
                 className="rounded-xl overflow-hidden shadow-md relative group bg-gray-900 flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
               >
-                {galeria.length > 4 && (
+                {galeria.length > 4 ? (
                   <ProgressiveImage
                     src={getAvatarUrl(iglesiaData?.galeriaObjs?.[4]?.url || galeria[4])}
                     medium={iglesiaData?.galeriaObjs?.[4]?.medium}
@@ -170,10 +175,12 @@ const IglesiaInfo = ({ iglesiaData }) => {
                     className="absolute inset-0 w-full h-full object-cover opacity-30 blur-sm"
                     alt="Background"
                   />
+                ) : (
+                   <div className="absolute inset-0 w-full h-full bg-indigo-600 opacity-20" />
                 )}
-                <span className="text-white font-medium flex flex-col items-center gap-1 relative z-10">
+                <span className="text-white font-medium flex flex-col items-center gap-1 relative z-10 text-center p-2">
                   <span className="material-symbols-outlined text-3xl">add_a_photo</span>
-                  <span className="text-sm">Ver más ({galeria.length})</span>
+                  <span className="text-sm">Ver todas ({galeria.length})</span>
                 </span>
               </div>
             </div>
@@ -366,45 +373,61 @@ const IglesiaInfo = ({ iglesiaData }) => {
               </div>
             )}
 
-            {/* Google Maps */}
             {/* Google Maps o Botón GPS */}
             <div className="h-64 md:h-96 rounded-xl overflow-hidden shadow-lg bg-gray-100 dark:bg-gray-800 relative">
               {iglesiaData?.ubicacion?.googleMapsLink ? (
-                <>
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-                    <a
-                      href={iglesiaData.ubicacion.googleMapsLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex flex-col items-center gap-3 px-6 py-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:scale-105 transition-transform colorMarcaDegader dark:text-indigo-400"
-                    >
-                      <MapPin size={40} className="text-red-500" />
-                      <span className="font-bold text-lg">Abrir ubicación en Google Maps</span>
-                      <span className="text-xs text-gray-500">Haz clic para ver la ruta GPS</span>
-                    </a>
+                  <>
+                    {/* Intentamos mostrar iframe si el link parece un embed o es un iframe completo */}
+                    {(() => {
+                      const link = iglesiaData.ubicacion.googleMapsLink;
+                      let src = link;
+                      
+                      // Si el usuario pegó el código de iframe completo, extraemos solo el src
+                      if (link.includes('<iframe')) {
+                        const match = link.match(/src="([^"]+)"/);
+                        if (match) src = match[1];
+                      }
+                      
+                      if (src.includes('google.com/maps') || src.includes('embed')) {
+                        return (
+                          <iframe
+                            src={src}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0, position: 'relative', zIndex: 10 }}
+                            allowFullScreen=""
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="Ubicación de la iglesia"
+                          />
+                        );
+                      }
+                      
+                      // Fallback si no es un link de embed válido
+                      return (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                          <a
+                            href={link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center gap-3 px-6 py-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:scale-105 transition-transform colorMarcaDegader dark:text-indigo-400"
+                          >
+                            <MapPin size={40} className="text-red-500" />
+                            <span className="font-bold text-lg">Abrir ubicación en Google Maps</span>
+                            <span className="text-xs text-gray-500">Haz clic para ver la ruta GPS</span>
+                          </a>
+                        </div>
+                      );
+                    })()}
+                  </>
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 p-6 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
+                    <span className="material-symbols-outlined text-5xl text-gray-400 dark:text-gray-500 mb-3">map</span>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">
+                      El administrador aún no ha configurado el mapa GPS de esta iglesia.
+                    </p>
                   </div>
-                  {/* Intentamos mostrar iframe si el link parece un embed, si no, mostramos solo el botón arriba */}
-                  {iglesiaData.ubicacion.googleMapsLink.includes('embed') && (
-                    <iframe
-                      src={iglesiaData.ubicacion.googleMapsLink}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0, position: 'relative', zIndex: 10 }}
-                      allowFullScreen=""
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Ubicación de la iglesia"
-                    />
-                  )}
-                </>
-              ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 p-6 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl">
-                  <span className="material-symbols-outlined text-5xl text-gray-400 dark:text-gray-500 mb-3">map</span>
-                  <p className="text-gray-600 dark:text-gray-400 font-medium">
-                    El administrador aún no ha configurado el mapa GPS de esta iglesia.
-                  </p>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </section>
@@ -419,7 +442,8 @@ const IglesiaInfo = ({ iglesiaData }) => {
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Foto del Pastor */}
             <div className="flex-shrink-0 relative group">
-              <div className="w-32 h-32 md:w-36 md:h-36 rounded-full p-1 bg-gradient-to-tr from-purple-500 to-indigo-500 shadow-lg">
+              {/* Borde degradado siempre visible */}
+              <div className="w-32 h-32 md:w-36 md:h-36 rounded-full p-1.5 bg-gradient-to-tr from-purple-500 via-indigo-500 to-blue-500 shadow-xl">
                 <div className="w-full h-full rounded-full overflow-hidden border-2 border-white dark:border-gray-900 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
                   {iglesiaData?.pastorPrincipal?.social?.fotoPerfil ? (
                     <ProgressiveImage
@@ -428,15 +452,15 @@ const IglesiaInfo = ({ iglesiaData }) => {
                       large={iglesiaData.pastorPrincipal.social?.fotoPerfilObj?.large}
                       blurHash={iglesiaData.pastorPrincipal.social?.fotoPerfilObj?.blurHash}
                       alt="Pastor Principal"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   ) : (
                     <span className="text-4xl font-bold text-indigo-500">{getPastorName().charAt(0)}</span>
                   )}
                 </div>
               </div>
-              {/* Badge opcional de verificado o rol */}
-              <div className="absolute bottom-1 right-1 bg-white dark:bg-gray-800 rounded-full p-1 shadow-md border border-gray-100 dark:border-gray-700 text-indigo-500">
+              {/* Badge verificado */}
+              <div className="absolute -bottom-1 -right-1 bg-white dark:bg-gray-800 rounded-full p-1.5 shadow-lg border border-gray-100 dark:border-gray-700 text-indigo-500 z-10">
                 <span className="material-symbols-outlined text-xl">workspace_premium</span>
               </div>
             </div>

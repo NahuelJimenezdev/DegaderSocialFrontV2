@@ -23,9 +23,17 @@ export const getAvatarUrl = (avatar, defaultPath = '/avatars/default-avatar.png'
     return avatar;
   }
 
-  // Si es una URL absoluta, usar directamente
+  // Si ya es una URL absoluta (incluyendo R2), usar directamente
   if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
     return avatar;
+  }
+
+  // Si contiene el nombre del bucket de R2 o el patrón de optimización
+  if (avatar.includes('degader-social-uploads') || avatar.includes('optimized/')) {
+    const R2_URL = 'https://pub-47f4a5a5dc3d492f1797.r2.dev';
+    // Si empieza con barra, quitarla para evitar doble barra
+    const cleanPath = avatar.startsWith('/') ? avatar.substring(1) : avatar;
+    return `${R2_URL}/${cleanPath}`;
   }
 
   // Si empieza con /uploads, es del servidor backend

@@ -336,7 +336,7 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const CARGOS_POR_NIVEL = {
-        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva"],
+        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Secretario/a"],
         organo_control: ["Auditor", "Secretario/a", "Miembro Comité Ético"],
         organismo_internacional: ["Delegado Internacional", "Secretario/a"],
         nacional: ["Director", "Secretario/a", "Director General (Pastor)"],

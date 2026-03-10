@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { X, Folder, Info } from 'lucide-react';
+import { X, Folder, Info, UsersRound } from 'lucide-react';
+import api from '../../../api/config';
 import '../styles/ModalCarpeta.css';
 
 const COLORES_CARPETA = [
@@ -52,6 +52,7 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
     descripcion: '',
     tipo: 'personal',
     color: '#3B82F6',
+    group: '',
     visibilidadPorCargo: {
       habilitado: false,
       cargos: []
@@ -75,6 +76,9 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
     geografia: false
   });
 
+  const [myGroups, setMyGroups] = useState([]);
+  const [loadingGroups, setLoadingGroups] = useState(false);
+
   useEffect(() => {
     if (carpeta) {
       setFormData({
@@ -82,6 +86,7 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
         descripcion: carpeta.descripcion || '',
         tipo: carpeta.tipo || 'personal',
         color: carpeta.color || '#3B82F6',
+        group: carpeta.group || '',
         visibilidadPorCargo: carpeta.visibilidadPorCargo || { habilitado: false, cargos: [] },
         visibilidadPorNivel: carpeta.visibilidadPorNivel || { habilitado: false, niveles: [] },
         visibilidadGeografica: carpeta.visibilidadGeografica || { habilitado: false, pais: '', region: '', municipio: '', barrio: '' }
@@ -92,12 +97,24 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
         descripcion: '',
         tipo: 'personal',
         color: '#3B82F6',
+        group: '',
         visibilidadPorCargo: { habilitado: false, cargos: [] },
         visibilidadPorNivel: { habilitado: false, niveles: [] },
         visibilidadGeografica: { habilitado: false, pais: '', region: '', municipio: '', barrio: '' }
       });
     }
   }, [carpeta, isOpen]);
+
+  // Cargar grupos del usuario cuando el tipo es grupal
+  useEffect(() => {
+    if (formData.tipo === 'grupal' && isOpen) {
+      setLoadingGroups(true);
+      api.get('/grupos/mis-grupos')
+        .then(r => setMyGroups(r.data?.data || []))
+        .catch(() => setMyGroups([]))
+        .finally(() => setLoadingGroups(false));
+    }
+  }, [formData.tipo, isOpen]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -255,6 +272,29 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
                 ))}
               </div>
             </div>
+            {/* Selector de grupo (solo para tipo grupal) */}
+            {formData.tipo === 'grupal' && (
+              <div className="space-y-2 p-4 bg-pink-50 dark:bg-pink-900/10 rounded-lg border border-pink-200 dark:border-pink-800">
+                <h4 className="flex items-center font-semibold text-pink-800 dark:text-pink-300 text-sm">
+                  <UsersRound className="w-4 mr-2" /> Seleccionar Grupo
+                </h4>
+                {loadingGroups ? (
+                  <p className="text-xs text-pink-600 dark:text-pink-400">Cargando tus grupos...</p>
+                ) : myGroups.length === 0 ? (
+                  <p className="text-xs text-pink-600 dark:text-pink-400">No pertenecés a ningún grupo todavía.</p>
+                ) : (
+                  <select 
+                    value={formData.group} 
+                    onChange={(e) => handleChange('group', e.target.value)}
+                    className="w-full border border-pink-300 dark:border-pink-700 rounded-lg p-2 bg-white dark:bg-gray-700 dark:text-white outline-none text-sm"
+                    required
+                  >
+                    <option value="">Seleccioná un grupo...</option>
+                    {myGroups.map(g => <option key={g._id} value={g._id}>{g.nombre}</option>)}
+                  </select>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Opciones de visibilidad (solo para grupales e institucionales) */}

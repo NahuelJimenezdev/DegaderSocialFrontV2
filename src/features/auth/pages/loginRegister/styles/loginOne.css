@@ -40,15 +40,15 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
     text-align: center;
+    overflow: hidden; /* Evitar que las nubes se salgan y creen círculos raros en Edge */
 }
 
 /* ☁️ EL EFECTO NUBES (parte importante) */
 .clouds {
     position: absolute;
     top: 0;
-    right: -60px;
+    right: -80px; /* Movidas 20px más a la derecha para no tocar el logo */
     width: 160px;
     height: 100%;
     background: white;

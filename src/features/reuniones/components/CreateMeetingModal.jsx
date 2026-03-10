@@ -6,7 +6,7 @@ import api from '../../../api/config';
 // Tipos para contexto GLOBAL
 const globalMeetingTypes = [
   { value: 'publica',     label: 'Pública',       icon: Globe,       color: 'text-sky-600',  desc: 'Visible para todos tus amigos. Sin notificación al crearla.' },
-  { value: 'capacitacion',label: 'Capacitación',  icon: BookOpen,    color: 'text-teal-600', desc: 'Visible para amigos. Notifica a los usuarios que selecciones.' },
+  { value: 'privado',    label: 'Privado',       icon: BookOpen,    color: 'text-teal-600', desc: 'Visible para amigos. Notifica a los usuarios que selecciones.' },
   { value: 'grupal',      label: 'Grupal',         icon: UsersRound,  color: 'text-pink-600', desc: 'Solo visible para miembros de un grupo. Notifica a los miembros.' },
 ];
 
@@ -16,7 +16,7 @@ const churchMeetingTypes = [
   { value: 'estudio_biblico',   label: 'Estudio de la Palabra', color: 'text-blue-600' },
   { value: 'culto',             label: 'Culto General',         color: 'colorMarcaDegader' },
   { value: 'escuela_dominical', label: 'Escuela Dominical',     color: 'text-orange-600' },
-  { value: 'capacitacion',      label: 'Capacitación',          color: 'text-teal-600' },
+  { value: 'privado',           label: 'Privado',               color: 'text-teal-600' },
   { value: 'grupal',            label: 'Grupal',                color: 'text-pink-600' },
 ];
 
@@ -130,7 +130,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
   };
 
   const selectedType = globalMeetingTypes.find(t => t.value === formData.type);
-  const showUserSearch = !isChurchContext && (formData.type === 'capacitacion');
+  const showUserSearch = !isChurchContext && (formData.type === 'privado');
   const showGroupSelect = !isChurchContext && formData.type === 'grupal';
 
   return (
