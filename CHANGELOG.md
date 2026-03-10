@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.67.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.66.2...v1.67.0) (2026-03-10)
+
+
+### Features
+
+* **carpetas:** agregar soporte para carpetas grupales faltantes ([a6ba73d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a6ba73d729deda3a9dcd0d1d2b999acaa2a611d2))
+
+
+### Bug Fixes
+
+* **carpetas:** corregir etiqueta div de cierre faltante en el modal ([8c4e869](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8c4e8699a08d7294c41f7a8b5756ec06e8d96c5c))
+
 ### [1.66.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.66.1...v1.66.2) (2026-03-10)
 
 ### [1.66.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.66.0...v1.66.1) (2026-03-10)
