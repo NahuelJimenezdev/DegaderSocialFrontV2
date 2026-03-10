@@ -196,6 +196,8 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 </button>
               ))}
             </div>
+          </div>
+
           {/* Configuración Grupal (Condicional) */}
           {formData.tipo === 'grupal' && (
             <div className="bg-pink-50 dark:bg-pink-900/20 rounded-xl p-5 border border-pink-200 dark:border-pink-800 space-y-4 animate-fadeIn">
