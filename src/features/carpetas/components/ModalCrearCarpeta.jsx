@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { X, Folder, Users, Globe, Building, Shield } from 'lucide-react';
+import { X, Folder, Users, Globe, Building, Shield, UsersRound } from 'lucide-react';
+import api from '../../../api/config';
 
 const COLORES_CARPETA = [
   { nombre: 'Azul', valor: '#3B82F6' },
@@ -33,10 +34,13 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
     pais: '',
     provincia: '',
     ciudad: '',
-    compartirAutomaticamente: false
+    compartirAutomaticamente: false,
+    grupoId: ''
   });
 
   const [previewUsuarios, setPreviewUsuarios] = useState(null); // null = loading/unknown, 0 = none, >0 = count
+  const [myGroups, setMyGroups] = useState([]);
+  const [loadingGroups, setLoadingGroups] = useState(false);
 
   // Reset/Load form on open
   useEffect(() => {
@@ -69,10 +73,18 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
           pais: '',
           provincia: '',
           ciudad: '',
-          compartirAutomaticamente: false
+          compartirAutomaticamente: false,
+          grupoId: ''
         });
       }
       setPreviewUsuarios(null);
+
+      // Cargar grupos si abren el modal (o diferirlo a cuando seleccionen 'grupal')
+      setLoadingGroups(true);
+      api.get('/grupos/mis-grupos')
+        .then(r => setMyGroups(r.data?.data || []))
+        .catch(() => setMyGroups([]))
+        .finally(() => setLoadingGroups(false));
     }
   }, [isOpen, isEditing, carpeta]);
 
@@ -99,10 +111,16 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Validar grupo si es tipo grupal
+    if (formData.tipo === 'grupal' && !formData.grupoId) {
+       return; // No debe poder enviar
+    }
     onSubmit(formData);
   };
 
   if (!isOpen) return null;
+
+  const isGrupalWithoutGroups = formData.tipo === 'grupal' && myGroups.length === 0 && !loadingGroups;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -178,7 +196,43 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 </button>
               ))}
             </div>
-          </div>
+          {/* Configuración Grupal (Condicional) */}
+          {formData.tipo === 'grupal' && (
+            <div className="bg-pink-50 dark:bg-pink-900/20 rounded-xl p-5 border border-pink-200 dark:border-pink-800 space-y-4 animate-fadeIn">
+              <h3 className="font-semibold text-pink-800 dark:text-pink-300 flex items-center gap-2">
+                <UsersRound size={18} className="text-pink-500" />
+                Configuración de Grupo
+              </h3>
+              
+              {loadingGroups ? (
+                <p className="text-sm text-pink-600 dark:text-pink-400">Cargando grupos...</p>
+              ) : myGroups.length === 0 ? (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600 font-medium">No perteneces a ningún grupo todavía.</p>
+                  <p className="text-xs text-red-500 mt-1">Debes unirte o crear un grupo antes de poder crear carpetas grupales.</p>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Selecciona un grupo
+                  </label>
+                  <select
+                    value={formData.grupoId}
+                    onChange={(e) => handleChange('grupoId', e.target.value)}
+                    className="w-full px-4 py-2 border border-pink-300 dark:border-pink-700 rounded-lg focus:ring-2 focus:ring-pink-500 bg-white dark:bg-[#0a0e27] dark:text-white"
+                    required={formData.tipo === 'grupal'}
+                  >
+                    <option value="">Selecciona tu grupo...</option>
+                    {myGroups.map(g => (
+                      <option key={g._id} value={g._id} className="dark:bg-[#1a1f3a]">
+                        {g.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Configuración Institucional (Condicional) */}
           {formData.tipo === 'institucional' && (
@@ -306,7 +360,8 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-lg shadow-indigo-500/30"
+              disabled={isGrupalWithoutGroups}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-lg shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isEditing ? 'Guardar Cambios' : 'Crear Carpeta'}
             </button>
