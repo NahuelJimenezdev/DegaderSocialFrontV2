@@ -1,18 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ProgressiveImage.css';
+import { getAvatarUrl } from '../../utils/avatarUtils';
 
 /**
  * Componente ProgressiveImage
- * 
- * Implementa una carga estilo Facebook para evitar Cumulative Layout Shift (CLS)
- * y proveer una experiencia fluida al usuario.
- * 
- * @param {string} src - URL final de la imagen optimizada (medium/large).
- * @param {string} blurHash - Base64 ultra pequeño proveído por el backend.
- * @param {string} alt - Texto alternativo para accesibilidad.
- * @param {string} className - Clases CSS adicionales para la imagen.
- * @param {string} containerClass - Clases CSS para el contenedor de la imagen.
- * @param {string} aspectRatio - CSS aspect-ratio para reservar el espacio antes de cargar. (ej. "16/9", "1/1", "auto")
  */
 const ProgressiveImage = ({
     src,
@@ -51,8 +42,8 @@ const ProgressiveImage = ({
 
     // Construir srcset si existen versiones optimizadas
     const srcSet = [
-        medium && `${medium} 600w`,
-        large && `${large} 1200w`
+        medium && `${getAvatarUrl(medium)} 600w`,
+        large && `${getAvatarUrl(large)} 1200w`
     ].filter(Boolean).join(', ');
 
     return (

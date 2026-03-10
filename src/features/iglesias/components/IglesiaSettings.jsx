@@ -381,7 +381,7 @@ const IglesiaSettings = ({ iglesiaData, refetch }) => {
                 Link de Google Maps (GPS)
               </label>
               <input
-                type="url"
+                type="text"
                 name="ubicacion.googleMapsLink"
                 value={formData.ubicacion.googleMapsLink || ''}
                 onChange={handleInputChange}

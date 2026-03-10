@@ -105,7 +105,7 @@ const IglesiaHeader = ({ iglesia, user, onJoin, setActiveSection }) => {
       </div>
 
       {/* Info Bar */}
-      <div className="px-4 md:px-8 pb-6">
+      <div className="px-4 md:px-8 pb-6 relative z-10">
         <div className="flex flex-col md:flex-row items-start md:items-end -mt-12 mb-4 gap-6">
           {/* Logo */}
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl border-4 border-white dark:border-gray-800 shadow-lg bg-white dark:bg-gray-700 overflow-hidden flex-shrink-0 z-10">

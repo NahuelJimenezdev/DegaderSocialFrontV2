@@ -110,8 +110,15 @@ const ModalCarpeta = ({ isOpen, onClose, onSubmit, carpeta = null }) => {
     if (formData.tipo === 'grupal' && isOpen) {
       setLoadingGroups(true);
       api.get('/grupos/mis-grupos')
-        .then(r => setMyGroups(r.data?.data || []))
-        .catch(() => setMyGroups([]))
+        .then(r => {
+          const fetchedGroups = r.data?.data || r.data || [];
+          console.log('📦 Grupos obtenidos en ModalCarpeta:', fetchedGroups);
+          setMyGroups(Array.isArray(fetchedGroups) ? fetchedGroups : []);
+        })
+        .catch((error) => {
+          console.error('❌ Error al cargar grupos:', error);
+          setMyGroups([]);
+        })
         .finally(() => setLoadingGroups(false));
     }
   }, [formData.tipo, isOpen]);
