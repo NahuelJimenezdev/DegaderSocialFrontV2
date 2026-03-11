@@ -51,6 +51,8 @@ export const useFundacion = (user, updateUser) => {
         // Niveles Operativos (Nacional, Regional, Departamental, Municipal)
         nacional: {
             areas: {
+                "Despacho del Director": { subAreas: {}, programas: {} },
+                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Dirección de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -122,6 +124,8 @@ export const useFundacion = (user, updateUser) => {
         },
         regional: {
             areas: {
+                "Despacho del Director": { subAreas: {}, programas: {} },
+                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Dirección de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -193,6 +197,8 @@ export const useFundacion = (user, updateUser) => {
         },
         departamental: {
             areas: {
+                "Despacho del Director": { subAreas: {}, programas: {} },
+                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Coordinación de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -264,6 +270,8 @@ export const useFundacion = (user, updateUser) => {
         },
         municipal: {
             areas: {
+                "Despacho del Director": { subAreas: {}, programas: {} },
+                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Coordinación de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -336,15 +344,15 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const CARGOS_POR_NIVEL = {
-        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Secretario/a"],
-        organo_control: ["Auditor", "Secretario/a", "Miembro Comité Ético"],
-        organismo_internacional: ["Delegado Internacional", "Secretario/a"],
-        nacional: ["Director", "Secretario/a", "Director General (Pastor)"],
-        regional: ["Director", "Secretario/a", "Director General (Pastor)"],
-        departamental: ["Director", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        municipal: ["Coordinador", "Secretario/a", "Director General (Pastor)"],
-        local: ["Coordinador", "Secretario/a", "Director General (Pastor)"],
-        barrial: ["Coordinador", "Secretario/a", "Director General (Pastor)"]
+        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Secretario/a", "Subdirector"],
+        organo_control: ["Auditor", "Secretario/a", "Miembro Comité Ético", "Subdirector"],
+        organismo_internacional: ["Delegado Internacional", "Secretario/a", "Subdirector"],
+        nacional: ["Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
+        regional: ["Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
+        departamental: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        municipal: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        local: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        barrial: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"]
     };
 
     const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "secretario/a", "voluntario", "pastor"];
