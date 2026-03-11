@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.68.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.68.0...v1.68.1) (2026-03-11)
+
+
+### Bug Fixes
+
+* **iglesia:** renderizar fallback object en error de img galeria ([9a11485](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9a1148563f74a3d3a708a87747093fb1d1c36908))
+
 ## [1.68.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.67.1...v1.68.0) (2026-03-11)
 
 
