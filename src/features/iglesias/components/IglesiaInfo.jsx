@@ -114,7 +114,7 @@ const IglesiaInfo = ({ iglesiaData }) => {
                 onClick={() => { setCurrentImageIndex(0); setShowGalleryModal(true); }}
               >
                 <ProgressiveImage
-                  src={getAvatarUrl(iglesiaData?.galeriaObjs?.[0]?.url || galeria[0])}
+                  src={getAvatarUrl(iglesiaData?.galeriaObjs?.[0]?.url || iglesiaData?.galeriaObjs?.[0]?.large || galeria[0])}
                   medium={iglesiaData?.galeriaObjs?.[0]?.medium}
                   large={iglesiaData?.galeriaObjs?.[0]?.large}
                   blurHash={iglesiaData?.galeriaObjs?.[0]?.blurHash}
@@ -128,22 +128,23 @@ const IglesiaInfo = ({ iglesiaData }) => {
               {[1, 2, 3].map((idx) => {
                 const img = galeria[idx];
                 const obj = iglesiaData?.galeriaObjs?.[idx];
+                const hasImage = Boolean(img || obj?.url || obj?.large || obj?.medium);
                 
                 return (
                   <div
                     key={idx}
                     className={`rounded-xl overflow-hidden shadow-md relative group cursor-pointer ${idx === 3 ? 'hidden md:block' : ''}`}
                     onClick={() => {
-                      if (img) {
+                      if (hasImage) {
                         setCurrentImageIndex(idx);
                         setShowGalleryModal(true);
                       }
                     }}
                   >
-                    {img ? (
+                    {hasImage ? (
                       <>
                         <ProgressiveImage
-                          src={getAvatarUrl(obj?.url || img)}
+                          src={getAvatarUrl(obj?.url || obj?.large || obj?.medium || img)}
                           medium={obj?.medium}
                           large={obj?.large}
                           blurHash={obj?.blurHash}
@@ -168,7 +169,7 @@ const IglesiaInfo = ({ iglesiaData }) => {
               >
                 {galeria.length > 4 ? (
                   <ProgressiveImage
-                    src={getAvatarUrl(iglesiaData?.galeriaObjs?.[4]?.url || galeria[4])}
+                    src={getAvatarUrl(iglesiaData?.galeriaObjs?.[4]?.url || iglesiaData?.galeriaObjs?.[4]?.large || galeria[4])}
                     medium={iglesiaData?.galeriaObjs?.[4]?.medium}
                     large={iglesiaData?.galeriaObjs?.[4]?.large}
                     blurHash={iglesiaData?.galeriaObjs?.[4]?.blurHash}
@@ -223,7 +224,7 @@ const IglesiaInfo = ({ iglesiaData }) => {
 
               <div className="flex flex-col items-center gap-4 w-full h-full justify-center">
                 <ProgressiveImage
-                  src={getAvatarUrl(iglesiaData?.galeriaObjs?.[currentImageIndex]?.url || galeria[currentImageIndex])}
+                  src={getAvatarUrl(iglesiaData?.galeriaObjs?.[currentImageIndex]?.url || iglesiaData?.galeriaObjs?.[currentImageIndex]?.large || galeria[currentImageIndex])}
                   medium={iglesiaData?.galeriaObjs?.[currentImageIndex]?.medium}
                   large={iglesiaData?.galeriaObjs?.[currentImageIndex]?.large}
                   blurHash={iglesiaData?.galeriaObjs?.[currentImageIndex]?.blurHash}
