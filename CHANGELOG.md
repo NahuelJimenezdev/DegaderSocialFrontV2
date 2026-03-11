@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.69.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.68.1...v1.69.0) (2026-03-11)
+
+
+### Features
+
+* **fundacion:** implementar formulario documentacion FHSYL con exportacion word/pdf nativa ([2fe65a3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2fe65a36c7ea06f2e95ccd7279a0fe37bdc9ea3a))
+
 ### [1.68.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.68.0...v1.68.1) (2026-03-11)
 
 
