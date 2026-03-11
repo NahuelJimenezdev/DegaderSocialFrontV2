@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.67.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.67.0...v1.67.1) (2026-03-11)
+
+
+### Bug Fixes
+
+* **fundacion:** sanitizar rol Secretario/a para validacion del backend ([d5e3b9f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d5e3b9f56b4414848d0ae609627411eb4f764582))
+
 ## [1.67.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.66.2...v1.67.0) (2026-03-10)
 
 
