@@ -501,6 +501,12 @@ export const useFundacion = (user, updateUser) => {
             // Para Director General (Pastor), área puede estar vacía
             const esDirectorGen = formData.cargo === "Director General (Pastor)";
 
+            // Sanitizar cargo para evitar error 500 en Mongoose Enum
+            let cargoSanitizado = formData.cargo;
+            if (cargoSanitizado === "Secretario" || cargoSanitizado === "Secretaria") {
+                cargoSanitizado = "Secretario/a";
+            }
+
             const updatedData = {
                 esMiembroFundacion: true,
                 fundacion: {
@@ -509,7 +515,7 @@ export const useFundacion = (user, updateUser) => {
                     area: esDirectorGen && !formData.area ? undefined : formData.area,
                     subArea: formData.subArea || undefined,
                     programa: formData.programa || undefined,
-                    cargo: formData.cargo,
+                    cargo: cargoSanitizado,
                     rolFuncional: formData.rolFuncional,
                     territorio: {
                         pais: formData.pais,
