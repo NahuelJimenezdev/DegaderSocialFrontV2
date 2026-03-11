@@ -18,6 +18,7 @@ import ClientAdsDashboard from './features/ads/ClientAdsDashboard'
 import IglesiaDetail from './features/iglesias/pages/IglesiaDetail'
 import ProfilePage from './features/perfilUsuario/page/ProfilePage'
 import FundacionPage from './features/fundacion/pages/FundacionPage'
+import FormularioFHSYL from './features/fundacion/components/documentacion/FormularioFHSYL'
 import FounderAdsDashboard from './features/ads/FounderAdsDashboard'
 import FavoritosPage from './features/favoritos/pages/FavoritosPage'
 import ProtectedRoute from './features/auth/components/ProtectedRoute'
@@ -80,6 +81,7 @@ export const router = createBrowserRouter([
       { path: '/Mis_grupos/:id', element: <GroupDetail /> },
       { path: '/Mi_iglesia', element: <IglesiaPage /> },
       { path: '/fundacion', element: <FundacionPage /> },
+      { path: '/documentacionFHSYL', element: <FormularioFHSYL /> },
       { path: '/Mi_iglesia/:id', element: <IglesiaDetail /> },
       { path: '/iglesias/:id', element: <IglesiaDetail /> },
       { path: '/Mi_iglesia/:id/miembros_salidos', element: <IglesiaExMiembros /> },

@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { Heart } from 'lucide-react';
+import { Heart, FileText } from 'lucide-react';
 import { useFundacion } from '../hooks/useFundacion';
 import SolicitudesList from '../components/SolicitudesList';
 import '../../../shared/styles/headers.style.css';
 
 export default function FundacionPage() {
     const { user, updateUser } = useAuth();
+    const navigate = useNavigate();
 
     // Hook de Fundación
     const {
@@ -67,7 +69,22 @@ export default function FundacionPage() {
                             </div>
                         )}
 
-                        {/* Formulario */}
+                        {/* Acceso a Formulario FHSYL */}
+                        <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-100 dark:border-blue-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div>
+                                <h3 className="text-lg font-bold text-blue-900 dark:text-blue-100">Aplicativo República Argentina</h3>
+                                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Completa o actualiza tu documentación específica para la Fundación Humanitaria Sol y Luna.</p>
+                            </div>
+                            <button
+                                onClick={() => navigate('/documentacionFHSYL')}
+                                className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center gap-2 whitespace-nowrap"
+                            >
+                                <FileText className="w-5 h-5" />
+                                Llenar Formulario
+                            </button>
+                        </div>
+
+                        {/* Formulario de Perfil Institucional */}
                         <form onSubmit={handleUpdateProfile} className="space-y-8">
 
                             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
