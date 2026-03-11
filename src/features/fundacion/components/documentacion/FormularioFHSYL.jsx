@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Download, FileText, Save, CheckCircle2, AlertCircle } from 'lucide-react';
-import { useAuth } from '../../../../shared/context/AuthContext';
-import api from '../../../../api/axios';
+import { useAuth } from '../../../../context/AuthContext';
+import api from '../../../../api/config';
 
 const FormularioFHSYL = () => {
   const { user, login } = useAuth(); // login to update auth context state if needed
