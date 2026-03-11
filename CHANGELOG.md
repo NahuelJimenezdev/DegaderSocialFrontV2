@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.68.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.67.1...v1.68.0) (2026-03-11)
+
+
+### Features
+
+* **fundacion:** agregar areas de despacho y cargo de subdirector ([9aac60d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9aac60dcafb93dbe64e89f4f11e4d5e19108af79))
+
 ### [1.67.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.67.0...v1.67.1) (2026-03-11)
 
 
