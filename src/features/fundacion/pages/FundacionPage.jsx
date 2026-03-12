@@ -27,8 +27,8 @@ export default function FundacionPage() {
         <div className="page-container max-w-7xl mx-auto px-4 py-8">
             <div className="mb-mobile-30">
                 {/* Header Mejorado */}
-                <div className="section-header mb-10">
-                    <div className="section-header__icon-box bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg">
+                <div className="section-header mb-10 items-start md:items-center">
+                    <div className="section-header__icon-box bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg mt-1 md:mt-0">
                         <Heart className="section-header__icon text-white" strokeWidth={2.5} />
                     </div>
                     <div className="section-header__content">
@@ -84,7 +84,7 @@ export default function FundacionPage() {
                 
                 <DocumentCards 
                     user={user} 
-                    onNavigate={(path) => navigate(path)} 
+                    onNavigate={(path, options) => navigate(path, options)} 
                 />
 
                 {/* Panel de Aprobaciones (Solo si aplica) */}
