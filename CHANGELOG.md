@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.70.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.3...v1.70.0) (2026-03-12)
+
+
+### Features
+
+* Implementación de visor de documentos Word y lógica de visualización/edición en cards de Fundación ([c927323](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c92732369f1e3a1cbfa25b5b6eea32d8a0a8afc7))
+
+
+### Bug Fixes
+
+* Nombre de institución y layout de íconos en DocumentCards ([31aee7b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/31aee7b25c298a757664af979d445f2c3837046d))
+
 ### [1.69.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.2...v1.69.3) (2026-03-12)
 
 ### [1.69.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.1...v1.69.2) (2026-03-12)
