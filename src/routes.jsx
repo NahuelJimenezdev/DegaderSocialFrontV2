@@ -21,6 +21,7 @@ import FundacionPage from './features/fundacion/pages/FundacionPage'
 import FormularioFHSYL from './features/fundacion/components/documentacion/FormularioFHSYL'
 import FormularioEntrevista from './features/fundacion/components/documentacion/FormularioEntrevista'
 import DocumentViewer from './features/fundacion/components/documentacion/DocumentViewer'
+import FormularioSolicitud from './features/fundacion/components/documentacion/FormularioSolicitud'
 import FundacionAdminDashboard from './features/fundacion/pages/FundacionAdminDashboard'
 import FounderAdsDashboard from './features/ads/FounderAdsDashboard'
 import FavoritosPage from './features/favoritos/pages/FavoritosPage'
@@ -85,6 +86,7 @@ export const router = createBrowserRouter([
       { path: '/Mi_iglesia', element: <IglesiaPage /> },
       { path: '/fundacion', element: <FundacionPage /> },
       { path: '/fundacion/admin', element: <FundacionAdminDashboard /> },
+      { path: '/fundacion/solicitud', element: <FormularioSolicitud /> },
       { path: '/fundacion/documentacion-fhsyl', element: <FormularioFHSYL /> },
       { path: '/fundacion/entrevista', element: <FormularioEntrevista /> },
       { path: '/fundacion/hoja-de-vida', element: <div className="p-10 text-center">Formulario de Hoja de Vida (Próximamente)</div> },

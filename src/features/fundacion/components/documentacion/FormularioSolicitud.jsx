@@ -1,0 +1,304 @@
+import React, { useState, useEffect } from 'react';
+import { Save, CheckCircle2, ChevronRight, MapPin, Briefcase, UserCircle } from 'lucide-react';
+import { useAuth } from '../../../../context/AuthContext';
+import { useFundacion } from '../../hooks/useFundacion';
+import '../../../../shared/styles/headers.style.css';
+
+const FormularioSolicitud = () => {
+    const { user, updateUser } = useAuth();
+    const {
+        loading,
+        formData,
+        setFormData,
+        getAreasDisponibles,
+        getSubAreasDisponibles,
+        getProgramasDisponibles,
+        getCargosDisponibles,
+        getRolesDisponibles,
+        getNivelesDisponibles,
+        getPaisesDisponibles,
+        getDivisionesTerritoriales,
+        getNombreDivisionTerritorial,
+        handleNivelChange,
+        handleAreaChange,
+        handleSubAreaChange,
+        handleUpdateProfile
+    } = useFundacion(user, updateUser);
+
+    const [success, setSuccess] = useState(false);
+    const [step, setStep] = useState(1);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await handleUpdateProfile(e);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 5000);
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+                {/* Header Profile Style */}
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+                    <div className="flex items-center gap-6">
+                        <div className="w-20 h-20 bg-white/20 rounded-2xl backdrop-blur-md flex items-center justify-center border border-white/30">
+                            <Briefcase size={40} />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-bold">Solicitud de Ingreso</h1>
+                            <p className="text-blue-100 mt-1 text-lg">Perfil Institucional y Jerárquico</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-8 space-y-8">
+                    {/* Stepper Simple */}
+                    <div className="flex items-center gap-4 mb-8">
+                        <button 
+                            type="button"
+                            onClick={() => setStep(1)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${step === 1 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-gray-500'}`}
+                        >
+                            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
+                            Estructura
+                        </button>
+                        <ChevronRight size={16} className="text-gray-300" />
+                        <button 
+                            type="button"
+                            onClick={() => setStep(2)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${step === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-gray-500'}`}
+                        >
+                            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">2</span>
+                            Ubicación
+                        </button>
+                    </div>
+
+                    {step === 1 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                             {/* Nivel Jerárquico */}
+                             <div className="space-y-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                    <UserCircle size={18} className="text-blue-500" />
+                                    Nivel Jerárquico
+                                </label>
+                                <select 
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    value={formData.nivel}
+                                    onChange={(e) => handleNivelChange(e.target.value)}
+                                    required
+                                >
+                                    <option value="">Seleccione Nivel</option>
+                                    {getNivelesDisponibles().map(n => (
+                                        <option key={n} value={n}>{n.replace(/_/g, ' ').toUpperCase()}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Área */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
+                                <select 
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50"
+                                    value={formData.area}
+                                    onChange={(e) => handleAreaChange(e.target.value)}
+                                    disabled={!formData.nivel}
+                                >
+                                    <option value="">Seleccione Área</option>
+                                    {getAreasDisponibles().map(a => (
+                                        <option key={a} value={a}>{a}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* SubÁrea */}
+                            {getSubAreasDisponibles().length > 0 && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Sub-Área</label>
+                                    <select 
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                        value={formData.subArea}
+                                        onChange={(e) => handleSubAreaChange(e.target.value)}
+                                    >
+                                        <option value="">Seleccione Sub-Área</option>
+                                        {getSubAreasDisponibles().map(sa => (
+                                            <option key={sa} value={sa}>{sa}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Programa */}
+                            {getProgramasDisponibles().length > 0 && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Programa / Proyecto</label>
+                                    <select 
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                        value={formData.programa}
+                                        onChange={(e) => setFormData({...formData, programa: e.target.value})}
+                                    >
+                                        <option value="">Seleccione Programa</option>
+                                        {getProgramasDisponibles().map(p => (
+                                            <option key={p} value={p}>{p}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Cargo */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Cargo Institucional</label>
+                                <select 
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50"
+                                    value={formData.cargo}
+                                    onChange={(e) => setFormData({...formData, cargo: e.target.value})}
+                                    disabled={!formData.nivel}
+                                    required
+                                >
+                                    <option value="">Seleccione Cargo</option>
+                                    {getCargosDisponibles().map(c => (
+                                        <option key={c} value={c}>{c}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Rol Funcional */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
+                                <select 
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    value={formData.rolFuncional}
+                                    onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
+                                    required
+                                >
+                                    <option value="">Seleccione Rol</option>
+                                    {getRolesDisponibles().map(r => (
+                                        <option key={r} value={r}>{r.toUpperCase()}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                            {/* País */}
+                            <div className="space-y-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                    <MapPin size={18} className="text-red-500" />
+                                    País de Trabajo
+                                </label>
+                                <select 
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    value={formData.pais}
+                                    onChange={(e) => setFormData({...formData, pais: e.target.value})}
+                                    required
+                                >
+                                    {getPaisesDisponibles().map(p => (
+                                        <option key={p} value={p}>{p}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* División Territorial (Departamento/Provincia) */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">{getNombreDivisionTerritorial()}</label>
+                                <select 
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    value={formData.departamento}
+                                    onChange={(e) => setFormData({...formData, departamento: e.target.value})}
+                                    required
+                                >
+                                    <option value="">Seleccione {getNombreDivisionTerritorial()}</option>
+                                    {getDivisionesTerritoriales().map(d => (
+                                        <option key={d} value={d}>{d}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Municipio / Ciudad */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Municipio / Ciudad</label>
+                                <input 
+                                    type="text"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    placeholder="Nombre del municipio"
+                                    value={formData.municipio}
+                                    onChange={(e) => setFormData({...formData, municipio: e.target.value})}
+                                    required
+                                />
+                            </div>
+
+                            {/* Barrio / Localidad */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Barrio / Vereda</label>
+                                <input 
+                                    type="text"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    placeholder="Nombre del barrio"
+                                    value={formData.barrio}
+                                    onChange={(e) => setFormData({...formData, barrio: e.target.value})}
+                                    required
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="pt-8 border-t border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-3">
+                            {success && (
+                                <div className="flex items-center gap-2 text-green-600 font-bold bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-xl border border-green-100 dark:border-green-800 animate-slideUp">
+                                    <CheckCircle2 size={20} />
+                                    ¡Solicitud guardada con éxito!
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="flex items-center gap-4 w-full md:w-auto">
+                            {step === 2 && (
+                                <button 
+                                    type="button"
+                                    onClick={() => setStep(1)}
+                                    className="px-8 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:bg-gray-200 transition active:scale-95"
+                                >
+                                    Anterior
+                                </button>
+                            )}
+                            
+                            {step === 1 ? (
+                                <button 
+                                    type="button"
+                                    onClick={() => setStep(2)}
+                                    className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg active:scale-95 flex-1 md:flex-none"
+                                >
+                                    Siguiente Paso
+                                </button>
+                            ) : (
+                                <button 
+                                    type="submit"
+                                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-xl hover:shadow-xl transition shadow-lg active:scale-95 flex-1 md:flex-none flex items-center justify-center gap-2"
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Procesando...' : (
+                                        <>
+                                            <Save size={20} />
+                                            Enviar Solicitud
+                                        </>
+                                    )}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </form>
+
+                <div className="bg-gray-50 dark:bg-gray-900/50 p-6 flex items-start gap-4 border-t border-gray-100 dark:border-gray-700">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                        <CheckCircle2 size={20} />
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Esta información es fundamental para asignar tu rol dentro de la Estructura Jerárquica de la Fundación. Tu solicitud será revisada por un Director o Coordinador de tu zona.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default FormularioSolicitud;

@@ -107,7 +107,7 @@ export default function DocumentCards({ user, onNavigate }) {
       buttonText: "Enviar solicitud",
       status: (user?.fundacion?.estadoAprobacion === 'aprobado' || user?.fundacion?.estadoAprobacion === 'pendiente') ? 'Completado' : 'Pendiente',
       icon: CheckCircle,
-      path: '/fundacion/documentacion-fhsyl' // Mismo que Aplicativo para permitir edición
+      path: '/fundacion/solicitud' // Mismo que Aplicativo para permitir edición
     }
   ];
 
