@@ -33,6 +33,22 @@ const fundacionService = {
 
     const response = await api.get(`/fundacion/admin/todas-solicitudes?${params.toString()}`);
     return response.data;
+  },
+
+  getUsersUnderJurisdiction: async (filters = {}) => {
+    const params = new URLSearchParams();
+
+    if (filters.nivel) params.append('nivel', filters.nivel);
+    if (filters.area) params.append('area', filters.area);
+    if (filters.pais) params.append('pais', filters.pais);
+    if (filters.region) params.append('region', filters.region);
+    if (filters.departamento) params.append('departamento', filters.departamento);
+    if (filters.municipio) params.append('municipio', filters.municipio);
+    if (filters.page) params.append('page', filters.page);
+    if (filters.limit) params.append('limit', filters.limit);
+
+    const response = await api.get(`/fundacion/admin/usuarios-jurisdiccion?${params.toString()}`);
+    return response.data;
   }
 };
 

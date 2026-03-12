@@ -134,6 +134,16 @@ const userService = {
     const response = await api.get('/usuarios/saved-posts');
     return response.data;
   },
+
+  /**
+   * Update foundation interview documentation
+   * @param {Object} respuestas - Interview responses
+   * @returns {Promise<Object>} Response data
+   */
+  saveInterview: async (respuestas) => {
+    const response = await api.put('/usuarios/entrevistaFundacion', { respuestas });
+    return response.data;
+  },
 };
 
 export default userService;
