@@ -38,12 +38,12 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
             onClick={onClick}
             className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm ${
               isCompleted
-                ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 hover:bg-blue-200'
                 : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-[0.98]'
             }`}
           >
             <FileText size={18} />
-            {buttonText}
+            {isCompleted ? 'Visualizar documento' : buttonText}
           </button>
         </div>
       </div>
@@ -54,12 +54,12 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
           onClick={onClick}
           className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm ${
             isCompleted
-              ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30'
               : 'bg-blue-600 text-white shadow-md'
           }`}
         >
           <FileText size={18} />
-          {buttonText}
+          {isCompleted ? 'Visualizar documento' : buttonText}
         </button>
       </div>
     </div>
@@ -71,6 +71,7 @@ export default function DocumentCards({ user, onNavigate }) {
   const docs = [
     {
       id: 1,
+      type: 'Aplicativo',
       title: "Aplicativo República Argentina",
       description: "Completa y actualiza tu documentación específica para la Fundación Humanitaria Internacional Sol y Luna en Argentina.",
       buttonText: "Rellenar formulario",
@@ -80,6 +81,7 @@ export default function DocumentCards({ user, onNavigate }) {
     },
     {
       id: 2,
+      type: 'Entrevista',
       title: "Entrevista Fundación",
       description: "Completa la entrevista inicial requerida para formar parte de la fundación.",
       buttonText: "Realizar entrevista",
@@ -89,6 +91,7 @@ export default function DocumentCards({ user, onNavigate }) {
     },
     {
       id: 3,
+      type: 'HojaDeVida',
       title: "Formato de Hoja de Vida",
       description: "Completa tu hoja de vida con tu información personal, profesional y ministerial.",
       buttonText: "Completar hoja de vida",
@@ -98,14 +101,23 @@ export default function DocumentCards({ user, onNavigate }) {
     },
     {
       id: 4,
+      type: 'Solicitud',
       title: "Solicitud de Ingreso",
       description: "Una vez completados los documentos anteriores, podrás enviar tu solicitud oficial para formar parte de la fundación.",
       buttonText: "Enviar solicitud",
       status: (user?.fundacion?.estadoAprobacion === 'aprobado' || user?.fundacion?.estadoAprobacion === 'pendiente') ? 'Completado' : 'Pendiente',
       icon: CheckCircle,
-      path: null // Acción especial
+      path: '/fundacion/documentacion-fhsyl' // Mismo que Aplicativo para permitir edición
     }
   ];
+
+  const handleAction = (doc) => {
+    if (doc.status === 'Completado') {
+      onNavigate('/fundacion/visor', { state: { type: doc.type } });
+    } else if (doc.path) {
+      onNavigate(doc.path);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 mb-10">
@@ -113,7 +125,7 @@ export default function DocumentCards({ user, onNavigate }) {
         <DocumentCard 
           key={doc.id}
           {...doc}
-          onClick={() => doc.path ? onNavigate(doc.path) : null}
+          onClick={() => handleAction(doc)}
         />
       ))}
     </div>
