@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.69.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.1...v1.69.2) (2026-03-12)
+
+
+### Bug Fixes
+
+* **fundacion:** cambiar ruta de documento fhsyl para evitar wildcard y colision con backend ([4b8a865](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4b8a865918d51c3e67661ff5b5bdff9c9b0c01d0))
+* **fundacion:** revertir llamada a login al actualizar documentacion fhsyl y usar updateUser en su lugar ([904cbdf](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/904cbdf39254b94c6c749024b032a8d940e41df2))
+
 ### [1.69.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.0...v1.69.1) (2026-03-12)
 
 
