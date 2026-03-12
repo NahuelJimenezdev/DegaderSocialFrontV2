@@ -33,7 +33,7 @@ export default function FundacionPage() {
                     </div>
                     <div className="section-header__content">
                         <h1 className="section-header__title section-header__title--heavy text-3xl md:text-4xl text-gray-900 dark:text-white">
-                            Fundación Humanitaria Sol y Luna
+                            Fundación Humanitaria Internacional Sol y Luna
                         </h1>
                         <p className="section-header__subtitle text-lg text-gray-600 dark:text-gray-400 mt-2">
                             Transformando vidas a través del amor y el servicio.
@@ -48,7 +48,7 @@ export default function FundacionPage() {
                             Bienvenido, {user?.nombres?.primero} {user?.apellidos?.primero}
                         </h2>
                         <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl">
-                            Antes de formar parte de la Fundación Humanitaria Sol y Luna, debes completar los siguientes documentos obligatorios.
+                            Antes de formar parte de la Fundación Humanitaria Internacional Sol y Luna, debes completar los siguientes documentos obligatorios.
                         </p>
                     </div>
                     <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-blue-50 to-transparent dark:from-blue-900/10 dark:to-transparent pointer-events-none hidden md:block"></div>

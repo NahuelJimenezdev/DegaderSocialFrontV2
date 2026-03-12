@@ -266,7 +266,7 @@ export default function FormularioEntrevista() {
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">Entrevista Fundación</h1>
-              <p className="text-blue-100">Complementa tu perfil para la Fundación Humanitaria Sol y Luna.</p>
+              <p className="text-blue-100">Complementa tu perfil para la Fundación Humanitaria Internacional Sol y Luna.</p>
             </div>
           </div>
 
