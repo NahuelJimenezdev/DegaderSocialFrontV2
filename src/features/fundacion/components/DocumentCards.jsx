@@ -5,46 +5,54 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
   const isCompleted = status === 'Completado';
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
-      <div>
-        <div className="flex justify-between items-start mb-4">
-          <div className={`p-3 rounded-lg ${isCompleted ? 'bg-green-50 dark:bg-green-900/20 text-green-600' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-600'}`}>
-            <Icon size={24} />
-          </div>
-          <div className={`text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 ${
-            isCompleted 
-              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' 
-              : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
-          }`}>
-            {isCompleted ? <CheckCircle size={14} /> : <Clock size={14} />}
-            {status}
-          </div>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all group">
+      <div className="flex flex-col md:flex-row md:items-center gap-6">
+        {/* Icono */}
+        <div className={`flex-shrink-0 p-4 rounded-2xl ${isCompleted ? 'bg-green-50 dark:bg-green-900/20 text-green-600' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-600'} transition-colors group-hover:scale-110 duration-300`}>
+          <Icon size={32} />
         </div>
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-          {description}
-        </p>
+
+        {/* Info */}
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-3 mb-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white transition-colors">
+              {title}
+            </h3>
+            <div className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wider ${
+              isCompleted 
+                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' 
+                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+            }`}>
+              {isCompleted ? <CheckCircle size={14} /> : <Clock size={14} />}
+              {status}
+            </div>
+          </div>
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+            {description}
+          </p>
+        </div>
+        
+        {/* Acción */}
+        <div className="flex-shrink-0 w-full md:w-auto">
+          <button
+            onClick={onClick}
+            className={`w-full md:w-64 py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-base ${
+              isCompleted
+                ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-[0.98]'
+            }`}
+          >
+            <FileText size={20} />
+            {buttonText}
+          </button>
+        </div>
       </div>
-      
-      <button
-        onClick={onClick}
-        className={`w-full py-2.5 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
-          isCompleted
-            ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-            : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-[0.98]'
-        }`}
-      >
-        <FileText size={18} />
-        {buttonText}
-      </button>
     </div>
   );
 };
 
 export default function DocumentCards({ user, onNavigate }) {
-  // Documentos lógica de estado (Mock por ahora para los nuevos)
+  // Documentos lógica de estado
   const docs = [
     {
       id: 1,
@@ -85,7 +93,7 @@ export default function DocumentCards({ user, onNavigate }) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div className="flex flex-col gap-4 mb-10">
       {docs.map((doc) => (
         <DocumentCard 
           key={doc.id}
