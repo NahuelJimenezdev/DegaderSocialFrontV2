@@ -76,7 +76,7 @@ export default function FundacionPage() {
                                 <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Completa o actualiza tu documentación específica para la Fundación Humanitaria Sol y Luna.</p>
                             </div>
                             <button
-                                onClick={() => navigate('/documentacionFHSYL')}
+                                onClick={() => navigate('/fundacion/documentacion-fhsyl')}
                                 className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center gap-2 whitespace-nowrap"
                             >
                                 <FileText className="w-5 h-5" />

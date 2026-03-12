@@ -81,7 +81,7 @@ export const router = createBrowserRouter([
       { path: '/Mis_grupos/:id', element: <GroupDetail /> },
       { path: '/Mi_iglesia', element: <IglesiaPage /> },
       { path: '/fundacion', element: <FundacionPage /> },
-      { path: '/documentacionFHSYL', element: <FormularioFHSYL /> },
+      { path: '/fundacion/documentacion-fhsyl', element: <FormularioFHSYL /> },
       { path: '/Mi_iglesia/:id', element: <IglesiaDetail /> },
       { path: '/iglesias/:id', element: <IglesiaDetail /> },
       { path: '/Mi_iglesia/:id/miembros_salidos', element: <IglesiaExMiembros /> },
