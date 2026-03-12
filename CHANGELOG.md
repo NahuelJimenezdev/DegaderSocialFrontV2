@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.69.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.0...v1.69.1) (2026-03-12)
+
+
+### Bug Fixes
+
+* **fundacion:** corregir rutas de importacion en FormularioFHSYL que rompian el build ([c8bd0a8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c8bd0a8ad0ebac6bfddcc3f88c846b5c034facd9))
+
 ## [1.69.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.68.1...v1.69.0) (2026-03-11)
 
 
