@@ -4,7 +4,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import api from '../../../../api/config';
 
 const FormularioFHSYL = () => {
-  const { user, login } = useAuth(); // login to update auth context state if needed
+  const { user, updateUser } = useAuth(); // updateUser to update auth context state
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -192,7 +192,7 @@ const FormularioFHSYL = () => {
       
       // Update local context
       if (res.data.data) {
-        login(res.data.data);
+        updateUser(res.data.data);
       }
       
       setSuccess(true);
