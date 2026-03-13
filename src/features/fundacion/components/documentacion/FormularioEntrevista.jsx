@@ -326,7 +326,11 @@ export default function FormularioEntrevista() {
                 return (
                   <button
                     key={section.id}
-                    onClick={() => setCurrentStep(idx)}
+                    onClick={() => {
+                      if (idx <= currentStep || validateStep(currentStep)) {
+                        setCurrentStep(idx);
+                      }
+                    }}
                     className={`w-full flex items-center gap-3 p-3 rounded-xl text-sm font-bold transition-all ${
                       isActive 
                         ? 'bg-blue-600 text-white shadow-md' 
