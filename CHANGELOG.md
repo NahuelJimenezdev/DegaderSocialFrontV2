@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.71.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.3...v1.71.4) (2026-03-13)
+
+
+### Bug Fixes
+
+* Corregida navegación y visualización de Solicitud de Ingreso ([2a10741](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2a107411246a4bf33813aca7a0ffd280366f89d4))
+* Corregido ReferenceError y visibilidad condicional para Director General ([2b73e90](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2b73e904ca3208114ad8a4e17b389442431e720a))
+
 ### [1.71.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.2...v1.71.3) (2026-03-13)
 
 
