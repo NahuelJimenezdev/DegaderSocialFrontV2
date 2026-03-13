@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileText, UserCircle, CheckCircle, Clock } from 'lucide-react';
 
-const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon }) => {
+const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon, type }) => {
   const isCompleted = status === 'Completado';
 
   return (
@@ -43,7 +43,7 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
             }`}
           >
             <FileText size={18} />
-            {isCompleted ? 'Visualizar documento' : buttonText}
+            {isCompleted ? (type === 'Solicitud' ? 'Visualizar Formulario' : 'Visualizar documento') : buttonText}
           </button>
         </div>
       </div>
@@ -59,7 +59,7 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
           }`}
         >
           <FileText size={18} />
-          {isCompleted ? 'Visualizar documento' : buttonText}
+          {isCompleted ? (type === 'Solicitud' ? 'Visualizar Formulario' : 'Visualizar documento') : buttonText}
         </button>
       </div>
     </div>
