@@ -26,7 +26,8 @@ export default function DocumentViewer() {
             "xmlns='http://www.w3.org/TR/REC-html40'>"+
             "<head><meta charset='utf-8'><title>Documento</title><style>"+
             "body { font-family: 'Arial', sans-serif; padding: 20px; text-align: justify; }"+
-            "h1, h2, h3 { color: #1e3a8a; text-align: center; }"+
+            "h1, h2 { color: #1e3a8a; text-align: center; }"+
+            "h3 { color: #1e3a8a; text-align: left; }" +
             ".section { background: #f3f4f6; padding: 5px; margin-top: 20px; font-weight: bold; }"+
             "table { width: 100%; border-collapse: collapse; }"+
             "td, th { border: 1px solid #ddd; padding: 8px; }"+
@@ -39,7 +40,7 @@ export default function DocumentViewer() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Documento_${type}_${user.nombres.primero}.doc`;
+    link.download = `Documento_${type}_${user.nombres.primero}_${user.nombres.primero}.docx`;
     link.click();
     URL.revokeObjectURL(url);
   };
