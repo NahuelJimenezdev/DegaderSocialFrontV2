@@ -26,16 +26,15 @@ export default function FundacionPage() {
     return (
         <div className="page-container max-w-7xl mx-auto px-4 py-8">
             <div className="mb-mobile-30">
-                {/* Header Mejorado */}
-                <div className="flex items-start gap-4 mb-10">
-                    <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 shadow-sm rounded-xl w-12 h-12 flex items-center justify-center mt-1">
-                        <Heart className="text-blue-600 dark:text-blue-400" size={24} strokeWidth={2.5} />
+                <div className="section-header">
+                    <div className="section-header__icon-box">
+                        <Heart className="section-header__icon" strokeWidth={2.5} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                        <h1 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white leading-tight">
+                    <div className="section-header__content">
+                        <h1 className="section-header__title section-header__title--heavy">
                             Fundación Humanitaria Internacional Sol y Luna
                         </h1>
-                        <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="section-header__subtitle">
                             Transformando vidas a través del amor y el servicio.
                         </p>
                     </div>
