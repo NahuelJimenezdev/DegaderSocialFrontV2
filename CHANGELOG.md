@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.71.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.0...v1.71.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* Corregida visibilidad de scrollbars en modo claro, justificación de texto en Word y error de impresión completa ([13d2628](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/13d2628b61b3f2d4e008f53835affde40d22ced4))
+
 ## [1.71.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.70.0...v1.71.0) (2026-03-13)
 
 
