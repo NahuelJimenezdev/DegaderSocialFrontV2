@@ -262,14 +262,14 @@ export default function FormularioEntrevista() {
         <div className="p-8 border-b border-gray-100 dark:border-gray-700">
           <div className="section-header">
               <div className="section-header__icon-box">
-                  <Heart className="section-header__icon" strokeWidth={2.5} />
+                  <Heart className="section-header__icon" strokeWidth={2.5} size={32} />
               </div>
               <div className="section-header__content">
                   <h1 className="section-header__title section-header__title--heavy">
-                      Fundación Humanitaria Internacional Sol y Luna
+                      Entrevista Fundación
                   </h1>
                   <p className="section-header__subtitle">
-                      Transformando vidas a través del amor y el servicio.
+                      Complementa tu perfil para la Fundación Humanitaria Internacional Sol y Luna.
                   </p>
               </div>
           </div>
