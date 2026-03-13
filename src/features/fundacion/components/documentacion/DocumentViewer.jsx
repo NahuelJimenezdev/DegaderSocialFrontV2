@@ -145,20 +145,20 @@ export default function DocumentViewer() {
               </div> */}
               <section>
                 <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">3. Tres virtudes personales:</h3>
-                <ol className="list-decimal ml-8 space-y-1">
+                <ol className="text-justify list-decimal ml-8 space-y-1">
                   {appData.virtudes?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
                 </ol>
               </section>
               <section>
                 <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">4. Dos áreas por mejorar:</h3>
-                <ol className="list-decimal ml-8 space-y-1">
+                <ol className="text-justify list-decimal ml-8 space-y-1">
                   {appData.areasMejora?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
                 </ol>
               </section>
 
               <section>
                 <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">5. Dos eventos de éxito en su ministerio:</h3>
-                <ol className="list-decimal ml-8 space-y-1">
+                <ol className="text-justify list-decimal ml-8 space-y-1">
                   {appData.eventosExito?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
                 </ol>
               </section>
@@ -206,16 +206,16 @@ export default function DocumentViewer() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                <div className="space-y-4 pt-4 border-t border-gray-200">
                   <div>
                     <p className="font-bold mb-2">3. Necesidades familia Pastoral:</p>
-                    <ol className="list-decimal ml-8 space-y-1">
+                    <ol className="text-justify list-decimal ml-8 space-y-1">
                       {appData.necesidadesFamiliaPastoral?.map((v, m) => <li key={m}>{v}</li>) || <li>---</li>}
                     </ol>
                   </div>
                   <div>
                     <p className="font-bold mb-2">4. Necesidades congregación:</p>
-                    <ol className="list-decimal ml-8 space-y-1">
+                    <ol className="text-justify list-decimal ml-8 space-y-1">
                       {appData.necesidadesCongregacion?.map((v, n) => <li key={n}>{v}</li>) || <li>---</li>}
                     </ol>
                   </div>
@@ -224,11 +224,11 @@ export default function DocumentViewer() {
                 <div className="space-y-4 pt-4 border-t border-gray-200">
                   <div>
                     <p className="font-bold mb-1">5. Profesionales en su iglesia:</p>
-                    <p className="px-2 italic">{appData.profesionalesIglesia || 'Ninguno especificado'}</p>
+                    <p className="text-justify px-2 italic">{appData.profesionalesIglesia || 'Ninguno especificado'}</p>
                   </div>
                   <div>
                     <p className="font-bold mb-1">6. Proyecto Psico-social a desarrollar:</p>
-                    <p className="px-2 italic">{appData.proyectoPsicosocial || 'Ninguno especificado'}</p>
+                    <p className="text-justify px-2 italic">{appData.proyectoPsicosocial || 'Ninguno especificado'}</p>
                   </div>
                 </div>
               </section>
