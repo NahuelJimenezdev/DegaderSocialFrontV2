@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.71.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.4...v1.71.5) (2026-03-13)
+
+
+### Bug Fixes
+
+* Corregido visibilidad de header e inputs en modo claro/oscuro para FormularioEntrevista ([b89f150](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b89f150927effda72a5829d363d591b21bc5c9d0))
+* Forzado de gradiente y colores de texto en header de FormularioEntrevista ([9b01206](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9b012062d10fab4e156bcc66d6838dd7e2994ae5))
+* Revertido diseño de header e implementado estándar institucional para FormularioEntrevista ([4030cb4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4030cb480acdb9fd952f3faed2c2787171e535ad))
+
 ### [1.71.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.3...v1.71.4) (2026-03-13)
 
 
