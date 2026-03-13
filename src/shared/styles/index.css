@@ -107,6 +107,11 @@
   /* Verde más oscuro para mejor contraste (era #10b981) */
   --accent: #4f46e5;
   --info: #3b82f6;
+  
+  /* Scrollbar - Light mode */
+  --scrollbar-track: #f3f4f6; /* Gray-100 */
+  --scrollbar-thumb: #d1d5db; /* Gray-300 */
+  --scrollbar-thumb-hover: #9ca3af; /* Gray-400 */
 }
 
 /* ===== DARK MODE ===== */

@@ -25,11 +25,12 @@ export default function DocumentViewer() {
             "xmlns:w='urn:schemas-microsoft-com:office:word' "+
             "xmlns='http://www.w3.org/TR/REC-html40'>"+
             "<head><meta charset='utf-8'><title>Documento</title><style>"+
-            "body { font-family: 'Arial', sans-serif; padding: 20px; }"+
-            "h1, h2, h3 { color: #1e3a8a; }"+
+            "body { font-family: 'Arial', sans-serif; padding: 20px; text-align: justify; }"+
+            "h1, h2, h3 { color: #1e3a8a; text-align: center; }"+
             ".section { background: #f3f4f6; padding: 5px; margin-top: 20px; font-weight: bold; }"+
             "table { width: 100%; border-collapse: collapse; }"+
             "td, th { border: 1px solid #ddd; padding: 8px; }"+
+            "p { text-align: justify; }"+
             "</style></head><body>";
     const footer = "</body></html>";
     const sourceHTML = header + content + footer;
@@ -354,7 +355,7 @@ export default function DocumentViewer() {
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 relative max-h-[1000px] overflow-y-auto">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible">
         {/* Marca de agua o estilo de hoja */}
         <div className="p-8 md:p-16 bg-gray-50/30">
           <div className="bg-white shadow-[0_0_50px_rgba(0,0,0,0.05)] w-full max-w-4xl mx-auto min-h-[842px] p-12 md:p-20 border border-gray-100">
@@ -372,6 +373,7 @@ export default function DocumentViewer() {
           .rounded-3xl { border-radius: 0 !important; }
           .bg-gray-50\/30 { background: white !important; padding: 0 !important; }
           .p-12 { padding: 0 !important; }
+          .max-h-\[1000px\] { max-height: none !important; overflow: visible !important; }
         }
       `}</style>
     </div>
