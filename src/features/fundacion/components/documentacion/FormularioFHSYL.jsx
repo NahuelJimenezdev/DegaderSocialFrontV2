@@ -164,6 +164,10 @@ const FormularioFHSYL = () => {
     setLoading(true);
     try {
       const payload = {
+        direccion: formData.direccion,
+        localidad: formData.localidad,
+        barrio: formData.barrio,
+        celular: formData.celular,
         upz: formData.upz,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
