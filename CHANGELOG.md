@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.71.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.2...v1.71.3) (2026-03-13)
+
+
+### Bug Fixes
+
+* Incluida información personal en el envío del formulario FHSYL para persistencia global ([c89eb38](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c89eb3881c65153dc926be1af4b2f0c447e3f891))
+
 ### [1.71.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.1...v1.71.2) (2026-03-13)
 
 ### [1.71.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.0...v1.71.1) (2026-03-13)
