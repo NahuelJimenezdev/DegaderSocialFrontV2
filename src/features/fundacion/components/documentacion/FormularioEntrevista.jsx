@@ -67,14 +67,35 @@ export default function FormularioEntrevista() {
     setRespuestas(prev => ({ ...prev, [name]: value }));
   };
 
+  const validateStep = (step) => {
+    let fieldsToValidate = [];
+    switch (step) {
+      case 0: fieldsToValidate = ['nombre', 'fechaNacimiento', 'upzLocalidad']; break;
+      case 1: fieldsToValidate = ['llamado', 'loQueMasGusta', 'sacrificioPastoral']; break;
+      case 2: fieldsToValidate = ['caracterAmigos', 'caracterCompañeros', 'situacionDificil']; break;
+      case 3: fieldsToValidate = ['autoridadEspiritual', 'personeriaJuridica', 'manejoDiferencias']; break;
+      case 4: fieldsToValidate = ['dones', 'profesion', 'enfrentamientoConflictos', 'porqueCoordinador', 'manejaOffice']; break;
+      case 5: fieldsToValidate = ['vinculoFamiliar', 'familiaInvolucrada', 'formaEspiritual']; break;
+      case 6: fieldsToValidate = ['tiempoPastoreando', 'permanenciaMinisterio', 'disponibilidadTiempo', 'palabrasVoluntarias']; break;
+      default: break;
+    }
+
+    const missingFields = fieldsToValidate.filter(field => !respuestas[field]?.trim());
+    
+    if (missingFields.length > 0) {
+      toast.error('Todos los campos de esta sección son obligatorios para continuar.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSave = async () => {
+    if (!validateStep(currentStep)) return;
     setLoading(true);
     try {
       const response = await userService.saveInterview(respuestas);
       if (response.success) {
         toast.success('Entrevista guardada exitosamente');
-        // Actualizar contexto local si el backend devolvió el usuario actualizado
-        // Si no, podemos hacer un getMe o actualizar manualmente
         navigate('/fundacion');
       }
     } catch (error) {
@@ -85,7 +106,11 @@ export default function FormularioEntrevista() {
     }
   };
 
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, SECTIONS.length - 1));
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, SECTIONS.length - 1));
+    }
+  };
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
 
   const renderStepContent = () => {
