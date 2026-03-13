@@ -259,7 +259,7 @@ export default function FormularioEntrevista() {
       </button>
 
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+        <div className="form-header-premium p-8">
           <div className="section-header section-header--light">
               <div className="section-header__icon-box">
                   <Heart className="section-header__icon" strokeWidth={2.5} size={32} />
