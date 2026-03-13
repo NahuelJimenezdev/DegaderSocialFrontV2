@@ -261,26 +261,17 @@ export default function FormularioEntrevista() {
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
           <div className="section-header">
-                              <div className="section-header__icon-box">
-                                  <Heart className="section-header__icon" strokeWidth={2.5} />
-                              </div>
-                              <div className="section-header__content">
-                                  <h1 className="section-header__title section-header__title--heavy">
-                                      Fundación Humanitaria Internacional Sol y Luna
-                                  </h1>
-                                  <p className="section-header__subtitle">
-                                      Transformando vidas a través del amor y el servicio.
-                                  </p>
-                              </div>
-                          </div>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
-              <Heart size={32} />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold">Entrevista Fundación</h1>
-              <p className="text-blue-100">Complementa tu perfil para la Fundación Humanitaria Internacional Sol y Luna.</p>
-            </div>
+              <div className="section-header__icon-box">
+                  <Heart className="section-header__icon" strokeWidth={2.5} size={32} />
+              </div>
+              <div className="section-header__content">
+                  <h1 className="section-header__title section-header__title--heavy">
+                      Entrevista Fundación
+                  </h1>
+                  <p className="section-header__subtitle">
+                      Complementa tu perfil para la Fundación Humanitaria Internacional Sol y Luna.
+                  </p>
+              </div>
           </div>
 
           {/* Progress Bar */}
