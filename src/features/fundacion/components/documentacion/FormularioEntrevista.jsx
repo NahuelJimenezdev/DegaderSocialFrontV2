@@ -277,7 +277,7 @@ export default function FormularioEntrevista() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 pt-16 pb-8 md:py-8">
       <button onClick={() => navigate('/fundacion')} className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-6 font-medium transition-colors">
         <ChevronLeft size={20} />
         Volver a Fundación

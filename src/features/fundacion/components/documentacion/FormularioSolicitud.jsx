@@ -44,7 +44,7 @@ const FormularioSolicitud = () => {
     const inputClasses = "w-full p-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100";
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 pt-16 pb-8 md:py-8">
             {/* Botón Volver */}
             <button 
                 onClick={() => navigate('/fundacion')} 

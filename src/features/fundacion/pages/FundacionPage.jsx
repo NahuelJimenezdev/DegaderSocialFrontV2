@@ -24,7 +24,7 @@ export default function FundacionPage() {
          user?.seguridad?.rolSistema === 'Founder');
 
     return (
-        <div className="page-container max-w-7xl mx-auto px-4 py-8">
+        <div className="page-container max-w-7xl mx-auto px-4 pt-16 pb-8 md:py-8">
             <div className="mb-mobile-30">
                 <div className="section-header">
                     <div className="section-header__icon-box">
