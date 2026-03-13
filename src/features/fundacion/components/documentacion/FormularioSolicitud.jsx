@@ -56,7 +56,7 @@ const FormularioSolicitud = () => {
 
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
                 {/* Header Profile Style - Fixed background and text visibility */}
-                <div className="bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+                <div className="bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-700 p-5 md:p-8 text-white">
                     <div className="flex items-center gap-6">
                         <div className="w-20 h-20 bg-white/20 rounded-2xl backdrop-blur-md flex items-center justify-center border border-white/30">
                             <Briefcase size={40} className="text-white" />
@@ -68,7 +68,7 @@ const FormularioSolicitud = () => {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-8">
+                <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-8">
                     {/* Stepper Simple */}
                     <div className="flex items-center gap-4 mb-8">
                         <button 

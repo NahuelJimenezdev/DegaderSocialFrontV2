@@ -360,10 +360,10 @@ export default function DocumentViewer() {
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible text-gray-900">
         {/* Marca de agua o estilo de hoja */}
-        <div className="p-8 md:p-16 bg-gray-50/30">
-          <div className="bg-white shadow-[0_0_50px_rgba(0,0,0,0.05)] w-full max-w-4xl mx-auto min-h-[842px] p-12 md:p-20 border border-gray-100">
+        <div className="p-2 md:p-16 bg-gray-50/30">
+          <div className="bg-white shadow-[0_0_50px_rgba(0,0,0,0.05)] w-full max-w-4xl mx-auto min-h-[842px] p-5 md:p-20 border border-gray-100">
              {renderContent()}
           </div>
         </div>
