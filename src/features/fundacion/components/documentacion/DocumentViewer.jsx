@@ -78,6 +78,8 @@ export default function DocumentViewer() {
               <div className="flex flex-col">
                 <span className="font-bold">Barrio:</span>
                 <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.barrio || '---'}</span>
+              </div>
+              <div className="flex flex-col">
                 <span className="font-bold ml-2">UPZ:</span>
                 <span className="border-b border-gray-300 min-w-[50px]">{appData.upz || '---'}</span>
               </div>
@@ -139,20 +141,20 @@ export default function DocumentViewer() {
                 <p className="text-justify px-2 leading-relaxed whitespace-pre-wrap">{appData.llamadoPastoral || '---'}</p>
               </section>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <section>
-                  <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">3. Tres virtudes personales:</h3>
-                  <ol className="list-decimal ml-8 space-y-1">
-                    {appData.virtudes?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
-                  </ol>
-                </section>
-                <section>
-                  <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">4. Dos áreas por mejorar:</h3>
-                  <ol className="list-decimal ml-8 space-y-1">
-                    {appData.areasMejora?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
-                  </ol>
-                </section>
-              </div>
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              </div> */}
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">3. Tres virtudes personales:</h3>
+                <ol className="list-decimal ml-8 space-y-1">
+                  {appData.virtudes?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
+                </ol>
+              </section>
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">4. Dos áreas por mejorar:</h3>
+                <ol className="list-decimal ml-8 space-y-1">
+                  {appData.areasMejora?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
+                </ol>
+              </section>
 
               <section>
                 <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">5. Dos eventos de éxito en su ministerio:</h3>
@@ -162,11 +164,11 @@ export default function DocumentViewer() {
               </section>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
-                <div className="flex gap-2 md:col-span-2">
+                <div className="flex flex-col md:col-span-2">
                   <span className="font-bold">Nombre de la Congregación que Pastorea:</span>
                   <span className="border-b border-gray-300 flex-1">{appData.nombreCongregacionPastorea || '---'}</span>
                 </div>
-                <div className="flex gap-2 md:col-span-2">
+                <div className="flex flex-col md:col-span-2">
                   <span className="font-bold">Alianza de pastores a la cual pertenece:</span>
                   <span className="border-b border-gray-300 flex-1">{appData.alianzaPastores || '---'}</span>
                 </div>
