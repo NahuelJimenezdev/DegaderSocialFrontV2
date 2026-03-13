@@ -1,34 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, FileText, Save, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  Download, 
+  FileText, 
+  Save, 
+  CheckCircle2, 
+  AlertCircle, 
+  ChevronLeft,
+  Heart
+} from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
-import api from '../../../../api/config';
+import userService from '../../../../api/userService';
+import { useToast } from '../../../../shared/components/Toast/ToastProvider';
 
 const FormularioFHSYL = () => {
-  const { user, updateUser } = useAuth(); // updateUser to update auth context state
+  const { user, updateUser } = useAuth();
+  const navigate = useNavigate();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
   
   // Ref for PDF export
   const formRef = useRef(null);
 
   // Form State
   const [formData, setFormData] = useState({
-    // Pre-filled existing data
     nombreCompleto: '',
     direccion: '',
-    localidad: '', // could be ciudad
+    localidad: '', 
     barrio: '',
     celular: '',
     email: '',
-    
-    // New FHSYL fields
     upz: '',
     ocupacion: '',
     estadoCivil: '',
     nombreConyuge: '',
-    hijos: [{ nombre: '', edad: '' }], // Array of objects
-    deseaSerCoordinadorLocalidad: '', // "SI" o "NO"
+    hijos: [{ nombre: '', edad: '' }], 
+    deseaSerCoordinadorLocalidad: '', 
     localidadCoordinar: '',
     testimonioConversion: '',
     llamadoPastoral: '',
@@ -42,9 +49,8 @@ const FormularioFHSYL = () => {
       { nombre: '', relacion: '', contacto: '' }
     ],
     pastorQueInvito: '',
-    // Preguntas finales
-    tieneCasaPropia: '', // "SI" o "NO"
-    iglesiaTienePropiedad: '', // "SI" o "NO"
+    tieneCasaPropia: '', 
+    iglesiaTienePropiedad: '', 
     necesidadesFamiliaPastoral: ['', '', '', '', ''],
     necesidadesCongregacion: ['', '', '', '', ''],
     profesionalesIglesia: '',
@@ -52,7 +58,6 @@ const FormularioFHSYL = () => {
   });
 
   useEffect(() => {
-    // Pre-fill existing user data
     if (user) {
       const docFHSYL = user.fundacion?.documentacionFHSYL || {};
       
@@ -71,7 +76,6 @@ const FormularioFHSYL = () => {
           celular: user.personal?.celular || '',
           email: user.email || '',
           
-          // Hydrate from DB if exists
           upz: docFHSYL.upz || '',
           ocupacion: docFHSYL.ocupacion || '',
           estadoCivil: docFHSYL.estadoCivil || '',
@@ -111,7 +115,6 @@ const FormularioFHSYL = () => {
     }
   }, [user]);
 
-  // Helper to ensure array size
   const hydrateArray = (arr, size) => {
     let newArr = Array(size).fill('');
     if (arr && Array.isArray(arr)) {
@@ -159,9 +162,6 @@ const FormularioFHSYL = () => {
 
   const saveToDatabase = async () => {
     setLoading(true);
-    setError('');
-    setSuccess(false);
-
     try {
       const payload = {
         upz: formData.upz,
@@ -188,18 +188,18 @@ const FormularioFHSYL = () => {
         proyectoPsicosocial: formData.proyectoPsicosocial
       };
 
-      const res = await api.put('/usuarios/documentacionFHSYL', payload);
+      const response = await userService.saveDocumentationFHSYL(payload);
       
-      // Update local context
-      if (res.data.data) {
-        updateUser(res.data.data);
+      if (response.success) {
+        if (response.data) {
+          updateUser(response.data);
+        }
+        toast.success('Documentación guardada correctamente');
+        setTimeout(() => navigate('/fundacion'), 2000);
       }
-      
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       console.error(err);
-      setError('Ocurrió un error al guardar en la base de datos.');
+      toast.error('Error al guardar la documentación');
     } finally {
       setLoading(false);
     }
@@ -310,268 +310,303 @@ const FormularioFHSYL = () => {
   };
 
   const exportToPDF = () => {
-    // Uses CSS print media queries to perfectly format the document
     window.print();
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden mb-12">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white text-center">
-        <h1 className="text-2xl font-bold uppercase tracking-wider">Aplicativo República Argentina</h1>
-        <h2 className="text-lg opacity-90">Fundación Humanitaria Sol y Luna</h2>
-      </div>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Botón Volver */}
+      <button 
+        onClick={() => navigate('/fundacion')} 
+        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-6 font-medium transition-colors"
+      >
+        <ChevronLeft size={20} />
+        Volver a Fundación
+      </button>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
-        <div className="flex items-center space-x-2 text-sm text-gray-500">
-          <AlertCircle className="w-5 h-5 text-amber-500" />
-          <span>Complete la información y guárdela, o descárguela en formato físico.</span>
-        </div>
-        <div className="flex space-x-3 mt-4 sm:mt-0">
-          <button 
-            onClick={exportToWord}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-lg hover:bg-blue-200 transition"
-          >
-            <FileText className="w-4 h-4" /> Word
-          </button>
-          <button 
-            onClick={exportToPDF}
-            className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition"
-          >
-            <Download className="w-4 h-4" /> PDF
-          </button>
-        </div>
-      </div>
-
-      {/* Form Content (Ref for PDF) */}
-      <div ref={formRef} className="p-6 md:p-10 space-y-8 print:p-0 print:m-0 print:w-full">
-        
-        {/* Sección Personal */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Datos Personales</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Nombre completo</label>
-              <input type="text" name="nombreCompleto" value={formData.nombreCompleto} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+        {/* Header Premium (Igual a Entrevista) */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md shrink-0">
+              <Heart size={32} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Dirección</label>
-              <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Localidad</label>
-              <input type="text" name="localidad" value={formData.localidad} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Barrio</label>
-              <input type="text" name="barrio" value={formData.barrio} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">UPZ</label>
-              <input type="text" name="upz" value={formData.upz} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Celular</label>
-              <input type="tel" name="celular" value={formData.celular} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Dirección electrónica</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Ocupación</label>
-              <input type="text" name="ocupacion" value={formData.ocupacion} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Estado Civil</label>
-              <input type="text" name="estadoCivil" value={formData.estadoCivil} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Nombre del Cónyugue</label>
-              <input type="text" name="nombreConyuge" value={formData.nombreConyuge} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+              <h1 className="text-2xl md:text-3xl font-bold leading-tight">
+                Aplicativo República Argentina
+              </h1>
+              <p className="text-blue-100 font-medium">
+                Fundación Humanitaria Sol y Luna
+              </p>
             </div>
           </div>
+        </div>
 
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Nombre de los hijos, y su respectiva edad</label>
-            {formData.hijos.map((hijo, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input placeholder="Nombre" type="text" value={hijo.nombre} onChange={(e) => handleObjectArrayChange('hijos', index, 'nombre', e.target.value)} className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                <input placeholder="Edad" type="number" value={hijo.edad} onChange={(e) => handleObjectArrayChange('hijos', index, 'edad', e.target.value)} className="w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                {index > 0 && (
-                  <button type="button" onClick={() => removeHijo(index)} className="px-3 py-2 bg-red-50 text-red-600 rounded-md hover:bg-red-100">X</button>
-                )}
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <AlertCircle className="w-5 h-5 text-amber-500" />
+            <span>Complete la información para su registro oficial.</span>
+          </div>
+          <div className="flex space-x-3 mt-4 sm:mt-0">
+            <button 
+              onClick={exportToWord}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold rounded-xl hover:bg-blue-200 transition"
+            >
+              <FileText className="w-4 h-4" /> Word
+            </button>
+            <button 
+              onClick={exportToPDF}
+              className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-bold rounded-xl hover:bg-red-200 transition"
+            >
+              <Download className="w-4 h-4" /> Imprimir
+            </button>
+          </div>
+        </div>
+
+        {/* Form Content */}
+        <div ref={formRef} className="p-8 md:p-10 space-y-10 print:p-0">
+          
+          {/* Sección Personal */}
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+              <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+              Datos Personales
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Nombre completo</label>
+                <input type="text" name="nombreCompleto" value={formData.nombreCompleto} onChange={handleChange} className="form-input-premium w-full" />
               </div>
-            ))}
-            <button type="button" onClick={addHijo} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">+ Añadir otro hijo</button>
-          </div>
-        </div>
-
-        {/* Sección Coordinación */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Área de Coordinación</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">¿Desea ser Coordinador de una Localidad?</label>
-              <select name="deseaSerCoordinadorLocalidad" value={formData.deseaSerCoordinadorLocalidad} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="">Seleccione</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Localidad</label>
-              <input type="text" name="localidadCoordinar" value={formData.localidadCoordinar} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-          </div>
-        </div>
-
-        {/* Sección Narrativa Minsiterial */}
-        <div className="space-y-6">
-          <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Vida y Ministerio</h3>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">1. Comparta su testimonio personal brevemente, y su conversión a Cristo Jesús</label>
-            <textarea name="testimonioConversion" value={formData.testimonioConversion} onChange={handleChange} rows="3" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">2. Compartanos acerca de su llamado Pastoral:</label>
-            <textarea name="llamadoPastoral" value={formData.llamadoPastoral} onChange={handleChange} rows="3" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">3. Por favor, describa tres virtudes personales que tenga:</label>
-            {formData.virtudes.map((v, i) => (
-              <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('virtudes', i, e.target.value)} className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={`Virtud ${i+1}`} />
-            ))}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">4. Por favor, describa dos áreas donde necesite mejorar personalmente:</label>
-            {formData.areasMejora.map((v, i) => (
-              <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('areasMejora', i, e.target.value)} className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={`Área ${i+1}`} />
-            ))}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">5. Describa dos eventos en su ministerio en los que tuvo éxito y le produjo alegria realizarlos:</label>
-            {formData.eventosExito.map((v, i) => (
-              <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('eventosExito', i, e.target.value)} className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={`Evento ${i+1}`} />
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <div>
-              <label className="block text-sm font-medium text-gray-700">Nombre de la Congregación que Pastorea</label>
-              <input type="text" name="nombreCongregacionPastorea" value={formData.nombreCongregacionPastorea} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Alianza de pastores a la cual pertenece (Concilio, misión)</label>
-              <input type="text" name="alianzaPastores" value={formData.alianzaPastores} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-          </div>
-        </div>
-
-        {/* Referencias */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Referencias</h3>
-          <p className="text-sm text-gray-500">Por favor, denos dos referencias que no sean miembros de familia (Por favor coloque a su autoridad espiritual de primeras y despues pastor, líder de la comunidad, miembro de la iglesia, etc.)</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {formData.referencias.map((ref, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
-                <span className="font-semibold text-gray-700 text-sm block">Referencia {index + 1}</span>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600">Nombre</label>
-                  <input type="text" value={ref.nombre} onChange={(e) => handleObjectArrayChange('referencias', index, 'nombre', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600">Relación con usted</label>
-                  <input type="text" value={ref.relacion} onChange={(e) => handleObjectArrayChange('referencias', index, 'relacion', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600">Número celular y dirección email</label>
-                  <input type="text" value={ref.contacto} onChange={(e) => handleObjectArrayChange('referencias', index, 'contacto', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm" />
-                </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Dirección</label>
+                <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} className="form-input-premium w-full" />
               </div>
-            ))}
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Localidad</label>
+                <input type="text" name="localidad" value={formData.localidad} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Barrio</label>
+                <input type="text" name="barrio" value={formData.barrio} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">UPZ</label>
+                <input type="text" name="upz" value={formData.upz} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Celular</label>
+                <input type="tel" name="celular" value={formData.celular} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Dirección electrónica</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Ocupación</label>
+                <input type="text" name="ocupacion" value={formData.ocupacion} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Estado Civil</label>
+                <input type="text" name="estadoCivil" value={formData.estadoCivil} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Nombre del Cónyugue</label>
+                <input type="text" name="nombreConyuge" value={formData.nombreConyuge} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+            </div>
+
+            <div className="mt-8 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 ml-1 italic">Nombre de los hijos y edad</label>
+              <div className="space-y-3">
+                {formData.hijos.map((hijo, index) => (
+                  <div key={index} className="flex gap-3">
+                    <input placeholder="Nombre" type="text" value={hijo.nombre} onChange={(e) => handleObjectArrayChange('hijos', index, 'nombre', e.target.value)} className="form-input-premium flex-1" />
+                    <input placeholder="Edad" type="number" value={hijo.edad} onChange={(e) => handleObjectArrayChange('hijos', index, 'edad', e.target.value)} className="w-24 form-input-premium" />
+                    {index > 0 && (
+                      <button type="button" onClick={() => removeHijo(index)} className="px-3 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition font-bold">X</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button type="button" onClick={addHijo} className="mt-4 text-sm text-blue-600 dark:text-blue-400 hover:underline font-bold">+ Agregar otro hijo</button>
+            </div>
           </div>
 
-          <div className="pt-4">
-             <label className="block text-sm font-medium text-gray-700">Nombre del pastor que le Invito a la presentación de Visión Fundación Humanitaria Sol y Luna</label>
-             <input type="text" name="pastorQueInvito" value={formData.pastorQueInvito} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+          {/* Sección Coordinación */}
+          <div className="space-y-6 bg-blue-50/30 dark:bg-blue-900/10 p-6 rounded-2xl border border-blue-100/50 dark:border-blue-900/20">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+              Área de Coordinación
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">¿Desea ser Coordinador de una Localidad?</label>
+                <select name="deseaSerCoordinadorLocalidad" value={formData.deseaSerCoordinadorLocalidad} onChange={handleChange} className="form-input-premium w-full">
+                  <option value="">Seleccione</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Localidad de interés</label>
+                <input type="text" name="localidadCoordinar" value={formData.localidadCoordinar} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+            </div>
+          </div>
+
+          {/* Sección Vida y Ministerio */}
+          <div className="space-y-8">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+              <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+              Vida y Ministerio
+            </h3>
+            
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">1. Comparta su testimonio personal brevemente:</label>
+              <textarea name="testimonioConversion" value={formData.testimonioConversion} onChange={handleChange} rows="4" className="form-input-premium w-full resize-none" />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">2. Compártanos acerca de su llamado Pastoral:</label>
+              <textarea name="llamadoPastoral" value={formData.llamadoPastoral} onChange={handleChange} rows="4" className="form-input-premium w-full resize-none" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">3. Tres Virtudes</label>
+                {formData.virtudes.map((v, i) => (
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('virtudes', i, e.target.value)} className="form-input-premium w-full mb-2" placeholder={`Virtud ${i+1}`} />
+                ))}
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">4. Dos Áreas a mejorar</label>
+                {formData.areasMejora.map((v, i) => (
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('areasMejora', i, e.target.value)} className="form-input-premium w-full mb-2" placeholder={`Área ${i+1}`} />
+                ))}
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">5. Eventos de Éxito</label>
+                {formData.eventosExito.map((v, i) => (
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('eventosExito', i, e.target.value)} className="form-input-premium w-full mb-2" placeholder={`Evento ${i+1}`} />
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Congregación que Pastorea</label>
+                <input type="text" name="nombreCongregacionPastorea" value={formData.nombreCongregacionPastorea} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Alianza / Concilio</label>
+                <input type="text" name="alianzaPastores" value={formData.alianzaPastores} onChange={handleChange} className="form-input-premium w-full" />
+              </div>
+            </div>
+          </div>
+
+          {/* Referencias */}
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+              <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+              Referencias (No familiares)
+            </h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 italic">Por favor coloque a su autoridad espiritual de primera.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {formData.referencias.map((ref, index) => (
+                <div key={index} className="bg-gray-50/50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-4">
+                  <span className="font-bold text-blue-600 dark:text-blue-400 text-xs uppercase tracking-widest">Referencia {index + 1}</span>
+                  <div className="space-y-3">
+                    <input placeholder="Nombre" type="text" value={ref.nombre} onChange={(e) => handleObjectArrayChange('referencias', index, 'nombre', e.target.value)} className="form-input-premium w-full text-sm" />
+                    <input placeholder="Relación" type="text" value={ref.relacion} onChange={(e) => handleObjectArrayChange('referencias', index, 'relacion', e.target.value)} className="form-input-premium w-full text-sm" />
+                    <input placeholder="Celular / Email" type="text" value={ref.contacto} onChange={(e) => handleObjectArrayChange('referencias', index, 'contacto', e.target.value)} className="form-input-premium w-full text-sm" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-4 space-y-2">
+               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Pastor que le Invitó a la Fundación:</label>
+               <input type="text" name="pastorQueInvito" value={formData.pastorQueInvito} onChange={handleChange} className="form-input-premium w-full" />
+            </div>
+          </div>
+
+          {/* Sección Preguntas Finales */}
+          <div className="space-y-8">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+              <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+              Preguntas Adicionales
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">1. ¿Tiene Casa Propia?</label>
+                <select name="tieneCasaPropia" value={formData.tieneCasaPropia} onChange={handleChange} className="form-input-premium w-full text-sm">
+                  <option value="">Seleccione</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">2. ¿La iglesia tiene propiedad?</label>
+                <select name="iglesiaTienePropiedad" value={formData.iglesiaTienePropiedad} onChange={handleChange} className="form-input-premium w-full text-sm">
+                  <option value="">Seleccione</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">3. Necesidades (Familia Pastoral)</label>
+                {formData.necesidadesFamiliaPastoral.map((v, i) => (
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesFamiliaPastoral', i, e.target.value)} className="form-input-premium w-full text-sm" placeholder={`Necesidad ${i+1}`} />
+                ))}
+              </div>
+
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">4. Necesidades (Congregación)</label>
+                 {formData.necesidadesCongregacion.map((v, i) => (
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesCongregacion', i, e.target.value)} className="form-input-premium w-full text-sm" placeholder={`Necesidad ${i+1}`} />
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">5. ¿Tiene usted profesionales en su iglesia? (Mencione profesiones):</label>
+              <textarea name="profesionalesIglesia" value={formData.profesionalesIglesia} onChange={handleChange} rows="3" className="form-input-premium w-full resize-none" />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">6. Mencione un Proyecto Psico-social que quiera desarrollar:</label>
+              <textarea name="proyectoPsicosocial" value={formData.proyectoPsicosocial} onChange={handleChange} rows="4" className="form-input-premium w-full resize-none" />
+            </div>
+
           </div>
         </div>
 
-        {/* Sección Preguntas Finales */}
-        <div className="space-y-6">
-          <h3 className="text-lg font-bold text-gray-800 border-b pb-2">Preguntas Adicionales</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">1. Tiene Casa Propia</label>
-              <select name="tieneCasaPropia" value={formData.tieneCasaPropia} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="">Seleccione</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">2. La iglesia que usted pastorea tiene propiedad</label>
-              <select name="iglesiaTienePropiedad" value={formData.iglesiaTienePropiedad} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="">Seleccione</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">3. Mencione 5 necesidades que tenga como familia Pastoral:</label>
-            {formData.necesidadesFamiliaPastoral.map((v, i) => (
-              <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesFamiliaPastoral', i, e.target.value)} className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={`Necesidad ${i+1}`} />
-            ))}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">4. Mencione 5 necesidades que usted como pastor visualiza en el general de las familias de su congregación:</label>
-             {formData.necesidadesCongregacion.map((v, i) => (
-              <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesCongregacion', i, e.target.value)} className="mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={`Necesidad ${i+1}`} />
-            ))}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">5. Tiene usted profesionales en su iglesia? Mencione que profesiones.</label>
-            <textarea name="profesionalesIglesia" value={formData.profesionalesIglesia} onChange={handleChange} rows="2" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">6. Mencione un Proyecto Psico-social que quiera desarrollar y que falencias tiene para desarrollarlo.</label>
-            <textarea name="proyectoPsicosocial" value={formData.proyectoPsicosocial} onChange={handleChange} rows="3" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-          </div>
-
+        {/* Footer Submit Button */}
+        <div className="bg-gray-50/80 dark:bg-gray-900/80 p-10 border-t border-gray-100 dark:border-gray-700 flex flex-col items-center backdrop-blur-sm">
+          <button 
+            onClick={saveToDatabase}
+            disabled={loading}
+            className="w-full md:w-auto px-12 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
+          >
+            {loading ? 'Guardando...' : <><Save className="w-6 h-6" /> Guardar Documentación</>}
+          </button>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-6 text-center max-w-lg">
+            Sus datos se guardarán de forma segura en su perfil institucional de la Fundación Humanitaria Sol y Luna.
+          </p>
         </div>
       </div>
 
-      {/* Footer Submit Button */}
-      <div className="bg-gray-50 p-6 border-t border-gray-200 flex flex-col items-center">
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-        {success && <p className="text-green-600 font-medium flex items-center gap-2 mb-3"><CheckCircle2 className="w-5 h-5"/> Guardado correctamente en tu perfil.</p>}
-        
-        <button 
-          onClick={saveToDatabase}
-          disabled={loading}
-          className="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 transition disabled:opacity-50 flex items-center justify-center gap-2"
-        >
-          {loading ? 'Guardando...' : <><Save className="w-5 h-5" /> Guardar en Base de Datos</>}
-        </button>
-        <p className="text-xs text-gray-400 mt-4 text-center max-w-lg">
-          Al guardar, esta información quedará vinculada en tu cuenta bajo la sección Fundación Humanitaria Sol y Luna.
-        </p>
-      </div>
-
+      <style jsx>{`
+        .form-input-premium {
+          @apply px-4 py-3 bg-gray-50 dark:bg-gray-950/50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all dark:text-white outline-none shadow-inner;
+        }
+      `}</style>
     </div>
   );
 };

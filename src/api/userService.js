@@ -144,6 +144,16 @@ const userService = {
     const response = await api.put('/usuarios/entrevistaFundacion', { respuestas });
     return response.data;
   },
+
+  /**
+   * Update foundation FHSYL documentation (Aplicativo Argentina)
+   * @param {Object} data - FHSYL documentation data
+   * @returns {Promise<Object>} Response data
+   */
+  saveDocumentationFHSYL: async (data) => {
+    const response = await api.put('/usuarios/documentacionFHSYL', data);
+    return response.data;
+  },
 };
 
 export default userService;

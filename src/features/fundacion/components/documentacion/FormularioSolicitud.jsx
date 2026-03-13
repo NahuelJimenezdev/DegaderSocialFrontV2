@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Save, CheckCircle2, ChevronRight, MapPin, Briefcase, UserCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Save, CheckCircle2, ChevronRight, MapPin, Briefcase, UserCircle, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { useFundacion } from '../../hooks/useFundacion';
 import '../../../../shared/styles/headers.style.css';
 
 const FormularioSolicitud = () => {
     const { user, updateUser } = useAuth();
+    const navigate = useNavigate();
     const {
         loading,
         formData,
@@ -37,6 +38,15 @@ const FormularioSolicitud = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* Botón Volver */}
+            <button 
+                onClick={() => navigate('/fundacion')} 
+                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-6 font-medium transition-colors"
+            >
+                <ChevronLeft size={20} />
+                Volver a Fundación
+            </button>
+
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
                 {/* Header Profile Style */}
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
