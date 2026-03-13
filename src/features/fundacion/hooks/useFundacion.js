@@ -453,9 +453,11 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const handleCargoChange = (nuevoCargo) => {
+        const esDirGen = nuevoCargo === "Director General (Pastor)";
         setFormData({
             ...formData,
             cargo: nuevoCargo,
+            rolFuncional: esDirGen ? 'pastor' : formData.rolFuncional,
             area: '',
             subArea: '',
             programa: ''

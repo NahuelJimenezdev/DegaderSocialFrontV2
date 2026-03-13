@@ -22,9 +22,11 @@ const FormularioSolicitud = () => {
         getDivisionesTerritoriales,
         getNombreDivisionTerritorial,
         handleNivelChange,
+        handleCargoChange,
         handleAreaChange,
         handleSubAreaChange,
-        handleUpdateProfile
+        handleUpdateProfile,
+        esDirectorGeneral
     } = useFundacion(user, updateUser);
 
     const [success, setSuccess] = useState(false);
@@ -127,23 +129,25 @@ const FormularioSolicitud = () => {
                             </div>
 
                             {/* Área */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
-                                <select 
-                                    className={selectClasses}
-                                    value={formData.area}
-                                    onChange={(e) => handleAreaChange(e.target.value)}
-                                    disabled={!formData.cargo}
-                                >
-                                    <option value="">Seleccione Área</option>
-                                    {getAreasDisponibles().map(a => (
-                                        <option key={a} value={a}>{a}</option>
-                                    ))}
-                                </select>
-                            </div>
+                            {!esDirectorGeneral() && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
+                                    <select 
+                                        className={selectClasses}
+                                        value={formData.area}
+                                        onChange={(e) => handleAreaChange(e.target.value)}
+                                        disabled={!formData.cargo}
+                                    >
+                                        <option value="">Seleccione Área</option>
+                                        {getAreasDisponibles().map(a => (
+                                            <option key={a} value={a}>{a}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
 
                             {/* SubÁrea */}
-                            {getSubAreasDisponibles().length > 0 && (
+                            {!esDirectorGeneral() && getSubAreasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Sub-Área</label>
                                     <select 
@@ -161,7 +165,7 @@ const FormularioSolicitud = () => {
                             )}
 
                             {/* Programa */}
-                            {getProgramasDisponibles().length > 0 && (
+                            {!esDirectorGeneral() && getProgramasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Programa / Proyecto</label>
                                     <select 
@@ -179,20 +183,22 @@ const FormularioSolicitud = () => {
                             )}
 
                             {/* Rol Funcional */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
-                                <select 
-                                    className={selectClasses}
-                                    value={formData.rolFuncional}
-                                    onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
-                                    required
-                                >
-                                    <option value="">Seleccione Rol</option>
-                                    {getRolesDisponibles().map(r => (
-                                        <option key={r} value={r}>{r.toUpperCase()}</option>
-                                    ))}
-                                </select>
-                            </div>
+                            {!esDirectorGeneral() && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
+                                    <select 
+                                        className={selectClasses}
+                                        value={formData.rolFuncional}
+                                        onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
+                                        required
+                                    >
+                                        <option value="">Seleccione Rol</option>
+                                        {getRolesDisponibles().map(r => (
+                                            <option key={r} value={r}>{r.toUpperCase()}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
