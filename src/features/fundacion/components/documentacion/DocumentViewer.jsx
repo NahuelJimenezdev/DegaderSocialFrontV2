@@ -118,16 +118,16 @@ export default function DocumentViewer() {
               </ul>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-10">
-              <div className="flex gap-2">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-10">
+            </div> */}
+              <div className="flex flex-col">
                 <span className="font-bold">Desea ser Coordinador de una Localidad:</span>
                 <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.deseaSerCoordinadorLocalidad ? 'SI' : 'NO'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Localidad:</span>
                 <span className="border-b border-gray-300 flex-1">{appData.localidadCoordinar || '---'}</span>
               </div>
-            </div>
 
             {/* Secciones de Vida y Ministerio */}
             <div className="space-y-8">
@@ -195,16 +195,16 @@ export default function DocumentViewer() {
 
               <section>
                 <h3 className="bg-blue-900 text-white p-2 font-bold text-[17px] text-center mb-4">PREGUNTAS FINALES</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col">
                     <span className="font-bold">1. ¿Tiene Casa Propia?</span>
                     <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.tieneCasaPropia ? 'SI' : 'NO'}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col">
                     <span className="font-bold">2. ¿La iglesia tiene propiedad?</span>
                     <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.iglesiaTienePropiedad ? 'SI' : 'NO'}</span>
                   </div>
-                </div>
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
+                </div> */}
 
                 <div className="space-y-4 pt-4 border-t border-gray-200">
                   <div>
@@ -331,29 +331,31 @@ export default function DocumentViewer() {
           Volver a Fundación
         </button>
 
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:flex gap-2 sm:gap-3 w-full md:w-auto">
           {(type === 'Aplicativo' || type === 'Solicitud') && (
              <button 
               onClick={() => navigate('/fundacion/documentacion-fhsyl')}
-              className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-xl font-bold hover:bg-amber-200 transition"
+              className="flex items-center justify-center gap-1.5 px-3 py-2 md:px-4 md:py-2 bg-amber-100 text-amber-700 rounded-xl font-bold hover:bg-amber-200 transition text-sm md:text-base"
             >
-              <Edit3 size={18} />
+              <Edit3 size={16} className="md:w-[18px]" />
               Modificar
             </button>
           )}
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 md:px-4 md:py-2 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition text-sm md:text-base"
           >
-            <Printer size={18} />
-            Imprimir / PDF
+            <Printer size={16} className="md:w-[18px]" />
+            <span className="hidden xs:inline">Imprimir</span>
+            <span className="xs:hidden">PDF</span>
           </button>
           <button 
             onClick={handleDownloadWord}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-md shadow-blue-500/20"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 md:px-4 md:py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-md shadow-blue-500/20 text-sm md:text-base col-span-2 sm:col-span-1"
           >
-            <Download size={18} />
-            Descargar Word
+            <Download size={16} className="md:w-[18px]" />
+            <span className="hidden xs:inline">Descargar Word</span>
+            <span className="xs:hidden">Descargar</span>
           </button>
         </div>
       </div>

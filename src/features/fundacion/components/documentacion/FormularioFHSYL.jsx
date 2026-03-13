@@ -349,28 +349,6 @@ const FormularioFHSYL = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <AlertCircle className="w-5 h-5 text-amber-500" />
-            <span>Complete la información para su registro oficial.</span>
-          </div>
-          <div className="flex space-x-3 mt-4 sm:mt-0">
-            <button 
-              onClick={exportToWord}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-bold rounded-xl hover:bg-blue-200 transition"
-            >
-              <FileText className="w-4 h-4" /> Word
-            </button>
-            <button 
-              onClick={exportToPDF}
-              className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-bold rounded-xl hover:bg-red-200 transition"
-            >
-              <Download className="w-4 h-4" /> Imprimir
-            </button>
-          </div>
-        </div>
-
         {/* Form Content */}
         <div ref={formRef} className="p-8 md:p-10 space-y-10 print:p-0">
           
