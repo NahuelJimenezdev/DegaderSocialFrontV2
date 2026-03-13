@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, CheckCircle2, ChevronRight, MapPin, Briefcase, UserCircle, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
@@ -36,6 +37,10 @@ const FormularioSolicitud = () => {
         setTimeout(() => setSuccess(false), 5000);
     };
 
+    // Standardized selector classes for theme consistency
+    const selectClasses = "w-full p-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100 disabled:opacity-50";
+    const inputClasses = "w-full p-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100";
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
             {/* Botón Volver */}
@@ -48,15 +53,15 @@ const FormularioSolicitud = () => {
             </button>
 
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-                {/* Header Profile Style */}
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+                {/* Header Profile Style - Fixed background and text visibility */}
+                <div className="bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
                     <div className="flex items-center gap-6">
                         <div className="w-20 h-20 bg-white/20 rounded-2xl backdrop-blur-md flex items-center justify-center border border-white/30">
-                            <Briefcase size={40} />
+                            <Briefcase size={40} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold">Solicitud de Ingreso</h1>
-                            <p className="text-blue-100 mt-1 text-lg">Perfil Institucional y Jerárquico</p>
+                            <h1 className="text-3xl font-bold text-white">Solicitud de Ingreso</h1>
+                            <p className="text-blue-50 mt-1 text-lg">Perfil Institucional y Jerárquico</p>
                         </div>
                     </div>
                 </div>
@@ -67,7 +72,7 @@ const FormularioSolicitud = () => {
                         <button 
                             type="button"
                             onClick={() => setStep(1)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${step === 1 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-gray-500'}`}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${step === 1 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800' : 'text-gray-500'}`}
                         >
                             <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
                             Estructura
@@ -76,7 +81,7 @@ const FormularioSolicitud = () => {
                         <button 
                             type="button"
                             onClick={() => setStep(2)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${step === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'text-gray-500'}`}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${step === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800' : 'text-gray-500'}`}
                         >
                             <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">2</span>
                             Ubicación
@@ -92,7 +97,7 @@ const FormularioSolicitud = () => {
                                     Nivel Jerárquico
                                 </label>
                                 <select 
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    className={selectClasses}
                                     value={formData.nivel}
                                     onChange={(e) => handleNivelChange(e.target.value)}
                                     required
@@ -108,7 +113,7 @@ const FormularioSolicitud = () => {
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
                                 <select 
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50"
+                                    className={selectClasses}
                                     value={formData.area}
                                     onChange={(e) => handleAreaChange(e.target.value)}
                                     disabled={!formData.nivel}
@@ -125,12 +130,12 @@ const FormularioSolicitud = () => {
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Sub-Área</label>
                                     <select 
-                                        className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                        className={selectClasses}
                                         value={formData.subArea}
                                         onChange={(e) => handleSubAreaChange(e.target.value)}
                                     >
                                         <option value="">Seleccione Sub-Área</option>
-                                        {getSubAreasDisponibles().map(sa => (
+                                        {getSubAreasDisponibles().map(sa => ( sa &&
                                             <option key={sa} value={sa}>{sa}</option>
                                         ))}
                                     </select>
@@ -142,7 +147,7 @@ const FormularioSolicitud = () => {
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Programa / Proyecto</label>
                                     <select 
-                                        className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                        className={selectClasses}
                                         value={formData.programa}
                                         onChange={(e) => setFormData({...formData, programa: e.target.value})}
                                     >
@@ -158,7 +163,7 @@ const FormularioSolicitud = () => {
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Cargo Institucional</label>
                                 <select 
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50"
+                                    className={selectClasses}
                                     value={formData.cargo}
                                     onChange={(e) => setFormData({...formData, cargo: e.target.value})}
                                     disabled={!formData.nivel}
@@ -175,7 +180,7 @@ const FormularioSolicitud = () => {
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
                                 <select 
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    className={selectClasses}
                                     value={formData.rolFuncional}
                                     onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
                                     required
@@ -196,7 +201,7 @@ const FormularioSolicitud = () => {
                                     País de Trabajo
                                 </label>
                                 <select 
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    className={selectClasses}
                                     value={formData.pais}
                                     onChange={(e) => setFormData({...formData, pais: e.target.value})}
                                     required
@@ -211,7 +216,7 @@ const FormularioSolicitud = () => {
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">{getNombreDivisionTerritorial()}</label>
                                 <select 
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    className={selectClasses}
                                     value={formData.departamento}
                                     onChange={(e) => setFormData({...formData, departamento: e.target.value})}
                                     required
@@ -228,7 +233,7 @@ const FormularioSolicitud = () => {
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Municipio / Ciudad</label>
                                 <input 
                                     type="text"
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    className={inputClasses}
                                     placeholder="Nombre del municipio"
                                     value={formData.municipio}
                                     onChange={(e) => setFormData({...formData, municipio: e.target.value})}
@@ -241,7 +246,7 @@ const FormularioSolicitud = () => {
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Barrio / Vereda</label>
                                 <input 
                                     type="text"
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    className={inputClasses}
                                     placeholder="Nombre del barrio"
                                     value={formData.barrio}
                                     onChange={(e) => setFormData({...formData, barrio: e.target.value})}

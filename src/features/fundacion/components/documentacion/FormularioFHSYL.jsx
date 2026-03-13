@@ -313,6 +313,9 @@ const FormularioFHSYL = () => {
     window.print();
   };
 
+  // Helper for input classes to avoid repeating long strings
+  const inputClasses = "w-full px-4 py-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-gray-100 outline-none shadow-sm";
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Botón Volver */}
@@ -325,17 +328,17 @@ const FormularioFHSYL = () => {
       </button>
 
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-        {/* Header Premium (Igual a Entrevista) */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+        {/* Header Premium - Background solid and white text to ensure visibility */}
+        <div className="bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md shrink-0">
-              <Heart size={32} />
+              <Heart size={32} className="text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold leading-tight">
+              <h1 className="text-2xl md:text-3xl font-bold leading-tight text-white">
                 Aplicativo República Argentina
               </h1>
-              <p className="text-blue-100 font-medium">
+              <p className="text-blue-50 font-medium">
                 Fundación Humanitaria Sol y Luna
               </p>
             </div>
@@ -343,7 +346,7 @@ const FormularioFHSYL = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between p-6 bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+        <div className="flex flex-wrap items-center justify-between p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <AlertCircle className="w-5 h-5 text-amber-500" />
             <span>Complete la información para su registro oficial.</span>
@@ -369,50 +372,50 @@ const FormularioFHSYL = () => {
           
           {/* Sección Personal */}
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
               <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
               Datos Personales
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Nombre completo</label>
-                <input type="text" name="nombreCompleto" value={formData.nombreCompleto} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="nombreCompleto" value={formData.nombreCompleto} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Dirección</label>
-                <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Localidad</label>
-                <input type="text" name="localidad" value={formData.localidad} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="localidad" value={formData.localidad} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Barrio</label>
-                <input type="text" name="barrio" value={formData.barrio} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="barrio" value={formData.barrio} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">UPZ</label>
-                <input type="text" name="upz" value={formData.upz} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="upz" value={formData.upz} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Celular</label>
-                <input type="tel" name="celular" value={formData.celular} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="tel" name="celular" value={formData.celular} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Dirección electrónica</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Ocupación</label>
-                <input type="text" name="ocupacion" value={formData.ocupacion} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="ocupacion" value={formData.ocupacion} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Estado Civil</label>
-                <input type="text" name="estadoCivil" value={formData.estadoCivil} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="estadoCivil" value={formData.estadoCivil} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Nombre del Cónyugue</label>
-                <input type="text" name="nombreConyuge" value={formData.nombreConyuge} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="nombreConyuge" value={formData.nombreConyuge} onChange={handleChange} className={inputClasses} />
               </div>
             </div>
 
@@ -421,8 +424,8 @@ const FormularioFHSYL = () => {
               <div className="space-y-3">
                 {formData.hijos.map((hijo, index) => (
                   <div key={index} className="flex gap-3">
-                    <input placeholder="Nombre" type="text" value={hijo.nombre} onChange={(e) => handleObjectArrayChange('hijos', index, 'nombre', e.target.value)} className="form-input-premium flex-1" />
-                    <input placeholder="Edad" type="number" value={hijo.edad} onChange={(e) => handleObjectArrayChange('hijos', index, 'edad', e.target.value)} className="w-24 form-input-premium" />
+                    <input placeholder="Nombre" type="text" value={hijo.nombre} onChange={(e) => handleObjectArrayChange('hijos', index, 'nombre', e.target.value)} className={`${inputClasses} flex-1`} />
+                    <input placeholder="Edad" type="number" value={hijo.edad} onChange={(e) => handleObjectArrayChange('hijos', index, 'edad', e.target.value)} className={`${inputClasses} w-24`} />
                     {index > 0 && (
                       <button type="button" onClick={() => removeHijo(index)} className="px-3 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition font-bold">X</button>
                     )}
@@ -434,15 +437,15 @@ const FormularioFHSYL = () => {
           </div>
 
           {/* Sección Coordinación */}
-          <div className="space-y-6 bg-blue-50/30 dark:bg-blue-900/10 p-6 rounded-2xl border border-blue-100/50 dark:border-blue-900/20">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          <div className="space-y-6 bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border border-blue-100 dark:border-blue-900/20">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2 text-gray-900 dark:text-gray-100">
               <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
               Área de Coordinación
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">¿Desea ser Coordinador de una Localidad?</label>
-                <select name="deseaSerCoordinadorLocalidad" value={formData.deseaSerCoordinadorLocalidad} onChange={handleChange} className="form-input-premium w-full">
+                <select name="deseaSerCoordinadorLocalidad" value={formData.deseaSerCoordinadorLocalidad} onChange={handleChange} className={inputClasses}>
                   <option value="">Seleccione</option>
                   <option value="SI">SI</option>
                   <option value="NO">NO</option>
@@ -450,45 +453,45 @@ const FormularioFHSYL = () => {
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Localidad de interés</label>
-                <input type="text" name="localidadCoordinar" value={formData.localidadCoordinar} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="localidadCoordinar" value={formData.localidadCoordinar} onChange={handleChange} className={inputClasses} />
               </div>
             </div>
           </div>
 
           {/* Sección Vida y Ministerio */}
           <div className="space-y-8">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
               <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
               Vida y Ministerio
             </h3>
             
             <div className="space-y-2">
               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">1. Comparta su testimonio personal brevemente:</label>
-              <textarea name="testimonioConversion" value={formData.testimonioConversion} onChange={handleChange} rows="4" className="form-input-premium w-full resize-none" />
+              <textarea name="testimonioConversion" value={formData.testimonioConversion} onChange={handleChange} rows="4" className={inputClasses + " resize-none"} />
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">2. Compártanos acerca de su llamado Pastoral:</label>
-              <textarea name="llamadoPastoral" value={formData.llamadoPastoral} onChange={handleChange} rows="4" className="form-input-premium w-full resize-none" />
+              <textarea name="llamadoPastoral" value={formData.llamadoPastoral} onChange={handleChange} rows="4" className={inputClasses + " resize-none"} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">3. Tres Virtudes</label>
+                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">3. Tres Virtudes</label>
                 {formData.virtudes.map((v, i) => (
-                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('virtudes', i, e.target.value)} className="form-input-premium w-full mb-2" placeholder={`Virtud ${i+1}`} />
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('virtudes', i, e.target.value)} className={`${inputClasses} mb-2`} placeholder={`Virtud ${i+1}`} />
                 ))}
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">4. Dos Áreas a mejorar</label>
+                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">4. Dos Áreas a mejorar</label>
                 {formData.areasMejora.map((v, i) => (
-                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('areasMejora', i, e.target.value)} className="form-input-premium w-full mb-2" placeholder={`Área ${i+1}`} />
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('areasMejora', i, e.target.value)} className={`${inputClasses} mb-2`} placeholder={`Área ${i+1}`} />
                 ))}
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">5. Eventos de Éxito</label>
+                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">5. Eventos de Éxito</label>
                 {formData.eventosExito.map((v, i) => (
-                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('eventosExito', i, e.target.value)} className="form-input-premium w-full mb-2" placeholder={`Evento ${i+1}`} />
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('eventosExito', i, e.target.value)} className={`${inputClasses} mb-2`} placeholder={`Evento ${i+1}`} />
                 ))}
               </div>
             </div>
@@ -496,18 +499,18 @@ const FormularioFHSYL = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Congregación que Pastorea</label>
-                <input type="text" name="nombreCongregacionPastorea" value={formData.nombreCongregacionPastorea} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="nombreCongregacionPastorea" value={formData.nombreCongregacionPastorea} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Alianza / Concilio</label>
-                <input type="text" name="alianzaPastores" value={formData.alianzaPastores} onChange={handleChange} className="form-input-premium w-full" />
+                <input type="text" name="alianzaPastores" value={formData.alianzaPastores} onChange={handleChange} className={inputClasses} />
               </div>
             </div>
           </div>
 
           {/* Referencias */}
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
               <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
               Referencias (No familiares)
             </h3>
@@ -515,12 +518,12 @@ const FormularioFHSYL = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {formData.referencias.map((ref, index) => (
-                <div key={index} className="bg-gray-50/50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-4">
+                <div key={index} className="bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-4">
                   <span className="font-bold text-blue-600 dark:text-blue-400 text-xs uppercase tracking-widest">Referencia {index + 1}</span>
                   <div className="space-y-3">
-                    <input placeholder="Nombre" type="text" value={ref.nombre} onChange={(e) => handleObjectArrayChange('referencias', index, 'nombre', e.target.value)} className="form-input-premium w-full text-sm" />
-                    <input placeholder="Relación" type="text" value={ref.relacion} onChange={(e) => handleObjectArrayChange('referencias', index, 'relacion', e.target.value)} className="form-input-premium w-full text-sm" />
-                    <input placeholder="Celular / Email" type="text" value={ref.contacto} onChange={(e) => handleObjectArrayChange('referencias', index, 'contacto', e.target.value)} className="form-input-premium w-full text-sm" />
+                    <input placeholder="Nombre" type="text" value={ref.nombre} onChange={(e) => handleObjectArrayChange('referencias', index, 'nombre', e.target.value)} className={`${inputClasses} text-sm`} />
+                    <input placeholder="Relación" type="text" value={ref.relacion} onChange={(e) => handleObjectArrayChange('referencias', index, 'relacion', e.target.value)} className={`${inputClasses} text-sm`} />
+                    <input placeholder="Celular / Email" type="text" value={ref.contacto} onChange={(e) => handleObjectArrayChange('referencias', index, 'contacto', e.target.value)} className={`${inputClasses} text-sm`} />
                   </div>
                 </div>
               ))}
@@ -528,13 +531,13 @@ const FormularioFHSYL = () => {
 
             <div className="pt-4 space-y-2">
                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Pastor que le Invitó a la Fundación:</label>
-               <input type="text" name="pastorQueInvito" value={formData.pastorQueInvito} onChange={handleChange} className="form-input-premium w-full" />
+               <input type="text" name="pastorQueInvito" value={formData.pastorQueInvito} onChange={handleChange} className={inputClasses} />
             </div>
           </div>
 
           {/* Sección Preguntas Finales */}
           <div className="space-y-8">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-3 flex items-center gap-2 text-gray-900 dark:text-gray-100">
               <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
               Preguntas Adicionales
             </h3>
@@ -542,7 +545,7 @@ const FormularioFHSYL = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">1. ¿Tiene Casa Propia?</label>
-                <select name="tieneCasaPropia" value={formData.tieneCasaPropia} onChange={handleChange} className="form-input-premium w-full text-sm">
+                <select name="tieneCasaPropia" value={formData.tieneCasaPropia} onChange={handleChange} className={`${inputClasses} text-sm`}>
                   <option value="">Seleccione</option>
                   <option value="SI">SI</option>
                   <option value="NO">NO</option>
@@ -550,7 +553,7 @@ const FormularioFHSYL = () => {
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">2. ¿La iglesia tiene propiedad?</label>
-                <select name="iglesiaTienePropiedad" value={formData.iglesiaTienePropiedad} onChange={handleChange} className="form-input-premium w-full text-sm">
+                <select name="iglesiaTienePropiedad" value={formData.iglesiaTienePropiedad} onChange={handleChange} className={`${inputClasses} text-sm`}>
                   <option value="">Seleccione</option>
                   <option value="SI">SI</option>
                   <option value="NO">NO</option>
@@ -562,33 +565,33 @@ const FormularioFHSYL = () => {
               <div className="space-y-3">
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">3. Necesidades (Familia Pastoral)</label>
                 {formData.necesidadesFamiliaPastoral.map((v, i) => (
-                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesFamiliaPastoral', i, e.target.value)} className="form-input-premium w-full text-sm" placeholder={`Necesidad ${i+1}`} />
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesFamiliaPastoral', i, e.target.value)} className={`${inputClasses} text-sm`} placeholder={`Necesidad ${i+1}`} />
                 ))}
               </div>
 
               <div className="space-y-3">
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">4. Necesidades (Congregación)</label>
                  {formData.necesidadesCongregacion.map((v, i) => (
-                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesCongregacion', i, e.target.value)} className="form-input-premium w-full text-sm" placeholder={`Necesidad ${i+1}`} />
+                  <input key={i} type="text" value={v} onChange={(e) => handleArrayChange('necesidadesCongregacion', i, e.target.value)} className={`${inputClasses} text-sm`} placeholder={`Necesidad ${i+1}`} />
                 ))}
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">5. ¿Tiene usted profesionales en su iglesia? (Mencione profesiones):</label>
-              <textarea name="profesionalesIglesia" value={formData.profesionalesIglesia} onChange={handleChange} rows="3" className="form-input-premium w-full resize-none" />
+              <textarea name="profesionalesIglesia" value={formData.profesionalesIglesia} onChange={handleChange} rows="3" className={inputClasses + " resize-none"} />
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 italic">6. Mencione un Proyecto Psico-social que quiera desarrollar:</label>
-              <textarea name="proyectoPsicosocial" value={formData.proyectoPsicosocial} onChange={handleChange} rows="4" className="form-input-premium w-full resize-none" />
+              <textarea name="proyectoPsicosocial" value={formData.proyectoPsicosocial} onChange={handleChange} rows="4" className={inputClasses + " resize-none"} />
             </div>
 
           </div>
         </div>
 
         {/* Footer Submit Button */}
-        <div className="bg-gray-50/80 dark:bg-gray-900/80 p-10 border-t border-gray-100 dark:border-gray-700 flex flex-col items-center backdrop-blur-sm">
+        <div className="bg-gray-50 dark:bg-gray-900 p-10 border-t border-gray-100 dark:border-gray-700 flex flex-col items-center backdrop-blur-sm">
           <button 
             onClick={saveToDatabase}
             disabled={loading}
@@ -601,12 +604,6 @@ const FormularioFHSYL = () => {
           </p>
         </div>
       </div>
-
-      <style jsx>{`
-        .form-input-premium {
-          @apply px-4 py-3 bg-gray-50 dark:bg-gray-950/50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 transition-all dark:text-white outline-none shadow-inner;
-        }
-      `}</style>
     </div>
   );
 };
