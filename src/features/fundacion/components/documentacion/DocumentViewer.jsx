@@ -63,41 +63,41 @@ export default function DocumentViewer() {
             
             {/* Informacion Basica */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-8 text-[15px]">
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Nombre:</span>
                 <span className="border-b border-gray-300 flex-1 min-w-[150px]">{user.nombres?.primero} {user.nombres?.segundo} {user.apellidos?.primero} {user.apellidos?.segundo}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Dirección:</span>
                 <span className="border-b border-gray-300 flex-1">{user.personal?.direccion || '---'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Localidad:</span>
                 <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.ciudad || '---'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Barrio:</span>
                 <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.barrio || '---'}</span>
                 <span className="font-bold ml-2">UPZ:</span>
                 <span className="border-b border-gray-300 min-w-[50px]">{appData.upz || '---'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Celular:</span>
                 <span className="border-b border-gray-300 flex-1">{user.personal?.celular || '---'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Email:</span>
                 <span className="border-b border-gray-300 flex-1">{user.email || '---'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Ocupación:</span>
                 <span className="border-b border-gray-300 flex-1">{appData.ocupacion || '---'}</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col">
                 <span className="font-bold">Estado Civil:</span>
                 <span className="border-b border-gray-300 flex-1">{appData.estadoCivil || '---'}</span>
               </div>
-              <div className="flex gap-2 md:col-span-2">
+              <div className="flex flex-col md:col-span-2">
                 <span className="font-bold">Nombre del Cónyugue:</span>
                 <span className="border-b border-gray-300 flex-1">{appData.nombreConyuge || '---'}</span>
               </div>
