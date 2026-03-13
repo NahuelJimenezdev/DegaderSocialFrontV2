@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.71.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.70.0...v1.71.0) (2026-03-13)
+
+
+### Features
+
+* Mejoras en visualización de documentos FHSYL, diseño profesional minimalista y correcciones de temas en formularios ([0310096](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/031009632034a28ee87bda842ed8ff24148bb47c))
+
+
+### Bug Fixes
+
+* Corrección de navegación al visor de documentos y ajuste de alineación en header mobile ([07317c7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/07317c73ffe6760242b2e62e7a6531cfeeebe80f))
+* Corrección de visibilidad de temas (claro/oscuro) localizada en formularios de Fundación ([7f4de25](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7f4de25658d624ec17dd81ddd708720a43222cab))
+* Estandarización de encabezados premium, botones de regreso y corrección de lógica de guardado en formularios de Fundación ([96a160e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/96a160e158cca073146f645558b4fa8d42dca4ba))
+* Recuperación de formulario de solicitud institucional, corrección de navegación en cards y ajuste de diseño header mobile ([c0546cf](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c0546cf33c629a5684e2628d4b23aae102c6f2ad))
+
 ## [1.70.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.69.3...v1.70.0) (2026-03-12)
 
 
