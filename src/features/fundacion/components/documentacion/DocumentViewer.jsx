@@ -40,7 +40,7 @@ export default function DocumentViewer() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Documento_${type}_${user.nombres.primero}_${user.nombres.primero}.docx`;
+    link.download = `Documento_${type}_${user.nombres.primero}_${user.apellidos.primero}.doc`;
     link.click();
     URL.revokeObjectURL(url);
   };
