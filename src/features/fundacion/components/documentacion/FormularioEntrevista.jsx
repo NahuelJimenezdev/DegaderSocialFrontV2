@@ -260,7 +260,7 @@ export default function FormularioEntrevista() {
 
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
-          <div className="section-header">
+          <div className="section-header section-header--light">
               <div className="section-header__icon-box">
                   <Heart className="section-header__icon" strokeWidth={2.5} size={32} />
               </div>
@@ -280,7 +280,7 @@ export default function FormularioEntrevista() {
               <span>Sección {currentStep + 1} de {SECTIONS.length}</span>
               <span>{Math.round(((currentStep + 1) / SECTIONS.length) * 100)}% Completado</span>
             </div>
-            <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden border border-white/10">
               <div 
                 className="h-full bg-white transition-all duration-500 ease-out shadow-[0_0_10px_rgba(255,255,255,0.5)]" 
                 style={{ width: `${((currentStep + 1) / SECTIONS.length) * 100}%` }}
@@ -357,11 +357,6 @@ export default function FormularioEntrevista() {
         </div>
       </div>
 
-      <style jsx>{`
-        .form-input-premium {
-          @apply px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all dark:text-white outline-none;
-        }
-      `}</style>
     </div>
   );
 }

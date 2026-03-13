@@ -335,6 +335,44 @@
     align-items: center;
 }
 
+/* Header con texto forzado a blanco (para fondos oscuros/gradientes) */
+.section-header--light .section-header__title,
+.section-header--light .section-header__subtitle {
+    color: #ffffff !important;
+}
+
+.section-header--light .section-header__icon-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.section-header--light .section-header__icon {
+    color: #ffffff !important;
+}
+
+/* Input Premium unificado */
+.form-input-premium {
+    padding: 0.625rem 1rem;
+    background-color: #f9fafb; /* Gray-50 */
+    border: 1px solid #e5e7eb; /* Gray-200 */
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    color: #111827; /* Gray-900 */
+    outline: none;
+}
+
+.dark .form-input-premium {
+    background-color: #111827; /* Gray-900 */
+    border-color: #374151; /* Gray-700 */
+    color: #ffffff;
+}
+
+.form-input-premium:focus {
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    border-color: #2563eb;
+}
+
 /* Header con separador inferior */
 .section-header--with-divider {
     padding-bottom: 1rem;
