@@ -259,30 +259,30 @@ export default function FormularioEntrevista() {
       </button>
 
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-        <div className="form-header-premium p-8">
-          <div className="section-header section-header--light">
+        <div className="p-8 border-b border-gray-100 dark:border-gray-700">
+          <div className="section-header">
               <div className="section-header__icon-box">
-                  <Heart className="section-header__icon" strokeWidth={2.5} size={32} />
+                  <Heart className="section-header__icon" strokeWidth={2.5} />
               </div>
               <div className="section-header__content">
                   <h1 className="section-header__title section-header__title--heavy">
-                      Entrevista Fundación
+                      Fundación Humanitaria Internacional Sol y Luna
                   </h1>
                   <p className="section-header__subtitle">
-                      Complementa tu perfil para la Fundación Humanitaria Internacional Sol y Luna.
+                      Transformando vidas a través del amor y el servicio.
                   </p>
               </div>
           </div>
 
           {/* Progress Bar */}
           <div className="mt-6">
-            <div className="flex justify-between text-xs font-bold mb-2 uppercase tracking-wider text-blue-100">
+            <div className="flex justify-between text-xs font-bold mb-2 uppercase tracking-wider text-gray-500 dark:text-gray-400">
               <span>Sección {currentStep + 1} de {SECTIONS.length}</span>
               <span>{Math.round(((currentStep + 1) / SECTIONS.length) * 100)}% Completado</span>
             </div>
-            <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden border border-white/10">
+            <div className="h-2 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-white transition-all duration-500 ease-out shadow-[0_0_10px_rgba(255,255,255,0.5)]" 
+                className="h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(37,99,235,0.3)]" 
                 style={{ width: `${((currentStep + 1) / SECTIONS.length) * 100}%` }}
               ></div>
             </div>

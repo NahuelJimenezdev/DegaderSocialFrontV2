@@ -335,41 +335,6 @@
     align-items: center;
 }
 
-/* Header con texto forzado a blanco (para fondos oscuros/gradientes) */
-.section-header--light .section-header__title,
-.section-header--light .section-header__subtitle {
-    color: #ffffff !important;
-}
-
-.section-header--light .section-header__icon-box {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.section-header--light .section-header__icon {
-    color: #ffffff !important;
-}
-
-/* Header de Formulario con Gradiente Forzado */
-.form-header-premium {
-    background: linear-gradient(135deg, #2563eb 0%, #4338ca 100%) !important;
-    color: #ffffff !important;
-}
-
-/* Forzar que todos los textos dentro del header premium sean blancos */
-.form-header-premium h1, 
-.form-header-premium p, 
-.form-header-premium span, 
-.form-header-premium .section-header__title, 
-.form-header-premium .section-header__subtitle {
-    color: #ffffff !important;
-}
-
-.form-header-premium .text-blue-100 {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-
 /* Input Premium unificado */
 .form-input-premium {
     padding: 0.625rem 1rem;
