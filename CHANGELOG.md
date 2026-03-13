@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.72.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.5...v1.72.0) (2026-03-13)
+
+
+### Features
+
+* Agregada validación de campos obligatorios por paso en FormularioEntrevista ([0398075](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/03980752687efe24f2f84cc6495855a8dd09e385))
+* Protegida navegación lateral en FormularioEntrevista para evitar bypass de validación ([41a6322](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/41a632214d13cecd7d8317e75f7a30e5b8219ef0))
+
 ### [1.71.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.4...v1.71.5) (2026-03-13)
 
 
