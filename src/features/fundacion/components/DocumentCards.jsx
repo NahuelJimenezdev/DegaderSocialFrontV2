@@ -112,8 +112,8 @@ export default function DocumentCards({ user, onNavigate }) {
   ];
 
   const handleAction = (doc) => {
-    // Solicitud siempre va al formulario, sin pasar por el visor
-    if (doc.type === 'Solicitud') {
+    // Solicitud y Hoja de Vida siempre van al formulario, sin pasar por el visor
+    if (doc.type === 'Solicitud' || doc.type === 'HojaDeVida') {
       onNavigate(doc.path);
       return;
     }
