@@ -49,64 +49,268 @@ export default function DocumentViewer() {
       case 'Solicitud':
         const appData = user.fundacion?.documentacionFHSYL || {};
         return (
-          <div id="document-preview" className="space-y-6 text-gray-800">
-            <h1 className="text-2xl font-bold text-center border-b pb-4 text-blue-900">APLICATIVO COORDINACIÓN<br/>Fundación Humanitaria Internacional Sol y Luna</h1>
+          <div id="document-preview" className="text-gray-900 bg-white">
+            <div className="text-center mb-10">
+              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 mb-1">
+                APLICATIVO REPUBLICA ARGENTINA
+              </h1>
+              <h2 className="text-xl font-medium text-gray-700">
+                Fundación Humanitaria Sol y Luna
+              </h2>
+            </div>
             
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-              <p><strong>Nombre Completo:</strong> {user.nombres?.primero} {user.apellidos?.primero}</p>
-              <p><strong>Dirección:</strong> {user.personal?.direccion || '---'}</p>
-              <p><strong>Localidad:</strong> {user.personal?.ubicacion?.ciudad || '---'}</p>
-              <p><strong>Barrio/UPZ:</strong> {user.personal?.ubicacion?.barrio || '---'} / {appData.upz || '---'}</p>
-              <p><strong>Ocupación:</strong> {appData.ocupacion || '---'}</p>
-              <p><strong>Estado Civil:</strong> {appData.estadoCivil || '---'}</p>
-            </section>
+            {/* Informacion Basica */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-8 text-[15px]">
+              <div className="flex gap-2">
+                <span className="font-bold">Nombre:</span>
+                <span className="border-b border-gray-300 flex-1 min-w-[150px]">{user.nombres?.primero} {user.nombres?.segundo} {user.apellidos?.primero} {user.apellidos?.segundo}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Dirección:</span>
+                <span className="border-b border-gray-300 flex-1">{user.personal?.direccion || '---'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Localidad:</span>
+                <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.ciudad || '---'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Barrio:</span>
+                <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.barrio || '---'}</span>
+                <span className="font-bold ml-2">UPZ:</span>
+                <span className="border-b border-gray-300 min-w-[50px]">{appData.upz || '---'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Celular:</span>
+                <span className="border-b border-gray-300 flex-1">{user.personal?.celular || '---'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Email:</span>
+                <span className="border-b border-gray-300 flex-1">{user.email || '---'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Ocupación:</span>
+                <span className="border-b border-gray-300 flex-1">{appData.ocupacion || '---'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Estado Civil:</span>
+                <span className="border-b border-gray-300 flex-1">{appData.estadoCivil || '---'}</span>
+              </div>
+              <div className="flex gap-2 md:col-span-2">
+                <span className="font-bold">Nombre del Cónyugue:</span>
+                <span className="border-b border-gray-300 flex-1">{appData.nombreConyuge || '---'}</span>
+              </div>
+            </div>
 
-            <section className="space-y-4 pt-4 border-t">
-              <h2 className="text-lg font-bold bg-gray-100 p-2">1. Testimonio y Conversión</h2>
-              <p className="whitespace-pre-wrap">{appData.testimonioConversion || 'No especificado'}</p>
-              
-              <h2 className="text-lg font-bold bg-gray-100 p-2">2. Llamado Pastoral</h2>
-              <p className="whitespace-pre-wrap">{appData.llamadoPastoral || 'No especificado'}</p>
+            <div className="mb-8">
+              <p className="font-bold mb-2">Nombre de los hijos, y su respectiva edad:</p>
+              <ul className="list-disc ml-8 space-y-1">
+                {appData.hijos && appData.hijos.length > 0 ? (
+                  appData.hijos.map((hijo, i) => (
+                    <li key={i}>{hijo.nombre} ({hijo.edad} años)</li>
+                  ))
+                ) : (
+                  <li>Sin registros</li>
+                )}
+              </ul>
+            </div>
 
-              <h2 className="text-lg font-bold bg-gray-100 p-2">3. Virtudes y Áreas de Mejora</h2>
-              <p><strong>Virtudes:</strong> {appData.virtudes?.join(', ') || '---'}</p>
-              <p><strong>Áreas de Mejora:</strong> {appData.areasMejora?.join(', ') || '---'}</p>
-            </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-10">
+              <div className="flex gap-2">
+                <span className="font-bold">Desea ser Coordinador de una Localidad:</span>
+                <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.deseaSerCoordinadorLocalidad ? 'SI' : 'NO'}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Localidad:</span>
+                <span className="border-b border-gray-300 flex-1">{appData.localidadCoordinar || '---'}</span>
+              </div>
+            </div>
 
-            <section className="space-y-4 pt-4 border-t">
-               <h2 className="text-lg font-bold bg-gray-100 p-2">4. Información de Congregación</h2>
-               <p><strong>Nombre Congregación:</strong> {appData.nombreCongregacionPastorea || '---'}</p>
-               <p><strong>Alianza de Pastores:</strong> {appData.alianzaPastores || '---'}</p>
-            </section>
+            {/* Secciones de Vida y Ministerio */}
+            <div className="space-y-8">
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">1. Comparta su testimonio personal brevemente, y su conversión a Cristo Jesús:</h3>
+                <p className="text-justify px-2 leading-relaxed whitespace-pre-wrap">{appData.testimonioConversion || '---'}</p>
+              </section>
+
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">2. Compártanos acerca de su llamado Pastoral:</h3>
+                <p className="text-justify px-2 leading-relaxed whitespace-pre-wrap">{appData.llamadoPastoral || '---'}</p>
+              </section>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <section>
+                  <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">3. Tres virtudes personales:</h3>
+                  <ol className="list-decimal ml-8 space-y-1">
+                    {appData.virtudes?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
+                  </ol>
+                </section>
+                <section>
+                  <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">4. Dos áreas por mejorar:</h3>
+                  <ol className="list-decimal ml-8 space-y-1">
+                    {appData.areasMejora?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
+                  </ol>
+                </section>
+              </div>
+
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">5. Dos eventos de éxito en su ministerio:</h3>
+                <ol className="list-decimal ml-8 space-y-1">
+                  {appData.eventosExito?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
+                </ol>
+              </section>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
+                <div className="flex gap-2 md:col-span-2">
+                  <span className="font-bold">Nombre de la Congregación que Pastorea:</span>
+                  <span className="border-b border-gray-300 flex-1">{appData.nombreCongregacionPastorea || '---'}</span>
+                </div>
+                <div className="flex gap-2 md:col-span-2">
+                  <span className="font-bold">Alianza de pastores a la cual pertenece:</span>
+                  <span className="border-b border-gray-300 flex-1">{appData.alianzaPastores || '---'}</span>
+                </div>
+              </div>
+
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">6. Referencias (No familiares):</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
+                  {appData.referencias?.map((ref, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <p className="font-bold text-blue-800 underline">Referencia {idx + 1}</p>
+                      <p><strong>Nombre:</strong> {ref.nombre || '---'}</p>
+                      <p><strong>Relación:</strong> {ref.relacion || '---'}</p>
+                      <p><strong>Contacto:</strong> {ref.contacto || '---'}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <div className="flex gap-2 pt-4">
+                <span className="font-bold">Nombre del pastor que le Invitó:</span>
+                <span className="border-b border-gray-300 flex-1">{appData.pastorQueInvito || '---'}</span>
+              </div>
+
+              <section>
+                <h3 className="bg-blue-900 text-white p-2 font-bold text-[17px] text-center mb-4">PREGUNTAS FINALES</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
+                  <div className="flex gap-2">
+                    <span className="font-bold">1. ¿Tiene Casa Propia?</span>
+                    <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.tieneCasaPropia ? 'SI' : 'NO'}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="font-bold">2. ¿La iglesia tiene propiedad?</span>
+                    <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.iglesiaTienePropiedad ? 'SI' : 'NO'}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                  <div>
+                    <p className="font-bold mb-2">3. Necesidades familia Pastoral:</p>
+                    <ol className="list-decimal ml-8 space-y-1">
+                      {appData.necesidadesFamiliaPastoral?.map((v, m) => <li key={m}>{v}</li>) || <li>---</li>}
+                    </ol>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">4. Necesidades congregación:</p>
+                    <ol className="list-decimal ml-8 space-y-1">
+                      {appData.necesidadesCongregacion?.map((v, n) => <li key={n}>{v}</li>) || <li>---</li>}
+                    </ol>
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-gray-200">
+                  <div>
+                    <p className="font-bold mb-1">5. Profesionales en su iglesia:</p>
+                    <p className="px-2 italic">{appData.profesionalesIglesia || 'Ninguno especificado'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-1">6. Proyecto Psico-social a desarrollar:</p>
+                    <p className="px-2 italic">{appData.proyectoPsicosocial || 'Ninguno especificado'}</p>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         );
 
       case 'Entrevista':
         const entData = user.fundacion?.entrevista?.respuestas || {};
+        const entRes = typeof entData === 'object' && !Array.isArray(entData) ? entData : {};
+        
         return (
-          <div id="document-preview" className="space-y-6 text-gray-800">
-            <h1 className="text-2xl font-bold text-center border-b pb-4 text-blue-900">ENTREVISTA FUNDACIONAL<br/>Fundación Humanitaria Internacional Sol y Luna</h1>
+          <div id="document-preview" className="text-gray-900 bg-white">
+            <div className="text-center mb-10">
+              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 mb-1">
+                ENTREVISTA FUNDACIONAL
+              </h1>
+              <h2 className="text-xl font-medium text-gray-700">
+                Fundación Humanitaria Sol y Luna
+              </h2>
+            </div>
             
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p><strong>Nombre:</strong> {entData.nombre || '---'}</p>
-              <p><strong>Fecha Nacimiento:</strong> {entData.fechaNacimiento || '---'}</p>
-              <p><strong>UPZ/Localidad:</strong> {entData.upzLocalidad || '---'}</p>
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="flex gap-2">
+                <span className="font-bold">Nombre:</span>
+                <span className="border-b border-gray-300 flex-1">{entRes.nombre || `${user.nombres?.primero} ${user.apellidos?.primero}`}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Fecha Nacimiento:</span>
+                <span className="border-b border-gray-300 flex-1">{entRes.fechaNacimiento || '---'}</span>
+              </div>
+              <div className="flex gap-2 md:col-span-2">
+                <span className="font-bold">UPZ/Localidad:</span>
+                <span className="border-b border-gray-300 flex-1">{entRes.upzLocalidad || '---'}</span>
+              </div>
             </section>
 
-            <section className="space-y-4 pt-4 border-t">
-              <h2 className="text-lg font-bold bg-gray-100 p-2">Ministerio</h2>
-              <p><strong>Llamado:</strong> {entData.llamado}</p>
-              <p><strong>Lo que más le gusta:</strong> {entData.loQueMasGusta}</p>
+            <div className="space-y-6">
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">Ministerio</h3>
+                <div className="space-y-4 px-2">
+                  <div>
+                    <p className="font-bold text-sm text-blue-800">¿Cuál es su llamado?</p>
+                    <p className="italic">{entRes.llamado || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800">¿Qué es lo que más le gusta de servir?</p>
+                    <p className="italic">{entRes.loQueMasGusta || '---'}</p>
+                  </div>
+                </div>
+              </section>
               
-              <h2 className="text-lg font-bold bg-gray-100 p-2">Carácter</h2>
-              <p><strong>Amigos dicen:</strong> {entData.caracterAmigos}</p>
-              <p><strong>Compañeros dicen:</strong> {entData.caracterCompañeros}</p>
-              <p><strong>Situación difícil:</strong> {entData.situacionDificil}</p>
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">Carácter</h3>
+                <div className="space-y-4 px-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="font-bold text-sm text-blue-800">¿Qué dicen sus amigos?</p>
+                      <p className="italic">{entRes.caracterAmigos || '---'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-blue-800">¿Qué dicen sus compañeros?</p>
+                      <p className="italic">{entRes.caracterCompañeros || '---'}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800">¿Cómo reacciona ante situaciones difíciles?</p>
+                    <p className="italic">{entRes.situacionDificil || '---'}</p>
+                  </div>
+                </div>
+              </section>
 
-              <h2 className="text-lg font-bold bg-gray-100 p-2">Compromiso</h2>
-              <p><strong>Tiempo pastoreando:</strong> {entData.tiempoPastoreando}</p>
-              <p><strong>Disponibilidad tiempo:</strong> {entData.disponibilidadTiempo}</p>
-            </section>
+              <section>
+                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">Compromiso</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
+                  <div>
+                    <p className="font-bold text-sm text-blue-800">Tiempo pastoreando:</p>
+                    <p className="italic">{entRes.tiempoPastoreando || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800">Disponibilidad de tiempo:</p>
+                    <p className="italic">{entRes.disponibilidadTiempo || '---'}</p>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         );
 

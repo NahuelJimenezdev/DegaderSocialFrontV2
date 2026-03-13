@@ -28,8 +28,8 @@ export default function FundacionPage() {
             <div className="mb-mobile-30">
                 {/* Header Mejorado */}
                 <div className="flex items-start gap-4 mb-10">
-                    <div className="flex-shrink-0 bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg rounded-xl w-12 h-12 flex items-center justify-center mt-1">
-                        <Heart className="text-white" size={24} strokeWidth={2.5} />
+                    <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 shadow-sm rounded-xl w-12 h-12 flex items-center justify-center mt-1">
+                        <Heart className="text-blue-600 dark:text-blue-400" size={24} strokeWidth={2.5} />
                     </div>
                     <div className="flex-1 min-w-0">
                         <h1 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white leading-tight">
