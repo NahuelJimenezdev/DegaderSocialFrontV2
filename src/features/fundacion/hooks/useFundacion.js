@@ -452,6 +452,16 @@ export const useFundacion = (user, updateUser) => {
         });
     };
 
+    const handleCargoChange = (nuevoCargo) => {
+        setFormData({
+            ...formData,
+            cargo: nuevoCargo,
+            area: '',
+            subArea: '',
+            programa: ''
+        });
+    };
+
     const handleAreaChange = (nuevaArea) => {
         setFormData({
             ...formData,
@@ -742,6 +752,7 @@ export const useFundacion = (user, updateUser) => {
 
         // Handlers con limpieza automática
         handleNivelChange,
+        handleCargoChange,
         handleAreaChange,
         handleSubAreaChange,
 

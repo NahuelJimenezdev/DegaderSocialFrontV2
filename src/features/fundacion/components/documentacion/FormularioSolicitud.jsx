@@ -109,6 +109,23 @@ const FormularioSolicitud = () => {
                                 </select>
                             </div>
 
+                            {/* Cargo */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Cargo Institucional</label>
+                                <select 
+                                    className={selectClasses}
+                                    value={formData.cargo}
+                                    onChange={(e) => handleCargoChange(e.target.value)}
+                                    disabled={!formData.nivel}
+                                    required
+                                >
+                                    <option value="">Seleccione Cargo</option>
+                                    {getCargosDisponibles().map(c => (
+                                        <option key={c} value={c}>{c}</option>
+                                    ))}
+                                </select>
+                            </div>
+
                             {/* Área */}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
@@ -116,7 +133,7 @@ const FormularioSolicitud = () => {
                                     className={selectClasses}
                                     value={formData.area}
                                     onChange={(e) => handleAreaChange(e.target.value)}
-                                    disabled={!formData.nivel}
+                                    disabled={!formData.cargo}
                                 >
                                     <option value="">Seleccione Área</option>
                                     {getAreasDisponibles().map(a => (
@@ -133,6 +150,7 @@ const FormularioSolicitud = () => {
                                         className={selectClasses}
                                         value={formData.subArea}
                                         onChange={(e) => handleSubAreaChange(e.target.value)}
+                                        disabled={!formData.area}
                                     >
                                         <option value="">Seleccione Sub-Área</option>
                                         {getSubAreasDisponibles().map(sa => ( sa &&
@@ -150,6 +168,7 @@ const FormularioSolicitud = () => {
                                         className={selectClasses}
                                         value={formData.programa}
                                         onChange={(e) => setFormData({...formData, programa: e.target.value})}
+                                        disabled={!formData.subArea && getSubAreasDisponibles().length > 0}
                                     >
                                         <option value="">Seleccione Programa</option>
                                         {getProgramasDisponibles().map(p => (
@@ -158,23 +177,6 @@ const FormularioSolicitud = () => {
                                     </select>
                                 </div>
                             )}
-
-                            {/* Cargo */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Cargo Institucional</label>
-                                <select 
-                                    className={selectClasses}
-                                    value={formData.cargo}
-                                    onChange={(e) => setFormData({...formData, cargo: e.target.value})}
-                                    disabled={!formData.nivel}
-                                    required
-                                >
-                                    <option value="">Seleccione Cargo</option>
-                                    {getCargosDisponibles().map(c => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
-                            </div>
 
                             {/* Rol Funcional */}
                             <div className="space-y-2">

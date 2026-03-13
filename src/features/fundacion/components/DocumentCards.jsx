@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileText, UserCircle, CheckCircle, Clock } from 'lucide-react';
 
-const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon, type }) => {
+const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon }) => {
   const isCompleted = status === 'Completado';
 
   return (
@@ -43,7 +43,7 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
             }`}
           >
             <FileText size={18} />
-            {isCompleted ? (type === 'Solicitud' ? 'Visualizar Formulario' : 'Visualizar documento') : buttonText}
+            {isCompleted ? 'Visualizar documento' : buttonText}
           </button>
         </div>
       </div>
@@ -59,7 +59,7 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
           }`}
         >
           <FileText size={18} />
-          {isCompleted ? (type === 'Solicitud' ? 'Visualizar Formulario' : 'Visualizar documento') : buttonText}
+          {isCompleted ? 'Visualizar documento' : buttonText}
         </button>
       </div>
     </div>
@@ -112,6 +112,12 @@ export default function DocumentCards({ user, onNavigate }) {
   ];
 
   const handleAction = (doc) => {
+    // Solicitud siempre va al formulario, sin pasar por el visor
+    if (doc.type === 'Solicitud') {
+      onNavigate(doc.path);
+      return;
+    }
+
     if (doc.status === 'Completado') {
       onNavigate('/fundacion/visor', { state: { type: doc.type } });
     } else if (doc.path) {

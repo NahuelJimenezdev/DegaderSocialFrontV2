@@ -48,6 +48,7 @@ export default function DocumentViewer() {
   const renderContent = () => {
     switch (type) {
       case 'Aplicativo':
+      case 'Solicitud':
         const appData = user.fundacion?.documentacionFHSYL || {};
         return (
           <div id="document-preview" className="text-gray-900 bg-white">
@@ -233,92 +234,6 @@ export default function DocumentViewer() {
           </div>
         );
 
-      case 'Solicitud':
-        const solData = user.fundacion || {};
-        return (
-          <div id="document-preview" className="text-gray-900 bg-white">
-            <div className="text-center mb-10">
-              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 mb-1">
-                SOLICITUD DE INGRESO
-              </h1>
-              <h2 className="text-xl font-medium text-gray-700">
-                Fundación Humanitaria Sol y Luna
-              </h2>
-            </div>
-            
-            <div className="space-y-8">
-              <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-4">Información Institucional</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 px-2">
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Nivel:</span>
-                    <span className="border-b border-gray-300 flex-1 uppercase">{solData.nivel?.replace(/_/g, ' ') || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Área:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.area || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Sub-Área:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.subArea || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Programa:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.programa || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Cargo:</span>
-                    <span className="border-b border-gray-300 flex-1 font-bold text-blue-800">{solData.cargo || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Rol Funcional:</span>
-                    <span className="border-b border-gray-300 flex-1 capitalize">{solData.rolFuncional || '---'}</span>
-                  </div>
-                </div>
-              </section>
-
-              <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-4">Ubicación y Territorio</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 px-2">
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">País:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.territorio?.pais || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Región:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.territorio?.region || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Departamento:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.territorio?.departamento || '---'}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="font-bold w-32">Municipio:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.territorio?.municipio || '---'}</span>
-                  </div>
-                  <div className="flex gap-2 md:col-span-2">
-                    <span className="font-bold w-32">Barrio:</span>
-                    <span className="border-b border-gray-300 flex-1">{solData.territorio?.barrio || '---'}</span>
-                  </div>
-                </div>
-              </section>
-
-              <section className="pt-10 border-t border-gray-100 flex justify-between items-end">
-                <div className="text-center w-64">
-                  <div className="border-b border-gray-400 mb-2 h-10"></div>
-                  <p className="text-sm font-bold">Firma del Solicitante</p>
-                  <p className="text-xs text-gray-500">{user.nombres?.primero} {user.apellidos?.primero}</p>
-                </div>
-                <div className="text-center w-64">
-                  <div className="border-b border-gray-400 mb-2 h-10"></div>
-                  <p className="text-sm font-bold">Aval de la Fundación</p>
-                  <p className="text-xs text-gray-500">Dirección Nacional</p>
-                </div>
-              </section>
-            </div>
-          </div>
-        );
-
       case 'Entrevista':
         const entData = user.fundacion?.entrevista?.respuestas || {};
         const entRes = typeof entData === 'object' && !Array.isArray(entData) ? entData : {};
@@ -417,7 +332,7 @@ export default function DocumentViewer() {
         <div className="flex gap-3">
           {(type === 'Aplicativo' || type === 'Solicitud') && (
              <button 
-              onClick={() => navigate(type === 'Solicitud' ? '/fundacion/solicitud' : '/fundacion/documentacion-fhsyl')}
+              onClick={() => navigate('/fundacion/documentacion-fhsyl')}
               className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-xl font-bold hover:bg-amber-200 transition"
             >
               <Edit3 size={18} />
