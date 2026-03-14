@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.73.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.72.0...v1.73.0) (2026-03-14)
+
+
+### Features
+
+* Actualización de la Hoja de Vida y componentes ([44dcc9a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/44dcc9a53a7e3f917e34f81185d49245b9e11104))
+* Actualización final de la plantilla Word de Hoja de Vida ([52bab43](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/52bab439130595f7114feb0ed8d7e2851b73f60b))
+* Actualizada plantilla de Hoja de Vida con etiquetas del usuario ([5d3d4ad](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5d3d4adb46bfdec49973bbc32918af0f5798e34a))
+* Actualizado correo del founder a founderdegader@degadersocial.com en permisos de sistema ([3f52c88](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3f52c88313f84f223c12f06e7e7ee01af4848095))
+* Agregado soporte para foto de perfil en Hoja de Vida con docxtemplater-image-module ([8f65966](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8f659665b589596d6bd6ae0044caa3917833f3c9))
+* Implementada generación de Hoja de Vida en Word con docxtemplater ([f2460ff](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f2460ff6daf2df3dbe16bb8e15430899716286ff))
+* Sincronización final de Hoja de Vida con soporte de imagen y etiquetas actualizadas ([df016e2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/df016e2ee508fdfc57ab97330e3dc312fdb0d3c6))
+
+
+### Bug Fixes
+
+* Areglado problema de detección de founder por espacios en blanco y actualizado placeholder ([ff06b5b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ff06b5b54e0d69bba1d1e77cfd84c3d726de2261))
+* Corregido acceso a URL de banner y añadido logs de error ([12442ff](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/12442ff5f0b1eaf19a777ff78f1458b99f0116b7))
+* Corregido error asincrónico en generación de Word con imagen (resolveData) ([eb8e305](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/eb8e305ae4c0a5d0baf7a98057d3688ba5d2ad9d))
+
 ## [1.72.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.71.5...v1.72.0) (2026-03-13)
 
 
