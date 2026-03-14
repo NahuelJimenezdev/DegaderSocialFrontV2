@@ -15,6 +15,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+import ImageModule from 'docxtemplater-image-module-free';
 import { saveAs } from 'file-saver';
 
 const SECTIONS = [
@@ -30,6 +31,7 @@ export default function FormularioHojaDeVida() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('personal');
+  const [photoPreview, setPhotoPreview] = useState(null);
 
   // Estado del formulario
   const [formData, setFormData] = useState({
@@ -74,10 +76,25 @@ export default function FormularioHojaDeVida() {
         fecha_nacimiento: user.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
         nacionalidad: user.personal?.ubicacion?.pais || '',
         iglesia: user.eclesiastico?.iglesia?.nombre || '',
-        documento_num: user.fundacion?.documentacionFHSYL?.upz || '' // Ejemplo, rellenar según disponibilidad
+        documento_num: user.fundacion?.documentacionFHSYL?.upz || ''
       }));
+      
+      if (user.social?.fotoPerfil) {
+        setPhotoPreview(user.social.fotoPerfil);
+      }
     }
   }, [user]);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,15 +111,40 @@ export default function FormularioHojaDeVida() {
       const content = await response.arrayBuffer();
       const zip = new PizZip(content);
       
+      // Configuración del módulo de imagen
+      const opts = {
+        centered: false,
+        getImage: (tagValue) => {
+          return new Promise((resolve, reject) => {
+            const base64 = tagValue.split(',')[1] || tagValue;
+            const binaryString = window.atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            resolve(bytes.buffer);
+          });
+        },
+        getSize: () => [120, 150], // Tamaño en píxeles [ancho, alto] para el Word
+      };
+      
+      const imageModule = new ImageModule(opts);
+      
       const doc = new Docxtemplater(zip, {
         paragraphLoop: true,
         linebreaks: true,
+        modules: [imageModule]
       });
 
       // 2. Mapear datos (asegurar que no haya nulos)
-      const dataToRender = {};
-      Object.keys(formData).forEach(key => {
-        dataToRender[key] = formData[key] || '---';
+      const dataToRender = {
+        ...formData,
+        foto_perfil: photoPreview || '' // Etiqueta {%foto_perfil}
+      };
+      
+      Object.keys(dataToRender).forEach(key => {
+        if (!dataToRender[key]) dataToRender[key] = '---';
       });
 
       // 3. Renderizar
@@ -132,7 +174,47 @@ export default function FormularioHojaDeVida() {
     switch (activeSection) {
       case 'personal':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Foto de Perfil */}
+            <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 dark:bg-gray-900/50 rounded-3xl border border-gray-100 dark:border-gray-700">
+              <div className="relative group">
+                <div className="w-32 h-40 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden shadow-inner">
+                  {photoPreview ? (
+                    <img src={photoPreview} alt="Perfil" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={40} className="text-gray-300" />
+                  )}
+                </div>
+                <label className="absolute -bottom-2 -right-2 p-2 bg-blue-600 text-white rounded-xl shadow-lg cursor-pointer hover:bg-blue-700 transition-all active:scale-90">
+                  <Download size={16} className="rotate-180" />
+                  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                </label>
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h4 className="font-bold text-gray-900 dark:text-white mb-1">Foto para Hoja de Vida</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+                  Sube una foto profesional. Se redimensionará automáticamente en el documento Word.
+                </p>
+                <div className="mt-3 flex gap-2 justify-center md:justify-start">
+                  <button 
+                    onClick={() => setPhotoPreview(user?.social?.fotoPerfil)}
+                    className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    Usar foto de perfil actual
+                  </button>
+                  {photoPreview && (
+                    <button 
+                      onClick={() => setPhotoPreview(null)}
+                      className="text-xs font-bold text-red-500 hover:underline ml-3"
+                    >
+                      Quitar foto
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <label className={labelClasses}>Nombre Completo</label>
               <input name="nombre_completo" value={formData.nombre_completo} onChange={handleChange} className={inputClasses} placeholder="Nombre completo..." />
@@ -174,6 +256,7 @@ export default function FormularioHojaDeVida() {
               <input type="email" name="email" value={formData.email} onChange={handleChange} className={inputClasses} />
             </div>
           </div>
+        </div>
         );
       case 'profesional':
         return (
