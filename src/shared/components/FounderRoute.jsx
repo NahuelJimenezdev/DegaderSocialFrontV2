@@ -18,7 +18,7 @@ export default function FounderRoute({ children }) {
 
     // Verificar si es Founder por email o por rol del sistema
     const isFounder =
-        user?.email === 'founderdegader@degader.org' ||
+        user?.email === 'founderdegader@degadersocial.com' ||
         user?.seguridad?.rolSistema === 'Founder';
 
     if (!isFounder) {

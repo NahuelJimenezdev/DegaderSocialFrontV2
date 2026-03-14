@@ -225,7 +225,7 @@ export default function FounderUsersPage() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                {user.email !== 'founderdegader@degader.org' && (
+                                                {user.email !== 'founderdegader@degadersocial.com' && (
                                                     <div className="flex items-center justify-end gap-2">
                                                         <select
                                                             value={user.rol}
