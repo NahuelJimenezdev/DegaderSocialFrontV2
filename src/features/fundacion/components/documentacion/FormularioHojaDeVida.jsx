@@ -142,13 +142,16 @@ export default function FormularioHojaDeVida() {
         ...formData,
         foto_perfil: photoPreview || '' // Etiqueta {%foto_perfil}
       };
-      
+
       Object.keys(dataToRender).forEach(key => {
-        if (!dataToRender[key]) dataToRender[key] = '---';
+        if (!dataToRender[key] && key !== 'foto_perfil') {
+          dataToRender[key] = '---';
+        }
       });
 
-      // 3. Renderizar
-      doc.render(dataToRender);
+      // 3. Renderizar asincrónicamente para procesar la imagen
+      await doc.resolveData(dataToRender);
+      doc.render();
 
       // 4. Generar blob y descargar
       const out = doc.getZip().generate({
