@@ -82,14 +82,17 @@ export const ProfileProvider = ({ user, updateUser, children }) => {
         ...user,
         social: {
           ...user.social,
-          fotoBanner: response.data.banner
+          fotoBanner: response.data.banner || response.data?.data?.banner
         }
       };
       updateUser(updatedUser);
       return { success: true };
     } catch (error) {
       console.error('❌ [ProfileProvider] Error al actualizar banner:', error);
-      return { success: false, error: error.message };
+      if (error.response) {
+        console.error('❌ [ProfileProvider] Detalle del error:', error.response.data);
+      }
+      return { success: false, error: error.response?.data?.message || error.message };
     }
   }, [user, updateUser]);
 
