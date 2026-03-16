@@ -344,15 +344,15 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const CARGOS_POR_NIVEL = {
-        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Secretario/a", "Subdirector"],
-        organo_control: ["Auditor", "Secretario/a", "Miembro Comité Ético", "Subdirector"],
-        organismo_internacional: ["Delegado Internacional", "Secretario/a", "Subdirector"],
-        nacional: ["Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
-        regional: ["Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
-        departamental: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        municipal: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        local: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        barrial: ["Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"]
+        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones", "Secretario/a", "Subdirector"],
+        organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético", "Auditor", "Secretario/a", "Miembro Comité Ético", "Subdirector"],
+        organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz", "Delegado Internacional", "Secretario/a", "Subdirector"],
+        nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
+        regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
+        departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        local: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
+        barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"]
     };
 
     const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "secretario/a", "voluntario", "pastor"];
@@ -377,28 +377,96 @@ export const useFundacion = (user, updateUser) => {
     // ==========================================
 
     const getAreasDisponibles = () => {
-        if (!formData.nivel) return [];
+        if (!formData.nivel || !formData.cargo) return [];
+
+        const nivel = formData.nivel;
+        const cargo = formData.cargo;
+
+        if (nivel === "directivo_general") {
+            if (cargo === "Director Ejecutivo") return ["Director General FHIS&L"];
+            if (cargo === "Secretario Ejecutivo") return ["Secretario General FHIS&L"];
+            return [];
+        }
+
+        if (nivel === "organo_control") {
+            if (cargo === "Dirección de Control Interno y Seguimiento") return ["Control Interno", "Seguimiento de Proyectos"];
+            if (cargo === "Dirección Asuntos Ético") return ["FHISYL", "Nacional"];
+        }
+
+        if (nivel === "organismo_internacional") {
+            if (cargo === "Salvación Mundial") return ["Salvación Latinoamérica", "Embajadores"];
+            if (cargo === "Misión Internacional de Paz") return ["FHISYL", "Nacional"];
+        }
+
+        if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
+            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas") {
+                 return Object.keys(ESTRUCTURA_FUNDACION[nivel]?.areas || {});
+            }
+            if (cargo === "Director General" || cargo.includes("Sub-Director") || cargo.includes("secretario Director")) {
+                 return [];
+            }
+        }
+
+        // Fallback for legacy
         return Object.keys(ESTRUCTURA_FUNDACION[formData.nivel]?.areas || {});
     };
 
     const getSubAreasDisponibles = () => {
-        if (!formData.nivel || !formData.area) return [];
-        const areaData = ESTRUCTURA_FUNDACION[formData.nivel]?.areas[formData.area];
+        if (!formData.nivel || !formData.area || !formData.cargo) return [];
+        
+        const nivel = formData.nivel;
+        const cargo = formData.cargo;
+        const area = formData.area;
+
+        if (nivel === "organo_control" && cargo === "Dirección de Control Interno y Seguimiento") {
+             if (area === "Control Interno" || area === "Seguimiento de Proyectos") {
+                 return ["FHISYL", "Nacional"];
+             }
+        }
+
+        if (nivel === "organismo_internacional" && cargo === "Salvación Mundial") {
+             if (area === "Salvación Latinoamérica" || area === "Embajadores") {
+                 return ["FHISYL", "Nacional"];
+             }
+        }
+
+        if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
+            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || !cargo.includes("General")) {
+                const areaData = ESTRUCTURA_FUNDACION[nivel]?.areas?.[area];
+                return Object.keys(areaData?.subAreas || {});
+            }
+        }
+
+        const areaData = ESTRUCTURA_FUNDACION[nivel]?.areas?.[area];
         return Object.keys(areaData?.subAreas || {});
     };
 
     const getProgramasDisponibles = () => {
-        if (!formData.nivel || !formData.area) return [];
+        if (!formData.nivel || !formData.area || !formData.cargo) return [];
+        
+        const nivel = formData.nivel;
+        const cargo = formData.cargo;
+        const area = formData.area;
+        const subArea = formData.subArea;
 
-        const areaData = ESTRUCTURA_FUNDACION[formData.nivel]?.areas[formData.area];
-
-        // Si tiene subárea seleccionada, buscar programas de la subárea
-        if (formData.subArea && areaData?.subAreas[formData.subArea]) {
-            return Object.keys(areaData.subAreas[formData.subArea].programas || {});
+        if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
+             if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || !cargo.includes("General")) {
+                  const areaData = ESTRUCTURA_FUNDACION[nivel]?.areas?.[area];
+                  if (subArea && areaData?.subAreas?.[subArea]) {
+                      return Object.keys(areaData.subAreas[subArea].programas || {});
+                  }
+                  return Object.keys(areaData?.programas || {});
+             }
         }
+        return [];
+    };
 
-        // Si no tiene subárea, buscar programas directos del área
-        return Object.keys(areaData?.programas || {});
+    const requiereUbicacionExacta = () => {
+        // FHISYL implies global, no location
+        if (formData.area?.includes('FHIS&L') || formData.area === 'FHISYL' || formData.subArea === 'FHISYL') {
+            return false;
+        }
+        return true;
     };
 
     const getCargosDisponibles = () => {
@@ -518,9 +586,6 @@ export const useFundacion = (user, updateUser) => {
         e.preventDefault();
         setLoading(true);
         try {
-            // Para Director General (Pastor), área puede estar vacía
-            const esDirectorGen = formData.cargo === "Director General (Pastor)";
-
             // Sanitizar cargo para evitar error 500 en Mongoose Enum
             let cargoSanitizado = formData.cargo;
             if (cargoSanitizado === "Secretario" || cargoSanitizado === "Secretaria") {
@@ -532,7 +597,7 @@ export const useFundacion = (user, updateUser) => {
                 fundacion: {
                     activo: true,
                     nivel: formData.nivel,
-                    area: esDirectorGen && !formData.area ? undefined : formData.area,
+                    area: formData.area || undefined,
                     subArea: formData.subArea || undefined,
                     programa: formData.programa || undefined,
                     cargo: cargoSanitizado,
@@ -751,6 +816,7 @@ export const useFundacion = (user, updateUser) => {
         getPaisesDisponibles,
         getDivisionesTerritoriales,
         getNombreDivisionTerritorial,
+        requiereUbicacionExacta,
 
         // Handlers con limpieza automática
         handleNivelChange,

@@ -26,7 +26,7 @@ const FormularioSolicitud = () => {
         handleAreaChange,
         handleSubAreaChange,
         handleUpdateProfile,
-        esDirectorGeneral
+        requiereUbicacionExacta
     } = useFundacion(user, updateUser);
 
     const [success, setSuccess] = useState(false);
@@ -79,15 +79,19 @@ const FormularioSolicitud = () => {
                             <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
                             Estructura
                         </button>
-                        <ChevronRight size={16} className="text-gray-300" />
-                        <button 
-                            type="button"
-                            onClick={() => setStep(2)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${step === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800' : 'text-gray-500'}`}
-                        >
-                            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">2</span>
-                            Ubicación
-                        </button>
+                        {requiereUbicacionExacta() && (
+                            <>
+                                <ChevronRight size={16} className="text-gray-300" />
+                                <button 
+                                    type="button"
+                                    onClick={() => setStep(2)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${step === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800' : 'text-gray-500'}`}
+                                >
+                                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">2</span>
+                                    Ubicación
+                                </button>
+                            </>
+                        )}
                     </div>
 
                     {step === 1 ? (
@@ -129,7 +133,7 @@ const FormularioSolicitud = () => {
                             </div>
 
                             {/* Área */}
-                            {!esDirectorGeneral() && (
+                            {getAreasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
                                     <select 
@@ -147,7 +151,7 @@ const FormularioSolicitud = () => {
                             )}
 
                             {/* SubÁrea */}
-                            {!esDirectorGeneral() && getSubAreasDisponibles().length > 0 && (
+                            {getSubAreasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Sub-Área</label>
                                     <select 
@@ -165,7 +169,7 @@ const FormularioSolicitud = () => {
                             )}
 
                             {/* Programa */}
-                            {!esDirectorGeneral() && getProgramasDisponibles().length > 0 && (
+                            {getProgramasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Programa / Proyecto</label>
                                     <select 
@@ -183,22 +187,20 @@ const FormularioSolicitud = () => {
                             )}
 
                             {/* Rol Funcional */}
-                            {!esDirectorGeneral() && (
-                                <div className="space-y-2">
-                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
-                                    <select 
-                                        className={selectClasses}
-                                        value={formData.rolFuncional}
-                                        onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
-                                        required
-                                    >
-                                        <option value="">Seleccione Rol</option>
-                                        {getRolesDisponibles().map(r => (
-                                            <option key={r} value={r}>{r.toUpperCase()}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
+                                <select 
+                                    className={selectClasses}
+                                    value={formData.rolFuncional}
+                                    onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
+                                    required
+                                >
+                                    <option value="">Seleccione Rol</option>
+                                    {getRolesDisponibles().map(r => (
+                                        <option key={r} value={r}>{r.toUpperCase()}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
@@ -275,7 +277,7 @@ const FormularioSolicitud = () => {
                         </div>
                         
                         <div className="flex items-center gap-4 w-full md:w-auto">
-                            {step === 2 && (
+                            {step === 2 && requiereUbicacionExacta() && (
                                 <button 
                                     type="button"
                                     onClick={() => setStep(1)}
@@ -285,7 +287,7 @@ const FormularioSolicitud = () => {
                                 </button>
                             )}
                             
-                            {step === 1 ? (
+                            {step === 1 && requiereUbicacionExacta() ? (
                                 <button 
                                     type="button"
                                     onClick={() => setStep(2)}
