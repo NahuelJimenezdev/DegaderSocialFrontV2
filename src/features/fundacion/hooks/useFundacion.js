@@ -391,11 +391,11 @@ export const useFundacion = (user, updateUser) => {
         }
 
         if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
-            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas") {
+            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || cargo === "Director de Areas") {
                  return Object.keys(ESTRUCTURA_FUNDACION[nivel]?.areas || {});
             }
-            if (cargo === "Director General" || cargo.includes("Sub-Director") || cargo.includes("secretario Director")) {
-                 return [];
+            if (cargo === "Director General" || cargo.includes("Sub-Director") || cargo.includes("secretario Director") || cargo === "Director General (Pastor)") {
+                 return ["Dirección General Territorial"];
             }
         }
 
