@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.74.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.74.1...v1.74.2) (2026-03-17)
+
+
+### Bug Fixes
+
+* **fundacion:** eliminar area y rol inventado y corregir formato de ubicacion ([313b1f4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/313b1f45a013989f4318c8d44e6835c9390d1d77))
+* **ui:** Corregir diseño de cuadrícula en portátiles y autoselección del Área en formulario de Fundación ([7e57d3f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7e57d3fffae7dc47455c07ddc4d19f77c40dd206))
+
 ### [1.74.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.74.0...v1.74.1) (2026-03-17)
 
 ## [1.74.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.73.0...v1.74.0) (2026-03-17)
