@@ -28,6 +28,8 @@ const fundacionService = {
     if (filters.nivel) params.append('nivel', filters.nivel);
     if (filters.pais) params.append('pais', filters.pais);
     if (filters.area) params.append('area', filters.area);
+    if (filters.search) params.append('search', filters.search);
+    if (filters.cargo) params.append('cargo', filters.cargo);
     if (filters.page) params.append('page', filters.page);
     if (filters.limit) params.append('limit', filters.limit);
 
@@ -40,10 +42,12 @@ const fundacionService = {
 
     if (filters.nivel) params.append('nivel', filters.nivel);
     if (filters.area) params.append('area', filters.area);
+    if (filters.cargo) params.append('cargo', filters.cargo);
     if (filters.pais) params.append('pais', filters.pais);
     if (filters.region) params.append('region', filters.region);
     if (filters.departamento) params.append('departamento', filters.departamento);
     if (filters.municipio) params.append('municipio', filters.municipio);
+    if (filters.search) params.append('search', filters.search);
     if (filters.page) params.append('page', filters.page);
     if (filters.limit) params.append('limit', filters.limit);
 
