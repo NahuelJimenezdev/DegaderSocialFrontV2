@@ -478,6 +478,42 @@ export const useFundacion = (user, updateUser) => {
         return true;
     };
 
+    const requiereDepartamento = () => {
+        if (!requiereUbicacionExacta()) return false;
+        
+        // Nacional Directors only need Country
+        if (formData.nivel === "nacional") {
+            if (["Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"].includes(formData.cargo)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const requiereMunicipio = () => {
+        if (!requiereDepartamento()) return false;
+        
+        // Regional Directors only need Country + Dept
+        if (formData.nivel === "regional") {
+            if (["Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"].includes(formData.cargo)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const requiereBarrio = () => {
+        if (!requiereMunicipio()) return false;
+        
+        // Departamental Directors only need Country + Dept + Mun
+        if (formData.nivel === "departamental") {
+            if (["Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"].includes(formData.cargo)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     const necesitaRolFuncional = () => {
         if (!formData.nivel) return false;
         
@@ -842,6 +878,9 @@ export const useFundacion = (user, updateUser) => {
         getDivisionesTerritoriales,
         getNombreDivisionTerritorial,
         requiereUbicacionExacta,
+        requiereDepartamento,
+        requiereMunicipio,
+        requiereBarrio,
 
         // Handlers con limpieza automática
         handleNivelChange,

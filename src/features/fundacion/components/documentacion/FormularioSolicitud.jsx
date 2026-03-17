@@ -23,10 +23,12 @@ const FormularioSolicitud = () => {
         getNombreDivisionTerritorial,
         handleNivelChange,
         handleCargoChange,
-        handleAreaChange,
         handleSubAreaChange,
         handleUpdateProfile,
         requiereUbicacionExacta,
+        requiereDepartamento,
+        requiereMunicipio,
+        requiereBarrio,
         necesitaRolFuncional
     } = useFundacion(user, updateUser);
 
@@ -200,36 +202,40 @@ const FormularioSolicitud = () => {
                             </div>
 
                             {/* División Territorial (Departamento/Provincia) */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">{getNombreDivisionTerritorial()}</label>
-                                <select 
-                                    className={selectClasses}
-                                    value={formData.departamento}
-                                    onChange={(e) => setFormData({...formData, departamento: e.target.value})}
-                                    required
-                                >
-                                    <option value="">Seleccione {getNombreDivisionTerritorial()}</option>
-                                    {getDivisionesTerritoriales().map(d => (
-                                        <option key={d} value={d}>{d}</option>
-                                    ))}
-                                </select>
-                            </div>
+                            {requiereDepartamento() && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">{getNombreDivisionTerritorial()}</label>
+                                    <select 
+                                        className={selectClasses}
+                                        value={formData.departamento}
+                                        onChange={(e) => setFormData({...formData, departamento: e.target.value})}
+                                        required
+                                    >
+                                        <option value="">Seleccione {getNombreDivisionTerritorial()}</option>
+                                        {getDivisionesTerritoriales().map(d => (
+                                            <option key={d} value={d}>{d}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
 
                             {/* Municipio / Ciudad */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Municipio / Ciudad</label>
-                                <input 
-                                    type="text"
-                                    className={inputClasses}
-                                    placeholder="Nombre del municipio"
-                                    value={formData.municipio}
-                                    onChange={(e) => setFormData({...formData, municipio: e.target.value})}
-                                    required
-                                />
-                            </div>
+                            {requiereMunicipio() && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Municipio / Ciudad</label>
+                                    <input 
+                                        type="text"
+                                        className={inputClasses}
+                                        placeholder="Nombre del municipio"
+                                        value={formData.municipio}
+                                        onChange={(e) => setFormData({...formData, municipio: e.target.value})}
+                                        required
+                                    />
+                                </div>
+                            )}
 
                             {/* Barrio / Localidad */}
-                            {requiereUbicacionExacta() && (
+                            {requiereBarrio() && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Barrio / Vereda</label>
                                     <input 
