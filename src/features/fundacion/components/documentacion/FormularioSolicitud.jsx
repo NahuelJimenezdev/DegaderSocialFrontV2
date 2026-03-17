@@ -259,7 +259,7 @@ const FormularioSolicitud = () => {
                         <div className="flex items-center gap-4 w-full md:w-auto">
                             <button 
                                 type="submit"
-                                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-xl hover:shadow-xl transition shadow-lg active:scale-95 flex-1 md:flex-none flex items-center justify-center gap-2"
+                                className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg active:scale-95 flex-1 md:flex-none flex items-center justify-center gap-2"
                                 disabled={loading}
                             >
                                 {loading ? 'Procesando...' : (
