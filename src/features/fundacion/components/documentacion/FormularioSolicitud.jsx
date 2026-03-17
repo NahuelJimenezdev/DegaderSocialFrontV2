@@ -44,22 +44,6 @@ const FormularioSolicitud = () => {
     const selectClasses = "w-full p-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100 disabled:opacity-50";
     const inputClasses = "w-full p-3 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100";
 
-    // Auto-select Área si solo hay una opción disponible
-    React.useEffect(() => {
-        const areas = getAreasDisponibles();
-        if (areas.length === 1 && formData.area !== areas[0]) {
-            setFormData(prev => ({ ...prev, area: areas[0] }));
-        }
-    }, [formData.nivel, formData.cargo]);
-
-    // Auto-select Rol Funcional si solo hay una opción disponible
-    React.useEffect(() => {
-        const roles = getRolesDisponibles();
-        if (necesitaRolFuncional() && roles.length === 1 && formData.rolFuncional !== roles[0]) {
-            setFormData(prev => ({ ...prev, rolFuncional: roles[0] }));
-        }
-    }, [formData.area, formData.cargo]);
-
     return (
         <div className="max-w-4xl mx-auto px-4 pt-16 pb-8 md:py-8">
             {/* Botón Volver */}

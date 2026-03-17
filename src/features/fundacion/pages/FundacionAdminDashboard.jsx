@@ -73,14 +73,17 @@ export default function FundacionAdminDashboard() {
     if (u.fundacion?.nivel === 'nacional') {
       if (u.fundacion?.territorio?.pais) parts.push(u.fundacion.territorio.pais);
     } else if (u.fundacion?.nivel === 'regional') {
+      if (u.fundacion?.territorio?.pais) parts.push(u.fundacion.territorio.pais);
       if (u.fundacion?.territorio?.region) parts.push(u.fundacion.territorio.region);
     } else if (u.fundacion?.nivel === 'departamental') {
-      if (isArgentine && u.fundacion?.territorio?.provincia) {
-          parts.push(u.fundacion.territorio.provincia);
+      if (u.fundacion?.territorio?.pais) parts.push(u.fundacion.territorio.pais);
+      if (isArgentine && (u.fundacion?.territorio?.provincia || u.fundacion?.territorio?.departamento)) {
+          parts.push(u.fundacion.territorio.provincia || u.fundacion.territorio.departamento);
       } else if (!isArgentine && u.fundacion?.territorio?.departamento) {
           parts.push(u.fundacion.territorio.departamento);
       }
     } else if (u.fundacion?.nivel === 'municipal' || u.fundacion?.nivel === 'local' || u.fundacion?.nivel === 'barrial') {
+      if (u.fundacion?.territorio?.pais) parts.push(u.fundacion.territorio.pais);
       if (u.fundacion?.territorio?.municipio) {
         parts.push(u.fundacion.territorio.municipio);
       }
@@ -225,9 +228,11 @@ export default function FundacionAdminDashboard() {
                        <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight mb-2 break-words">
                          {u.nombres?.primero} {u.apellidos?.primero}
                        </h4>
-                       <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
-                         {u.fundacion?.area || 'Sin área'}
-                       </span>
+                       {u.fundacion?.area && (
+                         <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
+                           {u.fundacion.area}
+                         </span>
+                       )}
                      </div>
                   </div>
                   
@@ -265,9 +270,11 @@ export default function FundacionAdminDashboard() {
                     <p className="text-sm text-gray-600 dark:text-gray-400 font-medium truncate mb-1">
                        {formatRoleLocation(u)}
                     </p>
-                    <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
-                       {u.fundacion?.area || 'Sin área'}
-                     </span>
+                    {u.fundacion?.area && (
+                      <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
+                        {u.fundacion.area}
+                      </span>
+                    )}
                   </div>
                   
                   <button 

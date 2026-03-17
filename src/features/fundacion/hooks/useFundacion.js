@@ -395,7 +395,7 @@ export const useFundacion = (user, updateUser) => {
                  return Object.keys(ESTRUCTURA_FUNDACION[nivel]?.areas || {});
             }
             if (cargo === "Director General" || cargo.includes("Sub-Director") || cargo.includes("secretario Director") || cargo === "Director General (Pastor)") {
-                 return ["Dirección General Territorial"];
+                 return [];
             }
         }
 
@@ -582,11 +582,9 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const handleCargoChange = (nuevoCargo) => {
-        const esDirGen = nuevoCargo === "Director General (Pastor)";
         setFormData({
             ...formData,
             cargo: nuevoCargo,
-            rolFuncional: esDirGen ? 'pastor' : formData.rolFuncional,
             area: '',
             subArea: '',
             programa: ''
@@ -727,13 +725,6 @@ export const useFundacion = (user, updateUser) => {
             }
         }
     }, [user]);
-
-    // Auto-seleccionar rol "pastor" cuando se elige Director General
-    useEffect(() => {
-        if (formData.cargo === "Director General (Pastor)" && formData.rolFuncional !== "pastor") {
-            setFormData(prev => ({ ...prev, rolFuncional: "pastor" }));
-        }
-    }, [formData.cargo]);
 
     // 📡 Escuchar actualizaciones en tiempo real de solicitudes
     useEffect(() => {
