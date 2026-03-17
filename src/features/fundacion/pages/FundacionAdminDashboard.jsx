@@ -255,35 +255,38 @@ export default function FundacionAdminDashboard() {
                     <img 
                       src={getUserAvatar(u)} 
                       alt={`${u.nombres?.primero || ''} ${u.apellidos?.primero || ''}`}
-                      className="w-20 h-20 rounded-full object-cover shadow-sm bg-gray-100 dark:bg-gray-700"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-sm bg-gray-100 dark:bg-gray-700"
                       onError={(e) => { e.currentTarget.src = '/avatars/default-avatar.png'; }}
                     />
-                    <div className="absolute -bottom-1 -right-1 p-1.5 bg-green-500 rounded-full text-white border-2 border-white dark:border-gray-800">
-                      <UserCheck size={14} fill="currentColor" />
+                    <div className="absolute -bottom-1 -right-1 p-1 sm:p-1.5 bg-green-500 rounded-full text-white border-2 border-white dark:border-gray-800">
+                      <UserCheck size={12} className="sm:w-[14px] sm:h-[14px]" fill="currentColor" />
                     </div>
                   </div>
                   
-                  <div className="flex-1 min-w-0 pr-4">
-                    <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors mb-1 truncate">
-                      {u.nombres?.primero} {u.apellidos?.primero}
-                    </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-medium truncate mb-1">
-                       {formatRoleLocation(u)}
-                    </p>
-                    {u.fundacion?.area && (
-                      <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
-                        {u.fundacion.area}
-                      </span>
-                    )}
+                  <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 min-w-0">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors mb-0.5 sm:mb-1 truncate">
+                        {u.nombres?.primero} {u.apellidos?.primero}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium truncate mb-1">
+                         {formatRoleLocation(u)}
+                      </p>
+                      {u.fundacion?.area && (
+                        <span className="inline-block text-[10px] sm:text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
+                          {u.fundacion.area}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <button 
+                      onClick={() => navigate(`/perfil/${u._id}`)}
+                      className="w-full sm:w-auto flex-shrink-0 px-4 py-2 sm:py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
+                    >
+                      <span className="hidden xs:inline">Ver Perfil Detallado</span>
+                      <span className="xs:hidden">Ver Perfil</span>
+                      <ChevronRight size={18} />
+                    </button>
                   </div>
-                  
-                  <button 
-                    onClick={() => navigate(`/perfil/${u._id}`)}
-                    className="ml-auto flex-shrink-0 px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2"
-                  >
-                    Ver Perfil Detallado
-                    <ChevronRight size={18} />
-                  </button>
                 </>
               )}
             </div>
