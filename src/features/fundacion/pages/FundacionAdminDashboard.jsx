@@ -8,17 +8,21 @@ import {
   Briefcase, 
   Download, 
   ChevronRight,
-  UserCheck
+  UserCheck,
+  LayoutGrid,
+  List
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import fundacionService from '../../../api/fundacionService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
+import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 
 export default function FundacionAdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
   
+  const [viewMode, setViewMode] = useState('grid');
   const [loading, setLoading] = useState(true);
   const [usuarios, setUsuarios] = useState([]);
   const [filters, setFilters] = useState({
@@ -55,6 +59,36 @@ export default function FundacionAdminDashboard() {
     setFilters(prev => ({ ...prev, [name]: value, page: 1 }));
   };
 
+  const formatRoleLocation = (u) => {
+    const parts = [];
+    if (u.fundacion?.cargo) parts.push(u.fundacion.cargo);
+    if (u.fundacion?.nivel) {
+      const nivelStr = u.fundacion.nivel.charAt(0).toUpperCase() + u.fundacion.nivel.slice(1);
+      parts.push(nivelStr);
+    }
+    
+    // Determine the specific location 
+    const isArgentine = u.fundacion?.territorio?.pais === 'Argentina';
+    
+    if (u.fundacion?.nivel === 'nacional') {
+      if (u.fundacion?.territorio?.pais) parts.push(u.fundacion.territorio.pais);
+    } else if (u.fundacion?.nivel === 'regional') {
+      if (u.fundacion?.territorio?.region) parts.push(u.fundacion.territorio.region);
+    } else if (u.fundacion?.nivel === 'departamental') {
+      if (isArgentine && u.fundacion?.territorio?.provincia) {
+          parts.push(u.fundacion.territorio.provincia);
+      } else if (!isArgentine && u.fundacion?.territorio?.departamento) {
+          parts.push(u.fundacion.territorio.departamento);
+      }
+    } else if (u.fundacion?.nivel === 'municipal' || u.fundacion?.nivel === 'local' || u.fundacion?.nivel === 'barrial') {
+      if (u.fundacion?.territorio?.municipio) {
+        parts.push(u.fundacion.territorio.municipio);
+      }
+    }
+    
+    return parts.join(' - ');
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
@@ -79,10 +113,30 @@ export default function FundacionAdminDashboard() {
 
       {/* Filtros */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-8">
-        <div className="flex items-center gap-2 mb-4 text-gray-800 dark:text-gray-200 font-bold">
-          <Filter size={20} />
-          Filtros de Búsqueda
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2 text-gray-800 dark:text-gray-200 font-bold">
+            <Filter size={20} />
+            Filtros de Búsqueda
+          </div>
+          
+          <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-900 p-1 rounded-xl">
+            <button 
+              onClick={() => setViewMode('grid')}
+              className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+              title="Vista de Cuadrícula"
+            >
+              <LayoutGrid size={18} />
+            </button>
+            <button 
+              onClick={() => setViewMode('list')}
+              className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+              title="Vista de Lista"
+            >
+              <List size={18} />
+            </button>
+          </div>
         </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <select 
             name="pais" 
@@ -102,10 +156,12 @@ export default function FundacionAdminDashboard() {
             className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
           >
             <option value="">Nivel (Todos)</option>
+            <option value="nacional">Nacional</option>
             <option value="regional">Regional</option>
             <option value="departamental">Departamental</option>
             <option value="municipal">Municipal</option>
             <option value="local">Local</option>
+            <option value="barrial">Barrial</option>
           </select>
 
           <input 
@@ -136,51 +192,93 @@ export default function FundacionAdminDashboard() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
       ) : usuarios.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={
+          viewMode === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6" 
+            : "flex flex-col gap-4"
+        }>
           {usuarios.map((u) => (
             <div 
               key={u._id}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all group"
+              className={`bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-all group ${
+                viewMode === 'grid' 
+                  ? "p-6 flex flex-col h-full" 
+                  : "p-4 flex flex-row items-center gap-4"
+              }`}
             >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="relative">
-                  <img 
-                    src={u.social?.fotoPerfil || 'https://via.placeholder.com/150'} 
-                    alt={u.nombres?.primero}
-                    className="w-16 h-16 rounded-2xl object-cover shadow-inner"
-                  />
-                  <div className="absolute -bottom-1 -right-1 p-1 bg-green-500 rounded-lg text-white border-2 border-white dark:border-gray-800">
-                    <UserCheck size={12} fill="currentColor" />
+              {viewMode === 'grid' ? (
+                // --- GRID VIEW ---
+                <>
+                  <div className="flex items-start gap-4 mb-4">
+                     <div className="relative flex-shrink-0">
+                       <img 
+                         src={getUserAvatar(u)} 
+                         alt={`${u.nombres?.primero || ''} ${u.apellidos?.primero || ''}`}
+                         className="w-16 h-16 rounded-full object-cover shadow-sm bg-gray-100 dark:bg-gray-700"
+                         onError={(e) => { e.currentTarget.src = '/avatars/default-avatar.png'; }}
+                       />
+                       <div className="absolute -bottom-1 -right-1 p-1 bg-green-500 rounded-full text-white border-2 border-white dark:border-gray-800">
+                         <UserCheck size={12} fill="currentColor" />
+                       </div>
+                     </div>
+                     <div className="flex-1 min-w-0">
+                       <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight mb-2 break-words">
+                         {u.nombres?.primero} {u.apellidos?.primero}
+                       </h4>
+                       <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
+                         {u.fundacion?.area || 'Sin área'}
+                       </span>
+                     </div>
                   </div>
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                    {u.nombres?.primero} {u.apellidos?.primero}
-                  </h4>
-                  <span className="text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
-                    {u.fundacion?.cargo}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                  <Briefcase size={16} className="text-gray-400" />
-                  <span className="font-medium">{u.fundacion?.area}</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                  <MapPin size={16} className="text-gray-400" />
-                  <span>{u.fundacion?.territorio?.pais}, {u.fundacion?.territorio?.region || u.fundacion?.territorio?.departamento || u.fundacion?.territorio?.municipio}</span>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => navigate(`/perfil/${u._id}`)}
-                className="w-full py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
-              >
-                Ver Perfil Detallado
-                <ChevronRight size={18} />
-              </button>
+                  
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-6 flex-1">
+                    <p className="font-medium line-clamp-2">{formatRoleLocation(u)}</p>
+                  </div>
+                  
+                  <button 
+                    onClick={() => navigate(`/perfil/${u._id}`)}
+                    className="w-full mt-auto py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
+                  >
+                    Ver Perfil Detallado
+                    <ChevronRight size={18} />
+                  </button>
+                </>
+              ) : (
+                // --- LIST VIEW ---
+                <>
+                  <div className="relative flex-shrink-0">
+                    <img 
+                      src={getUserAvatar(u)} 
+                      alt={`${u.nombres?.primero || ''} ${u.apellidos?.primero || ''}`}
+                      className="w-20 h-20 rounded-full object-cover shadow-sm bg-gray-100 dark:bg-gray-700"
+                      onError={(e) => { e.currentTarget.src = '/avatars/default-avatar.png'; }}
+                    />
+                    <div className="absolute -bottom-1 -right-1 p-1.5 bg-green-500 rounded-full text-white border-2 border-white dark:border-gray-800">
+                      <UserCheck size={14} fill="currentColor" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0 pr-4">
+                    <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors mb-1 truncate">
+                      {u.nombres?.primero} {u.apellidos?.primero}
+                    </h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 font-medium truncate mb-1">
+                       {formatRoleLocation(u)}
+                    </p>
+                    <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
+                       {u.fundacion?.area || 'Sin área'}
+                     </span>
+                  </div>
+                  
+                  <button 
+                    onClick={() => navigate(`/perfil/${u._id}`)}
+                    className="ml-auto flex-shrink-0 px-4 py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2"
+                  >
+                    Ver Perfil Detallado
+                    <ChevronRight size={18} />
+                  </button>
+                </>
+              )}
             </div>
           ))}
         </div>
