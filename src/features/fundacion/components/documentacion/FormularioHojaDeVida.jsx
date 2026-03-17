@@ -45,6 +45,7 @@ export default function FormularioHojaDeVida() {
     direccion: '',
     telefono: '',
     email: '',
+    region: '',
     
     // Profesional
     perfil_profesional: '',
@@ -75,6 +76,7 @@ export default function FormularioHojaDeVida() {
         direccion: user.personal?.direccion || '',
         fecha_nacimiento: user.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
         nacionalidad: user.personal?.ubicacion?.pais || '',
+        region: user.fundacion?.territorio?.region || '',
         iglesia: user.eclesiastico?.iglesia?.nombre || '',
         documento_num: user.fundacion?.documentacionFHSYL?.upz || ''
       }));
@@ -225,6 +227,10 @@ export default function FormularioHojaDeVida() {
             <div>
               <label className={labelClasses}>Nacionalidad</label>
               <input name="nacionalidad" value={formData.nacionalidad} onChange={handleChange} className={inputClasses} />
+            </div>
+            <div>
+              <label className={labelClasses}>Región / Provincia / Estado</label>
+              <input name="region" value={formData.region} onChange={handleChange} className={inputClasses} placeholder="Nombre de la región o provincia..." />
             </div>
             <div>
               <label className={labelClasses}>Estado Civil</label>
