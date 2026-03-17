@@ -51,12 +51,12 @@ export default function DocumentViewer() {
       case 'Solicitud':
         const appData = user.fundacion?.documentacionFHSYL || {};
         return (
-          <div id="document-preview" className="text-gray-900 bg-white">
+          <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
             <div className="text-center mb-10">
-              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 mb-1">
+              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 dark:text-blue-400 mb-1">
                 APLICATIVO REPUBLICA ARGENTINA
               </h1>
-              <h2 className="text-xl font-medium text-gray-700">
+              <h2 className="text-xl font-medium text-gray-700 dark:text-gray-300">
                 Fundación Humanitaria Sol y Luna
               </h2>
             </div>
@@ -65,43 +65,43 @@ export default function DocumentViewer() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-8 text-[15px]">
               <div className="flex flex-col">
                 <span className="font-bold">Nombre:</span>
-                <span className="border-b border-gray-300 flex-1 min-w-[150px]">{user.nombres?.primero} {user.nombres?.segundo} {user.apellidos?.primero} {user.apellidos?.segundo}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1 min-w-[150px]">{user.nombres?.primero} {user.nombres?.segundo} {user.apellidos?.primero} {user.apellidos?.segundo}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Dirección:</span>
-                <span className="border-b border-gray-300 flex-1">{user.personal?.direccion || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.direccion || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Localidad:</span>
-                <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.ciudad || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.ubicacion?.ciudad || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Barrio:</span>
-                <span className="border-b border-gray-300 flex-1">{user.personal?.ubicacion?.barrio || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.ubicacion?.barrio || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold ml-2">UPZ:</span>
-                <span className="border-b border-gray-300 min-w-[50px]">{appData.upz || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 min-w-[50px]">{appData.upz || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Celular:</span>
-                <span className="border-b border-gray-300 flex-1">{user.personal?.celular || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.celular || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Email:</span>
-                <span className="border-b border-gray-300 flex-1">{user.email || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.email || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Ocupación:</span>
-                <span className="border-b border-gray-300 flex-1">{appData.ocupacion || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.ocupacion || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Estado Civil:</span>
-                <span className="border-b border-gray-300 flex-1">{appData.estadoCivil || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.estadoCivil || '---'}</span>
               </div>
               <div className="flex flex-col md:col-span-2">
                 <span className="font-bold">Nombre del Cónyugue:</span>
-                <span className="border-b border-gray-300 flex-1">{appData.nombreConyuge || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.nombreConyuge || '---'}</span>
               </div>
             </div>
 
@@ -118,46 +118,42 @@ export default function DocumentViewer() {
               </ul>
             </div>
 
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-10">
-            </div> */}
-              <div className="flex flex-col">
-                <span className="font-bold">Desea ser Coordinador de una Localidad:</span>
-                <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.deseaSerCoordinadorLocalidad ? 'SI' : 'NO'}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold">Localidad:</span>
-                <span className="border-b border-gray-300 flex-1">{appData.localidadCoordinar || '---'}</span>
-              </div>
+            <div className="flex flex-col mb-2">
+              <span className="font-bold">Desea ser Coordinador de una Localidad:</span>
+              <span className="border-b border-gray-300 dark:border-gray-600 min-w-[60px] text-center">{appData.deseaSerCoordinadorLocalidad ? 'SI' : 'NO'}</span>
+            </div>
+            <div className="flex flex-col mb-8">
+              <span className="font-bold">Localidad:</span>
+              <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.localidadCoordinar || '---'}</span>
+            </div>
 
             {/* Secciones de Vida y Ministerio */}
             <div className="space-y-8">
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">1. Comparta su testimonio personal brevemente, y su conversión a Cristo Jesús:</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">1. Comparta su testimonio personal brevemente, y su conversión a Cristo Jesús:</h3>
                 <p className="text-justify px-2 leading-relaxed whitespace-pre-wrap">{appData.testimonioConversion || '---'}</p>
               </section>
 
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">2. Compártanos acerca de su llamado Pastoral:</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">2. Compártanos acerca de su llamado Pastoral:</h3>
                 <p className="text-justify px-2 leading-relaxed whitespace-pre-wrap">{appData.llamadoPastoral || '---'}</p>
               </section>
 
-              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              </div> */}
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">3. Tres virtudes personales:</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">3. Tres virtudes personales:</h3>
                 <ol className="text-justify list-decimal ml-8 space-y-1">
                   {appData.virtudes?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
                 </ol>
               </section>
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">4. Dos áreas por mejorar:</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">4. Dos áreas por mejorar:</h3>
                 <ol className="text-justify list-decimal ml-8 space-y-1">
                   {appData.areasMejora?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
                 </ol>
               </section>
 
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">5. Dos eventos de éxito en su ministerio:</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">5. Dos eventos de éxito en su ministerio:</h3>
                 <ol className="text-justify list-decimal ml-8 space-y-1">
                   {appData.eventosExito?.map((v, i) => <li key={i}>{v}</li>) || <li>---</li>}
                 </ol>
@@ -166,20 +162,20 @@ export default function DocumentViewer() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
                 <div className="flex flex-col md:col-span-2">
                   <span className="font-bold">Nombre de la Congregación que Pastorea:</span>
-                  <span className="border-b border-gray-300 flex-1">{appData.nombreCongregacionPastorea || '---'}</span>
+                  <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.nombreCongregacionPastorea || '---'}</span>
                 </div>
                 <div className="flex flex-col md:col-span-2">
                   <span className="font-bold">Alianza de pastores a la cual pertenece:</span>
-                  <span className="border-b border-gray-300 flex-1">{appData.alianzaPastores || '---'}</span>
+                  <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.alianzaPastores || '---'}</span>
                 </div>
               </div>
 
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">6. Referencias (No familiares):</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">6. Referencias (No familiares):</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
                   {appData.referencias?.map((ref, idx) => (
                     <div key={idx} className="space-y-1">
-                      <p className="font-bold text-blue-800 underline">Referencia {idx + 1}</p>
+                      <p className="font-bold text-blue-800 dark:text-blue-400 underline">Referencia {idx + 1}</p>
                       <p><strong>Nombre:</strong> {ref.nombre || '---'}</p>
                       <p><strong>Relación:</strong> {ref.relacion || '---'}</p>
                       <p><strong>Contacto:</strong> {ref.contacto || '---'}</p>
@@ -190,23 +186,21 @@ export default function DocumentViewer() {
 
               <div className="flex gap-2 pt-4">
                 <span className="font-bold">Nombre del pastor que le Invitó:</span>
-                <span className="border-b border-gray-300 flex-1">{appData.pastorQueInvito || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.pastorQueInvito || '---'}</span>
               </div>
 
               <section>
-                <h3 className="bg-blue-900 text-white p-2 font-bold text-[17px] text-center mb-4">PREGUNTAS FINALES</h3>
+                <h3 className="bg-blue-900 dark:bg-blue-800 text-white p-2 font-bold text-[17px] text-center mb-4 uppercase tracking-wider">Preguntas Finales</h3>
                   <div className="flex flex-col">
                     <span className="font-bold">1. ¿Tiene Casa Propia?</span>
-                    <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.tieneCasaPropia ? 'SI' : 'NO'}</span>
+                    <span className="border-b border-gray-300 dark:border-gray-600 min-w-[60px] text-center">{appData.tieneCasaPropia ? 'SI' : 'NO'}</span>
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold">2. ¿La iglesia tiene propiedad?</span>
-                    <span className="border-b border-gray-300 min-w-[60px] text-center">{appData.iglesiaTienePropiedad ? 'SI' : 'NO'}</span>
+                    <span className="border-b border-gray-300 dark:border-gray-600 min-w-[60px] text-center">{appData.iglesiaTienePropiedad ? 'SI' : 'NO'}</span>
                   </div>
-                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-6">
-                </div> */}
 
-                <div className="space-y-4 pt-4 border-t border-gray-200">
+                <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div>
                     <p className="font-bold mb-2">3. Necesidades familia Pastoral:</p>
                     <ol className="text-justify list-decimal ml-8 space-y-1">
@@ -221,7 +215,7 @@ export default function DocumentViewer() {
                   </div>
                 </div>
 
-                <div className="space-y-4 pt-4 border-t border-gray-200">
+                <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div>
                     <p className="font-bold mb-1">5. Profesionales en su iglesia:</p>
                     <p className="text-justify px-2 italic">{appData.profesionalesIglesia || 'Ninguno especificado'}</p>
@@ -241,12 +235,12 @@ export default function DocumentViewer() {
         const entRes = typeof entData === 'object' && !Array.isArray(entData) ? entData : {};
         
         return (
-          <div id="document-preview" className="text-gray-900 bg-white">
+          <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
             <div className="text-center mb-10">
-              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 mb-1">
+              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 dark:text-blue-400 mb-1">
                 ENTREVISTA FUNDACIONAL
               </h1>
-              <h2 className="text-xl font-medium text-gray-700">
+              <h2 className="text-xl font-medium text-gray-700 dark:text-gray-300">
                 Fundación Humanitaria Sol y Luna
               </h2>
             </div>
@@ -254,62 +248,62 @@ export default function DocumentViewer() {
             <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div className="flex gap-2">
                 <span className="font-bold">Nombre:</span>
-                <span className="border-b border-gray-300 flex-1">{entRes.nombre || `${user.nombres?.primero} ${user.apellidos?.primero}`}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{entRes.nombre || `${user.nombres?.primero} ${user.apellidos?.primero}`}</span>
               </div>
               <div className="flex gap-2">
                 <span className="font-bold">Fecha Nacimiento:</span>
-                <span className="border-b border-gray-300 flex-1">{entRes.fechaNacimiento || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{entRes.fechaNacimiento || '---'}</span>
               </div>
               <div className="flex gap-2 md:col-span-2">
                 <span className="font-bold">UPZ/Localidad:</span>
-                <span className="border-b border-gray-300 flex-1">{entRes.upzLocalidad || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{entRes.upzLocalidad || '---'}</span>
               </div>
             </section>
 
             <div className="space-y-6">
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">Ministerio</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">Ministerio</h3>
                 <div className="space-y-4 px-2">
                   <div>
-                    <p className="font-bold text-sm text-blue-800">¿Cuál es su llamado?</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cuál es su llamado?</p>
                     <p className="italic">{entRes.llamado || '---'}</p>
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-blue-800">¿Qué es lo que más le gusta de servir?</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué es lo que más le gusta de servir?</p>
                     <p className="italic">{entRes.loQueMasGusta || '---'}</p>
                   </div>
                 </div>
               </section>
               
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">Carácter</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">Carácter</h3>
                 <div className="space-y-4 px-2">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="font-bold text-sm text-blue-800">¿Qué dicen sus amigos?</p>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué dicen sus amigos?</p>
                       <p className="italic">{entRes.caracterAmigos || '---'}</p>
                     </div>
                     <div>
-                      <p className="font-bold text-sm text-blue-800">¿Qué dicen sus compañeros?</p>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué dicen sus compañeros?</p>
                       <p className="italic">{entRes.caracterCompañeros || '---'}</p>
                     </div>
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-blue-800">¿Cómo reacciona ante situaciones difíciles?</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cómo reacciona ante situaciones difíciles?</p>
                     <p className="italic">{entRes.situacionDificil || '---'}</p>
                   </div>
                 </div>
               </section>
 
               <section>
-                <h3 className="bg-gray-100 p-2 font-bold text-[16px] border-l-4 border-blue-900 mb-3">Compromiso</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">Compromiso</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
                   <div>
-                    <p className="font-bold text-sm text-blue-800">Tiempo pastoreando:</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Tiempo pastoreando:</p>
                     <p className="italic">{entRes.tiempoPastoreando || '---'}</p>
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-blue-800">Disponibilidad de tiempo:</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Disponibilidad de tiempo:</p>
                     <p className="italic">{entRes.disponibilidadTiempo || '---'}</p>
                   </div>
                 </div>
@@ -360,10 +354,10 @@ export default function DocumentViewer() {
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible text-gray-900">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-800 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible text-gray-900">
         {/* Marca de agua o estilo de hoja */}
-        <div className="p-2 md:p-16 bg-gray-50/30">
-          <div className="bg-white shadow-[0_0_50px_rgba(0,0,0,0.05)] w-full max-w-4xl mx-auto min-h-[842px] p-5 md:p-20 border border-gray-100">
+        <div className="p-2 md:p-16 bg-gray-50/30 dark:bg-gray-800/20">
+          <div className="bg-white dark:bg-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.05)] w-full max-w-4xl mx-auto min-h-[842px] p-5 md:p-20 border border-gray-100 dark:border-gray-700">
              {renderContent()}
           </div>
         </div>
