@@ -26,11 +26,11 @@ const FormularioSolicitud = () => {
         handleAreaChange,
         handleSubAreaChange,
         handleUpdateProfile,
-        requiereUbicacionExacta
+        requiereUbicacionExacta,
+        necesitaRolFuncional
     } = useFundacion(user, updateUser);
 
     const [success, setSuccess] = useState(false);
-    const [step, setStep] = useState(1);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -69,33 +69,7 @@ const FormularioSolicitud = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-8">
-                    {/* Stepper Simple */}
-                    <div className="flex items-center gap-4 mb-8">
-                        <button 
-                            type="button"
-                            onClick={() => setStep(1)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${step === 1 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800' : 'text-gray-500'}`}
-                        >
-                            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
-                            Estructura
-                        </button>
-                        {requiereUbicacionExacta() && (
-                            <>
-                                <ChevronRight size={16} className="text-gray-300" />
-                                <button 
-                                    type="button"
-                                    onClick={() => setStep(2)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${step === 2 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800' : 'text-gray-500'}`}
-                                >
-                                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">2</span>
-                                    Ubicación
-                                </button>
-                            </>
-                        )}
-                    </div>
-
-                    {step === 1 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                              {/* Nivel Jerárquico */}
                              <div className="space-y-2">
                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
@@ -187,25 +161,28 @@ const FormularioSolicitud = () => {
                             )}
 
                             {/* Rol Funcional */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
-                                <select 
-                                    className={selectClasses}
-                                    value={formData.rolFuncional}
-                                    onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
-                                    required
-                                >
-                                    <option value="">Seleccione Rol</option>
-                                    {getRolesDisponibles().map(r => (
-                                        <option key={r} value={r}>{r.toUpperCase()}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
-                            {/* País */}
-                            <div className="space-y-2">
+                            {necesitaRolFuncional() && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
+                                    <select 
+                                        className={selectClasses}
+                                        value={formData.rolFuncional}
+                                        onChange={(e) => setFormData({...formData, rolFuncional: e.target.value})}
+                                        required
+                                    >
+                                        <option value="">Seleccione Rol</option>
+                                        {getRolesDisponibles().map(r => (
+                                            <option key={r} value={r}>{r.toUpperCase()}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Ubicación Dinámica */}
+                            {requiereUbicacionExacta() && (
+                                <>
+                                    {/* País */}
+                                    <div className="space-y-2">
                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
                                     <MapPin size={18} className="text-red-500" />
                                     País de Trabajo
@@ -252,19 +229,22 @@ const FormularioSolicitud = () => {
                             </div>
 
                             {/* Barrio / Localidad */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Barrio / Vereda</label>
-                                <input 
-                                    type="text"
-                                    className={inputClasses}
-                                    placeholder="Nombre del barrio"
-                                    value={formData.barrio}
-                                    onChange={(e) => setFormData({...formData, barrio: e.target.value})}
-                                    required
-                                />
-                            </div>
+                            {requiereUbicacionExacta() && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Barrio / Vereda</label>
+                                    <input 
+                                        type="text"
+                                        className={inputClasses}
+                                        placeholder="Nombre del barrio"
+                                        value={formData.barrio}
+                                        onChange={(e) => setFormData({...formData, barrio: e.target.value})}
+                                        required
+                                    />
+                                </div>
+                            )}
+                                </>
+                            )}
                         </div>
-                    )}
 
                     <div className="pt-8 border-t border-gray-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="flex items-center gap-3">
@@ -277,38 +257,18 @@ const FormularioSolicitud = () => {
                         </div>
                         
                         <div className="flex items-center gap-4 w-full md:w-auto">
-                            {step === 2 && requiereUbicacionExacta() && (
-                                <button 
-                                    type="button"
-                                    onClick={() => setStep(1)}
-                                    className="px-8 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:bg-gray-200 transition active:scale-95"
-                                >
-                                    Anterior
-                                </button>
-                            )}
-                            
-                            {step === 1 && requiereUbicacionExacta() ? (
-                                <button 
-                                    type="button"
-                                    onClick={() => setStep(2)}
-                                    className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg active:scale-95 flex-1 md:flex-none"
-                                >
-                                    Siguiente Paso
-                                </button>
-                            ) : (
-                                <button 
-                                    type="submit"
-                                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-xl hover:shadow-xl transition shadow-lg active:scale-95 flex-1 md:flex-none flex items-center justify-center gap-2"
-                                    disabled={loading}
-                                >
-                                    {loading ? 'Procesando...' : (
-                                        <>
-                                            <Save size={20} />
-                                            Enviar Solicitud
-                                        </>
-                                    )}
-                                </button>
-                            )}
+                            <button 
+                                type="submit"
+                                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-xl hover:shadow-xl transition shadow-lg active:scale-95 flex-1 md:flex-none flex items-center justify-center gap-2"
+                                disabled={loading}
+                            >
+                                {loading ? 'Procesando...' : (
+                                    <>
+                                        <Save size={20} />
+                                        Enviar Solicitud
+                                    </>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </form>

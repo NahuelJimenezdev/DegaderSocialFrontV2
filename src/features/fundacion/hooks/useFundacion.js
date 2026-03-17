@@ -344,15 +344,15 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const CARGOS_POR_NIVEL = {
-        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones", "Secretario/a", "Subdirector"],
-        organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético", "Auditor", "Secretario/a", "Miembro Comité Ético", "Subdirector"],
-        organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz", "Delegado Internacional", "Secretario/a", "Subdirector"],
-        nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
-        regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Secretario/a", "Director General (Pastor)"],
-        departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        local: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Director", "Subdirector", "Coordinador", "Secretario/a", "Director General (Pastor)"]
+        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
+        organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
+        organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz"],
+        nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
+        regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
+        departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+        municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+        local: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+        barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
     };
 
     const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "secretario/a", "voluntario", "pastor"];
@@ -464,6 +464,16 @@ export const useFundacion = (user, updateUser) => {
     const requiereUbicacionExacta = () => {
         // FHISYL implies global, no location
         if (formData.area?.includes('FHIS&L') || formData.area === 'FHISYL' || formData.subArea === 'FHISYL') {
+            return false;
+        }
+        return true;
+    };
+
+    const necesitaRolFuncional = () => {
+        if (!formData.nivel) return false;
+        
+        // No role func required for globals
+        if (["directivo_general", "organo_control", "organismo_internacional"].includes(formData.nivel)) {
             return false;
         }
         return true;
@@ -827,6 +837,7 @@ export const useFundacion = (user, updateUser) => {
         // Funciones
         cargarSolicitudesPendientes,
         handleUpdateProfile,
-        handleGestionarSolicitud
+        handleGestionarSolicitud,
+        necesitaRolFuncional
     };
 };
