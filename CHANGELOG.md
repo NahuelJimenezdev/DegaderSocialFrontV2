@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.74.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.73.0...v1.74.0) (2026-03-17)
+
+
+### Features
+
+* **fundacion:** anadir campo region al formulario de hoja de vida ([41d9ac7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/41d9ac7b366fed0d23ab0d0c79645ca98f161372))
+* **fundacion:** ocultar departamento, ciudad y barrio segun jerarquia de cargos directivos territoriales ([bdbdb2d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/bdbdb2d6702e13b3e917c416dc277560010bba7c))
+* **fundacion:** remodelación del organigrama jerárquico y lógica de ubicación dinámica FHISYL vs Nacional ([b9c644f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b9c644f5435e93e13419b57044bf1338ddffa6eb))
+* **fundacion:** remover form de dos pasos, aislar inputs globalmente y ocultar roles ([83b9abd](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/83b9abde1e5d94e10d9e6e36d4d94e63e85046c5))
+
+
+### Bug Fixes
+
+* **fundacion:** corregir color blanco del boton enviar solicitud en modo claro ([c74c37c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c74c37c80fa1b906480ab99539cfd29d8883b619))
+* **fundacion:** ocultar location por defecto, remover despacho, y validar necesitaRolFuncional con area ([21e8c13](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/21e8c13ff78a9d79ae84ec1596adbda5bb688e86))
+
 ## [1.73.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.72.0...v1.73.0) (2026-03-14)
 
 
