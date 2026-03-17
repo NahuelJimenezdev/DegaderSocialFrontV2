@@ -200,8 +200,11 @@ const PostCard = ({
     };
 
     const handleLikeClick = () => {
+        // 🆕 REGLA ESPECIAL: Permitir LIKE a publicaciones PÚBLICAS del FOUNDER sin ser amigos
+        const isFounderPublicPost = post.privacidad === 'publico' && post.usuario?.seguridad?.rolSistema === 'Founder';
+
         // 🆕 Restricción
-        if (!isFriend) {
+        if (!isFriend && !isFounderPublicPost) {
             handleActionRestriction();
             return;
         }
