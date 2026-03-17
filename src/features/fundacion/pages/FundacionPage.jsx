@@ -55,19 +55,19 @@ export default function FundacionPage() {
 
                 {/* Panel Administrative Access (Director Feature) */}
                 {canSeeAdminPanel && (
-                    <div className="mb-10 p-6 bg-gradient-to-r from-indigo-600 to-blue-700 rounded-2xl text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 transition-transform hover:scale-[1.01]">
+                    <div className="mb-10 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-transform hover:scale-[1.01]">
                         <div className="flex items-center gap-4">
-                            <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                            <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl">
                                 <ShieldCheck size={32} />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold">Panel de Control Administrativo</h3>
-                                <p className="text-white/80 font-medium">Gestiona los usuarios y documentación bajo tu jurisdicción.</p>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Panel de Control Administrativo</h3>
+                                <p className="text-gray-600 dark:text-gray-400 font-medium">Gestiona los usuarios y documentación bajo tu jurisdicción.</p>
                             </div>
                         </div>
                         <button 
                             onClick={() => navigate('/fundacion/admin')}
-                            className="px-8 py-3 bg-white text-indigo-700 font-bold rounded-xl hover:bg-gray-100 transition flex items-center gap-2 shadow-md active:scale-95"
+                            className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition flex items-center gap-2 shadow-md active:scale-95"
                         >
                             Acceder al Panel
                             <ArrowRight size={20} />
