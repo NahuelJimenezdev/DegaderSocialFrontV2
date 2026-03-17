@@ -51,8 +51,6 @@ export const useFundacion = (user, updateUser) => {
         // Niveles Operativos (Nacional, Regional, Departamental, Municipal)
         nacional: {
             areas: {
-                "Despacho del Director": { subAreas: {}, programas: {} },
-                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Dirección de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -124,8 +122,6 @@ export const useFundacion = (user, updateUser) => {
         },
         regional: {
             areas: {
-                "Despacho del Director": { subAreas: {}, programas: {} },
-                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Dirección de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -197,8 +193,6 @@ export const useFundacion = (user, updateUser) => {
         },
         departamental: {
             areas: {
-                "Despacho del Director": { subAreas: {}, programas: {} },
-                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Coordinación de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -270,8 +264,6 @@ export const useFundacion = (user, updateUser) => {
         },
         municipal: {
             areas: {
-                "Despacho del Director": { subAreas: {}, programas: {} },
-                "Despacho del Subdirector": { subAreas: {}, programas: {} },
                 "Coordinación de Planeación Estratégica y Proyectos": {
                     subAreas: {},
                     programas: { "Banco de Proyectos": true }
@@ -355,7 +347,7 @@ export const useFundacion = (user, updateUser) => {
         barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
     };
 
-    const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "secretario/a", "voluntario", "pastor"];
+    const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "voluntario", "pastor"];
 
     const [solicitudesPendientes, setSolicitudesPendientes] = useState([]);
     const [formData, setFormData] = useState({
@@ -462,10 +454,27 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const requiereUbicacionExacta = () => {
+        if (!formData.nivel || !formData.cargo) return false;
+
         // FHISYL implies global, no location
         if (formData.area?.includes('FHIS&L') || formData.area === 'FHISYL' || formData.subArea === 'FHISYL') {
             return false;
         }
+
+        // Directivo General requires location only for specific roles
+        if (formData.nivel === "directivo_general") {
+            if (["Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"].includes(formData.cargo)) {
+                return true;
+            }
+            return false; // Exec Director / Sec Ejec do not require location
+        }
+
+        // Control and Internacional typically don't default need it, unless they specify Nacional
+        if (["organo_control", "organismo_internacional"].includes(formData.nivel)) {
+             if (formData.area === 'Nacional' || formData.subArea === 'Nacional') return true;
+             return false;
+        }
+
         return true;
     };
 
@@ -476,6 +485,12 @@ export const useFundacion = (user, updateUser) => {
         if (["directivo_general", "organo_control", "organismo_internacional"].includes(formData.nivel)) {
             return false;
         }
+
+        // Only show if area is selected
+        if (!formData.area) {
+            return false;
+        }
+
         return true;
     };
 
