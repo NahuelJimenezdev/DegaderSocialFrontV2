@@ -29,12 +29,19 @@ export default function FundacionAdminDashboard() {
     page: 1,
     limit: 10,
     nivel: '',
-    area: '',
-    pais: '',
+    cargo: '',
+    pais: user?.fundacion?.nivel === 'nacional' ? user?.fundacion?.territorio?.pais : '',
     region: '',
-    municipio: ''
+    municipio: '',
+    search: ''
   });
   const [pagination, setPagination] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Rango de permisos del usuario logueado
+  const isPrivileged = user?.seguridad?.rolSistema === 'Founder' || user?.fundacion?.nivel === 'directivo_general';
+  const isNational = user?.fundacion?.nivel === 'nacional';
 
   const cargarUsuarios = async () => {
     setLoading(true);
@@ -58,6 +65,14 @@ export default function FundacionAdminDashboard() {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value, page: 1 }));
   };
+
+  // Debounce para búsqueda
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters(prev => ({ ...prev, search: searchTerm, page: 1 }));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const formatRoleLocation = (u) => {
     const parts = [];
@@ -117,10 +132,13 @@ export default function FundacionAdminDashboard() {
       {/* Filtros */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-8">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2 text-gray-800 dark:text-gray-200 font-bold">
-            <Filter size={20} />
-            Filtros de Búsqueda
-          </div>
+          <button 
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2 text-gray-800 dark:text-gray-200 font-bold hover:text-blue-600 transition-colors"
+          >
+            <Filter size={20} className={showFilters ? 'text-blue-600' : ''} />
+            {showFilters ? 'Ocultar Filtros' : 'Filtros de Búsqueda'}
+          </button>
           
           <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-900 p-1 rounded-xl">
             <button 
@@ -140,53 +158,59 @@ export default function FundacionAdminDashboard() {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          <select 
-            name="pais" 
-            value={filters.pais} 
-            onChange={handleFilterChange}
-            className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
-          >
-            <option value="">País (Todos)</option>
-            <option value="Argentina">Argentina</option>
-            <option value="Colombia">Colombia</option>
-          </select>
-          
-          <select 
-            name="nivel" 
-            value={filters.nivel} 
-            onChange={handleFilterChange}
-            className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
-          >
-            <option value="">Nivel (Todos)</option>
-            <option value="nacional">Nacional</option>
-            <option value="regional">Regional</option>
-            <option value="departamental">Departamental</option>
-            <option value="municipal">Municipal</option>
-            <option value="local">Local</option>
-            <option value="barrial">Barrial</option>
-          </select>
-
-          <input 
-            type="text" 
-            name="area" 
-            placeholder="Buscar por Área..."
-            value={filters.area}
-            onChange={handleFilterChange}
-            className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
-          />
-
-          <div className="md:col-span-2 flex gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input 
-                type="text" 
-                placeholder="Nombre del usuario..."
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
-              />
+        {showFilters && (
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 animate-in fade-in slide-in-from-top-2 duration-300">
+            {(isPrivileged) && (
+              <select 
+                name="pais" 
+                value={filters.pais} 
+                onChange={handleFilterChange}
+                className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
+              >
+                <option value="">País (Todos)</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Colombia">Colombia</option>
+              </select>
+            )}
+            
+            <select 
+              name="nivel" 
+              value={filters.nivel} 
+              onChange={handleFilterChange}
+              className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
+            >
+              <option value="">Nivel (Todos)</option>
+              <option value="nacional">Nacional</option>
+              <option value="regional">Regional</option>
+              <option value="departamental">Departamental</option>
+              <option value="municipal">Municipal</option>
+              <option value="local">Local</option>
+              <option value="barrial">Barrial</option>
+            </select>
+  
+            <input 
+              type="text" 
+              name="cargo" 
+              placeholder="Buscar por Cargo..."
+              value={filters.cargo || ''}
+              onChange={handleFilterChange}
+              className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
+            />
+  
+            <div className="md:col-span-2 flex gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input 
+                  type="text" 
+                  placeholder="Nombre o Apellido..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Listado de Usuarios */}
