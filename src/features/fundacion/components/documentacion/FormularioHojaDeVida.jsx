@@ -148,6 +148,8 @@ export default function FormularioHojaDeVida() {
     }
 
     if (user) {
+      console.log('DEBUG - Cargando datos para Hoja de Vida. User:', user);
+      
       // 1. Datos base del perfil maestro (con múltiples fallbacks)
       const baseData = {
         nombre_completo: `${user.nombres?.primero || ''} ${user.nombres?.segundo || ''} ${user.apellidos?.primero || ''} ${user.apellidos?.segundo || ''}`.replace(/\s+/g, ' ').trim(),
@@ -156,28 +158,38 @@ export default function FormularioHojaDeVida() {
         direccion: user.personal?.direccion || '',
         fecha_nacimiento: user.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
         nacionalidad: user.personal?.ubicacion?.pais || '',
-        // Priorizar territorio fundación si es miembro con cargo, sino ubicación personal (estado/ciudad)
+        // Ubicación
         departamento_estado_provincia: user.fundacion?.territorio?.region || user.personal?.ubicacion?.estado || '',
         municipio: user.fundacion?.territorio?.zona || user.fundacion?.territorio?.municipio || user.personal?.ubicacion?.ciudad || '',
-        nombre_iglesia: user.eclesiastico?.iglesia?.nombre || '',
-        documento_num: user.documento || user.personal?.documento || user.personal?.numeroDocumento || ''
+        // Documento y Otros
+        documento_num: user.documento || user.personal?.documento || user.personal?.numeroDocumento || '',
+        lugar_expedicion: user.personal?.lugarExpedicion || user.personal?.expedicion || '',
+        estado_civil: user.personal?.estadoCivil || user.fundacion?.documentacionFHSYL?.estadoCivil || '',
+        nombre_iglesia: user.eclesiastico?.iglesia?.nombre || ''
       };
 
       // 2. Datos persistidos de Hoja de Vida (Prioritarios)
-      // Filtramos nulos por si acaso vienen de la DB
       const hojaDeVidaDatos = user.fundacion?.hojaDeVida?.datos || {};
-      const savedData = Object.fromEntries(
-        Object.entries(hojaDeVidaDatos).filter(([_, v]) => v !== null && v !== undefined)
-      );
+      
+      // Convertir Map a objeto si es necesario y filtrar nulos
+      const savedData = {};
+      Object.entries(hojaDeVidaDatos).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          savedData[key] = value;
+        }
+      });
 
-      // 3. Unificar en un solo setFormData para evitar race conditions
+      console.log('DEBUG - Mapping - baseData:', baseData);
+      console.log('DEBUG - Mapping - savedData:', savedData);
+
+      // 3. Unificar (savedData tiene la prioridad máxima)
       setFormData(prev => ({
         ...prev,
         ...baseData,
         ...savedData
       }));
 
-      // 4. Previews de imágenes (Prioridad a lo subido en el form)
+      // 4. Previews de imágenes
       if (savedData.foto_perfil_form) {
         setPhotoPreview(savedData.foto_perfil_form);
       } else if (user.social?.fotoPerfil) {
