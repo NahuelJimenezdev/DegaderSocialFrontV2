@@ -56,9 +56,9 @@ export default function FormularioHojaDeVida() {
 
     // NIVEL EDUCATIVO - EDUCACIÓN BÁSICA
     'completa/incompleta': 'completa',
-    '1_grado': '', '2_grado': '', '3_grado': '', '_grado_4': '', '5_grado': '', // Primaria
-    '6_grado': '', '7_grado': '', '8_grado': '', '9_grado': '', // Secundaria
-    '10_grado': '', '11_grado': '', // Media
+    grado1: '', grado2: '', grado3: '', grado4: '', grado5: '', // Primaria
+    grado6: '', grado7: '', grado8: '', grado9: '', // Secundaria
+    grado10: '', grado11: '', // Media
     fecha_mes_grado: '',
     fecha_año_grado: '',
 
@@ -392,17 +392,17 @@ export default function FormularioHojaDeVida() {
         // --- TAGS ROBUSTOS (PASTE EN WORD SIN TILDES NI ESPACIOS) ---
         'fraseUser': formData.frase_identificadora || '',
         'descripMain': formData.descripcion_breve_ministerio_profesion || '',
-        'grado1': formData['1_grado'] || '',
-        'grado2': formData['2_grado'] || '',
-        'grado3': formData['3_grado'] || '',
-        'grado4': formData['4_grado'] || '',
-        'grado5': formData['5_grado'] || '',
-        'grado6': formData['6_grado'] || '',
-        'grado7': formData['7_grado'] || '',
-        'grado8': formData['8_grado'] || '',
-        'grado9': formData['9_grado'] || '',
-        'grado10': formData['10_grado'] || '',
-        'grado11': formData['11_grado'] || '',
+        'grado1': formData.grado1 || '',
+        'grado2': formData.grado2 || '',
+        'grado3': formData.grado3 || '',
+        'grado4': formData.grado4 || '',
+        'grado5': formData.grado5 || '',
+        'grado6': formData.grado6 || '',
+        'grado7': formData.grado7 || '',
+        'grado8': formData.grado8 || '',
+        'grado9': formData.grado9 || '',
+        'grado10': formData.grado10 || '',
+        'grado11': formData.grado11 || '',
         
         // Tags de Sectores Empresa (X)
         'sector_publica_1': formData.sector_empresa === 'publica' ? 'X' : '',
@@ -573,7 +573,7 @@ export default function FormularioHojaDeVida() {
                   <label className={labelClasses}>Grados Cursados (Marca los aprobados)</label>
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => {
-                      const key = `${num}_grado`;
+                      const key = `grado${num}`;
                       return (
                         <button
                           key={num}
