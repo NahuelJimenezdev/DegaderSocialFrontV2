@@ -274,7 +274,7 @@
    RESPONSIVE - TABLET
    ============================================ */
 
-@media (min-width: 641px) and (max-width: 1112px) {
+@media (min-width: 641px) and (max-width: 1024px) {
     .section-header__title {
         font-size: 1.75rem;
         /* Intermedio */
