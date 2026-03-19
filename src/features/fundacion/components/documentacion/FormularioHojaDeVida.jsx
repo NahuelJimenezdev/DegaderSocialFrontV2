@@ -148,22 +148,27 @@ export default function FormularioHojaDeVida() {
     }
 
     if (user) {
-      // 1. Datos base del perfil maestro
+      // 1. Datos base del perfil maestro (con múltiples fallbacks)
       const baseData = {
         nombre_completo: `${user.nombres?.primero || ''} ${user.nombres?.segundo || ''} ${user.apellidos?.primero || ''} ${user.apellidos?.segundo || ''}`.replace(/\s+/g, ' ').trim(),
         email: user.email || '',
-        telefono: user.personal?.celular || '',
+        telefono: user.personal?.celular || user.personal?.telefonoFijo || '',
         direccion: user.personal?.direccion || '',
         fecha_nacimiento: user.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
         nacionalidad: user.personal?.ubicacion?.pais || '',
-        departamento_estado_provincia: user.fundacion?.territorio?.region || '',
-        municipio: user.fundacion?.territorio?.zona || '',
+        // Priorizar territorio fundación si es miembro con cargo, sino ubicación personal (estado/ciudad)
+        departamento_estado_provincia: user.fundacion?.territorio?.region || user.personal?.ubicacion?.estado || '',
+        municipio: user.fundacion?.territorio?.zona || user.fundacion?.territorio?.municipio || user.personal?.ubicacion?.ciudad || '',
         nombre_iglesia: user.eclesiastico?.iglesia?.nombre || '',
-        documento_num: user.personal?.documento || user.personal?.numeroDocumento || ''
+        documento_num: user.documento || user.personal?.documento || user.personal?.numeroDocumento || ''
       };
 
       // 2. Datos persistidos de Hoja de Vida (Prioritarios)
-      const savedData = user.fundacion?.hojaDeVida?.datos || {};
+      // Filtramos nulos por si acaso vienen de la DB
+      const hojaDeVidaDatos = user.fundacion?.hojaDeVida?.datos || {};
+      const savedData = Object.fromEntries(
+        Object.entries(hojaDeVidaDatos).filter(([_, v]) => v !== null && v !== undefined)
+      );
 
       // 3. Unificar en un solo setFormData para evitar race conditions
       setFormData(prev => ({
