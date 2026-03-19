@@ -269,11 +269,13 @@ export default function FormularioHojaDeVida() {
       return;
     }
 
+    const EMPTY_IMAGE = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    
     setLoading(true);
     try {
-      // 1. Cargar el template desde la carpeta pública (ahora con el nombre que puso el usuario)
+      // 1. Cargar el template desde la carpeta pública
       const response = await fetch('/templates/FORMATO HOJA DE VIDA FHISYL.docx');
-      if (!response.ok) throw new Error('No se pudo cargar la plantilla de Word. Verifica el nombre del archivo en public/templates/');
+      if (!response.ok) throw new Error('No se pudo cargar la plantilla de Word.');
       
       const content = await response.arrayBuffer();
       const zip = new PizZip(content);
@@ -282,13 +284,18 @@ export default function FormularioHojaDeVida() {
       const opts = {
         centered: false,
         getImage: async (tagValue) => {
-          if (!tagValue || tagValue === '---') return null;
+          // Fallback a imagen transparente 1x1 para evitar errores de length
+          if (!tagValue || tagValue === '' || tagValue === '---') {
+            const binaryString = window.atob(EMPTY_IMAGE);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+          }
 
           try {
-            if (!tagValue) return null;
             const strVal = tagValue.toString();
-
-            // Caso 1: Data URL (Base64)
             if (strVal.startsWith('data:image')) {
               const base64 = strVal.split(',')[1];
               const binaryString = window.atob(base64);
@@ -299,56 +306,51 @@ export default function FormularioHojaDeVida() {
               return bytes.buffer;
             }
 
-            // Caso 2: URL (http o path absoluto) o Raw Base64 sin prefijo
-            // Usar el proxy para evitar problemas de CORS
-            // Nota: import.meta.env.VITE_API_URL ya suele incluir '/api'
             const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
-            
             let finalUrl = strVal;
-            // Si parece ser una URL relativa, convertirla en absoluta
             if (strVal.startsWith('/') && !strVal.startsWith('//')) {
               finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
             }
 
             const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
-            
             const response = await fetch(proxyUrl);
             if (!response.ok) throw new Error('Error al cargar imagen via proxy');
             return await response.arrayBuffer();
           } catch (error) {
-            console.error('Error procesando imagen para Word:', error, 'TagValue:', tagValue);
+            console.error('Error procesando imagen para Word:', error);
+            // Fallback en caso de error
+            const binaryString = window.atob(EMPTY_IMAGE);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
           }
-
-          return null;
         },
         getSize: (img, tagValue, tagName) => {
-          if (tagName === 'foto_perfil') return [110, 140];
-          if (tagName === 'firma_digital') return [180, 60];
+          if (tagName === 'foto_perfil' || tagName === 'fotoUser') return [110, 140];
+          if (tagName === 'firma_digital' || tagName === 'firmaUser') return [180, 60];
           return [100, 100];
         },
       };
       
       const imageModule = new ImageModule(opts);
-      
       const doc = new Docxtemplater(zip, {
-        paragraphLoop: true,
-        linebreaks: true,
-        modules: [imageModule],
-        nullGetter: () => "" // Evita que aparezca la palabra 'undefined' si no se encuentra un tag
+        paragraphLoop: true, linebreaks: true, modules: [imageModule],
+        nullGetter: () => "" 
       });
 
-      // Procesar firma para transparencia si existe
       let finalSignature = firmaPreview || '';
       if (finalSignature.startsWith('data:image')) {
         finalSignature = await processSignatureImage(finalSignature);
       }
 
-      // 2. Mapear datos (asegurar que no haya nulos)
       const dataToRender = {
         ...formData,
-        foto_perfil: photoPreview || '', // Etiqueta {%foto_perfil}
-        firma_digital: finalSignature, // Etiqueta {%firma_digital}
-        // Booleanos a X para el Word
+        foto_perfil: photoPreview || '',
+        fotoUser: photoPreview || '',
+        firma_digital: finalSignature || '',
+        firmaUser: finalSignature || '',
         seleccionar_tecnica: formData.seleccionar_tecnica ? 'X' : '',
         seleccionar_tecnologica: formData.seleccionar_tecnologica ? 'X' : '',
         seleccionar_universitario: formData.seleccionar_universitario ? 'X' : '',
@@ -367,30 +369,12 @@ export default function FormularioHojaDeVida() {
         exp_no3: formData.exp_no3 ? 'X' : '',
         autorizo_si: formData.autorizo_si ? 'X' : '',
         autorizo_no: formData.autorizo_no ? 'X' : '',
-        // Sector empresa (mapeo a x fija en el Word si coincide)
-        empresa_actual_pub: formData.sector_empresa === 'publica' ? 'X' : '',
-        empresa_actual_priv: formData.sector_empresa === 'privada' ? 'X' : '',
-        empresa_dos_pub: formData.sector_empresa2 === 'publica' ? 'X' : '',
-        empresa_dos_priv: formData.sector_empresa2 === 'privada' ? 'X' : '',
-        empresa_tres_pub: formData.sector_empresa3 === 'publica' ? 'X' : '',
-        empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
-        
-        // --- TAGS ROBUSTOS (PASTE EN WORD SIN TILDES NI ESPACIOS) ---
         'fraseUser': formData.frase_identificadora || '',
         'descripMain': formData.descripcion_breve_ministerio_profesion || '',
-        'grado1': formData.grado1 || '',
-        'grado2': formData.grado2 || '',
-        'grado3': formData.grado3 || '',
-        'grado4': formData.grado4 || '',
-        'grado5': formData.grado5 || '',
-        'grado6': formData.grado6 || '',
-        'grado7': formData.grado7 || '',
-        'grado8': formData.grado8 || '',
-        'grado9': formData.grado9 || '',
-        'grado10': formData.grado10 || '',
-        'grado11': formData.grado11 || '',
-        
-        // Tags de Sectores Empresa (X)
+        'grado1': formData.grado1 || '', 'grado2': formData.grado2 || '', 'grado3': formData.grado3 || '',
+        'grado4': formData.grado4 || '', 'grado5': formData.grado5 || '', 'grado6': formData.grado6 || '',
+        'grado7': formData.grado7 || '', 'grado8': formData.grado8 || '', 'grado9': formData.grado9 || '',
+        'grado10': formData.grado10 || '', 'grado11': formData.grado11 || '',
         'sector_publica_1': formData.sector_empresa === 'publica' ? 'X' : '',
         'sector_privada_1': formData.sector_empresa === 'privada' ? 'X' : '',
         'sector_publica_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
@@ -398,18 +382,8 @@ export default function FormularioHojaDeVida() {
         'sector_publica_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
         'sector_privada_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
         'empresa_publica': formData.sector_empresa === 'publica' ? 'X' : '',
-        'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : '',
-
-        // Referencias con espacio corregido en el template
-        'profesion_personal_2': formData.profesion_personal_2 || '',
-        'profesion_personal_3': formData.profesion_personal_3 || '',
-        
-        // Imágenes duplicadas con nombres simples
-        'fotoUser': photoPreview || '',
-        'firmaUser': finalSignature || ''
+        'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : ''
       };
-
-      console.log('DEBUG - Data to Render:', dataToRender);
 
       Object.keys(dataToRender).forEach(key => {
         if (dataToRender[key] === undefined || dataToRender[key] === null) {
