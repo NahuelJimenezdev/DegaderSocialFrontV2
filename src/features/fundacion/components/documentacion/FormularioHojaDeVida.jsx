@@ -283,11 +283,13 @@ export default function FormularioHojaDeVida() {
             }
 
             // Caso 2: URL (http o path absoluto)
-            if (tagValue.toString().startsWith('http') || tagValue.toString().startsWith('/')) {
-              const response = await fetch(tagValue);
-              if (!response.ok) throw new Error('Error al cargar imagen');
-              return await response.arrayBuffer();
-            }
+            // Usar el proxy para evitar problemas de CORS
+            const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com';
+            const proxyUrl = `${baseUrl}/api/upload/proxy?url=${encodeURIComponent(tagValue)}`;
+            
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error('Error al cargar imagen via proxy');
+            return await response.arrayBuffer();
           } catch (error) {
             console.error('Error procesando imagen para Word:', error, 'TagValue:', tagValue);
           }
@@ -357,9 +359,8 @@ export default function FormularioHojaDeVida() {
         }
       });
 
-      // 3. Renderizar asincrónicamente para procesar la imagen
-      await doc.resolveData(dataToRender);
-      doc.render();
+      // 3. Renderizar asincrónicamente
+      await doc.renderAsync(dataToRender);
 
       // 4. Generar blob y descargar
       const out = doc.getZip().generate({
