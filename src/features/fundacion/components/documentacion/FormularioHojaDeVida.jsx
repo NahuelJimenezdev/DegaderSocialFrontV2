@@ -171,16 +171,24 @@ export default function FormularioHojaDeVida() {
       // 2. Datos persistidos de Hoja de Vida (Prioritarios)
       const hojaDeVidaDatos = user.fundacion?.hojaDeVida?.datos || {};
       
-      // Convertir Map a objeto si es necesario y filtrar nulos
+      // Convertir Map a objeto y aplicar mapeo "fuzzy" para corregir typos históricos
       const savedData = {};
       Object.entries(hojaDeVidaDatos).forEach(([key, value]) => {
         if (value !== null && value !== undefined && value !== '') {
           savedData[key] = value;
+          
+          // Soporte para variaciones de nombres de campos (con/sin guion bajo)
+          if (key === 'profesion_personal2') savedData['profesion_personal_2'] = value;
+          if (key === 'profesion_personal3') savedData['profesion_personal_3'] = value;
+          if (key === 'profesion2_personal') savedData['profesion_personal_2'] = value;
+          if (key === 'profesion3_personal') savedData['profesion_personal_3'] = value;
+          if (key === 'doc_num' || key === 'documento') savedData['documento_num'] = value;
+          if (key === 'lugar_exp' || key === 'expedicion') savedData['lugar_expedicion'] = value;
         }
       });
 
       console.log('DEBUG - Mapping - baseData:', baseData);
-      console.log('DEBUG - Mapping - savedData:', savedData);
+      console.log('DEBUG - Mapping - savedData Keys Found:', Object.keys(savedData));
 
       // 3. Unificar (savedData tiene la prioridad máxima)
       setFormData(prev => ({
