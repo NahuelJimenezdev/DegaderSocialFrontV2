@@ -407,7 +407,10 @@ export default function FormularioHojaDeVida() {
         'sector_publica_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
         'sector_privada_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
         'empresa_publica': formData.sector_empresa === 'publica' ? 'X' : '',
-        'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : ''
+        'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : '',
+        // Soporte para tags con espacio en la plantilla Word
+        'profesion_personal _2': formData.profesion_personal_2 || '',
+        'profesion_personal _3': formData.profesion_personal_3 || ''
       };
 
       Object.keys(dataToRender).forEach(key => {
