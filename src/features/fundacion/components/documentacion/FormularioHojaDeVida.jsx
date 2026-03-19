@@ -125,7 +125,11 @@ export default function FormularioHojaDeVida() {
     // REFERENCIAS PERSONALES
     nombre_personales_1: '', profesion_personal_1: '', telefonopers_1: '',
     nombre_personales_2: '', profesion_personal_2: '', telefonopers_2: '',
-    nombre_personales_3: '', profesion_personal_3: '', telefonopers_3: ''
+    nombre_personales_3: '', profesion_personal_3: '', telefonopers_3: '',
+
+    // IMAGENES
+    foto_perfil_form: null,
+    firma_digital: null
   });
 
   const getFullImageUrl = (url) => {
@@ -165,10 +169,20 @@ export default function FormularioHojaDeVida() {
           ...prev,
           ...user.fundacion.hojaDeVida.datos
         }));
+        
+        // Cargar previews de imágenes si están en los datos persistidos
+        if (user.fundacion.hojaDeVida.datos.foto_perfil_form) {
+          setPhotoPreview(user.fundacion.hojaDeVida.datos.foto_perfil_form);
+        }
+        if (user.fundacion.hojaDeVida.datos.firma_digital) {
+          setFirmaPreview(user.fundacion.hojaDeVida.datos.firma_digital);
+        }
       }
       
       if (user.social?.fotoPerfil) {
-        setPhotoPreview(getFullImageUrl(user.social.fotoPerfil));
+        const fullUrl = getFullImageUrl(user.social.fotoPerfil);
+        setPhotoPreview(fullUrl);
+        setFormData(prev => ({ ...prev, foto_perfil_form: fullUrl }));
       }
     }
   }, [user]);
@@ -195,6 +209,7 @@ export default function FormularioHojaDeVida() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result);
+        setFormData(prev => ({ ...prev, foto_perfil_form: reader.result }));
       };
       reader.readAsDataURL(file);
     }
@@ -206,6 +221,7 @@ export default function FormularioHojaDeVida() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFirmaPreview(reader.result);
+        setFormData(prev => ({ ...prev, firma_digital: reader.result }));
       };
       reader.readAsDataURL(file);
     }
@@ -348,9 +364,37 @@ export default function FormularioHojaDeVida() {
         empresa_dos_priv: formData.sector_empresa2 === 'privada' ? 'X' : '',
         empresa_tres_pub: formData.sector_empresa3 === 'publica' ? 'X' : '',
         empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
+        
+        // Versiones con tildes o typos sugeridos por el usuario
+        'frase_indentificadora': formData.frase_identificadora, // Con la 'n' que puso el usuario
+        'frase_identificadora': formData.frase_identificadora, // Sin la 'n'
+        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion, // Con tilde
+        'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion, // Sin tilde
+        'publica/privada': formData.sector_empresa === 'publica' ? 'Pública' : 'Privada',
+        
+        // Tags específicos para las X de sector (coincidir con posibles nombres en Word)
+        'sector_publica_1': formData.sector_empresa === 'publica' ? 'X' : '',
+        'sector_privada_1': formData.sector_empresa === 'privada' ? 'X' : '',
+        'sector_publica_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
+        'sector_privada_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
+        'sector_publica_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
+        'sector_privada_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
+        
+        // Compatibilidad con tags de tipo {publica/privada_1} que puse antes
+        'publica/privada_1': formData.sector_empresa === 'publica' ? 'X' : '',
+        'publica/privada_priv_1': formData.sector_empresa === 'privada' ? 'X' : '',
+        'publica/privada_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
+        'publica/privada_priv_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
+        'publica/privada_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
+        'publica/privada_priv_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
+
         // Corregir espacios en tags detectados en el template para Referencias Personales 2 y 3
         'profesion_personal _2': formData.profesion_personal_2,
-        'profesion_personal _3': formData.profesion_personal_3
+        'profesion_personal _3': formData.profesion_personal_3,
+        
+        // Imágenes duplicadas con y sin % por si acaso el template varía
+        'foto_perfil': photoPreview || '',
+        'firma_digital': finalSignature || ''
       };
 
       Object.keys(dataToRender).forEach(key => {
