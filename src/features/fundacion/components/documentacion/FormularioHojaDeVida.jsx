@@ -160,7 +160,7 @@ export default function FormularioHojaDeVida() {
         departamento_estado_provincia: user.fundacion?.territorio?.region || '',
         municipio: user.fundacion?.territorio?.zona || '',
         nombre_iglesia: user.eclesiastico?.iglesia?.nombre || '',
-        documento_num: user.fundacion?.documentacionFHSYL?.upz || ''
+        documento_num: user.personal?.documento || user.personal?.numeroDocumento || ''
       }));
 
       // Cargar datos específicos del formulario si existen en el backend
@@ -287,9 +287,12 @@ export default function FormularioHojaDeVida() {
           if (!tagValue || tagValue === '---') return null;
 
           try {
+            if (!tagValue) return null;
+            const strVal = tagValue.toString();
+
             // Caso 1: Data URL (Base64)
-            if (tagValue.toString().startsWith('data:image')) {
-              const base64 = tagValue.split(',')[1];
+            if (strVal.startsWith('data:image')) {
+              const base64 = strVal.split(',')[1];
               const binaryString = window.atob(base64);
               const bytes = new Uint8Array(binaryString.length);
               for (let i = 0; i < binaryString.length; i++) {
@@ -303,10 +306,10 @@ export default function FormularioHojaDeVida() {
             // Nota: import.meta.env.VITE_API_URL ya suele incluir '/api'
             const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
             
-            let finalUrl = tagValue;
+            let finalUrl = strVal;
             // Si parece ser una URL relativa, convertirla en absoluta
-            if (tagValue.startsWith('/') && !tagValue.startsWith('//')) {
-              finalUrl = `${baseUrl.replace('/api', '')}${tagValue}`;
+            if (strVal.startsWith('/') && !strVal.startsWith('//')) {
+              finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
             }
 
             const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
@@ -374,10 +377,10 @@ export default function FormularioHojaDeVida() {
         empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
         
         // Versiones con tildes o typos sugeridos por el usuario
-        'frase_indentificadora': formData.frase_identificadora, // Con la 'n' que puso el usuario
-        'frase_identificadora': formData.frase_identificadora, // Sin la 'n'
-        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion, // Con tilde
-        'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion, // Sin tilde
+        'frase_indentificadora': formData.frase_identificadora || '', // Con la 'n' que puso el usuario
+        'frase_identificadora': formData.frase_identificadora || '', // Sin la 'n'
+        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Con tilde
+        'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Sin tilde
         'publica/privada': formData.sector_empresa === 'publica' ? 'Pública' : 'Privada',
         
         // Tags específicos para las X de sector (coincidir con posibles nombres en Word)
@@ -393,17 +396,22 @@ export default function FormularioHojaDeVida() {
         'publica/privada_priv_1': formData.sector_empresa === 'privada' ? 'X' : '',
         'publica/privada_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
         'publica/privada_priv_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
-        'publica/privada_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
         'publica/privada_priv_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
 
+        // Empresa publica/privada (Tags solicitados por el usuario)
+        'empresa_publica': formData.sector_empresa === 'publica' ? 'X' : '',
+        'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : '',
+
         // Corregir espacios en tags detectados en el template para Referencias Personales 2 y 3
-        'profesion_personal _2': formData.profesion_personal_2,
-        'profesion_personal _3': formData.profesion_personal_3,
+        'profesion_personal _2': formData.profesion_personal_2 || '',
+        'profesion_personal _3': formData.profesion_personal_3 || '',
         
         // Imágenes duplicadas con y sin % por si acaso el template varía
         'foto_perfil': photoPreview || '',
         'firma_digital': finalSignature || ''
       };
+
+      console.log('DEBUG - Data to Render:', dataToRender);
 
       Object.keys(dataToRender).forEach(key => {
         if (dataToRender[key] === undefined || dataToRender[key] === null) {
