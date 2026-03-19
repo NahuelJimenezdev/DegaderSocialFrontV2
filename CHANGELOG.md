@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.75.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.74.3...v1.75.0) (2026-03-19)
+
+
+### Features
+
+* expansion completa de Formulario Hoja de Vida con firma digital y todas las secciones ([806e624](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/806e62485e14ad140772e82ee056c3d08180165f))
+* implementar modo oscuro en DocumentViewer y correcciones de UI ([ad98650](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ad98650888029ad683fa9c69af15d3e396b522de))
+* persistencia de datos en Hoja de Vida y botón de guardado ([8d5b4eb](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8d5b4eba9886e0b8d5c63eedfb588f8588597171))
+* update tablet breakpoint to 1112px to hide ads on iPad landscape and other layout refinements ([55e6d09](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/55e6d09de728384658e083acd8a9051c25934b25))
+* uso de proxy para imágenes y renderAsync en Hoja de Vida ([bd0f752](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/bd0f752d036427baa5a66350730cb8c931768c57))
+
+
+### Bug Fixes
+
+* corrección de proxy URL y mapeo de imágenes en Word ([ba169a7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ba169a7838533a12c8cc897d9832187948c9326b))
+* corrección definitiva de campos undefined, documento_num e imágenes ([3d6e52f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3d6e52f963fab55cdb93ab0b560f57e04d270033))
+* corrección definitiva de ortografía (identificadora) y ajustes de hoja de vida ([be512f6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/be512f65847d6f29715e95cc73fecd8f88306bf8))
+* correcciones en formulario Hoja de Vida, campos faltantes, sectores y transparencia de firma ([d4fbec6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d4fbec63649c2b9235580b64b634cc8910abbdd8))
+* eliminación definitiva de tags legacy y limpieza total del mapeo de datos ([3ab388a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3ab388a477bbc122cb48e7516dfdb654da84e5e5))
+* evitar error de length en Word devolviendo imagen transparente para tags vacíos ([f96927c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f96927cb79c0cd829eede7e3d8e532759047ccf7))
+* implementación de tags robustos (alfanuméricos) para evitar errores de XML ([358a7f7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/358a7f72ac25b1592d70ddf066d7c7d169304fa9))
+* inclusión de FormularioHojaDeVida.jsx y ajustes finales de Hoja de Vida ([d730237](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d730237bd9d7dfb42d61e8d89e834285c9a0e8b7))
+* limpieza final de mapeo de tags y unificación con sistema robusto alfanumérico ([4662e54](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4662e54ca985511240790a0a251fb33a2f8873c1))
+* make getImage robust to handle URLs and base64 in Hoja de Vida ([6e3b93e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6e3b93e01dca3b2a5e7c68a70a06ee3c1b08ab3c))
+* mapeado robusto de documento y ubicación con fallbacks al perfil personal ([73f6eb9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/73f6eb9bec48e4219ca6e8d9c291ad0b3b25c4e2))
+* mapeo de tags con tildes y persistencia de firma/foto ([0c56aea](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0c56aea0fabbd8bee0f23305a6a10cfadfbac949))
+* reparación automática de etiqueta corrupta (4_grado) en plantilla Word ([84b2d49](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/84b2d49929815b55f3f2f1bc3bd81db5138c317a))
+* reparación quirúrgica de XML para etiquetas de grados escolares ([d005335](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d005335a365b71c48b31676d3295f4c6443ffc00))
+* restore sidebar navigation on iPad landscape while keeping ads hidden ([ce04ee8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ce04ee89e3f41099458a5f865883a288e35dbc2f))
+* sincronización final con nueva plantilla y mapeo de tags corregidos ([d733295](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d7332954c68698378ba526806d22e11410bb75ea))
+* solución definitiva a la persistencia de datos con markModified y useEffect atómico ([1095aa0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1095aa0a4c4f6474e249e47f44ce726d49fd71a5))
+* solución definitiva sin tildes, con nullGetter y mapeo robusto ([988df64](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/988df64d832e77a364126fe467c3bf3bd8f07f6f))
+* unificación universal de tags de grados a formato grado1-11 en todo el front ([bfced05](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/bfced050023878a810a801918bf3ac4689689c73))
+
 ### [1.74.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.74.2...v1.74.3) (2026-03-17)
 
 ### [1.74.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.74.1...v1.74.2) (2026-03-17)
