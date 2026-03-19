@@ -58,6 +58,13 @@ const FormularioFHSYL = () => {
   });
 
   useEffect(() => {
+    // Scroll window and main content to top on mount
+    window.scrollTo(0, 0);
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.scrollTo(0, 0);
+    }
+
     if (user) {
       const docFHSYL = user.fundacion?.documentacionFHSYL || {};
       

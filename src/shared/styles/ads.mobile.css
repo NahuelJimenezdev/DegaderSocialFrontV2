@@ -3,7 +3,7 @@
    ============================================ */
 
 /* Ocultar sidebar de anuncios en pantallas móviles y tablets */
-@media (max-width: 1024px) {
+@media (max-width: 1112px) {
 
     .quick-search,
     .ads-sidebar,
@@ -14,7 +14,7 @@
 }
 
 /* Ajustar margen del contenido principal cuando no hay sidebar derecho */
-@media (max-width: 1024px) {
+@media (max-width: 1112px) {
     .main-content {
         margin-right: 0 !important;
         max-width: 100% !important;
@@ -26,7 +26,7 @@
 }
 
 /* En desktop, asegurar que el sidebar se vea */
-@media (min-width: 1025px) {
+@media (min-width: 1113px) {
     .quick-search {
         display: block;
     }

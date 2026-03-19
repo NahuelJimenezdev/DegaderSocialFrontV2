@@ -161,8 +161,8 @@
 }
 
 /* Mobile */
-/* Mobile & Tablet (hasta 1024px para asegurar layout vertical si es necesario) */
-@media (max-width: 1024px) {
+/* Mobile & Tablet (hasta 1112px para asegurar layout vertical si es necesario) */
+@media (max-width: 1112px) {
     .groups-toolbar {
         flex-direction: column !important;
         align-items: stretch !important;

@@ -62,6 +62,15 @@ export default function FormularioEntrevista() {
     palabrasVoluntarias: ''
   });
 
+  React.useEffect(() => {
+    // Scroll window and main content to top on mount
+    window.scrollTo(0, 0);
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.scrollTo(0, 0);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRespuestas(prev => ({ ...prev, [name]: value }));

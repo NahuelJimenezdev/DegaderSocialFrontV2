@@ -67,6 +67,13 @@ export default function FormularioHojaDeVida() {
 
   // Cargar datos iniciales del usuario
   useEffect(() => {
+    // Scroll window and main content to top on mount
+    window.scrollTo(0, 0);
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.scrollTo(0, 0);
+    }
+
     if (user) {
       setFormData(prev => ({
         ...prev,

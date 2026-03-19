@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Download, FileText, Printer, Edit3 } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
@@ -8,6 +8,23 @@ export default function DocumentViewer() {
   const location = useLocation();
   const navigate = useNavigate();
   const { type, data } = location.state || {};
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll window to top
+    window.scrollTo(0, 0);
+    
+    // Scroll main layout container to top if exists
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.scrollTo(0, 0);
+    }
+
+    // Scroll internal container to top
+    if (containerRef.current) {
+      containerRef.current.scrollTo(0, 0);
+    }
+  }, [type]);
 
   if (!type || !user) {
     return (
@@ -354,7 +371,10 @@ export default function DocumentViewer() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-800 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible text-gray-900">
+      <div 
+        ref={containerRef}
+        className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-800 relative max-h-[1000px] overflow-y-auto print:max-h-none print:overflow-visible text-gray-900"
+      >
         {/* Marca de agua o estilo de hoja */}
         <div className="p-2 md:p-16 bg-gray-50/30 dark:bg-gray-800/20">
           <div className="bg-white dark:bg-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.05)] w-full max-w-4xl mx-auto min-h-[842px] p-5 md:p-20 border border-gray-100 dark:border-gray-700">

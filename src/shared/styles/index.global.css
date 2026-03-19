@@ -492,7 +492,7 @@ body {
 /* ============================================
    RESPONSIVE - TABLET
    ============================================ */
-@media (max-width: 1024px) {
+@media (max-width: 1112px) {
     .quick-search {
         display: none;
     }
