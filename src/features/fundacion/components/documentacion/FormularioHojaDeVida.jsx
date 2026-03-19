@@ -377,18 +377,6 @@ export default function FormularioHojaDeVida() {
         empresa_tres_pub: formData.sector_empresa3 === 'publica' ? 'X' : '',
         empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
         
-        // Grados escolares (1 al 11)
-        '1_grado': formData['1_grado'] || '',
-        '2_grado': formData['2_grado'] || '',
-        '3_grado': formData['3_grado'] || '',
-        '4_grado': formData['4_grado'] || '',
-        '5_grado': formData['5_grado'] || '',
-        '6_grado': formData['6_grado'] || '',
-        '7_grado': formData['7_grado'] || '',
-        '8_grado': formData['8_grado'] || '',
-        '9_grado': formData['9_grado'] || '',
-        '10_grado': formData['10_grado'] || '',
-        '11_grado': formData['11_grado'] || '',
         // --- TAGS ROBUSTOS (PASTE EN WORD SIN TILDES NI ESPACIOS) ---
         'fraseUser': formData.frase_identificadora || '',
         'descripMain': formData.descripcion_breve_ministerio_profesion || '',
@@ -420,9 +408,7 @@ export default function FormularioHojaDeVida() {
         
         // Imágenes duplicadas con nombres simples
         'fotoUser': photoPreview || '',
-        'firmaUser': finalSignature || '',
-        'foto_perfil': photoPreview || '',
-        'firma_digital': finalSignature || ''
+        'firmaUser': finalSignature || ''
       };
 
       console.log('DEBUG - Data to Render:', dataToRender);
