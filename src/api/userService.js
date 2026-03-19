@@ -154,6 +154,16 @@ const userService = {
     const response = await api.put('/usuarios/documentacionFHSYL', data);
     return response.data;
   },
+
+  /**
+   * Update foundation Hoja de Vida documentation
+   * @param {Object} datos - Hoja de Vida data
+   * @returns {Promise<Object>} Response data
+   */
+  saveHojaDeVida: async (datos) => {
+    const response = await api.put('/usuarios/hojaDeVida', { datos });
+    return response.data;
+  },
 };
 
 export default userService;

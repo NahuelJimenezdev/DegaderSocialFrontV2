@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { toast } from 'react-hot-toast';
+import userService from '../../../../api/userService';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import ImageModule from 'docxtemplater-image-module-free';
@@ -157,12 +158,36 @@ export default function FormularioHojaDeVida() {
         nombre_iglesia: user.eclesiastico?.iglesia?.nombre || '',
         documento_num: user.fundacion?.documentacionFHSYL?.upz || ''
       }));
+
+      // Cargar datos específicos del formulario si existen en el backend
+      if (user.fundacion?.hojaDeVida?.datos) {
+        setFormData(prev => ({
+          ...prev,
+          ...user.fundacion.hojaDeVida.datos
+        }));
+      }
       
       if (user.social?.fotoPerfil) {
         setPhotoPreview(getFullImageUrl(user.social.fotoPerfil));
       }
     }
   }, [user]);
+
+  const handleSave = async (silent = false) => {
+    if (!silent) setLoading(true);
+    try {
+      await userService.saveHojaDeVida(formData);
+      await refreshProfile();
+      if (!silent) toast.success('Información guardada correctamente');
+      return true;
+    } catch (error) {
+      console.error('Error al guardar Hoja de Vida:', error);
+      if (!silent) toast.error('Error al guardar la información');
+      return false;
+    } finally {
+      if (!silent) setLoading(false);
+    }
+  };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -223,6 +248,13 @@ export default function FormularioHojaDeVida() {
   };
 
   const generateWord = async () => {
+    // Primero guardamos la información por defecto
+    const saved = await handleSave(true);
+    if (!saved) {
+      toast.error('No se pudo guardar la información antes de descargar. Inténtalo de nuevo.');
+      return;
+    }
+
     setLoading(true);
     try {
       // 1. Cargar el template desde la carpeta pública
@@ -845,20 +877,30 @@ export default function FormularioHojaDeVida() {
             <p className="text-sm text-gray-500 dark:text-gray-400 italic">
               * El diseño del Word se mantendrá intacto.
             </p>
-            <button
-              onClick={generateWord}
-              disabled={loading}
-              className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95"
-            >
-              {loading ? (
-                <>Generando...</>
-              ) : (
-                <>
-                  <Download size={22} />
-                  Descargar Hoja de Vida (.docx)
-                </>
-              )}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => handleSave(false)}
+                disabled={loading}
+                className="w-full sm:w-auto px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95"
+              >
+                <Save size={22} />
+                Guardar Información
+              </button>
+              <button
+                onClick={generateWord}
+                disabled={loading}
+                className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95"
+              >
+                {loading ? (
+                  <>Procesando...</>
+                ) : (
+                  <>
+                    <Download size={22} />
+                    Descargar Word (.docx)
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
