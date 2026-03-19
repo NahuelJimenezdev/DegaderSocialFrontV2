@@ -377,14 +377,39 @@ export default function FormularioHojaDeVida() {
         empresa_tres_pub: formData.sector_empresa3 === 'publica' ? 'X' : '',
         empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
         
-        // Versiones con tildes o typos corregidos por el usuario
+        // Grados escolares (1 al 11)
+        '1_grado': formData['1_grado'] || '',
+        '2_grado': formData['2_grado'] || '',
+        '3_grado': formData['3_grado'] || '',
+        '4_grado': formData['4_grado'] || '',
+        '5_grado': formData['5_grado'] || '',
+        '6_grado': formData['6_grado'] || '',
+        '7_grado': formData['7_grado'] || '',
+        '8_grado': formData['8_grado'] || '',
+        '9_grado': formData['9_grado'] || '',
+        '10_grado': formData['10_grado'] || '',
+        '11_grado': formData['11_grado'] || '',
+        // --- TAGS SUPER ROBUSTOS (SIN TILDES, SIN ESPACIOS, SIN GUIONES) ---
+        // Estos son los que el usuario debe copiar y pegar en el Word
+        'fraseUser': formData.frase_identificadora || '',
+        'descripMain': formData.descripcion_breve_ministerio_profesion || '',
+        'grado1': formData['1_grado'] || '',
+        'grado2': formData['2_grado'] || '',
+        'grado3': formData['3_grado'] || '',
+        'grado4': formData['4_grado'] || '',
+        'grado5': formData['5_grado'] || '',
+        'grado6': formData['6_grado'] || '',
+        'grado7': formData['7_grado'] || '',
+        'grado8': formData['8_grado'] || '',
+        'grado9': formData['9_grado'] || '',
+        'grado10': formData['10_grado'] || '',
+        'grado11': formData['11_grado'] || '',
+        
+        // --- COMPATIBILIDAD CON TAGS ANTERIORES (POR SI ACASO) ---
         'frase_indentificadora': formData.frase_identificadora || '', 
         'frase_identificadora': formData.frase_identificadora || '', 
-        'fraseidentificadora': formData.frase_identificadora || '', // Sin guion ni tilde
-        'descripcionMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '', // NUEVO TAG SIN TILDE
-        'descripciónMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '', // Por si acaso
-        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '',
-        'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '',
+        'descripcionMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '',
+        'descripciónMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '',
         'publica/privada': formData.sector_empresa === 'publica' ? 'Pública' : 'Privada',
         
         // Tags específicos para las X de sector (coincidir con posibles nombres en Word)
@@ -410,7 +435,9 @@ export default function FormularioHojaDeVida() {
         'profesion_personal _2': formData.profesion_personal_2 || '',
         'profesion_personal _3': formData.profesion_personal_3 || '',
         
-        // Imágenes duplicadas con y sin % por si acaso el template varía
+        // Imágenes duplicadas con nombres simples
+        'fotoUser': photoPreview || '',
+        'firmaUser': finalSignature || '',
         'foto_perfil': photoPreview || '',
         'firma_digital': finalSignature || ''
       };
@@ -563,11 +590,11 @@ export default function FormularioHojaDeVida() {
                   <label className={labelClasses}>Grados Cursados (Marca los aprobados)</label>
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => {
-                      const key = num === 4 ? '_grado_4' : `${num}_grado`;
+                      const key = `${num}_grado`;
                       return (
                         <button
                           key={num}
-                          onClick={() => setFormData(prev => ({ ...prev, [key]: prev[key] ? '' : 'X' }))}
+                          onClick={() => setFormData(prev => ({ ...prev, [key]: prev[key] === 'X' ? '' : 'X' }))}
                           className={`p-2 rounded-lg text-sm font-bold border transition ${formData[key] === 'X' ? 'bg-indigo-100 dark:bg-indigo-900/40 border-indigo-300 text-indigo-700 dark:text-indigo-300' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400'}`}
                         >
                           {num}°
