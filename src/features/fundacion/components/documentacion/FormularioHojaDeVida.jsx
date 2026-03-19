@@ -335,7 +335,8 @@ export default function FormularioHojaDeVida() {
       const doc = new Docxtemplater(zip, {
         paragraphLoop: true,
         linebreaks: true,
-        modules: [imageModule]
+        modules: [imageModule],
+        nullGetter: () => "" // Evita que aparezca la palabra 'undefined' si no se encuentra un tag
       });
 
       // Procesar firma para transparencia si existe
@@ -377,11 +378,13 @@ export default function FormularioHojaDeVida() {
         empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
         
         // Versiones con tildes o typos corregidos por el usuario
-        'frase_indentificadora': formData.frase_identificadora || '', // Con la 'n' por si acaso
-        'frase_identificadora': formData.frase_identificadora || '', // Sin la 'n'
-        'descripciónMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '', // NUEVO TAG
-        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Anterior por si acaso
-        'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Sin tilde
+        'frase_indentificadora': formData.frase_identificadora || '', 
+        'frase_identificadora': formData.frase_identificadora || '', 
+        'fraseidentificadora': formData.frase_identificadora || '', // Sin guion ni tilde
+        'descripcionMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '', // NUEVO TAG SIN TILDE
+        'descripciónMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '', // Por si acaso
+        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '',
+        'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '',
         'publica/privada': formData.sector_empresa === 'publica' ? 'Pública' : 'Privada',
         
         // Tags específicos para las X de sector (coincidir con posibles nombres en Word)
