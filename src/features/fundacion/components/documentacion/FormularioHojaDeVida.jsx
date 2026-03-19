@@ -50,6 +50,8 @@ export default function FormularioHojaDeVida() {
     direccion: '',
     telefono: '',
     email: '',
+    frase_identificadora: '',
+    descripcion_breve_ministerio_profesion: '',
 
     // NIVEL EDUCATIVO - EDUCACIÓN BÁSICA
     'completa/incompleta': 'completa',
@@ -74,16 +76,19 @@ export default function FormularioHojaDeVida() {
     empresa_actual: '', departamento_empresa: '', municipio_empresa: '', email_empresa: '',
     teléfono_emrpesa: '', dia_inicio: '', mes_inicio: '', año_inicio: '',
     dia_fin: '', mes_fin: '', año_fin: '', cargo_empresa: '', dirección_empresa: '',
+    sector_empresa: 'privada', // 'publica' o 'privada'
 
     // EXPERIENCIA LABORAL 2
     empresa_dos: '', departamento_empresa2: '', municipio_empresa2: '', email_empresa2: '',
     teléfono_emrpesa2: '', dia_inicio2: '', mes_inicio2: '', año_inicio2: '',
     dia_fin2: '', mes_fin2: '', año_fin2: '', cargo_empresa2: '', dirección_empresa2: '',
+    sector_empresa2: 'privada',
 
     // EXPERIENCIA LABORAL 3
     empresa_tres: '', departamento_empresa3: '', municipio_empresa3: '', email_empresa3: '',
     teléfono_emrpesa3: '', dia_inicio3: '', mes_inicio3: '', año_inicio3: '',
     dia_fin3: '', mes_fin3: '', año_fin3: '', cargo_empresa3: '', dirección_empresa3: '',
+    sector_empresa3: 'privada',
 
     // DATOS DE LA IGLESIA
     nombre_iglesia: '', nombre_pastor: '', telefono_pastor: '',
@@ -122,6 +127,13 @@ export default function FormularioHojaDeVida() {
     nombre_personales_3: '', profesion_personal_3: '', telefonopers_3: ''
   });
 
+  const getFullImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com';
+    return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
   // Cargar datos iniciales del usuario
   useEffect(() => {
     // Scroll window and main content to top on mount
@@ -147,7 +159,7 @@ export default function FormularioHojaDeVida() {
       }));
       
       if (user.social?.fotoPerfil) {
-        setPhotoPreview(user.social.fotoPerfil);
+        setPhotoPreview(getFullImageUrl(user.social.fotoPerfil));
       }
     }
   }, [user]);
@@ -177,6 +189,37 @@ export default function FormularioHojaDeVida() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const processSignatureImage = (base64) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        
+        // Convertir blanco (o casi blanco) a transparente
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          // Si es muy claro, hacerlo transparente
+          if (r > 200 && g > 200 && b > 200) {
+            data[i + 3] = 0;
+          }
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.src = base64;
+    });
   };
 
   const generateWord = async () => {
@@ -234,12 +277,22 @@ export default function FormularioHojaDeVida() {
         modules: [imageModule]
       });
 
+      // Procesar firma para transparencia si existe
+      let finalSignature = firmaPreview || '';
+      if (finalSignature.startsWith('data:image')) {
+        finalSignature = await processSignatureImage(finalSignature);
+      }
+
       // 2. Mapear datos (asegurar que no haya nulos)
       const dataToRender = {
         ...formData,
         foto_perfil: photoPreview || '', // Etiqueta {%foto_perfil}
-        firma_digital: firmaPreview || '', // Etiqueta {%firma_digital}
+        firma_digital: finalSignature, // Etiqueta {%firma_digital}
         // Booleanos a X para el Word
+        seleccionar_tecnica: formData.seleccionar_tecnica ? 'X' : '',
+        seleccionar_tecnologica: formData.seleccionar_tecnologica ? 'X' : '',
+        seleccionar_universitario: formData.seleccionar_universitario ? 'X' : '',
+        seleccionar_posgrado: formData.seleccionar_posgrado ? 'X' : '',
         graduadoSi_1: formData.graduadoSi_1 ? 'X' : '',
         graduadoNo_1: formData.graduadoNo_1 ? 'X' : '',
         graduadoSi_2: formData.graduadoSi_2 ? 'X' : '',
@@ -253,11 +306,21 @@ export default function FormularioHojaDeVida() {
         exp_si3: formData.exp_si3 ? 'X' : '',
         exp_no3: formData.exp_no3 ? 'X' : '',
         autorizo_si: formData.autorizo_si ? 'X' : '',
-        autorizo_no: formData.autorizo_no ? 'X' : ''
+        autorizo_no: formData.autorizo_no ? 'X' : '',
+        // Sector empresa (mapeo a x fija en el Word si coincide)
+        empresa_actual_pub: formData.sector_empresa === 'publica' ? 'X' : '',
+        empresa_actual_priv: formData.sector_empresa === 'privada' ? 'X' : '',
+        empresa_dos_pub: formData.sector_empresa2 === 'publica' ? 'X' : '',
+        empresa_dos_priv: formData.sector_empresa2 === 'privada' ? 'X' : '',
+        empresa_tres_pub: formData.sector_empresa3 === 'publica' ? 'X' : '',
+        empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
+        // Corregir espacios en tags detectados en el template para Referencias Personales 2 y 3
+        'profesion_personal _2': formData.profesion_personal_2,
+        'profesion_personal _3': formData.profesion_personal_3
       };
 
       Object.keys(dataToRender).forEach(key => {
-        if (!dataToRender[key] && key !== 'foto_perfil' && key !== 'firma_digital') {
+        if (dataToRender[key] === undefined || dataToRender[key] === null) {
           dataToRender[key] = '';
         }
       });
@@ -366,9 +429,13 @@ export default function FormularioHojaDeVida() {
                 <label className={labelClasses}>Teléfono</label>
                 <input name="telefono" value={formData.telefono} onChange={handleChange} className={inputClasses} />
               </div>
-              <div>
+              <div className="md:col-span-2">
                 <label className={labelClasses}>Email</label>
                 <input name="email" value={formData.email} onChange={handleChange} className={inputClasses} />
+              </div>
+              <div className="md:col-span-2">
+                <label className={labelClasses}>Frase Identificadora</label>
+                <input name="frase_identificadora" value={formData.frase_identificadora} onChange={handleChange} className={inputClasses} placeholder="Una frase que te identifique..." />
               </div>
             </div>
           </div>
@@ -515,9 +582,21 @@ export default function FormularioHojaDeVida() {
                   <div key={idx} className="p-6 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-6">
                     <h5 className="font-black text-gray-400 text-sm uppercase tracking-widest">{exp.label} Empresa</h5>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="md:col-span-2">
+                      <div className="md:col-span-1">
                         <label className={labelClasses}>Empresa o Entidad</label>
                         <input name={exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`} value={formData[exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`]} onChange={handleChange} className={inputClasses} />
+                      </div>
+                      <div className="md:col-span-1">
+                        <label className={labelClasses}>Sector</label>
+                        <select 
+                          name={`sector_empresa${exp.prefix}`} 
+                          value={formData[`sector_empresa${exp.prefix}`]} 
+                          onChange={handleChange} 
+                          className={inputClasses}
+                        >
+                          <option value="privada">Privada</option>
+                          <option value="publica">Pública</option>
+                        </select>
                       </div>
                       <div> <label className={labelClasses}>Departamento</label> <input name={`departamento_empresa${exp.prefix}`} value={formData[`departamento_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
                       <div> <label className={labelClasses}>Municipio</label> <input name={`municipio_empresa${exp.prefix}`} value={formData[`municipio_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
@@ -610,7 +689,16 @@ export default function FormularioHojaDeVida() {
 
             <div>
               <div className={sectionTitleClasses}><User size={20} /> Cargo a Desempeñar en la Fundación</div>
-              <input name="cargo_en_FHISYL" value={formData.cargo_en_FHISYL} onChange={handleChange} className={inputClasses} placeholder="Nombre del cargo que aspira..." />
+              <div className="space-y-4">
+                <div>
+                  <label className={labelClasses}>Cargo que aspira</label>
+                  <input name="cargo_en_FHISYL" value={formData.cargo_en_FHISYL} onChange={handleChange} className={inputClasses} placeholder="Nombre del cargo que aspira..." />
+                </div>
+                <div>
+                  <label className={labelClasses}>Breve descripción del ministerio / profesión</label>
+                  <textarea name="descripcion_breve_ministerio_profesion" value={formData.descripcion_breve_ministerio_profesion} onChange={handleChange} className={textareaClasses} placeholder="Describe tu ministerio o profesión..." />
+                </div>
+              </div>
             </div>
           </div>
         );
