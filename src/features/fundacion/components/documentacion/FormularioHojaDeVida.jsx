@@ -298,10 +298,18 @@ export default function FormularioHojaDeVida() {
               return bytes.buffer;
             }
 
-            // Caso 2: URL (http o path absoluto)
+            // Caso 2: URL (http o path absoluto) o Raw Base64 sin prefijo
             // Usar el proxy para evitar problemas de CORS
-            const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com';
-            const proxyUrl = `${baseUrl}/api/upload/proxy?url=${encodeURIComponent(tagValue)}`;
+            // Nota: import.meta.env.VITE_API_URL ya suele incluir '/api'
+            const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
+            
+            let finalUrl = tagValue;
+            // Si parece ser una URL relativa, convertirla en absoluta
+            if (tagValue.startsWith('/') && !tagValue.startsWith('//')) {
+              finalUrl = `${baseUrl.replace('/api', '')}${tagValue}`;
+            }
+
+            const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
             
             const response = await fetch(proxyUrl);
             if (!response.ok) throw new Error('Error al cargar imagen via proxy');
