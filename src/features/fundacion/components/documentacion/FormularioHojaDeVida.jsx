@@ -123,17 +123,32 @@ export default function FormularioHojaDeVida() {
       // Configuración del módulo de imagen
       const opts = {
         centered: false,
-        getImage: (tagValue) => {
-          return new Promise((resolve, reject) => {
-            const base64 = tagValue.split(',')[1] || tagValue;
-            const binaryString = window.atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
+        getImage: async (tagValue) => {
+          if (!tagValue || tagValue === '---') return null;
+
+          try {
+            // Caso 1: Data URL (Base64)
+            if (tagValue.toString().startsWith('data:image')) {
+              const base64 = tagValue.split(',')[1];
+              const binaryString = window.atob(base64);
+              const bytes = new Uint8Array(binaryString.length);
+              for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+              }
+              return bytes.buffer;
             }
-            resolve(bytes.buffer);
-          });
+
+            // Caso 2: URL (http o path absoluto)
+            if (tagValue.toString().startsWith('http') || tagValue.toString().startsWith('/')) {
+              const response = await fetch(tagValue);
+              if (!response.ok) throw new Error('Error al cargar imagen');
+              return await response.arrayBuffer();
+            }
+          } catch (error) {
+            console.error('Error procesando imagen para Word:', error, 'TagValue:', tagValue);
+          }
+
+          return null;
         },
         getSize: () => [120, 150], // Tamaño en píxeles [ancho, alto] para el Word
       };
