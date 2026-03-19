@@ -273,9 +273,9 @@ export default function FormularioHojaDeVida() {
 
     setLoading(true);
     try {
-      // 1. Cargar el template desde la carpeta pública
-      const response = await fetch('/templates/hoja_de_vida_template.docx');
-      if (!response.ok) throw new Error('No se pudo cargar la plantilla de Word');
+      // 1. Cargar el template desde la carpeta pública (ahora con el nombre que puso el usuario)
+      const response = await fetch('/templates/FORMATO HOJA DE VIDA FHISYL.docx');
+      if (!response.ok) throw new Error('No se pudo cargar la plantilla de Word. Verifica el nombre del archivo en public/templates/');
       
       const content = await response.arrayBuffer();
       const zip = new PizZip(content);
@@ -376,10 +376,11 @@ export default function FormularioHojaDeVida() {
         empresa_tres_pub: formData.sector_empresa3 === 'publica' ? 'X' : '',
         empresa_tres_priv: formData.sector_empresa3 === 'privada' ? 'X' : '',
         
-        // Versiones con tildes o typos sugeridos por el usuario
-        'frase_indentificadora': formData.frase_identificadora || '', // Con la 'n' que puso el usuario
+        // Versiones con tildes o typos corregidos por el usuario
+        'frase_indentificadora': formData.frase_identificadora || '', // Con la 'n' por si acaso
         'frase_identificadora': formData.frase_identificadora || '', // Sin la 'n'
-        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Con tilde
+        'descripciónMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '', // NUEVO TAG
+        'descripción_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Anterior por si acaso
         'descripcion_breve_ministerio_profesion': formData.descripcion_breve_ministerio_profesion || '', // Sin tilde
         'publica/privada': formData.sector_empresa === 'publica' ? 'Pública' : 'Privada',
         
