@@ -139,7 +139,6 @@ export default function FormularioHojaDeVida() {
     return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
   };
 
-  // Cargar datos iniciales del usuario
   useEffect(() => {
     // Scroll window and main content to top on mount
     window.scrollTo(0, 0);
@@ -149,8 +148,8 @@ export default function FormularioHojaDeVida() {
     }
 
     if (user) {
-      setFormData(prev => ({
-        ...prev,
+      // 1. Datos base del perfil maestro
+      const baseData = {
         nombre_completo: `${user.nombres?.primero || ''} ${user.nombres?.segundo || ''} ${user.apellidos?.primero || ''} ${user.apellidos?.segundo || ''}`.replace(/\s+/g, ' ').trim(),
         email: user.email || '',
         telefono: user.personal?.celular || '',
@@ -161,28 +160,27 @@ export default function FormularioHojaDeVida() {
         municipio: user.fundacion?.territorio?.zona || '',
         nombre_iglesia: user.eclesiastico?.iglesia?.nombre || '',
         documento_num: user.personal?.documento || user.personal?.numeroDocumento || ''
+      };
+
+      // 2. Datos persistidos de Hoja de Vida (Prioritarios)
+      const savedData = user.fundacion?.hojaDeVida?.datos || {};
+
+      // 3. Unificar en un solo setFormData para evitar race conditions
+      setFormData(prev => ({
+        ...prev,
+        ...baseData,
+        ...savedData
       }));
 
-      // Cargar datos específicos del formulario si existen en el backend
-      if (user.fundacion?.hojaDeVida?.datos) {
-        setFormData(prev => ({
-          ...prev,
-          ...user.fundacion.hojaDeVida.datos
-        }));
-        
-        // Cargar previews de imágenes si están en los datos persistidos
-        if (user.fundacion.hojaDeVida.datos.foto_perfil_form) {
-          setPhotoPreview(user.fundacion.hojaDeVida.datos.foto_perfil_form);
-        }
-        if (user.fundacion.hojaDeVida.datos.firma_digital) {
-          setFirmaPreview(user.fundacion.hojaDeVida.datos.firma_digital);
-        }
+      // 4. Previews de imágenes (Prioridad a lo subido en el form)
+      if (savedData.foto_perfil_form) {
+        setPhotoPreview(savedData.foto_perfil_form);
+      } else if (user.social?.fotoPerfil) {
+        setPhotoPreview(getFullImageUrl(user.social.fotoPerfil));
       }
-      
-      if (user.social?.fotoPerfil) {
-        const fullUrl = getFullImageUrl(user.social.fotoPerfil);
-        setPhotoPreview(fullUrl);
-        setFormData(prev => ({ ...prev, foto_perfil_form: fullUrl }));
+
+      if (savedData.firma_digital) {
+        setFirmaPreview(savedData.firma_digital);
       }
     }
   }, [user]);
