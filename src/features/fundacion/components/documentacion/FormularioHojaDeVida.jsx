@@ -389,8 +389,7 @@ export default function FormularioHojaDeVida() {
         '9_grado': formData['9_grado'] || '',
         '10_grado': formData['10_grado'] || '',
         '11_grado': formData['11_grado'] || '',
-        // --- TAGS SUPER ROBUSTOS (SIN TILDES, SIN ESPACIOS, SIN GUIONES) ---
-        // Estos son los que el usuario debe copiar y pegar en el Word
+        // --- TAGS ROBUSTOS (PASTE EN WORD SIN TILDES NI ESPACIOS) ---
         'fraseUser': formData.frase_identificadora || '',
         'descripMain': formData.descripcion_breve_ministerio_profesion || '',
         'grado1': formData['1_grado'] || '',
@@ -405,35 +404,19 @@ export default function FormularioHojaDeVida() {
         'grado10': formData['10_grado'] || '',
         'grado11': formData['11_grado'] || '',
         
-        // --- COMPATIBILIDAD CON TAGS ANTERIORES (POR SI ACASO) ---
-        'frase_indentificadora': formData.frase_identificadora || '', 
-        'frase_identificadora': formData.frase_identificadora || '', 
-        'descripcionMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '',
-        'descripciónMinisterioProfesion': formData.descripcion_breve_ministerio_profesion || '',
-        'publica/privada': formData.sector_empresa === 'publica' ? 'Pública' : 'Privada',
-        
-        // Tags específicos para las X de sector (coincidir con posibles nombres en Word)
+        // Tags de Sectores Empresa (X)
         'sector_publica_1': formData.sector_empresa === 'publica' ? 'X' : '',
         'sector_privada_1': formData.sector_empresa === 'privada' ? 'X' : '',
         'sector_publica_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
         'sector_privada_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
         'sector_publica_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
         'sector_privada_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
-        
-        // Compatibilidad con tags de tipo {publica/privada_1} que puse antes
-        'publica/privada_1': formData.sector_empresa === 'publica' ? 'X' : '',
-        'publica/privada_priv_1': formData.sector_empresa === 'privada' ? 'X' : '',
-        'publica/privada_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
-        'publica/privada_priv_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
-        'publica/privada_priv_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
-
-        // Empresa publica/privada (Tags solicitados por el usuario)
         'empresa_publica': formData.sector_empresa === 'publica' ? 'X' : '',
         'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : '',
 
-        // Corregir espacios en tags detectados en el template para Referencias Personales 2 y 3
-        'profesion_personal _2': formData.profesion_personal_2 || '',
-        'profesion_personal _3': formData.profesion_personal_3 || '',
+        // Referencias con espacio corregido en el template
+        'profesion_personal_2': formData.profesion_personal_2 || '',
+        'profesion_personal_3': formData.profesion_personal_3 || '',
         
         // Imágenes duplicadas con nombres simples
         'fotoUser': photoPreview || '',
