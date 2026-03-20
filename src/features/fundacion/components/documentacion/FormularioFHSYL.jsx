@@ -94,7 +94,6 @@ const FormularioFHSYL = () => {
           
           // --- SINCRONIZACIÓN CROSS-FORM (FALLBACKS) ---
           llamadoPastoral: docFHSYL.llamadoPastoral || 
-                           user.fundacion?.hojaDeVida?.datos?.descripcion_breve_ministerio_profesion || 
                            user.fundacion?.entrevista?.respuestas?.llamado || '',
           
           virtudes: hydrateArray(docFHSYL.virtudes, 3),

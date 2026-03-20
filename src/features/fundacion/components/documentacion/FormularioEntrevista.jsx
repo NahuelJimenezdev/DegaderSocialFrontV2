@@ -37,7 +37,6 @@ export default function FormularioEntrevista() {
     fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
     upzLocalidad: user?.fundacion?.documentacionFHSYL?.upz || '',
     llamado: user?.fundacion?.entrevista?.respuestas?.llamado || 
-             user?.fundacion?.hojaDeVida?.datos?.descripcion_breve_ministerio_profesion || 
              user?.fundacion?.documentacionFHSYL?.llamadoPastoral || '',
     loQueMasGusta: '',
     sacrificioPastoral: '',

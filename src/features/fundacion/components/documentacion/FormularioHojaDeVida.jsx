@@ -165,10 +165,7 @@ export default function FormularioHojaDeVida() {
         estado_civil: user.fundacion?.documentacionFHSYL?.estadoCivil || user.personal?.estadoCivil || '',
         
         // --- SINCRONIZACIÓN CROSS-FORM (FALLBACKS) ---
-        // 1. Llamado Pastoral
-        descripcion_breve_ministerio_profesion: 
-          user.fundacion?.documentacionFHSYL?.llamadoPastoral || 
-          user.fundacion?.entrevista?.respuestas?.llamado || '',
+        // 1. Llamado Pastoral (ELIMINADO: Son datos distintos según el usuario)
           
         // 2. Referencias Personales (desde FHSYL si existen)
         nombre_personales_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.nombre || '',
