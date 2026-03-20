@@ -109,9 +109,10 @@ const getBinary = async (tagValue) => {
     const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
     let finalUrl = strVal;
     
-    // Corregir rutas relativas si es necesario
-    if (strVal.startsWith('/') && !strVal.startsWith('//')) {
-      finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
+    // Corregir rutas relativas (asegurar que empiecen con / si no son URLs completas ni base64)
+    if (!strVal.startsWith('http') && !strVal.startsWith('data:') && !strVal.startsWith('//')) {
+      const leadingSlash = strVal.startsWith('/') ? '' : '/';
+      finalUrl = `${baseUrl.replace('/api', '')}${leadingSlash}${strVal}`;
     }
 
     console.log('getBinary: descargando vía proxy:', finalUrl);
@@ -184,7 +185,11 @@ export const generateCV = async (userData, overrideData = null, overridePhotos =
   });
   
   console.log('Pre-cargando binarios de imágenes...');
-  const photoSource = overridePhotos?.photo || formData.foto_perfil || formData.foto_perfil_form || formData.fotoUser || '';
+  const photoSource = overridePhotos?.photo || 
+                    formData.foto_perfil || 
+                    formData.foto_perfil_form || 
+                    formData.fotoUser || 
+                    userData.social?.fotoPerfil || '';
   const photoData = await getBinary(photoSource);
   
   let firmaSource = overridePhotos?.firma || formData.firma_digital || formData.firmaUser || '';
