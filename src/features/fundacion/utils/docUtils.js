@@ -10,6 +10,11 @@ import ImageModule from 'docxtemplater-image-module-free';
 const sanitizeData = (data) => {
   if (data === null || data === undefined) return "";
   
+  // GUARDIA: No tocar datos binarios (evita corrupción de imágenes)
+  if (data instanceof Uint8Array || data instanceof ArrayBuffer || (typeof Blob !== 'undefined' && data instanceof Blob)) {
+    return data;
+  }
+  
   if (Array.isArray(data)) {
     return data.map(item => sanitizeData(item));
   }
