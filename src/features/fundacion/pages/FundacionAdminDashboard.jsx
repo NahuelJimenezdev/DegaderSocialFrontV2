@@ -236,7 +236,7 @@ export default function FundacionAdminDashboard() {
               {viewMode === 'grid' ? (
                 // --- GRID VIEW ---
                 <>
-                  <div className="flex items-start gap-4 mb-4">
+                  <div className="flex items-center gap-4 mb-4">
                      <div className="relative flex-shrink-0">
                        <img 
                          src={getUserAvatar(u)} 
@@ -249,18 +249,21 @@ export default function FundacionAdminDashboard() {
                        </div>
                      </div>
                      <div className="flex-1 min-w-0">
-                       <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight mb-2 break-words">
+                       <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight break-words">
                          {u.nombres?.primero} {u.apellidos?.primero}
                        </h4>
-                       {u.fundacion?.area && (
-                         <span className="inline-block text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
-                           {u.fundacion.area}
-                         </span>
-                       )}
                      </div>
                   </div>
                   
-                  <div className="text-sm text-gray-600 dark:text-gray-400 mb-6 flex-1">
+                  {u.fundacion?.area && (
+                    <div className="mb-4">
+                      <span className="block w-full text-center text-[10px] font-bold px-3 py-2 bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl uppercase tracking-widest border border-blue-100/50 dark:border-blue-800/30">
+                        {u.fundacion.area}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="text-sm text-center text-gray-600 dark:text-gray-400 mb-6 flex-1">
                     <p className="font-medium line-clamp-2">{formatRoleLocation(u)}</p>
                   </div>
                   
