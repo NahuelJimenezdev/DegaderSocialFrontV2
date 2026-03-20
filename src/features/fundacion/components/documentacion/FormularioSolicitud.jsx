@@ -34,6 +34,17 @@ const FormularioSolicitud = () => {
 
     const [success, setSuccess] = useState(false);
 
+    // Protección de ruta: Solo permitir si los 3 documentos anteriores están listos
+    React.useEffect(() => {
+        const isFHSYLDone = !!user?.fundacion?.documentacionFHSYL?.ultimaActualizacion;
+        const isEntrevistaDone = !!user?.fundacion?.entrevista?.completado;
+        const isHojaDeVidaDone = !!user?.fundacion?.hojaDeVida?.completado;
+
+        if (!isFHSYLDone || !isEntrevistaDone || !isHojaDeVidaDone) {
+            navigate('/fundacion');
+        }
+    }, [user, navigate]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         await handleUpdateProfile(e);
