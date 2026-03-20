@@ -23,6 +23,7 @@ const FormularioSolicitud = () => {
         getNombreDivisionTerritorial,
         handleNivelChange,
         handleCargoChange,
+        handleAreaChange,
         handleSubAreaChange,
         handleUpdateProfile,
         requiereUbicacionExacta,
