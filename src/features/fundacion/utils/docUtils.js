@@ -3,6 +3,29 @@ import PizZip from 'pizzip';
 import { saveAs } from 'file-saver';
 import ImageModule from 'docxtemplater-image-module-free';
 
+/**
+ * Sanitiza recursivamente un objeto para asegurar que no haya valores null/undefined
+ * que puedan romper docxtemplater, y asegura que las listas sean arrays.
+ */
+const sanitizeData = (data) => {
+  if (data === null || data === undefined) return "";
+  
+  if (Array.isArray(data)) {
+    return data.map(item => sanitizeData(item));
+  }
+  
+  if (typeof data === 'object') {
+    const sanitized = {};
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        sanitized[key] = sanitizeData(data[key]);
+      }
+    }
+    return sanitized;
+  }
+  
+  return data;
+};
 const EMPTY_IMAGE = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 const processSignatureImage = (base64) => {
@@ -119,44 +142,45 @@ export const generateCV = async (userData) => {
   let firma = formData.firma_digital || '';
   if (firma.startsWith('data:image')) firma = await processSignatureImage(firma);
   
-  const dataToRender = {
-    ...formData,
-    foto_perfil: formData.foto_perfil || '',
-    fotoUser: formData.foto_perfil || '',
+  const rawData = formData;
+  const dataToRender = sanitizeData({
+    ...rawData,
+    foto_perfil: rawData.foto_perfil || '',
+    fotoUser: rawData.foto_perfil || '',
     firma_digital: firma,
     firmaUser: firma,
-    // Mapeo detallado de checkboxes y campos técnicos
-    seleccionar_tecnica: formData.seleccionar_tecnica ? 'X' : '',
-    seleccionar_tecnologica: formData.seleccionar_tecnologica ? 'X' : '',
-    seleccionar_universitario: formData.seleccionar_universitario ? 'X' : '',
-    seleccionar_posgrado: formData.seleccionar_posgrado ? 'X' : '',
-    graduadoSi_1: formData.graduadoSi_1 ? 'X' : '',
-    graduadoNo_1: formData.graduadoNo_1 ? 'X' : '',
-    graduadoSi_2: formData.graduadoSi_2 ? 'X' : '',
-    graduadoNo_2: formData.graduadoNo_2 ? 'X' : '',
-    graduadoSi_3: formData.graduadoSi_3 ? 'X' : '',
-    graduadoNo_3: formData.graduadoNo_3 ? 'X' : '',
-    exp_si1: formData.exp_si1 ? 'X' : '',
-    exp_no1: formData.exp_no1 ? 'X' : '',
-    exp_si2: formData.exp_si2 ? 'X' : '',
-    exp_no2: formData.exp_no2 ? 'X' : '',
-    exp_si3: formData.exp_si3 ? 'X' : '',
-    exp_no3: formData.exp_no3 ? 'X' : '',
-    autorizo_si: formData.autorizo_si ? 'X' : '',
-    autorizo_no: formData.autorizo_no ? 'X' : '',
-    'fraseUser': formData.frase_identificadora || '',
-    'descripMain': formData.descripcion_breve_ministerio_profesion || '',
-    'profesion_personal _2': formData.profesion_personal_2 || '',
-    'profesion_personal _3': formData.profesion_personal_3 || '',
-    'sector_publica_1': formData.sector_empresa === 'publica' ? 'X' : '',
-    'sector_privada_1': formData.sector_empresa === 'privada' ? 'X' : '',
-    'sector_publica_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
-    'sector_privada_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
-    'sector_publica_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
-    'sector_privada_3': formData.sector_empresa3 === 'privada' ? 'X' : ''
-  };
+    seleccionar_tecnica: rawData.seleccionar_tecnica ? 'X' : '',
+    seleccionar_tecnologica: rawData.seleccionar_tecnologica ? 'X' : '',
+    seleccionar_profesional: rawData.seleccionar_profesional ? 'X' : '',
+    seleccionar_postgrado: rawData.seleccionar_postgrado ? 'X' : '',
+    sol_si: rawData.solicitud_ingreso === 'si' ? 'X' : '',
+    sol_no: rawData.solicitud_ingreso === 'no' ? 'X' : '',
+    autorizo_si: rawData.autorizo_si ? 'X' : '',
+    autorizo_no: rawData.autorizo_no ? 'X' : '',
+    'fraseUser': rawData.frase_identificadora || '',
+    'descripMain': rawData.descripcion_breve_ministerio_profesion || '',
+    'profesion_personal _2': rawData.profesion_personal_2 || '',
+    'profesion_personal _3': rawData.profesion_personal_3 || '',
+    'sector_publica_1': rawData.sector_empresa === 'publica' ? 'X' : '',
+    'sector_privada_1': rawData.sector_empresa === 'privada' ? 'X' : '',
+    'sector_publica_2': rawData.sector_empresa2 === 'publica' ? 'X' : '',
+    'sector_privada_2': rawData.sector_empresa2 === 'privada' ? 'X' : '',
+    'sector_publica_3': rawData.sector_empresa3 === 'publica' ? 'X' : '',
+    'sector_privada_3': rawData.sector_empresa3 === 'privada' ? 'X' : ''
+  });
 
-  await doc.renderAsync(dataToRender);
+  console.log('Datos sanitizados listos para renderizar:', dataToRender);
+  
+  try {
+    await doc.renderAsync(dataToRender);
+  } catch (renderError) {
+    console.error('Error detallado en renderAsync:', renderError);
+    if (renderError.properties && renderError.properties.errors) {
+      console.error('Errores de validación de Docxtemplater:', renderError.properties.errors);
+    }
+    throw renderError;
+  }
+
   return doc.getZip().generate({ 
     type: 'blob', 
     mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
