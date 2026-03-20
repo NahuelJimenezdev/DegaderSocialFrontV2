@@ -14,10 +14,7 @@ import {
 import { useAuth } from '../../../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import userService from '../../../../api/userService';
-import PizZip from 'pizzip';
-import Docxtemplater from 'docxtemplater';
-import ImageModule from 'docxtemplater-image-module-free';
-import { saveAs } from 'file-saver';
+import { downloadCV } from '../../utils/docUtils';
 
 const SECTIONS = [
   { id: 'personal', title: 'Datos Generales', icon: User },
@@ -297,106 +294,22 @@ export default function FormularioHojaDeVida() {
   };
 
   const generateWord = async () => {
-    // Primero guardamos la información por defecto
+    // Primero guardamos la información por defecto para no perder cambios locales
     const saved = await handleSave(true);
     if (!saved) {
       toast.error('No se pudo guardar la información antes de descargar. Inténtalo de nuevo.');
       return;
     }
 
-    const EMPTY_IMAGE = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-    
     setLoading(true);
     try {
-      // 1. Cargar el template desde la carpeta pública
-      const response = await fetch('/templates/FORMATO HOJA DE VIDA FHISYL.docx');
-      if (!response.ok) throw new Error('No se pudo cargar la plantilla de Word.');
-      
-      const content = await response.arrayBuffer();
-      const zip = new PizZip(content);
-      
-      // Configuración del módulo de imagen
-      const opts = {
-        centered: false,
-        getImage: (tagValue) => {
-          console.log('getImage (Formulario Sync) invocado con tipo:', (tagValue instanceof Uint8Array ? 'Uint8Array' : typeof tagValue));
-          if (tagValue instanceof Uint8Array) return tagValue;
-          
-          try {
-            const binaryString = window.atob(EMPTY_IMAGE);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes;
-          } catch (error) {
-            return new Uint8Array(0);
-          }
-        },
-        getSize: (img, tagValue, tagName) => {
-          if (tagName === 'foto_perfil' || tagName === 'fotoUser') return [110, 140];
-          if (tagName === 'firma_digital' || tagName === 'firmaUser') return [180, 60];
-          return [100, 100];
-        },
-      };
-
-      // Helper para obtener binario asíncronamente antes del render
-      const getBinary = async (tagValue) => {
-        if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
-          const binaryString = window.atob(EMPTY_IMAGE);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          return bytes;
-        }
-        try {
-          if (tagValue.startsWith('data:image')) {
-            const parts = tagValue.split(',');
-            const binaryString = window.atob(parts[1]);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes;
-          }
-          const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
-          let finalUrl = tagValue;
-          if (tagValue.startsWith('/') && !tagValue.startsWith('//')) {
-            finalUrl = `${baseUrl.replace('/api', '')}${tagValue}`;
-          }
-          const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
-          const response = await fetch(proxyUrl);
-          if (!response.ok) throw new Error('HTTP ' + response.status);
-          return new Uint8Array(await response.arrayBuffer());
-        } catch (error) {
-          const binaryString = window.atob(EMPTY_IMAGE);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          return bytes;
-        }
-      };
-
-      const sanitizeData = (data) => {
-        if (data === null || data === undefined) return "";
-        if (Array.isArray(data)) return data.map(item => sanitizeData(item));
-        if (typeof data === 'object') {
-          const sanitized = {};
-          for (const key in data) {
-            if (Object.prototype.hasOwnProperty.call(data, key)) {
-              sanitized[key] = sanitizeData(data[key]);
-            }
-          }
-          return sanitized;
-        }
-        return data;
-      };
-      
-      const imageModule = new ImageModule(opts);
       // Usar la función unificada de docUtils para garantizar consistencia total ( Admin == Usuario )
-      const success = await downloadCV(user, formData, photoPreview, firmaPreview);
+      // Pasamos formData, photoPreview y firmaPreview para que use los datos locales recién guardados o editados
+      const success = await downloadCV(user, formData, { 
+        photo: photoPreview, 
+        firma: firmaPreview 
+      });
+      
       if (success) toast.success('¡Hoja de Vida generada con éxito!');
     } catch (error) {
       console.error('Error generando Word:', error);

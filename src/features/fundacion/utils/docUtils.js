@@ -128,7 +128,7 @@ const getBinary = async (tagValue) => {
   }
 };
 
-export const generateCV = async (userData, overrideData = null) => {
+export const generateCV = async (userData, overrideData = null, overridePhotos = null) => {
   const meta = userData.fundacion || {};
   const formData = overrideData || meta.hojaDeVida?.datos || {};
   
@@ -179,11 +179,12 @@ export const generateCV = async (userData, overrideData = null) => {
   });
   
   console.log('Pre-cargando binarios de imágenes...');
-  const photoData = await getBinary(formData.foto_perfil || '');
+  const photoSource = overridePhotos?.photo || formData.foto_perfil || formData.fotoUser || '';
+  const photoData = await getBinary(photoSource);
   
-  let firma = formData.firma_digital || '';
-  if (firma.startsWith('data:image')) firma = await processSignatureImage(firma);
-  const firmaData = await getBinary(firma);
+  let firmaSource = overridePhotos?.firma || formData.firma_digital || formData.firmaUser || '';
+  if (firmaSource.startsWith('data:image')) firmaSource = await processSignatureImage(firmaSource);
+  const firmaData = await getBinary(firmaSource);
 
   const rawData = formData;
   const dataToRender = sanitizeData({
@@ -251,9 +252,9 @@ export const generateCV = async (userData, overrideData = null) => {
 /**
  * Función unificada para descargar la Hoja de Vida con el nombre de archivo correcto.
  */
-export const downloadCV = async (userData, overrideData = null) => {
+export const downloadCV = async (userData, overrideData = null, overridePhotos = null) => {
   try {
-    const blob = await generateCV(userData, overrideData);
+    const blob = await generateCV(userData, overrideData, overridePhotos);
     const meta = userData.fundacion || {};
     const formData = overrideData || meta.hojaDeVida?.datos || {};
     
