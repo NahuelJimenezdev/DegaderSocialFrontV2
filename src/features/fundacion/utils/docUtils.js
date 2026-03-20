@@ -7,45 +7,74 @@ const EMPTY_IMAGE = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 const processSignatureImage = (base64) => {
   return new Promise((resolve) => {
+    if (!base64 || typeof base64 !== 'string' || !base64.startsWith('data:image')) {
+      console.warn('processSignatureImage: base64 inválido o vacío');
+      return resolve(null);
+    }
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+      canvas.width = img.width || 180;
+      canvas.height = img.height || 60;
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        if (data[i] > 200 && data[i + 1] > 200 && data[i + 2] > 200) data[i + 3] = 0;
+      if (!ctx) {
+        console.error('processSignatureImage: No se pudo obtener el contexto 2d');
+        return resolve(base64);
       }
-      ctx.putImageData(imageData, 0, 0);
-      resolve(canvas.toDataURL('image/png'));
+      ctx.drawImage(img, 0, 0);
+      try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (imageData && imageData.data) {
+          const data = imageData.data;
+          for (let i = 0; i < data.length; i += 4) {
+            if (data[i] > 200 && data[i + 1] > 200 && data[i + 2] > 200) data[i + 3] = 0;
+          }
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        } else {
+          resolve(base64);
+        }
+      } catch (e) {
+        console.error('processSignatureImage: Error al procesar píxeles', e);
+        resolve(base64);
+      }
+    };
+    img.onerror = () => {
+      console.error('processSignatureImage: Error al cargar la imagen');
+      resolve(null);
     };
     img.src = base64;
   });
 };
 
 const getBinary = async (tagValue) => {
-  if (!tagValue || tagValue === '' || tagValue === '---') {
+  console.log('getBinary invocado con:', tagValue);
+  if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
+    console.log('getBinary: usando imagen vacía por defecto');
     const binaryString = window.atob(EMPTY_IMAGE);
     return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
   }
   try {
     const strVal = tagValue.toString();
     if (strVal.startsWith('data:image')) {
-      const base64 = strVal.split(',')[1];
-      const binaryString = window.atob(base64);
+      console.log('getBinary: procesando data:image');
+      const parts = strVal.split(',');
+      if (parts.length < 2) throw new Error('Formato data:image inválido');
+      const binaryString = window.atob(parts[1]);
       return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
     }
     const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
     let finalUrl = strVal;
     if (strVal.startsWith('/') && !strVal.startsWith('//')) finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
+    console.log('getBinary: descargando vía proxy:', finalUrl);
     const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
     const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error('Error proxy');
-    return new Uint8Array(await response.arrayBuffer());
+    if (!response.ok) throw new Error('Error proxy HTTP ' + response.status);
+    const buffer = await response.arrayBuffer();
+    console.log('getBinary: descarga exitosa, tamaño:', buffer.byteLength);
+    return new Uint8Array(buffer);
   } catch (e) {
+    console.warn('getBinary: error procesando tag, usando fallback', e.message);
     const binaryString = window.atob(EMPTY_IMAGE);
     return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
   }

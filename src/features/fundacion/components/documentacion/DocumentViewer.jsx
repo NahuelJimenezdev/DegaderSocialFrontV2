@@ -7,7 +7,9 @@ export default function DocumentViewer() {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const { type, data } = location.state || {};
+  const { type, data: stateData } = location.state || {};
+  // Priorizar los datos pasados por estado (para administradores) o los del propio usuario
+  const targetUser = stateData || user;
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function DocumentViewer() {
     }
   }, [type]);
 
-  if (!type || !user) {
+  if (!type || !targetUser) {
     return (
       <div className="p-10 text-center">
         <p className="text-gray-500 mb-4">No se encontró información del documento.</p>
@@ -57,7 +59,7 @@ export default function DocumentViewer() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Documento_${type}_${user.nombres.primero}_${user.apellidos.primero}.doc`;
+    link.download = `Documento_${type}_${targetUser.nombres?.primero}_${targetUser.apellidos?.primero}.doc`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -66,7 +68,7 @@ export default function DocumentViewer() {
     switch (type) {
       case 'Aplicativo':
       case 'Solicitud':
-        const appData = user.fundacion?.documentacionFHSYL || {};
+        const appData = targetUser.fundacion?.documentacionFHSYL || {};
         return (
           <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
             <div className="text-center mb-10">
@@ -82,19 +84,19 @@ export default function DocumentViewer() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-8 text-[15px]">
               <div className="flex flex-col">
                 <span className="font-bold">Nombre:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1 min-w-[150px]">{user.nombres?.primero} {user.nombres?.segundo} {user.apellidos?.primero} {user.apellidos?.segundo}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1 min-w-[150px]">{targetUser.nombres?.primero} {targetUser.nombres?.segundo} {targetUser.apellidos?.primero} {targetUser.apellidos?.segundo}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Dirección:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.direccion || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{targetUser.personal?.direccion || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Localidad:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.ubicacion?.ciudad || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{targetUser.personal?.ubicacion?.ciudad || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Barrio:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.ubicacion?.barrio || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{targetUser.personal?.ubicacion?.barrio || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold ml-2">UPZ:</span>
@@ -102,11 +104,11 @@ export default function DocumentViewer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Celular:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.personal?.celular || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{targetUser.personal?.celular || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Email:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{user.email || '---'}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{targetUser.email || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Ocupación:</span>
@@ -247,8 +249,44 @@ export default function DocumentViewer() {
           </div>
         );
 
+      case 'Hoja de Vida':
+        const cvData = targetUser.fundacion?.hojaDeVida?.datos || {};
+        return (
+          <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
+            <div className="text-center mb-10">
+              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 dark:text-blue-400 mb-1">
+                HOJA DE VIDA
+              </h1>
+              <h2 className="text-xl font-medium text-gray-700 dark:text-gray-300">
+                Fundación Humanitaria Sol y Luna
+              </h2>
+            </div>
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700">
+                <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-2">Información Personal</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <p><strong>Nombre Completo:</strong> {cvData.nombre_completo || `${targetUser.nombres?.primero} ${targetUser.apellidos?.primero}`}</p>
+                  <p><strong>Cédula:</strong> {cvData.cedula || '---'}</p>
+                  <p><strong>Nacionalidad:</strong> {cvData.nacionalidad || '---'}</p>
+                  <p><strong>Lugar de Nacimiento:</strong> {cvData.lugar_nacimiento || '---'}</p>
+                </div>
+              </div>
+              
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700">
+                <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-2">Perfil Profesional</h3>
+                <p className="text-sm italic">{cvData.perfil_profesional || 'Sin descripción'}</p>
+              </div>
+
+              {/* Más campos pueden añadirse aquí según necesidad */}
+              <div className="text-center py-10 text-gray-400 italic">
+                Cargando más secciones de la Hoja de Vida...
+              </div>
+            </div>
+          </div>
+        );
+
       case 'Entrevista':
-        const entData = user.fundacion?.entrevista?.respuestas || {};
+        const entData = targetUser.fundacion?.entrevista?.respuestas || {};
         const entRes = typeof entData === 'object' && !Array.isArray(entData) ? entData : {};
         
         return (
@@ -265,7 +303,7 @@ export default function DocumentViewer() {
             <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div className="flex gap-2">
                 <span className="font-bold">Nombre:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{entRes.nombre || `${user.nombres?.primero} ${user.apellidos?.primero}`}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{entRes.nombre || `${targetUser.nombres?.primero} ${targetUser.apellidos?.primero}`}</span>
               </div>
               <div className="flex gap-2">
                 <span className="font-bold">Fecha Nacimiento:</span>

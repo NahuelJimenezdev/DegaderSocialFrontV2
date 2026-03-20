@@ -51,6 +51,7 @@ export default function UserDocumentationView() {
   const handleDownload = async (type) => {
     if (!targetUser) return;
     setDownloading(true);
+    console.log('Iniciando descarga de tipo:', type);
     try {
       let blob;
       let filename = '';
@@ -58,23 +59,30 @@ export default function UserDocumentationView() {
 
       switch (type) {
         case 'cv':
+          console.log('Generando CV Word...');
           blob = await generateCV(targetUser);
           filename = `Hoja_de_Vida_${nameStr}.docx`;
           break;
         case 'fhsyl':
+          console.log('Generando Aplicativo Argentina...');
           blob = generateFHSYL(targetUser);
           filename = `FHSYL_Argentina_${nameStr}.doc`;
           break;
         case 'entrevista':
+          console.log('Generando Entrevista...');
           blob = generateEntrevista(targetUser);
           filename = `Entrevista_${nameStr}.doc`;
           break;
         case 'solicitud':
+          console.log('Generando Solicitud...');
           blob = generateSolicitud(targetUser);
           filename = `Solicitud_Ingreso_${nameStr}.doc`;
           break;
         default: return;
       }
+
+      if (!blob) throw new Error('No se pudo generar el blob del documento');
+      console.log('Documento generado, procediendo a descargar. Tamaño:', blob.size);
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -83,13 +91,30 @@ export default function UserDocumentationView() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
       toast.success('Documento generado con éxito');
     } catch (error) {
-      console.error(error);
-      toast.error('Error al generar el documento');
+      console.error('Error detallado handleDownload:', error);
+      toast.error('Error al generar el documento: ' + error.message);
     } finally {
       setDownloading(false);
     }
+  };
+
+  const handlePreview = (docId) => {
+    const typeMap = {
+      'cv': 'Hoja de Vida',
+      'fhsyl': 'Aplicativo',
+      'entrevista': 'Entrevista',
+      'solicitud': 'Solicitud'
+    };
+    console.log('Abriendo vista previa para:', typeMap[docId]);
+    navigate('/fundacion/visor', { 
+      state: { 
+        type: typeMap[docId], 
+        data: targetUser // Pasamos el usuario cargado como data para el visor
+      } 
+    });
   };
 
   const downloadAll = async () => {
@@ -218,8 +243,9 @@ export default function UserDocumentationView() {
                   Descargar
                 </button>
                 <button 
+                  onClick={() => handlePreview(doc.id)}
                   disabled={!doc.status}
-                  className="p-3 bg-white dark:bg-gray-800 text-blue-600 border border-blue-100 dark:border-blue-900/50 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all disabled:opacity-30 disabled:pointer-events-none"
+                  className="p-3 bg-white dark:bg-gray-800 text-blue-600 border border-blue-100 dark:border-blue-900/50 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
                   title="Vista Previa"
                 >
                   <Eye size={20} />

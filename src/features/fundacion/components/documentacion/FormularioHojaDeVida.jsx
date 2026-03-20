@@ -171,7 +171,6 @@ export default function FormularioHojaDeVida() {
         nombre_personales_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.nombre || '',
         profesion_personal_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.relacion || '',
         telefonopers_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.contacto || '',
-        
         nombre_personales_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.nombre || '',
         profesion_personal_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.relacion || '',
         telefonopers_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.contacto || '',
@@ -320,8 +319,9 @@ export default function FormularioHojaDeVida() {
       const opts = {
         centered: false,
         getImage: async (tagValue) => {
+          console.log('getImage (Formulario) invocado con:', tagValue);
           // Fallback a imagen transparente 1x1 para evitar errores de length
-          if (!tagValue || tagValue === '' || tagValue === '---') {
+          if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
             const binaryString = window.atob(EMPTY_IMAGE);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
@@ -333,7 +333,10 @@ export default function FormularioHojaDeVida() {
           try {
             const strVal = tagValue.toString();
             if (strVal.startsWith('data:image')) {
-              const binaryString = window.atob(strVal.split(',')[1]);
+              console.log('getImage (Formulario): procesando data:image');
+              const parts = strVal.split(',');
+              if (parts.length < 2) throw new Error('Formato data:image inválido');
+              const binaryString = window.atob(parts[1]);
               const bytes = new Uint8Array(binaryString.length);
               for (let i = 0; i < binaryString.length; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
@@ -347,12 +350,14 @@ export default function FormularioHojaDeVida() {
               finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
             }
 
+            console.log('getImage (Formulario): descargando vía proxy:', finalUrl);
             const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
             const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error('Error al cargar imagen via proxy');
-            return new Uint8Array(await response.arrayBuffer());
+            if (!response.ok) throw new Error('Error al cargar imagen via proxy HTTP ' + response.status);
+            const buffer = await response.arrayBuffer();
+            return new Uint8Array(buffer);
           } catch (error) {
-            console.error('Error procesando imagen para Word:', error);
+            console.warn('getImage (Formulario): error procesando image, usando fallback', error.message);
             const binaryString = window.atob(EMPTY_IMAGE);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
