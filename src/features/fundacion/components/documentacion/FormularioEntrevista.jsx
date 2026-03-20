@@ -32,37 +32,45 @@ export default function FormularioEntrevista() {
   const toast = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [respuestas, setRespuestas] = useState(user?.fundacion?.entrevista?.respuestas || {
-    nombre: `${user?.nombres?.primero} ${user?.apellidos?.primero}`,
-    fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
-    upzLocalidad: user?.fundacion?.documentacionFHSYL?.upz || '',
-    llamado: user?.fundacion?.entrevista?.respuestas?.llamado || 
-             user?.fundacion?.documentacionFHSYL?.llamadoPastoral || '',
-    loQueMasGusta: '',
-    sacrificioPastoral: '',
-    caracterAmigos: '',
-    caracterCompañeros: '',
-    situacionDificil: '',
-    respuestaSituacion: '',
-    cambioSituacion: '',
-    autoridadEspiritual: '',
-    personeriaJuridica: '',
-    manejoDiferencias: '',
-    dones: '',
-    talentos: '',
-    profesion: user?.fundacion?.entrevista?.respuestas?.profesion || 
-               user?.fundacion?.documentacionFHSYL?.ocupacion || '',
-    enfrentamientoConflictos: '',
-    porqueCoordinador: '',
-    manejaOffice: '',
-    tiempoPastoreando: '',
-    permanenciaMinisterio: '',
-    vinculoFamiliar: '',
-    familiaInvolucrada: '',
-    formaEspiritual: '',
-    disponibilidadTiempo: '',
-    palabrasVoluntarias: ''
-  });
+  
+  // Función para obtener estado inicial con mezcla (merge)
+  const getInitialState = () => {
+    const defaultRespuestas = {
+      nombre: user?.nombres ? `${user.nombres.primero} ${user.apellidos?.primero || ''}`.trim() : '',
+      fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
+      upzLocalidad: user?.fundacion?.documentacionFHSYL?.upz || '',
+      llamado: user?.fundacion?.documentacionFHSYL?.llamadoPastoral || '',
+      loQueMasGusta: '',
+      sacrificioPastoral: '',
+      caracterAmigos: '',
+      caracterCompañeros: '',
+      situacionDificil: '',
+      respuestaSituacion: '',
+      cambioSituacion: '',
+      autoridadEspiritual: '',
+      personeriaJuridica: '',
+      manejoDiferencias: '',
+      dones: '',
+      talentos: '',
+      profesion: user?.fundacion?.documentacionFHSYL?.ocupacion || '',
+      enfrentamientoConflictos: '',
+      porqueCoordinador: '',
+      manejaOffice: '',
+      tiempoPastoreando: '',
+      permanenciaMinisterio: '',
+      vinculoFamiliar: '',
+      familiaInvolucrada: '',
+      formaEspiritual: '',
+      disponibilidadTiempo: '',
+      palabrasVoluntarias: ''
+    };
+
+    // Mezclar datos guardados con los por defecto para asegurar que todas las llaves existan
+    const savedRespuestas = user?.fundacion?.entrevista?.respuestas || {};
+    return { ...defaultRespuestas, ...savedRespuestas };
+  };
+
+  const [respuestas, setRespuestas] = useState(getInitialState());
 
   React.useEffect(() => {
     // Scroll window and main content to top on mount
@@ -83,9 +91,9 @@ export default function FormularioEntrevista() {
     switch (step) {
       case 0: fieldsToValidate = ['nombre', 'fechaNacimiento', 'upzLocalidad']; break;
       case 1: fieldsToValidate = ['llamado', 'loQueMasGusta', 'sacrificioPastoral']; break;
-      case 2: fieldsToValidate = ['caracterAmigos', 'caracterCompañeros', 'situacionDificil']; break;
+      case 2: fieldsToValidate = ['caracterAmigos', 'caracterCompañeros', 'situacionDificil', 'respuestaSituacion', 'cambioSituacion']; break;
       case 3: fieldsToValidate = ['autoridadEspiritual', 'personeriaJuridica', 'manejoDiferencias']; break;
-      case 4: fieldsToValidate = ['dones', 'profesion', 'enfrentamientoConflictos', 'porqueCoordinador', 'manejaOffice']; break;
+      case 4: fieldsToValidate = ['dones', 'talentos', 'profesion', 'enfrentamientoConflictos', 'porqueCoordinador', 'manejaOffice']; break;
       case 5: fieldsToValidate = ['vinculoFamiliar', 'familiaInvolucrada', 'formaEspiritual']; break;
       case 6: fieldsToValidate = ['tiempoPastoreando', 'permanenciaMinisterio', 'disponibilidadTiempo', 'palabrasVoluntarias']; break;
       default: break;
@@ -182,8 +190,18 @@ export default function FormularioEntrevista() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Cuénteme de un momento en que se encontró en una situación difícil. ¿Cómo respondió? ¿Qué cambiaría?</label>
-                <textarea name="situacionDificil" value={respuestas.situacionDificil} onChange={handleChange} className="form-input-premium w-full h-32" />
+                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Cuénteme de un momento en que se encontró en una situación difícil.</label>
+                <textarea name="situacionDificil" value={respuestas.situacionDificil} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Describe la situación..." />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Cómo respondió?</label>
+                  <textarea name="respuestaSituacion" value={respuestas.respuestaSituacion} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Tu respuesta..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué cambiaría?</label>
+                  <textarea name="cambioSituacion" value={respuestas.cambioSituacion} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Lo que cambiarías..." />
+                </div>
               </div>
             </div>
           </div>
@@ -213,9 +231,15 @@ export default function FormularioEntrevista() {
           <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
             <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Dones y Talentos</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Con cuáles dones y talentos aportaría usted al equipo?</label>
-                <textarea name="dones" value={respuestas.dones} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Dones, talentos..." />
+              <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Con qué dones aportaría usted al equipo?</label>
+                  <textarea name="dones" value={respuestas.dones} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Dones espirituales..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Y con qué talentos naturales?</label>
+                  <textarea name="talentos" value={respuestas.talentos} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Talentos, habilidades..." />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Profesión</label>
