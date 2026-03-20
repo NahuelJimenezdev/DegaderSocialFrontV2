@@ -481,11 +481,9 @@ export const useFundacion = (user, updateUser) => {
     const requiereDepartamento = () => {
         if (!requiereUbicacionExacta()) return false;
         
-        // Nacional Directors only need Country
+        // Nacional Level only needs Country
         if (formData.nivel === "nacional") {
-            if (["Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"].includes(formData.cargo)) {
-                return false;
-            }
+            return false;
         }
         return true;
     };
@@ -493,11 +491,9 @@ export const useFundacion = (user, updateUser) => {
     const requiereMunicipio = () => {
         if (!requiereDepartamento()) return false;
         
-        // Regional Directors only need Country + Dept
+        // Regional Level only needs Country + Dept
         if (formData.nivel === "regional") {
-            if (["Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"].includes(formData.cargo)) {
-                return false;
-            }
+            return false;
         }
         return true;
     };
@@ -505,11 +501,9 @@ export const useFundacion = (user, updateUser) => {
     const requiereBarrio = () => {
         if (!requiereMunicipio()) return false;
         
-        // Departamental Directors only need Country + Dept + Mun
+        // Departamental Level only needs Country + Dept + Mun
         if (formData.nivel === "departamental") {
-            if (["Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"].includes(formData.cargo)) {
-                return false;
-            }
+            return false;
         }
         return true;
     };
