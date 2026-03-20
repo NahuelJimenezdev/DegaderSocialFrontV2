@@ -31,9 +31,10 @@ export default function UserDocumentationView() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await userService.getUserById(id);
-        if (response.success) {
-          setTargetUser(response.data);
+        const res = await userService.getUserById(id);
+        // Extraer los datos del usuario del wrapper de la respuesta {success, message, data}
+        if (res.success) {
+          setTargetUser(res.data);
         } else {
           toast.error('No se pudo cargar la información del usuario');
           navigate('/fundacion/admin');
