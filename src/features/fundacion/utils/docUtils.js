@@ -179,14 +179,27 @@ export const generateCV = async (userData, overrideData = null, overridePhotos =
   });
   
   console.log('Pre-cargando binarios de imágenes...');
-  const photoSource = overridePhotos?.photo || formData.foto_perfil || formData.fotoUser || '';
+  const photoSource = overridePhotos?.photo || formData.foto_perfil || formData.foto_perfil_form || formData.fotoUser || '';
   const photoData = await getBinary(photoSource);
   
   let firmaSource = overridePhotos?.firma || formData.firma_digital || formData.firmaUser || '';
   if (firmaSource.startsWith('data:image')) firmaSource = await processSignatureImage(firmaSource);
   const firmaData = await getBinary(firmaSource);
 
-  const rawData = formData;
+  const rawData = { ...formData };
+  
+  // Soporte para variaciones de nombres de campos (Fuzzy Mapping)
+  if (rawData.profesion_personal2) rawData.profesion_personal_2 = rawData.profesion_personal2;
+  if (rawData.profesion_personal3) rawData.profesion_personal_3 = rawData.profesion_personal3;
+  if (rawData.profesion2_personal) rawData.profesion_personal_2 = rawData.profesion2_personal;
+  if (rawData.profesion3_personal) rawData.profesion_personal_3 = rawData.profesion3_personal;
+  if (!rawData.documento_num && (rawData.doc_num || rawData.documento)) {
+    rawData.documento_num = rawData.doc_num || rawData.documento;
+  }
+  if (!rawData.lugar_expedicion && (rawData.lugar_exp || rawData.expedicion)) {
+    rawData.lugar_expedicion = rawData.lugar_exp || rawData.expedicion;
+  }
+
   const dataToRender = sanitizeData({
     ...rawData,
     foto_perfil: photoData,
