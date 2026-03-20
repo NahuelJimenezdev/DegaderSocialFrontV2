@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.77.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.76.0...v1.77.0) (2026-03-20)
+
+
+### Features
+
+* full document mapping and ZIP bundling for user documentation ([05ba0f7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/05ba0f7ca5a1c6448604e1ac2ee103085e48c7a7))
+
+
+### Bug Fixes
+
+* restringir creación y filtro de carpetas institucionales por aprobación y cargo ([cf0ec10](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cf0ec107efae1d131d28c8ea3e12aaf8482a9622))
+
 ## [1.76.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.75.0...v1.76.0) (2026-03-20)
 
 
