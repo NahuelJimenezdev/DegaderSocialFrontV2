@@ -30,8 +30,13 @@ export default function UserDocumentationView() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await userService.getUserById(id);
-        setTargetUser(data);
+        const response = await userService.getUserById(id);
+        if (response.success) {
+          setTargetUser(response.data);
+        } else {
+          toast.error('No se pudo cargar la información del usuario');
+          navigate('/fundacion/admin');
+        }
       } catch (error) {
         toast.error('Error al cargar datos del usuario');
         navigate('/fundacion/admin');
@@ -48,7 +53,7 @@ export default function UserDocumentationView() {
     try {
       let blob;
       let filename = '';
-      const nameStr = `${targetUser.nombres.primero}_${targetUser.apellidos.primero}`.replace(/\s+/g, '_');
+      const nameStr = `${targetUser.nombres?.primero || 'Usuario'}_${targetUser.apellidos?.primero || ''}`.replace(/\s+/g, '_');
 
       switch (type) {
         case 'cv':
@@ -135,7 +140,7 @@ export default function UserDocumentationView() {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              Documentación: <span className="text-blue-600">{targetUser.nombres.primero} {targetUser.apellidos.primero}</span>
+              Documentación: <span className="text-blue-600">{targetUser.nombres?.primero || ''} {targetUser.apellidos?.primero || ''}</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
               Visualiza y descarga los documentos oficiales requeridos.
@@ -220,9 +225,9 @@ export default function UserDocumentationView() {
              />
           </div>
           <div className="flex-1 text-center md:text-left">
-            <h4 className="text-xl font-bold">{targetUser.nombres.primero} {targetUser.apellidos.primero}</h4>
+            <h4 className="text-xl font-bold">{targetUser.nombres?.primero || 'Usuario'} {targetUser.apellidos?.primero || ''}</h4>
             <p className="text-blue-200 mt-1 uppercase tracking-widest text-xs font-bold">
-              {targetUser.fundacion?.cargo} • {targetUser.fundacion?.area}
+              {targetUser.fundacion?.cargo || 'Sin Cargo'} • {targetUser.fundacion?.area || 'Sin Área'}
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
               <span className="flex items-center gap-2 text-sm bg-white/10 px-4 py-1.5 rounded-xl border border-white/10">
