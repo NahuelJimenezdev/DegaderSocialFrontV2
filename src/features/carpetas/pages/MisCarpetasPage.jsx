@@ -159,6 +159,34 @@ const MisCarpetasPage = () => {
                       </option>
                     ))}
                   </select>
+
+                  {jerarquia.subAreas?.length > 0 && (
+                    <select
+                      value={filtros.subArea}
+                      onChange={(e) => actualizarFiltro('subArea', e.target.value)}
+                      className="w-full sm:w-auto px-3 py-1.5 text-sm border-2 border-cyan-400 dark:border-cyan-400 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-cyan-500 max-w-full shadow-sm shadow-cyan-200 dark:shadow-cyan-900/50"
+                      style={{ borderColor: 'rgb(34, 211, 238)' }}
+                    >
+                      <option value="">Todas las Sub-Áreas</option>
+                      {jerarquia.subAreas.map(sa => (
+                        <option key={sa} value={sa}>{sa}</option>
+                      ))}
+                    </select>
+                  )}
+
+                  {jerarquia.programas?.length > 0 && (
+                    <select
+                      value={filtros.programa}
+                      onChange={(e) => actualizarFiltro('programa', e.target.value)}
+                      className="w-full sm:w-auto px-3 py-1.5 text-sm border-2 border-cyan-400 dark:border-cyan-400 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-cyan-500 max-w-full shadow-sm shadow-cyan-200 dark:shadow-cyan-900/50"
+                      style={{ borderColor: 'rgb(34, 211, 238)' }}
+                    >
+                      <option value="">Todos los Programas</option>
+                      {jerarquia.programas.map(p => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  )}
                 </>
               )}
 
@@ -179,6 +207,8 @@ const MisCarpetasPage = () => {
                     actualizarFiltro('tipo', '');
                     actualizarFiltro('area', '');
                     actualizarFiltro('cargo', '');
+                    actualizarFiltro('subArea', '');
+                    actualizarFiltro('programa', '');
                     actualizarFiltro('compartidas', false);
                     setBusqueda('');
                   }}

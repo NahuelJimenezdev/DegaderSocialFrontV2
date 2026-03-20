@@ -19,6 +19,8 @@ export const useCarpetas = () => {
     pais: '',
     provincia: '',
     ciudad: '',
+    subArea: '',
+    programa: '',
     compartidas: false,
     misCarpetas: false
   });
@@ -35,6 +37,8 @@ export const useCarpetas = () => {
   // Jerarquía Institucional
   const [jerarquia, setJerarquia] = useState({
     areas: [],
+    subAreas: [],
+    programas: [],
     cargos: [],
     niveles: []
   });

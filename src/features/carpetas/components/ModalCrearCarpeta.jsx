@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Folder, Users, Globe, Building, Shield, UsersRound } from 'lucide-react';
+import { X, Folder, Users, Globe, Building, Shield, UsersRound, MapPin } from 'lucide-react';
 import api from '../../../api/config';
 import { useAuth } from '../../../context/AuthContext';
+import { useFundacion } from '../../fundacion/hooks/useFundacion';
 
 const COLORES_CARPETA = [
   { nombre: 'Azul', valor: '#3B82F6' },
@@ -53,15 +54,26 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
     tipo: 'personal',
     color: '#3B82F6',
     icono: 'folder',
-    // Jerarquía
-    areaSeleccionada: '',
+    // Jerarquía completa
     nivelInstitucional: '',
+    cargoInstitucional: '',
+    areaSeleccionada: '',
+    subAreaSeleccionada: '',
+    programaSeleccionado: '',
     pais: '',
     provincia: '',
     ciudad: '',
     compartirAutomaticamente: false,
     grupoId: ''
   });
+
+  const {
+    ESTRUCTURA_FUNDACION,
+    CARGOS_POR_NIVEL,
+    AREAS_POR_CARGO,
+    SUB_AREAS_POR_AREA,
+    PROGRAMAS_POR_AREA
+  } = useFundacion(user, null); // Pasamos null a updateUser ya que no vamos a actualizar el perfil aquí
 
   const [previewUsuarios, setPreviewUsuarios] = useState(null); // null = loading/unknown, 0 = none, >0 = count
   const [myGroups, setMyGroups] = useState([]);
@@ -78,11 +90,14 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
           tipo: carpeta.tipo || 'personal',
           color: carpeta.color || '#3B82F6',
           icono: carpeta.icono || 'folder',
+          nivelInstitucional: carpeta.visibilidadPorNivel?.niveles?.[0] || (carpeta.visibilidadPorNivel?.habilitado === false ? 'Todas' : ''),
+          cargoInstitucional: carpeta.visibilidadPorCargo?.cargos?.[0] || '',
           areaSeleccionada: carpeta.visibilidadPorArea?.areas?.[0] || '',
-          nivelInstitucional: carpeta.visibilidadPorArea?.nivel || '',
-          pais: carpeta.visibilidadPorArea?.ubicacion?.pais || '',
-          provincia: carpeta.visibilidadPorArea?.ubicacion?.subdivision || '',
-          ciudad: carpeta.visibilidadPorArea?.ubicacion?.ciudad || '',
+          subAreaSeleccionada: carpeta.visibilidadPorArea?.subAreas?.[0] || '',
+          programaSeleccionado: carpeta.visibilidadPorArea?.programas?.[0] || '',
+          pais: carpeta.visibilidadGeografica?.pais || '',
+          provincia: carpeta.visibilidadGeografica?.subdivision || '',
+          ciudad: carpeta.visibilidadGeografica?.ciudad || '',
           compartirAutomaticamente: false // No persistimos esto en edición por seguridad
         });
       } else {
@@ -93,8 +108,11 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
           tipo: 'personal',
           color: '#3B82F6',
           icono: 'folder',
-          areaSeleccionada: '',
           nivelInstitucional: '',
+          cargoInstitucional: '',
+          areaSeleccionada: '',
+          subAreaSeleccionada: '',
+          programaSeleccionado: '',
           pais: '',
           provincia: '',
           ciudad: '',
@@ -263,98 +281,197 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
 
           {/* Configuración Institucional (Condicional) */}
           {formData.tipo === 'institucional' && (
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-5 border border-gray-200 dark:border-gray-700 space-y-4 animate-fadeIn">
-              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <Building size={18} className="text-indigo-500" />
-                Configuración Institucional
+            <div className="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-5 border border-blue-200 dark:border-blue-800/50 space-y-5 animate-fadeIn">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100 flex items-center gap-2">
+                <Building size={18} className="text-blue-500" />
+                Configuración Institucional (FHS&L)
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* 1. NIVEL */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Área</label>
-                  <select
-                    value={formData.areaSeleccionada}
-                    onChange={(e) => handleChange('areaSeleccionada', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
-                  >
-                    <option value="">Seleccionar Área</option>
-                    {jerarquia.areas?.map(area => (
-                      <option key={area} value={area}>{area}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 uppercase mb-1">Nivel</label>
+                  <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
+                    1. Nivel Jerárquico
+                  </label>
                   <select
                     value={formData.nivelInstitucional}
-                    onChange={(e) => handleChange('nivelInstitucional', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        nivelInstitucional: val,
+                        cargoInstitucional: '', areaSeleccionada: '', subAreaSeleccionada: '', programaSeleccionado: '',
+                        provincia: '', ciudad: ''
+                      }));
+                    }}
+                    className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                    required={formData.tipo === 'institucional'}
                   >
-                    <option value="">Seleccionar Nivel</option>
-                    {jerarquia.niveles?.map(nivel => (
-                      <option key={nivel} value={nivel}>{nivel}</option>
+                    <option value="">Seleccionar Nivel...</option>
+                    <option value="Todas">Todas la Fundación (Global)</option>
+                    {ESTRUCTURA_FUNDACION?.niveles?.map(n => (
+                      <option key={n.valor} value={n.valor}>{n.nombre}</option>
                     ))}
                   </select>
                 </div>
+
+                {/* 2. CARGO */}
+                {formData.nivelInstitucional && formData.nivelInstitucional !== 'Todas' && (
+                  <div>
+                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
+                      2. Cargo Institucional
+                    </label>
+                    <select
+                      value={formData.cargoInstitucional}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormData(prev => ({
+                          ...prev,
+                          cargoInstitucional: val,
+                          areaSeleccionada: '', subAreaSeleccionada: '', programaSeleccionado: ''
+                        }));
+                      }}
+                      className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Cualquier Cargo (Todos)</option>
+                      {CARGOS_POR_NIVEL[formData.nivelInstitucional]?.map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* 3. ÁREA */}
+                {formData.cargoInstitucional && (
+                  <div>
+                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
+                      3. Área / Dirección
+                    </label>
+                    <select
+                      value={formData.areaSeleccionada}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormData(prev => ({
+                          ...prev,
+                          areaSeleccionada: val,
+                          subAreaSeleccionada: '', programaSeleccionado: ''
+                        }));
+                      }}
+                      className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Cualquier Área (Todas)</option>
+                      {AREAS_POR_CARGO[formData.cargoInstitucional]?.map(a => (
+                        <option key={a} value={a}>{a}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* 4. SUB-ÁREA (Si aplica) */}
+                {formData.areaSeleccionada && SUB_AREAS_POR_AREA[formData.areaSeleccionada] && (
+                  <div>
+                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
+                      4. Sub-Área
+                    </label>
+                    <select
+                      value={formData.subAreaSeleccionada}
+                      onChange={(e) => handleChange('subAreaSeleccionada', e.target.value)}
+                      className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Todas las Sub-Áreas</option>
+                      {SUB_AREAS_POR_AREA[formData.areaSeleccionada]?.map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* 5. PROGRAMA (Si aplica) */}
+                {formData.areaSeleccionada && PROGRAMAS_POR_AREA[formData.areaSeleccionada] && (
+                  <div>
+                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
+                      5. Programa
+                    </label>
+                    <select
+                      value={formData.programaSeleccionado}
+                      onChange={(e) => handleChange('programaSeleccionado', e.target.value)}
+                      className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Todos los Programas</option>
+                      {PROGRAMAS_POR_AREA[formData.areaSeleccionada]?.map(p => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
-              {/* Ubicación (Condicional según nivel) */}
-              {(formData.nivelInstitucional && formData.nivelInstitucional !== 'Nacional') && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-                  <input
-                    type="text"
-                    placeholder="País"
-                    value={formData.pais}
-                    onChange={(e) => handleChange('pais', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
-                  />
-                  {['Provincial', 'Municipal', 'Local'].includes(formData.nivelInstitucional) && (
-                    <input
-                      type="text"
-                      placeholder="Provincia/Estado"
-                      value={formData.provincia}
-                      onChange={(e) => handleChange('provincia', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
-                    />
-                  )}
-                  {['Municipal', 'Local'].includes(formData.nivelInstitucional) && (
-                    <input
-                      type="text"
-                      placeholder="Ciudad"
-                      value={formData.ciudad}
-                      onChange={(e) => handleChange('ciudad', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* Preview y Checkbox Automático */}
-              {previewUsuarios && (
-                <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-3 mt-2">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5">
-                      <Globe size={16} className="colorMarcaDegader dark:text-indigo-400" />
-                    </div>
+              {/* Ubicación Geográfica (Dinámica) */}
+              {formData.nivelInstitucional && formData.nivelInstitucional !== 'Todas' && formData.nivelInstitucional !== 'directivo_general' && (
+                <div className="pt-4 border-t border-blue-100 dark:border-blue-900/50">
+                  <h4 className="text-xs font-bold text-blue-800 dark:text-blue-400 uppercase flex items-center gap-2 mb-3">
+                    <MapPin size={14} />
+                    Alcance Territorial
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                      <p className="text-sm text-indigo-900 dark:text-indigo-200 font-medium">
-                        Alcance estimado: {previewUsuarios}
-                      </p>
-                      <label className="flex items-center gap-2 mt-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={formData.compartirAutomaticamente}
-                          onChange={(e) => handleChange('compartirAutomaticamente', e.target.checked)}
-                          className="rounded colorMarcaDegader focus:ring-indigo-500"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">
-                          Compartir automáticamente con estos usuarios
-                        </span>
-                      </label>
+                      <label className="block text-[10px] text-gray-500 uppercase mb-1">País</label>
+                      <input
+                        type="text"
+                        placeholder="País"
+                        value={formData.pais}
+                        onChange={(e) => handleChange('pais', e.target.value)}
+                        className="w-full px-3 py-2 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white"
+                        required={formData.nivelInstitucional !== 'Todas'}
+                      />
                     </div>
+                    {['regional', 'departamental', 'municipal', 'local', 'barrial'].includes(formData.nivelInstitucional) && (
+                      <div>
+                        <label className="block text-[10px] text-gray-500 uppercase mb-1">Provincia/Estado</label>
+                        <input
+                          type="text"
+                          placeholder="Ej: Buenos Aires"
+                          value={formData.provincia}
+                          onChange={(e) => handleChange('provincia', e.target.value)}
+                          className="w-full px-3 py-2 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white"
+                        />
+                      </div>
+                    )}
+                    {['municipal', 'local', 'barrial'].includes(formData.nivelInstitucional) && (
+                      <div>
+                        <label className="block text-[10px] text-gray-500 uppercase mb-1">Ciudad/Municipio</label>
+                        <input
+                          type="text"
+                          placeholder="Ej: Rosario"
+                          value={formData.ciudad}
+                          onChange={(e) => handleChange('ciudad', e.target.value)}
+                          className="w-full px-3 py-2 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
+
+              {/* Opción de Compartir Automáticamente */}
+              <div className="bg-blue-100/50 dark:bg-blue-900/30 rounded-lg p-3">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.compartirAutomaticamente}
+                    onChange={(e) => handleChange('compartirAutomaticamente', e.target.checked)}
+                    className="mt-1 rounded text-blue-600 focus:ring-blue-500"
+                  />
+                  <div>
+                    <span className="text-sm font-medium text-blue-900 dark:text-blue-200 block">
+                      Vincular a todos los usuarios actuales
+                    </span>
+                    <span className="text-xs text-blue-700 dark:text-blue-400">
+                      Los miembros que coincidan con esta jerarquía encontrarán la carpeta en su sección "Institucional".
+                    </span>
+                  </div>
+                </label>
+              </div>
             </div>
           )}
 
