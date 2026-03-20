@@ -318,52 +318,19 @@ export default function FormularioHojaDeVida() {
       // Configuración del módulo de imagen
       const opts = {
         centered: false,
-        getImage: async (tagValue) => {
-          console.log('getImage (Formulario) invocado con:', tagValue);
-          // Fallback a imagen transparente 1x1 para evitar errores de length
-          if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
-            const binaryString = window.atob(EMPTY_IMAGE);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes;
-          }
-
+        getImage: (tagValue) => {
+          console.log('getImage (Formulario Sync) invocado con tipo:', (tagValue instanceof Uint8Array ? 'Uint8Array' : typeof tagValue));
+          if (tagValue instanceof Uint8Array) return tagValue;
+          
           try {
-            const strVal = tagValue.toString();
-            if (strVal.startsWith('data:image')) {
-              console.log('getImage (Formulario): procesando data:image');
-              const parts = strVal.split(',');
-              if (parts.length < 2) throw new Error('Formato data:image inválido');
-              const binaryString = window.atob(parts[1]);
-              const bytes = new Uint8Array(binaryString.length);
-              for (let i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-              }
-              return bytes;
-            }
-
-            const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
-            let finalUrl = strVal;
-            if (strVal.startsWith('/') && !strVal.startsWith('//')) {
-              finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
-            }
-
-            console.log('getImage (Formulario): descargando vía proxy:', finalUrl);
-            const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error('Error al cargar imagen via proxy HTTP ' + response.status);
-            const buffer = await response.arrayBuffer();
-            return new Uint8Array(buffer);
-          } catch (error) {
-            console.warn('getImage (Formulario): error procesando image, usando fallback', error.message);
             const binaryString = window.atob(EMPTY_IMAGE);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
               bytes[i] = binaryString.charCodeAt(i);
             }
             return bytes;
+          } catch (error) {
+            return new Uint8Array(0);
           }
         },
         getSize: (img, tagValue, tagName) => {
@@ -372,66 +339,122 @@ export default function FormularioHojaDeVida() {
           return [100, 100];
         },
       };
+
+      // Helper para obtener binario asíncronamente antes del render
+      const getBinary = async (tagValue) => {
+        if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
+          const binaryString = window.atob(EMPTY_IMAGE);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          return bytes;
+        }
+        try {
+          if (tagValue.startsWith('data:image')) {
+            const parts = tagValue.split(',');
+            const binaryString = window.atob(parts[1]);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes;
+          }
+          const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
+          let finalUrl = tagValue;
+          if (tagValue.startsWith('/') && !tagValue.startsWith('//')) {
+            finalUrl = `${baseUrl.replace('/api', '')}${tagValue}`;
+          }
+          const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
+          const response = await fetch(proxyUrl);
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return new Uint8Array(await response.arrayBuffer());
+        } catch (error) {
+          const binaryString = window.atob(EMPTY_IMAGE);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          return bytes;
+        }
+      };
+
+      const sanitizeData = (data) => {
+        if (data === null || data === undefined) return "";
+        if (Array.isArray(data)) return data.map(item => sanitizeData(item));
+        if (typeof data === 'object') {
+          const sanitized = {};
+          for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+              sanitized[key] = sanitizeData(data[key]);
+            }
+          }
+          return sanitized;
+        }
+        return data;
+      };
       
       const imageModule = new ImageModule(opts);
       const doc = new Docxtemplater(zip, {
-        paragraphLoop: true, linebreaks: true, modules: [imageModule],
-        nullGetter: () => "" 
+        paragraphLoop: true, 
+        linebreaks: true, 
+        modules: [imageModule],
+        nullGetter: () => ""
       });
 
+      console.log('Pre-cargando imágenes...');
+      const photoBin = await getBinary(photoPreview || '');
+      
       let finalSignature = firmaPreview || '';
       if (finalSignature.startsWith('data:image')) {
         finalSignature = await processSignatureImage(finalSignature);
       }
+      const firmaBin = await getBinary(finalSignature);
 
-      const dataToRender = {
-        ...formData,
-        foto_perfil: photoPreview || '',
-        fotoUser: photoPreview || '',
-        firma_digital: finalSignature || '',
-        firmaUser: finalSignature || '',
-        seleccionar_tecnica: formData.seleccionar_tecnica ? 'X' : '',
-        seleccionar_tecnologica: formData.seleccionar_tecnologica ? 'X' : '',
-        seleccionar_universitario: formData.seleccionar_universitario ? 'X' : '',
-        seleccionar_posgrado: formData.seleccionar_posgrado ? 'X' : '',
-        graduadoSi_1: formData.graduadoSi_1 ? 'X' : '',
-        graduadoNo_1: formData.graduadoNo_1 ? 'X' : '',
-        graduadoSi_2: formData.graduadoSi_2 ? 'X' : '',
-        graduadoNo_2: formData.graduadoNo_2 ? 'X' : '',
-        graduadoSi_3: formData.graduadoSi_3 ? 'X' : '',
-        graduadoNo_3: formData.graduadoNo_3 ? 'X' : '',
-        exp_si1: formData.exp_si1 ? 'X' : '',
-        exp_no1: formData.exp_no1 ? 'X' : '',
-        exp_si2: formData.exp_si2 ? 'X' : '',
-        exp_no2: formData.exp_no2 ? 'X' : '',
-        exp_si3: formData.exp_si3 ? 'X' : '',
-        exp_no3: formData.exp_no3 ? 'X' : '',
-        autorizo_si: formData.autorizo_si ? 'X' : '',
-        autorizo_no: formData.autorizo_no ? 'X' : '',
-        'fraseUser': formData.frase_identificadora || '',
-        'descripMain': formData.descripcion_breve_ministerio_profesion || '',
-        'grado1': formData.grado1 || '', 'grado2': formData.grado2 || '', 'grado3': formData.grado3 || '',
-        'grado4': formData.grado4 || '', 'grado5': formData.grado5 || '', 'grado6': formData.grado6 || '',
-        'grado7': formData.grado7 || '', 'grado8': formData.grado8 || '', 'grado9': formData.grado9 || '',
-        'grado10': formData.grado10 || '', 'grado11': formData.grado11 || '',
-        'sector_publica_1': formData.sector_empresa === 'publica' ? 'X' : '',
-        'sector_privada_1': formData.sector_empresa === 'privada' ? 'X' : '',
-        'sector_publica_2': formData.sector_empresa2 === 'publica' ? 'X' : '',
-        'sector_privada_2': formData.sector_empresa2 === 'privada' ? 'X' : '',
-        'sector_publica_3': formData.sector_empresa3 === 'publica' ? 'X' : '',
-        'sector_privada_3': formData.sector_empresa3 === 'privada' ? 'X' : '',
-        'empresa_publica': formData.sector_empresa === 'publica' ? 'X' : '',
-        'empresa_privada': formData.sector_empresa === 'privada' ? 'X' : '',
-        // Soporte para tags con espacio en la plantilla Word
-        'profesion_personal _2': formData.profesion_personal_2 || '',
-        'profesion_personal _3': formData.profesion_personal_3 || ''
-      };
-
-      Object.keys(dataToRender).forEach(key => {
-        if (dataToRender[key] === undefined || dataToRender[key] === null) {
-          dataToRender[key] = '';
-        }
+      const rawData = formData;
+      const dataToRender = sanitizeData({
+        ...rawData,
+        foto_perfil: photoBin,
+        fotoUser: photoBin,
+        firma_digital: firmaBin,
+        firmaUser: firmaBin,
+        seleccionar_tecnica: rawData.seleccionar_tecnica ? 'X' : '',
+        seleccionar_tecnologica: rawData.seleccionar_tecnologica ? 'X' : '',
+        seleccionar_universitario: rawData.seleccionar_universitario ? 'X' : '',
+        seleccionar_posgrado: rawData.seleccionar_posgrado ? 'X' : '',
+        graduadoSi_1: rawData.graduadoSi_1 ? 'X' : '',
+        graduadoNo_1: rawData.graduadoNo_1 ? 'X' : '',
+        graduadoSi_2: rawData.graduadoSi_2 ? 'X' : '',
+        graduadoNo_2: rawData.graduadoNo_2 ? 'X' : '',
+        graduadoSi_3: rawData.graduadoSi_3 ? 'X' : '',
+        graduadoNo_3: rawData.graduadoNo_3 ? 'X' : '',
+        exp_si1: rawData.exp_si1 ? 'X' : '',
+        exp_no1: rawData.exp_no1 ? 'X' : '',
+        exp_si2: rawData.exp_si2 ? 'X' : '',
+        exp_no2: rawData.exp_no2 ? 'X' : '',
+        exp_si3: rawData.exp_si3 ? 'X' : '',
+        exp_no3: rawData.exp_no3 ? 'X' : '',
+        autorizo_si: rawData.autorizo_si ? 'X' : '',
+        autorizo_no: rawData.autorizo_no ? 'X' : '',
+        'fraseUser': rawData.frase_identificadora || '',
+        'descripMain': rawData.descripcion_breve_ministerio_profesion || '',
+        'grado1': rawData.grado1 || '', 'grado2': rawData.grado2 || '', 'grado3': rawData.grado3 || '',
+        'grado4': rawData.grado4 || '', 'grado5': rawData.grado5 || '', 'grado6': rawData.grado6 || '',
+        'grado7': rawData.grado7 || '', 'grado8': rawData.grado8 || '', 'grado9': rawData.grado9 || '',
+        'grado10': rawData.grado10 || '', 'grado11': rawData.grado11 || '',
+        'sector_publica_1': rawData.sector_empresa === 'publica' ? 'X' : '',
+        'sector_privada_1': rawData.sector_empresa === 'privada' ? 'X' : '',
+        'sector_publica_2': rawData.sector_empresa2 === 'publica' ? 'X' : '',
+        'sector_privada_2': rawData.sector_empresa2 === 'privada' ? 'X' : '',
+        'sector_publica_3': rawData.sector_empresa3 === 'publica' ? 'X' : '',
+        'sector_privada_3': rawData.sector_empresa3 === 'privada' ? 'X' : '',
+        'empresa_publica': rawData.sector_empresa === 'publica' ? 'X' : '',
+        'empresa_privada': rawData.sector_empresa === 'privada' ? 'X' : '',
+        'profesion_personal _2': rawData.profesion_personal_2 || '',
+        'profesion_personal _3': rawData.profesion_personal_3 || ''
       });
+
+      console.log('Datos finales para renderizar (Hoja de Vida):', dataToRender);
 
       // 3. Renderizar asincrónicamente
       await doc.renderAsync(dataToRender);

@@ -70,36 +70,61 @@ const processSignatureImage = (base64) => {
   });
 };
 
+/**
+ * Obtiene el contenido binario de una imagen (Base64 o URL vía proxy)
+ */
 const getBinary = async (tagValue) => {
   console.log('getBinary invocado con:', tagValue);
+  // Fallback a imagen transparente 1x1 para evitar errores de length de docxtemplater
   if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
-    console.log('getBinary: usando imagen vacía por defecto');
     const binaryString = window.atob(EMPTY_IMAGE);
-    return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
   }
+
   try {
     const strVal = tagValue.toString();
+    // Caso 1: Es una data URI (Base64)
     if (strVal.startsWith('data:image')) {
       console.log('getBinary: procesando data:image');
       const parts = strVal.split(',');
       if (parts.length < 2) throw new Error('Formato data:image inválido');
       const binaryString = window.atob(parts[1]);
-      return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
     }
+
+    // Caso 2: Es una URL de imagen (requiere proxy para evitar CORS)
     const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
     let finalUrl = strVal;
-    if (strVal.startsWith('/') && !strVal.startsWith('//')) finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
+    
+    // Corregir rutas relativas si es necesario
+    if (strVal.startsWith('/') && !strVal.startsWith('//')) {
+      finalUrl = `${baseUrl.replace('/api', '')}${strVal}`;
+    }
+
     console.log('getBinary: descargando vía proxy:', finalUrl);
     const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
     const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error('Error proxy HTTP ' + response.status);
+    if (!response.ok) throw new Error(`HTTP ${response.status} al descargar imagen`);
+
     const buffer = await response.arrayBuffer();
     console.log('getBinary: descarga exitosa, tamaño:', buffer.byteLength);
     return new Uint8Array(buffer);
-  } catch (e) {
-    console.warn('getBinary: error procesando tag, usando fallback', e.message);
+  } catch (error) {
+    console.warn('Error en getBinary, usando fallback vacío:', error.message);
     const binaryString = window.atob(EMPTY_IMAGE);
-    return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+       bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
   }
 };
 
@@ -139,16 +164,20 @@ export const generateCV = async (userData) => {
     nullGetter: () => "" 
   });
   
+  console.log('Pre-cargando binarios de imágenes...');
+  const photoData = await getBinary(formData.foto_perfil || '');
+  
   let firma = formData.firma_digital || '';
   if (firma.startsWith('data:image')) firma = await processSignatureImage(firma);
-  
+  const firmaData = await getBinary(firma);
+
   const rawData = formData;
   const dataToRender = sanitizeData({
     ...rawData,
-    foto_perfil: rawData.foto_perfil || '',
-    fotoUser: rawData.foto_perfil || '',
-    firma_digital: firma,
-    firmaUser: firma,
+    foto_perfil: photoData,
+    fotoUser: photoData,
+    firma_digital: firmaData,
+    firmaUser: firmaData,
     seleccionar_tecnica: rawData.seleccionar_tecnica ? 'X' : '',
     seleccionar_tecnologica: rawData.seleccionar_tecnologica ? 'X' : '',
     seleccionar_profesional: rawData.seleccionar_profesional ? 'X' : '',
