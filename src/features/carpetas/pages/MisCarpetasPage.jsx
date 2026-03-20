@@ -133,6 +133,20 @@ const MisCarpetasPage = () => {
               {filtros.tipo === 'institucional' && (
                 <>
                   <select
+                    value={filtros.nivel || ''}
+                    onChange={(e) => actualizarFiltro('nivel', e.target.value)}
+                    className="w-full sm:w-auto px-3 py-1.5 text-sm border-2 border-cyan-400 dark:border-cyan-400 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-cyan-500 max-w-full shadow-sm shadow-cyan-200 dark:shadow-cyan-900/50"
+                    style={{ borderColor: 'rgb(34, 211, 238)' }}
+                  >
+                    <option value="">Todos los Niveles</option>
+                    {jerarquia.niveles?.map(nivel => (
+                      <option key={nivel} value={nivel}>
+                        {nivel.charAt(0).toUpperCase() + nivel.slice(1).replace('_', ' ')}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
                     value={filtros.area}
                     onChange={(e) => actualizarFiltro('area', e.target.value)}
                     className="w-full sm:w-auto px-3 py-1.5 text-sm border-2 border-cyan-400 dark:border-cyan-400 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-cyan-500 max-w-full shadow-sm shadow-cyan-200 dark:shadow-cyan-900/50"
@@ -201,10 +215,11 @@ const MisCarpetasPage = () => {
               </label>
 
               {/* Botón Borrar Filtros */}
-              {(filtros.tipo || filtros.area || filtros.cargo || filtros.compartidas || busqueda) && (
+              {(filtros.tipo || filtros.nivel || filtros.area || filtros.cargo || filtros.subArea || filtros.programa || filtros.compartidas || busqueda) && (
                 <button
                   onClick={() => {
                     actualizarFiltro('tipo', '');
+                    actualizarFiltro('nivel', '');
                     actualizarFiltro('area', '');
                     actualizarFiltro('cargo', '');
                     actualizarFiltro('subArea', '');

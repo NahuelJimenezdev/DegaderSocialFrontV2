@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Folder, Users, Globe, Building, Shield, UsersRound, MapPin } from 'lucide-react';
 import api from '../../../api/config';
 import { useAuth } from '../../../context/AuthContext';
-import { useFundacion } from '../../fundacion/hooks/useFundacion';
+import { useFundacion, ESTRUCTURA_FUNDACION, CARGOS_POR_NIVEL } from '../../fundacion/hooks/useFundacion';
 
 const COLORES_CARPETA = [
   { nombre: 'Azul', valor: '#3B82F6' },
@@ -68,12 +68,10 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
   });
 
   const {
-    ESTRUCTURA_FUNDACION,
-    CARGOS_POR_NIVEL,
-    AREAS_POR_CARGO,
-    SUB_AREAS_POR_AREA,
-    PROGRAMAS_POR_AREA
-  } = useFundacion(user, null); // Pasamos null a updateUser ya que no vamos a actualizar el perfil aquí
+    getNivelesDisponibles,
+    getCargosDisponibles,
+    getAreasDisponibles
+  } = useFundacion(user, null);
 
   const [previewUsuarios, setPreviewUsuarios] = useState(null); // null = loading/unknown, 0 = none, >0 = count
   const [myGroups, setMyGroups] = useState([]);
@@ -293,26 +291,28 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                   <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
                     1. Nivel Jerárquico
                   </label>
-                  <select
-                    value={formData.nivelInstitucional}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setFormData(prev => ({
-                        ...prev,
-                        nivelInstitucional: val,
-                        cargoInstitucional: '', areaSeleccionada: '', subAreaSeleccionada: '', programaSeleccionado: '',
-                        provincia: '', ciudad: ''
-                      }));
-                    }}
-                    className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
-                    required={formData.tipo === 'institucional'}
-                  >
-                    <option value="">Seleccionar Nivel...</option>
-                    <option value="Todas">Todas la Fundación (Global)</option>
-                    {ESTRUCTURA_FUNDACION?.niveles?.map(n => (
-                      <option key={n.valor} value={n.valor}>{n.nombre}</option>
-                    ))}
-                  </select>
+                    <select
+                      value={formData.nivelInstitucional || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormData(prev => ({
+                          ...prev,
+                          nivelInstitucional: val,
+                          cargoInstitucional: '', areaSeleccionada: '', subAreaSeleccionada: '', programaSeleccionado: '',
+                          provincia: '', ciudad: ''
+                        }));
+                      }}
+                      className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                      required={formData.tipo === 'institucional'}
+                    >
+                      <option value="">Seleccionar Nivel...</option>
+                      <option value="Todas">Toda la Fundación (Global)</option>
+                      {Object.keys(ESTRUCTURA_FUNDACION || {}).map(nivel => (
+                        <option key={nivel} value={nivel}>
+                          {nivel.charAt(0).toUpperCase() + nivel.slice(1).replace('_', ' ')}
+                        </option>
+                      ))}
+                    </select>
                 </div>
 
                 {/* 2. CARGO */}
@@ -342,7 +342,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 )}
 
                 {/* 3. ÁREA */}
-                {formData.cargoInstitucional && (
+                {formData.nivelInstitucional && formData.nivelInstitucional !== 'Todas' && (
                   <div>
                     <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
                       3. Área / Dirección
@@ -360,7 +360,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                       className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Cualquier Área (Todas)</option>
-                      {AREAS_POR_CARGO[formData.cargoInstitucional]?.map(a => (
+                      {Object.keys(ESTRUCTURA_FUNDACION[formData.nivelInstitucional]?.areas || {}).map(a => (
                         <option key={a} value={a}>{a}</option>
                       ))}
                     </select>
@@ -368,7 +368,8 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 )}
 
                 {/* 4. SUB-ÁREA (Si aplica) */}
-                {formData.areaSeleccionada && SUB_AREAS_POR_AREA[formData.areaSeleccionada] && (
+                {formData.areaSeleccionada && ESTRUCTURA_FUNDACION[formData.nivelInstitucional]?.areas[formData.areaSeleccionada]?.subAreas && 
+                 Object.keys(ESTRUCTURA_FUNDACION[formData.nivelInstitucional].areas[formData.areaSeleccionada].subAreas).length > 0 && (
                   <div>
                     <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
                       4. Sub-Área
@@ -379,7 +380,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                       className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Todas las Sub-Áreas</option>
-                      {SUB_AREAS_POR_AREA[formData.areaSeleccionada]?.map(s => (
+                      {Object.keys(ESTRUCTURA_FUNDACION[formData.nivelInstitucional].areas[formData.areaSeleccionada].subAreas).map(s => (
                         <option key={s} value={s}>{s}</option>
                       ))}
                     </select>
@@ -387,22 +388,38 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
                 )}
 
                 {/* 5. PROGRAMA (Si aplica) */}
-                {formData.areaSeleccionada && PROGRAMAS_POR_AREA[formData.areaSeleccionada] && (
-                  <div>
-                    <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
-                      5. Programa
-                    </label>
-                    <select
-                      value={formData.programaSeleccionado}
-                      onChange={(e) => handleChange('programaSeleccionado', e.target.value)}
-                      className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Todos los Programas</option>
-                      {PROGRAMAS_POR_AREA[formData.areaSeleccionada]?.map(p => (
-                        <option key={p} value={p}>{p}</option>
-                      ))}
-                    </select>
-                  </div>
+                {formData.areaSeleccionada && (
+                  (() => {
+                    const areaObj = ESTRUCTURA_FUNDACION[formData.nivelInstitucional]?.areas[formData.areaSeleccionada];
+                    const programas = areaObj?.programas || {};
+                    // Si hay sub-área seleccionada, buscar programas en la sub-área
+                    let programasKeys = [];
+                    if (formData.subAreaSeleccionada && areaObj?.subAreas[formData.subAreaSeleccionada]?.programas) {
+                        programasKeys = Object.keys(areaObj.subAreas[formData.subAreaSeleccionada].programas);
+                    } else if (!formData.subAreaSeleccionada) {
+                        programasKeys = Object.keys(programas);
+                    }
+
+                    if (programasKeys.length === 0) return null;
+
+                    return (
+                      <div>
+                        <label className="block text-xs font-bold text-blue-700 dark:text-blue-300 uppercase mb-1.5 tracking-wider">
+                          5. Programa
+                        </label>
+                        <select
+                          value={formData.programaSeleccionado}
+                          onChange={(e) => handleChange('programaSeleccionado', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-blue-200 dark:border-blue-800 rounded-lg text-sm dark:bg-[#0a0e27] dark:text-white focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Todos los Programas</option>
+                          {programasKeys.map(p => (
+                            <option key={p} value={p}>{p}</option>
+                          ))}
+                        </select>
+                      </div>
+                    );
+                  })()
                 )}
               </div>
 

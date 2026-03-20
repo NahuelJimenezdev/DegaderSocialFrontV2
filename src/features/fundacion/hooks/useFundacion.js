@@ -7,6 +7,338 @@ import fundacionService from '../../../api/fundacionService';
 import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../../data/paisesProvincias';
 import { getSocket } from '../../../shared/lib/socket';
 
+// ==========================================
+// 🔹 ESTRUCTURA JERÁRQUICA (Nivel → Área → SubÁrea → Programa)
+// ==========================================
+
+export const ESTRUCTURA_FUNDACION = {
+    // Niveles Globales (Directivo General, Órgano Control, Internacional)
+    directivo_general: {
+        areas: {
+            "Dirección Ejecutiva": { subAreas: {}, programas: {} },
+            "Secretaría Ejecutiva": { subAreas: {}, programas: {} },
+            "Junta Directiva": { subAreas: {}, programas: {} }
+        }
+    },
+    organo_control: {
+        areas: {
+            "Dirección de Control Interno y Seguimiento": {
+                subAreas: {
+                    "Interventoría Interna": { programas: {} },
+                    "Interventoría Externa": { programas: {} }
+                }
+            },
+            "Dirección de Asuntos Éticos": { subAreas: {}, programas: {} }
+        }
+    },
+    organismo_internacional: {
+        areas: {
+            "Salvación Mundial": { subAreas: {}, programas: {} },
+            "Misión Internacional de Paz": { subAreas: {}, programas: {} }
+        }
+    },
+
+    // Niveles Operativos (Nacional, Regional, Departamental, Municipal)
+    nacional: {
+        areas: {
+            "Dirección de Planeación Estratégica y Proyectos": {
+                subAreas: {},
+                programas: { "Banco de Proyectos": true }
+            },
+            "Dirección de Asuntos Étnicos": { subAreas: {}, programas: {} },
+            "Dirección de Infraestructura": { subAreas: {}, programas: {} },
+            "Dirección de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
+            "Dirección de Recursos Humanos y Seguridad Laboral": {
+                subAreas: {},
+                programas: {
+                    "Programas de Asuntos y Competencia Laboral": true,
+                    "Programas de Bienestar y Seguridad Laboral": true,
+                    "Programa de Gestión Documental y Almacén": true
+                }
+            },
+            "Dirección Jurídica": {
+                subAreas: {},
+                programas: {
+                    "Contratación": true,
+                    "Banco de Oferentes": true,
+                    "Programa de Jueces de Paz": true
+                }
+            },
+            "Dirección de Salud": {
+                subAreas: {
+                    "Dirección Psicosocial": {
+                        programas: {
+                            "Programas de Salud Mental": true,
+                            "Programas de Salud Sexual y Reproductiva": true,
+                            "Programas de Acompañamiento Productivo": true
+                        }
+                    },
+                    "Gerencia Clínica": {
+                        programas: { "Programas de Salud": true }
+                    },
+                    "Dirección de Protección Animal": {
+                        programas: {
+                            "Programas de Promoción y Prevención en la Salud Animal": true
+                        }
+                    },
+                    "Gerencia Clínica Veterinaria": { programas: {} }
+                }
+            },
+            "Dirección de Educación": {
+                subAreas: {},
+                programas: {
+                    "Programas de Educación": true,
+                    "Programas de Cultura y Turismo": true,
+                    "Gerencias Universitarias": true
+                }
+            },
+            "Dirección Financiera": {
+                subAreas: {},
+                programas: {
+                    "Programas de Tesorería": true,
+                    "Programas de Contabilidad": true
+                }
+            },
+            "Dirección de Imagen Corporativa y Comunicación": {
+                subAreas: {},
+                programas: {
+                    "Comunicaciones de Prensa": true,
+                    "Programas de Radio y Televisión": true,
+                    "Programa de Conexión y Desarrollo Informático": true
+                }
+            },
+            "Dirección de Seguridad": { subAreas: {}, programas: {} }
+        }
+    },
+    regional: {
+        areas: {
+            "Dirección de Planeación Estratégica y Proyectos": {
+                subAreas: {},
+                programas: { "Banco de Proyectos": true }
+            },
+            "Dirección de Asuntos Étnicos": { subAreas: {}, programas: {} },
+            "Dirección de Infraestructura": { subAreas: {}, programas: {} },
+            "Dirección de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
+            "Dirección de Recursos Humanos y Seguridad Laboral": {
+                subAreas: {},
+                programas: {
+                    "Programas de Asuntos y Competencia Laboral": true,
+                    "Programas de Bienestar y Seguridad Laboral": true,
+                    "Programa de Gestión Documental y Almacén": true
+                }
+            },
+            "Dirección Jurídica": {
+                subAreas: {},
+                programas: {
+                    "Contratación": true,
+                    "Banco de Oferentes": true,
+                    "Programa de Jueces de Paz": true
+                }
+            },
+            "Dirección de Salud": {
+                subAreas: {
+                    "Dirección Psicosocial": {
+                        programas: {
+                            "Programas de Salud Mental": true,
+                            "Programas de Salud Sexual y Reproductiva": true,
+                            "Programas de Acompañamiento Productivo": true
+                        }
+                    },
+                    "Gerencia Clínica": {
+                        programas: { "Programas de Salud": true }
+                    },
+                    "Dirección de Protección Animal": {
+                        programas: {
+                            "Programas de Promoción y Prevención en la Salud Animal": true
+                        }
+                    },
+                    "Gerencia Clínica Veterinaria": { programas: {} }
+                }
+            },
+            "Dirección de Educación": {
+                subAreas: {},
+                programas: {
+                    "Programas de Educación": true,
+                    "Programas de Cultura y Turismo": true,
+                    "Gerencias Universitarias": true
+                }
+            },
+            "Dirección Financiera": {
+                subAreas: {},
+                programas: {
+                    "Programas de Tesorería": true,
+                    "Programas de Contabilidad": true
+                }
+            },
+            "Dirección de Imagen Corporativa y Comunicación": {
+                subAreas: {},
+                programas: {
+                    "Comunicaciones de Prensa": true,
+                    "Programas de Radio y Televisión": true,
+                    "Programa de Conexión y Desarrollo Informático": true
+                }
+            },
+            "Dirección de Seguridad": { subAreas: {}, programas: {} }
+        }
+    },
+    departamental: {
+        areas: {
+            "Coordinación de Planeación Estratégica y Proyectos": {
+                subAreas: {},
+                programas: { "Banco de Proyectos": true }
+            },
+            "Coordinación de Asuntos Étnicos": { subAreas: {}, programas: {} },
+            "Coordinación de Infraestructura": { subAreas: {}, programas: {} },
+            "Coordinación de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
+            "Coordinación de Recursos Humanos y Seguridad Laboral": {
+                subAreas: {},
+                programas: {
+                    "Programas de Asuntos y Competencia Laboral": true,
+                    "Programas de Bienestar y Seguridad Laboral": true,
+                    "Programa de Gestión Documental y Almacén": true
+                }
+            },
+            "Coordinación Jurídica": {
+                subAreas: {},
+                programas: {
+                    "Contratación": true,
+                    "Banco de Oferentes": true,
+                    "Programa de Jueces de Paz": true
+                }
+            },
+            "Coordinación de Salud": {
+                subAreas: {
+                    "Dirección Psicosocial": {
+                        programas: {
+                            "Programas de Salud Mental": true,
+                            "Programas de Salud Sexual y Reproductiva": true,
+                            "Programas de Acompañamiento Productivo": true
+                        }
+                    },
+                    "Gerencia Clínica": {
+                        programas: { "Programas de Salud": true }
+                    },
+                    "Dirección de Protección Animal": {
+                        programas: {
+                            "Programas de Promoción y Prevención en la Salud Animal": true
+                        }
+                    },
+                    "Gerencia Clínica Veterinaria": { programas: {} }
+                }
+            },
+            "Coordinación de Educación": {
+                subAreas: {},
+                programas: {
+                    "Programas de Educación": true,
+                    "Programas de Cultura y Turismo": true,
+                    "Gerencias Universitarias": true
+                }
+            },
+            "Coordinación Financiera": {
+                subAreas: {},
+                programas: {
+                    "Programas de Tesorería": true,
+                    "Programas de Contabilidad": true
+                }
+            },
+            "Coordinación de Imagen Corporativa y Comunicación": {
+                subAreas: {},
+                programas: {
+                    "Comunicaciones de Prensa": true,
+                    "Programas de Radio y Televisión": true,
+                    "Programa de Conexión y Desarrollo Informático": true
+                }
+            },
+            "Coordinación de Seguridad": { subAreas: {}, programas: {} }
+        }
+    },
+    municipal: {
+        areas: {
+            "Coordinación de Planeación Estratégica y Proyectos": {
+                subAreas: {},
+                programas: { "Banco de Proyectos": true }
+            },
+            "Coordinación de Asuntos Étnicos": { subAreas: {}, programas: {} },
+            "Coordinación de Infraestructura": { subAreas: {}, programas: {} },
+            "Coordinación de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
+            "Coordinación de Recursos Humanos y Seguridad Laboral": {
+                subAreas: {},
+                programas: {
+                    "Programas de Asuntos y Competencia Laboral": true,
+                    "Programas de Bienestar y Seguridad Laboral": true,
+                    "Programa de Gestión Documental y Almacén": true
+                }
+            },
+            "Coordinación Jurídica": {
+                subAreas: {},
+                programas: {
+                    "Contratación": true,
+                    "Banco de Oferentes": true,
+                    "Programa de Jueces de Paz": true
+                }
+            },
+            "Coordinación de Salud": {
+                subAreas: {
+                    "Dirección Psicosocial": {
+                        programas: {
+                            "Programas de Salud Mental": true,
+                            "Programas de Salud Sexual y Reproductiva": true,
+                            "Programas de Acompañamiento Productivo": true
+                        }
+                    },
+                    "Gerencia Clínica": {
+                        programas: { "Programas de Salud": true }
+                    },
+                    "Dirección de Protección Animal": {
+                        programas: {
+                            "Programas de Promoción y Prevención en la Salud Animal": true
+                        }
+                    },
+                    "Gerencia Clínica Veterinaria": { programas: {} }
+                }
+            },
+            "Coordinación de Educación": {
+                subAreas: {},
+                programas: {
+                    "Programas de Educación": true,
+                    "Programas de Cultura y Turismo": true,
+                    "Gerencias Universitarias": true
+                }
+            },
+            "Coordinación Financiera": {
+                subAreas: {},
+                programas: {
+                    "Programas de Tesorería": true,
+                    "Programas de Contabilidad": true
+                }
+            },
+            "Coordinación de Imagen Corporativa y Comunicación": {
+                subAreas: {},
+                programas: {
+                    "Comunicaciones de Prensa": true,
+                    "Programas de Radio y Televisión": true,
+                    "Programa de Conexión y Desarrollo Informático": true
+                }
+            },
+            "Coordinación de Seguridad": { subAreas: {}, programas: {} }
+        }
+    }
+};
+
+export const CARGOS_POR_NIVEL = {
+    directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
+    organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
+    organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz"],
+    nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
+    regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
+    departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    local: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
+};
+
+export const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "voluntario", "pastor"];
+
 /**
  * Custom hook para manejar la lógica de la fundación
  * @param {Object} user - Usuario actual
@@ -16,339 +348,6 @@ import { getSocket } from '../../../shared/lib/socket';
 export const useFundacion = (user, updateUser) => {
     const toast = useToast();
     const [loading, setLoading] = useState(false);
-
-    // ==========================================
-    // 🔹 ESTRUCTURA JERÁRQUICA (Nivel → Área → SubÁrea → Programa)
-    // ==========================================
-
-    const ESTRUCTURA_FUNDACION = {
-        // Niveles Globales (Directivo General, Órgano Control, Internacional)
-        directivo_general: {
-            areas: {
-                "Dirección Ejecutiva": { subAreas: {}, programas: {} },
-                "Secretaría Ejecutiva": { subAreas: {}, programas: {} },
-                "Junta Directiva": { subAreas: {}, programas: {} }
-            }
-        },
-        organo_control: {
-            areas: {
-                "Dirección de Control Interno y Seguimiento": {
-                    subAreas: {
-                        "Interventoría Interna": { programas: {} },
-                        "Interventoría Externa": { programas: {} }
-                    }
-                },
-                "Dirección de Asuntos Éticos": { subAreas: {}, programas: {} }
-            }
-        },
-        organismo_internacional: {
-            areas: {
-                "Salvación Mundial": { subAreas: {}, programas: {} },
-                "Misión Internacional de Paz": { subAreas: {}, programas: {} }
-            }
-        },
-
-        // Niveles Operativos (Nacional, Regional, Departamental, Municipal)
-        nacional: {
-            areas: {
-                "Dirección de Planeación Estratégica y Proyectos": {
-                    subAreas: {},
-                    programas: { "Banco de Proyectos": true }
-                },
-                "Dirección de Asuntos Étnicos": { subAreas: {}, programas: {} },
-                "Dirección de Infraestructura": { subAreas: {}, programas: {} },
-                "Dirección de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
-                "Dirección de Recursos Humanos y Seguridad Laboral": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Asuntos y Competencia Laboral": true,
-                        "Programas de Bienestar y Seguridad Laboral": true,
-                        "Programa de Gestión Documental y Almacén": true
-                    }
-                },
-                "Dirección Jurídica": {
-                    subAreas: {},
-                    programas: {
-                        "Contratación": true,
-                        "Banco de Oferentes": true,
-                        "Programa de Jueces de Paz": true
-                    }
-                },
-                "Dirección de Salud": {
-                    subAreas: {
-                        "Dirección Psicosocial": {
-                            programas: {
-                                "Programas de Salud Mental": true,
-                                "Programas de Salud Sexual y Reproductiva": true,
-                                "Programas de Acompañamiento Productivo": true
-                            }
-                        },
-                        "Gerencia Clínica": {
-                            programas: { "Programas de Salud": true }
-                        },
-                        "Dirección de Protección Animal": {
-                            programas: {
-                                "Programas de Promoción y Prevención en la Salud Animal": true
-                            }
-                        },
-                        "Gerencia Clínica Veterinaria": { programas: {} }
-                    }
-                },
-                "Dirección de Educación": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Educación": true,
-                        "Programas de Cultura y Turismo": true,
-                        "Gerencias Universitarias": true
-                    }
-                },
-                "Dirección Financiera": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Tesorería": true,
-                        "Programas de Contabilidad": true
-                    }
-                },
-                "Dirección de Imagen Corporativa y Comunicación": {
-                    subAreas: {},
-                    programas: {
-                        "Comunicaciones de Prensa": true,
-                        "Programas de Radio y Televisión": true,
-                        "Programa de Conexión y Desarrollo Informático": true
-                    }
-                },
-                "Dirección de Seguridad": { subAreas: {}, programas: {} }
-            }
-        },
-        regional: {
-            areas: {
-                "Dirección de Planeación Estratégica y Proyectos": {
-                    subAreas: {},
-                    programas: { "Banco de Proyectos": true }
-                },
-                "Dirección de Asuntos Étnicos": { subAreas: {}, programas: {} },
-                "Dirección de Infraestructura": { subAreas: {}, programas: {} },
-                "Dirección de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
-                "Dirección de Recursos Humanos y Seguridad Laboral": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Asuntos y Competencia Laboral": true,
-                        "Programas de Bienestar y Seguridad Laboral": true,
-                        "Programa de Gestión Documental y Almacén": true
-                    }
-                },
-                "Dirección Jurídica": {
-                    subAreas: {},
-                    programas: {
-                        "Contratación": true,
-                        "Banco de Oferentes": true,
-                        "Programa de Jueces de Paz": true
-                    }
-                },
-                "Dirección de Salud": {
-                    subAreas: {
-                        "Dirección Psicosocial": {
-                            programas: {
-                                "Programas de Salud Mental": true,
-                                "Programas de Salud Sexual y Reproductiva": true,
-                                "Programas de Acompañamiento Productivo": true
-                            }
-                        },
-                        "Gerencia Clínica": {
-                            programas: { "Programas de Salud": true }
-                        },
-                        "Dirección de Protección Animal": {
-                            programas: {
-                                "Programas de Promoción y Prevención en la Salud Animal": true
-                            }
-                        },
-                        "Gerencia Clínica Veterinaria": { programas: {} }
-                    }
-                },
-                "Dirección de Educación": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Educación": true,
-                        "Programas de Cultura y Turismo": true,
-                        "Gerencias Universitarias": true
-                    }
-                },
-                "Dirección Financiera": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Tesorería": true,
-                        "Programas de Contabilidad": true
-                    }
-                },
-                "Dirección de Imagen Corporativa y Comunicación": {
-                    subAreas: {},
-                    programas: {
-                        "Comunicaciones de Prensa": true,
-                        "Programas de Radio y Televisión": true,
-                        "Programa de Conexión y Desarrollo Informático": true
-                    }
-                },
-                "Dirección de Seguridad": { subAreas: {}, programas: {} }
-            }
-        },
-        departamental: {
-            areas: {
-                "Coordinación de Planeación Estratégica y Proyectos": {
-                    subAreas: {},
-                    programas: { "Banco de Proyectos": true }
-                },
-                "Coordinación de Asuntos Étnicos": { subAreas: {}, programas: {} },
-                "Coordinación de Infraestructura": { subAreas: {}, programas: {} },
-                "Coordinación de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
-                "Coordinación de Recursos Humanos y Seguridad Laboral": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Asuntos y Competencia Laboral": true,
-                        "Programas de Bienestar y Seguridad Laboral": true,
-                        "Programa de Gestión Documental y Almacén": true
-                    }
-                },
-                "Coordinación Jurídica": {
-                    subAreas: {},
-                    programas: {
-                        "Contratación": true,
-                        "Banco de Oferentes": true,
-                        "Programa de Jueces de Paz": true
-                    }
-                },
-                "Coordinación de Salud": {
-                    subAreas: {
-                        "Dirección Psicosocial": {
-                            programas: {
-                                "Programas de Salud Mental": true,
-                                "Programas de Salud Sexual y Reproductiva": true,
-                                "Programas de Acompañamiento Productivo": true
-                            }
-                        },
-                        "Gerencia Clínica": {
-                            programas: { "Programas de Salud": true }
-                        },
-                        "Dirección de Protección Animal": {
-                            programas: {
-                                "Programas de Promoción y Prevención en la Salud Animal": true
-                            }
-                        },
-                        "Gerencia Clínica Veterinaria": { programas: {} }
-                    }
-                },
-                "Coordinación de Educación": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Educación": true,
-                        "Programas de Cultura y Turismo": true,
-                        "Gerencias Universitarias": true
-                    }
-                },
-                "Coordinación Financiera": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Tesorería": true,
-                        "Programas de Contabilidad": true
-                    }
-                },
-                "Coordinación de Imagen Corporativa y Comunicación": {
-                    subAreas: {},
-                    programas: {
-                        "Comunicaciones de Prensa": true,
-                        "Programas de Radio y Televisión": true,
-                        "Programa de Conexión y Desarrollo Informático": true
-                    }
-                },
-                "Coordinación de Seguridad": { subAreas: {}, programas: {} }
-            }
-        },
-        municipal: {
-            areas: {
-                "Coordinación de Planeación Estratégica y Proyectos": {
-                    subAreas: {},
-                    programas: { "Banco de Proyectos": true }
-                },
-                "Coordinación de Asuntos Étnicos": { subAreas: {}, programas: {} },
-                "Coordinación de Infraestructura": { subAreas: {}, programas: {} },
-                "Coordinación de Sostenibilidad Ambiental": { subAreas: {}, programas: {} },
-                "Coordinación de Recursos Humanos y Seguridad Laboral": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Asuntos y Competencia Laboral": true,
-                        "Programas de Bienestar y Seguridad Laboral": true,
-                        "Programa de Gestión Documental y Almacén": true
-                    }
-                },
-                "Coordinación Jurídica": {
-                    subAreas: {},
-                    programas: {
-                        "Contratación": true,
-                        "Banco de Oferentes": true,
-                        "Programa de Jueces de Paz": true
-                    }
-                },
-                "Coordinación de Salud": {
-                    subAreas: {
-                        "Dirección Psicosocial": {
-                            programas: {
-                                "Programas de Salud Mental": true,
-                                "Programas de Salud Sexual y Reproductiva": true,
-                                "Programas de Acompañamiento Productivo": true
-                            }
-                        },
-                        "Gerencia Clínica": {
-                            programas: { "Programas de Salud": true }
-                        },
-                        "Dirección de Protección Animal": {
-                            programas: {
-                                "Programas de Promoción y Prevención en la Salud Animal": true
-                            }
-                        },
-                        "Gerencia Clínica Veterinaria": { programas: {} }
-                    }
-                },
-                "Coordinación de Educación": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Educación": true,
-                        "Programas de Cultura y Turismo": true,
-                        "Gerencias Universitarias": true
-                    }
-                },
-                "Coordinación Financiera": {
-                    subAreas: {},
-                    programas: {
-                        "Programas de Tesorería": true,
-                        "Programas de Contabilidad": true
-                    }
-                },
-                "Coordinación de Imagen Corporativa y Comunicación": {
-                    subAreas: {},
-                    programas: {
-                        "Comunicaciones de Prensa": true,
-                        "Programas de Radio y Televisión": true,
-                        "Programa de Conexión y Desarrollo Informático": true
-                    }
-                },
-                "Coordinación de Seguridad": { subAreas: {}, programas: {} }
-            }
-        }
-    };
-
-    const CARGOS_POR_NIVEL = {
-        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
-        organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
-        organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz"],
-        nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
-        regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
-        departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-        municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-        local: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-        barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
-    };
-
-    const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "voluntario", "pastor"];
-
     const [solicitudesPendientes, setSolicitudesPendientes] = useState([]);
     const [formData, setFormData] = useState({
         nivel: '',
