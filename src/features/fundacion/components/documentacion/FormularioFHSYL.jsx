@@ -84,14 +84,18 @@ const FormularioFHSYL = () => {
           email: user.email || '',
           
           upz: docFHSYL.upz || '',
-          ocupacion: docFHSYL.ocupacion || '',
-          estadoCivil: docFHSYL.estadoCivil || '',
+          ocupacion: docFHSYL.ocupacion || user.fundacion?.entrevista?.respuestas?.profesion || '',
+          estadoCivil: docFHSYL.estadoCivil || user.personal?.estadoCivil || '',
           nombreConyuge: docFHSYL.nombreConyuge || '',
           hijos: docFHSYL.hijos?.length > 0 ? docFHSYL.hijos : [{ nombre: '', edad: '' }],
           deseaSerCoordinadorLocalidad: docFHSYL.deseaSerCoordinadorLocalidad === true ? "SI" : docFHSYL.deseaSerCoordinadorLocalidad === false ? "NO" : '',
           localidadCoordinar: docFHSYL.localidadCoordinar || '',
           testimonioConversion: docFHSYL.testimonioConversion || '',
-          llamadoPastoral: docFHSYL.llamadoPastoral || '',
+          
+          // --- SINCRONIZACIÓN CROSS-FORM (FALLBACKS) ---
+          llamadoPastoral: docFHSYL.llamadoPastoral || 
+                           user.fundacion?.hojaDeVida?.datos?.descripcion_breve_ministerio_profesion || 
+                           user.fundacion?.entrevista?.respuestas?.llamado || '',
           
           virtudes: hydrateArray(docFHSYL.virtudes, 3),
           areasMejora: hydrateArray(docFHSYL.areasMejora, 2),
@@ -100,9 +104,17 @@ const FormularioFHSYL = () => {
           nombreCongregacionPastorea: docFHSYL.nombreCongregacionPastorea || '',
           alianzaPastores: docFHSYL.alianzaPastores || '',
           
-          referencias: docFHSYL.referencias?.length === 2 ? docFHSYL.referencias : [
-            { nombre: '', relacion: '', contacto: '' },
-            { nombre: '', relacion: '', contacto: '' }
+          referencias: (docFHSYL.referencias?.length >= 2) ? docFHSYL.referencias : [
+            { 
+              nombre: docFHSYL.referencias?.[0]?.nombre || user.fundacion?.hojaDeVida?.datos?.nombre_personales_1 || '', 
+              relacion: docFHSYL.referencias?.[0]?.relacion || user.fundacion?.hojaDeVida?.datos?.profesion_personal_1 || '', 
+              contacto: docFHSYL.referencias?.[0]?.contacto || user.fundacion?.hojaDeVida?.datos?.telefonopers_1 || '' 
+            },
+            { 
+              nombre: docFHSYL.referencias?.[1]?.nombre || user.fundacion?.hojaDeVida?.datos?.nombre_personales_2 || '', 
+              relacion: docFHSYL.referencias?.[1]?.relacion || user.fundacion?.hojaDeVida?.datos?.profesion_personal_2 || '', 
+              contacto: docFHSYL.referencias?.[1]?.contacto || user.fundacion?.hojaDeVida?.datos?.telefonopers_2 || '' 
+            }
           ],
           
           pastorQueInvito: docFHSYL.pastorQueInvito || '',

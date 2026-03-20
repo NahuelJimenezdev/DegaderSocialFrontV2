@@ -150,21 +150,35 @@ export default function FormularioHojaDeVida() {
     if (user) {
       console.log('DEBUG - Cargando datos para Hoja de Vida. User:', user);
       
-      // 1. Datos base del perfil maestro (con múltiples fallbacks)
+      // 1. Datos base del perfil maestro
       const baseData = {
-        nombre_completo: `${user.nombres?.primero || ''} ${user.nombres?.segundo || ''} ${user.apellidos?.primero || ''} ${user.apellidos?.segundo || ''}`.replace(/\s+/g, ' ').trim(),
+        nombre_completo: user.nombres ? `${user.nombres.primero} ${user.nombres.segundo || ''} ${user.apellidos?.primero || ''} ${user.apellidos?.segundo || ''}`.trim() : '',
         email: user.email || '',
         telefono: user.personal?.celular || user.personal?.telefonoFijo || '',
         direccion: user.personal?.direccion || '',
         fecha_nacimiento: user.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
-        nacionalidad: user.personal?.ubicacion?.pais || '',
-        // Ubicación
-        departamento_estado_provincia: user.fundacion?.territorio?.region || user.personal?.ubicacion?.estado || '',
-        municipio: user.fundacion?.territorio?.zona || user.fundacion?.territorio?.municipio || user.personal?.ubicacion?.ciudad || '',
-        // Documento y Otros
-        documento_num: user.documento || user.personal?.documento || user.personal?.numeroDocumento || '',
+        nacionalidad: user.personal?.nacionalidad || user.personal?.ubicacion?.pais || '',
+        departamento_estado_provincia: user.personal?.ubicacion?.departamento || user.personal?.ubicacion?.provincia || user.fundacion?.territorio?.region || user.personal?.ubicacion?.estado || '',
+        municipio: user.personal?.ubicacion?.ciudad || user.personal?.ubicacion?.municipio || user.fundacion?.territorio?.zona || user.fundacion?.territorio?.municipio || '',
+        documento_num: user.personal?.documentoNumero || user.personal?.documento || user.documento || '',
         lugar_expedicion: user.personal?.lugarExpedicion || user.personal?.expedicion || '',
-        estado_civil: user.personal?.estadoCivil || user.fundacion?.documentacionFHSYL?.estadoCivil || '',
+        estado_civil: user.fundacion?.documentacionFHSYL?.estadoCivil || user.personal?.estadoCivil || '',
+        
+        // --- SINCRONIZACIÓN CROSS-FORM (FALLBACKS) ---
+        // 1. Llamado Pastoral
+        descripcion_breve_ministerio_profesion: 
+          user.fundacion?.documentacionFHSYL?.llamadoPastoral || 
+          user.fundacion?.entrevista?.respuestas?.llamado || '',
+          
+        // 2. Referencias Personales (desde FHSYL si existen)
+        nombre_personales_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.nombre || '',
+        profesion_personal_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.relacion || '',
+        telefonopers_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.contacto || '',
+        
+        nombre_personales_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.nombre || '',
+        profesion_personal_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.relacion || '',
+        telefonopers_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.contacto || '',
+        
         nombre_iglesia: user.eclesiastico?.iglesia?.nombre || ''
       };
 

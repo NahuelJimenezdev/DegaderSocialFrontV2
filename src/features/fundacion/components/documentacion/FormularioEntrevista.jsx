@@ -35,8 +35,10 @@ export default function FormularioEntrevista() {
   const [respuestas, setRespuestas] = useState(user?.fundacion?.entrevista?.respuestas || {
     nombre: `${user?.nombres?.primero} ${user?.apellidos?.primero}`,
     fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
-    upzLocalidad: '',
-    llamado: '',
+    upzLocalidad: user?.fundacion?.documentacionFHSYL?.upz || '',
+    llamado: user?.fundacion?.entrevista?.respuestas?.llamado || 
+             user?.fundacion?.hojaDeVida?.datos?.descripcion_breve_ministerio_profesion || 
+             user?.fundacion?.documentacionFHSYL?.llamadoPastoral || '',
     loQueMasGusta: '',
     sacrificioPastoral: '',
     caracterAmigos: '',
@@ -49,7 +51,8 @@ export default function FormularioEntrevista() {
     manejoDiferencias: '',
     dones: '',
     talentos: '',
-    profesion: '',
+    profesion: user?.fundacion?.entrevista?.respuestas?.profesion || 
+               user?.fundacion?.documentacionFHSYL?.ocupacion || '',
     enfrentamientoConflictos: '',
     porqueCoordinador: '',
     manejaOffice: '',
