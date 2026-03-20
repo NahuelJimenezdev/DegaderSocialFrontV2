@@ -32,6 +32,7 @@ export const useIglesiaSettings = (iglesiaData, refetch, isPastor = true) => {
             direccion: iglesiaData?.ubicacion?.direccion || '',
             ciudad: iglesiaData?.ubicacion?.ciudad || '',
             pais: iglesiaData?.ubicacion?.pais || '',
+            googleMapsLink: iglesiaData?.ubicacion?.googleMapsLink || '',
             coordenadas: iglesiaData?.ubicacion?.coordenadas || { lat: 0, lng: 0 }
         },
         contacto: {
