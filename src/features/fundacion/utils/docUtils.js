@@ -128,9 +128,9 @@ const getBinary = async (tagValue) => {
   }
 };
 
-export const generateCV = async (userData) => {
+export const generateCV = async (userData, overrideData = null) => {
   const meta = userData.fundacion || {};
-  const formData = meta.hojaDeVida?.datos || {};
+  const formData = overrideData || meta.hojaDeVida?.datos || {};
   
   // Plantilla configurable desde el usuario o por defecto
   const templatePath = meta.hojaDeVida?.templatePath || '/templates/FORMATO HOJA DE VIDA FHISYL.docx';
@@ -149,7 +149,21 @@ export const generateCV = async (userData) => {
   
   const opts = {
     centered: false,
-    getImage: getBinary,
+    getImage: (tagValue) => {
+      console.log('getImage (Sync) invocado. Tipo de dato:', (tagValue instanceof Uint8Array ? 'Uint8Array' : typeof tagValue));
+      if (tagValue instanceof Uint8Array) return tagValue;
+      
+      try {
+        const binaryString = window.atob(EMPTY_IMAGE);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes;
+      } catch (e) {
+        return new Uint8Array(0);
+      }
+    },
     getSize: (img, tagValue, tagName) => {
       if (tagName === 'foto_perfil' || tagName === 'fotoUser') return [110, 140];
       if (tagName === 'firma_digital' || tagName === 'firmaUser') return [180, 60];
@@ -180,14 +194,28 @@ export const generateCV = async (userData) => {
     firmaUser: firmaData,
     seleccionar_tecnica: rawData.seleccionar_tecnica ? 'X' : '',
     seleccionar_tecnologica: rawData.seleccionar_tecnologica ? 'X' : '',
-    seleccionar_profesional: rawData.seleccionar_profesional ? 'X' : '',
-    seleccionar_postgrado: rawData.seleccionar_postgrado ? 'X' : '',
-    sol_si: rawData.solicitud_ingreso === 'si' ? 'X' : '',
-    sol_no: rawData.solicitud_ingreso === 'no' ? 'X' : '',
+    seleccionar_universitario: rawData.seleccionar_universitario ? 'X' : '',
+    seleccionar_posgrado: rawData.seleccionar_posgrado ? 'X' : '',
+    graduadoSi_1: rawData.graduadoSi_1 ? 'X' : '',
+    graduadoNo_1: rawData.graduadoNo_1 ? 'X' : '',
+    graduadoSi_2: rawData.graduadoSi_2 ? 'X' : '',
+    graduadoNo_2: rawData.graduadoNo_2 ? 'X' : '',
+    graduadoSi_3: rawData.graduadoSi_3 ? 'X' : '',
+    graduadoNo_3: rawData.graduadoNo_3 ? 'X' : '',
+    exp_si1: rawData.exp_si1 ? 'X' : '',
+    exp_no1: rawData.exp_no1 ? 'X' : '',
+    exp_si2: rawData.exp_si2 ? 'X' : '',
+    exp_no2: rawData.exp_no2 ? 'X' : '',
+    exp_si3: rawData.exp_si3 ? 'X' : '',
+    exp_no3: rawData.exp_no3 ? 'X' : '',
     autorizo_si: rawData.autorizo_si ? 'X' : '',
     autorizo_no: rawData.autorizo_no ? 'X' : '',
     'fraseUser': rawData.frase_identificadora || '',
     'descripMain': rawData.descripcion_breve_ministerio_profesion || '',
+    'grado1': rawData.grado1 || '', 'grado2': rawData.grado2 || '', 'grado3': rawData.grado3 || '',
+    'grado4': rawData.grado4 || '', 'grado5': rawData.grado5 || '', 'grado6': rawData.grado6 || '',
+    'grado7': rawData.grado7 || '', 'grado8': rawData.grado8 || '', 'grado9': rawData.grado9 || '',
+    'grado10': rawData.grado10 || '', 'grado11': rawData.grado11 || '',
     'profesion_personal _2': rawData.profesion_personal_2 || '',
     'profesion_personal _3': rawData.profesion_personal_3 || '',
     'sector_publica_1': rawData.sector_empresa === 'publica' ? 'X' : '',
@@ -195,7 +223,11 @@ export const generateCV = async (userData) => {
     'sector_publica_2': rawData.sector_empresa2 === 'publica' ? 'X' : '',
     'sector_privada_2': rawData.sector_empresa2 === 'privada' ? 'X' : '',
     'sector_publica_3': rawData.sector_empresa3 === 'publica' ? 'X' : '',
-    'sector_privada_3': rawData.sector_empresa3 === 'privada' ? 'X' : ''
+    'sector_privada_3': rawData.sector_empresa3 === 'privada' ? 'X' : '',
+    'empresa_publica': rawData.sector_empresa === 'publica' ? 'X' : '',
+    'empresa_privada': rawData.sector_empresa === 'privada' ? 'X' : '',
+    'sol_si': rawData.solicitud_ingreso === 'si' ? 'X' : '',
+    'sol_no': rawData.solicitud_ingreso === 'no' ? 'X' : ''
   });
 
   console.log('Datos sanitizados listos para renderizar:', dataToRender);
@@ -215,6 +247,31 @@ export const generateCV = async (userData) => {
     mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
   });
 };
+
+/**
+ * Función unificada para descargar la Hoja de Vida con el nombre de archivo correcto.
+ */
+export const downloadCV = async (userData, overrideData = null) => {
+  try {
+    const blob = await generateCV(userData, overrideData);
+    const meta = userData.fundacion || {};
+    const formData = overrideData || meta.hojaDeVida?.datos || {};
+    
+    // Generación de nombre de archivo idéntica a la del formulario del usuario
+    const fullName = formData.nombre_completo || 
+                   `${userData.nombres?.primero || ''} ${userData.nombres?.segundo || ''} ${userData.apellidos?.primero || ''} ${userData.apellidos?.segundo || ''}`.trim().replace(/\s+/g, ' ') || 
+                   'Usuario';
+                   
+    const fileName = `Hoja_de_Vida_${fullName.replace(/\s+/g, '_')}.docx`;
+    
+    saveAs(blob, fileName);
+    return true;
+  } catch (error) {
+    console.error('Error en downloadCV:', error);
+    throw error;
+  }
+};
+
 
 const getHtmlBase = (title, bodyContent) => `
   <html>

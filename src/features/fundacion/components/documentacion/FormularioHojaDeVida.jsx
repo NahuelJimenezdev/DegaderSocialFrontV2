@@ -395,78 +395,9 @@ export default function FormularioHojaDeVida() {
       };
       
       const imageModule = new ImageModule(opts);
-      const doc = new Docxtemplater(zip, {
-        paragraphLoop: true, 
-        linebreaks: true, 
-        modules: [imageModule],
-        nullGetter: () => ""
-      });
-
-      console.log('Pre-cargando imágenes...');
-      const photoBin = await getBinary(photoPreview || '');
-      
-      let finalSignature = firmaPreview || '';
-      if (finalSignature.startsWith('data:image')) {
-        finalSignature = await processSignatureImage(finalSignature);
-      }
-      const firmaBin = await getBinary(finalSignature);
-
-      const rawData = formData;
-      const dataToRender = sanitizeData({
-        ...rawData,
-        foto_perfil: photoBin,
-        fotoUser: photoBin,
-        firma_digital: firmaBin,
-        firmaUser: firmaBin,
-        seleccionar_tecnica: rawData.seleccionar_tecnica ? 'X' : '',
-        seleccionar_tecnologica: rawData.seleccionar_tecnologica ? 'X' : '',
-        seleccionar_universitario: rawData.seleccionar_universitario ? 'X' : '',
-        seleccionar_posgrado: rawData.seleccionar_posgrado ? 'X' : '',
-        graduadoSi_1: rawData.graduadoSi_1 ? 'X' : '',
-        graduadoNo_1: rawData.graduadoNo_1 ? 'X' : '',
-        graduadoSi_2: rawData.graduadoSi_2 ? 'X' : '',
-        graduadoNo_2: rawData.graduadoNo_2 ? 'X' : '',
-        graduadoSi_3: rawData.graduadoSi_3 ? 'X' : '',
-        graduadoNo_3: rawData.graduadoNo_3 ? 'X' : '',
-        exp_si1: rawData.exp_si1 ? 'X' : '',
-        exp_no1: rawData.exp_no1 ? 'X' : '',
-        exp_si2: rawData.exp_si2 ? 'X' : '',
-        exp_no2: rawData.exp_no2 ? 'X' : '',
-        exp_si3: rawData.exp_si3 ? 'X' : '',
-        exp_no3: rawData.exp_no3 ? 'X' : '',
-        autorizo_si: rawData.autorizo_si ? 'X' : '',
-        autorizo_no: rawData.autorizo_no ? 'X' : '',
-        'fraseUser': rawData.frase_identificadora || '',
-        'descripMain': rawData.descripcion_breve_ministerio_profesion || '',
-        'grado1': rawData.grado1 || '', 'grado2': rawData.grado2 || '', 'grado3': rawData.grado3 || '',
-        'grado4': rawData.grado4 || '', 'grado5': rawData.grado5 || '', 'grado6': rawData.grado6 || '',
-        'grado7': rawData.grado7 || '', 'grado8': rawData.grado8 || '', 'grado9': rawData.grado9 || '',
-        'grado10': rawData.grado10 || '', 'grado11': rawData.grado11 || '',
-        'sector_publica_1': rawData.sector_empresa === 'publica' ? 'X' : '',
-        'sector_privada_1': rawData.sector_empresa === 'privada' ? 'X' : '',
-        'sector_publica_2': rawData.sector_empresa2 === 'publica' ? 'X' : '',
-        'sector_privada_2': rawData.sector_empresa2 === 'privada' ? 'X' : '',
-        'sector_publica_3': rawData.sector_empresa3 === 'publica' ? 'X' : '',
-        'sector_privada_3': rawData.sector_empresa3 === 'privada' ? 'X' : '',
-        'empresa_publica': rawData.sector_empresa === 'publica' ? 'X' : '',
-        'empresa_privada': rawData.sector_empresa === 'privada' ? 'X' : '',
-        'profesion_personal _2': rawData.profesion_personal_2 || '',
-        'profesion_personal _3': rawData.profesion_personal_3 || ''
-      });
-
-      console.log('Datos finales para renderizar (Hoja de Vida):', dataToRender);
-
-      // 3. Renderizar asincrónicamente
-      await doc.renderAsync(dataToRender);
-
-      // 4. Generar blob y descargar
-      const out = doc.getZip().generate({
-        type: 'blob',
-        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      });
-      
-      saveAs(out, `Hoja_de_Vida_${formData.nombre_completo.replace(/\s+/g, '_')}.docx`);
-      toast.success('¡Hoja de Vida generada con éxito!');
+      // Usar la función unificada de docUtils para garantizar consistencia total ( Admin == Usuario )
+      const success = await downloadCV(user, formData, photoPreview, firmaPreview);
+      if (success) toast.success('¡Hoja de Vida generada con éxito!');
     } catch (error) {
       console.error('Error generando Word:', error);
       toast.error('Error al generar el documento. Verifica la plantilla.');

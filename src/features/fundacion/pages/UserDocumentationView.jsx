@@ -18,7 +18,8 @@ import {
   generateFHSYL, 
   generateEntrevista, 
   generateSolicitud,
-  generateUserZip
+  generateUserZip,
+  downloadCV
 } from '../utils/docUtils';
 
 export default function UserDocumentationView() {
@@ -60,10 +61,10 @@ export default function UserDocumentationView() {
 
       switch (type) {
         case 'cv':
-          console.log('Generando CV Word...');
-          blob = await generateCV(targetUser);
-          filename = `Hoja_de_Vida_${nameStr}.docx`;
-          break;
+          console.log('Generando Hoja de Vida unificada...');
+          await downloadCV(targetUser);
+          setDownloading(false);
+          return; // downloadCV ya maneja el saveAs
         case 'fhsyl':
           console.log('Generando Aplicativo Argentina...');
           blob = generateFHSYL(targetUser);
