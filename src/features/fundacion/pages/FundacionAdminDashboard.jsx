@@ -268,10 +268,10 @@ export default function FundacionAdminDashboard() {
                   </div>
                   
                   <button 
-                    onClick={() => navigate(`/perfil/${u._id}`)}
+                    onClick={() => navigate(`/fundacion/admin/usuario/${u._id}/documentacion`)}
                     className="w-full mt-auto py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
                   >
-                    Ver Perfil Detallado
+                    Ver Documentación
                     <ChevronRight size={18} />
                   </button>
                 </>
@@ -306,11 +306,11 @@ export default function FundacionAdminDashboard() {
                     </div>
                     
                     <button 
-                      onClick={() => navigate(`/perfil/${u._id}`)}
+                      onClick={() => navigate(`/fundacion/admin/usuario/${u._id}/documentacion`)}
                       className="w-full sm:w-auto flex-shrink-0 px-4 py-2 sm:py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
                     >
-                      <span className="hidden xs:inline">Ver Perfil Detallado</span>
-                      <span className="xs:hidden">Ver Perfil</span>
+                      <span className="hidden xs:inline">Ver Documentación</span>
+                      <span className="xs:hidden">Ver Docs</span>
                       <ChevronRight size={18} />
                     </button>
                   </div>

@@ -24,6 +24,7 @@ import DocumentViewer from './features/fundacion/components/documentacion/Docume
 import FormularioSolicitud from './features/fundacion/components/documentacion/FormularioSolicitud'
 import FormularioHojaDeVida from './features/fundacion/components/documentacion/FormularioHojaDeVida'
 import FundacionAdminDashboard from './features/fundacion/pages/FundacionAdminDashboard'
+import UserDocumentationView from './features/fundacion/pages/UserDocumentationView'
 import FounderAdsDashboard from './features/ads/FounderAdsDashboard'
 import FavoritosPage from './features/favoritos/pages/FavoritosPage'
 import ProtectedRoute from './features/auth/components/ProtectedRoute'
@@ -87,6 +88,7 @@ export const router = createBrowserRouter([
       { path: '/Mi_iglesia', element: <IglesiaPage /> },
       { path: '/fundacion', element: <FundacionPage /> },
       { path: '/fundacion/admin', element: <FundacionAdminDashboard /> },
+      { path: '/fundacion/admin/usuario/:id/documentacion', element: <UserDocumentationView /> },
       { path: '/fundacion/solicitud', element: <FormularioSolicitud /> },
       { path: '/fundacion/documentacion-fhsyl', element: <FormularioFHSYL /> },
       { path: '/fundacion/entrevista', element: <FormularioEntrevista /> },
