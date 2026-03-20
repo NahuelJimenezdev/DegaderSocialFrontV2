@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.76.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.75.0...v1.76.0) (2026-03-20)
+
+
+### Features
+
+* ajustar jerarquia de ubicacion territorial por nivel (Nacional, Regional, Dept, Mun) ([8aa5762](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8aa5762559466742ba9b43479337989d5e199cf3))
+* bloqueo de Solicitud de Ingreso hasta completar CV, FHSYL y Entrevista ([593301f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/593301ff135da4d57f90fee40f30ccfebc4507a4))
+* implementar seccion de documentacion para administradores con descarga de Word ([4f8654c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4f8654c72dc7c169bd7ae779a379cbc487617b63))
+* sincronización de datos cross-form entre CV, FHSYL y Entrevista ([2c21077](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2c21077840a80da130115bdfc73b49ba036554ea))
+
+
+### Bug Fixes
+
+* corregir extraccion de datos en UserDocumentationView ([a2f3e24](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a2f3e2483521ea8b567e5a50a106c466ed384cf2))
+* dividir campos combinados en Entrevista para correcta persistencia (situacion y talentos) ([46ab102](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/46ab102a29c005555d2c86f6fc9aa28f4b0ba43f))
+* mapeado ultra-robusto con fallbacks y logs de depuración para Datos Generales ([351a856](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/351a8561946858fd038e5b5ef757277c8fa413c5))
+* mapeo fuzzy de llaves para referencias y campos de documento ([3940007](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/394000783ee8d59b56d789005020c811eb70eb2c))
+* refinar sincronización de Llamado Pastoral (solo entre FHSYL y Entrevista) ([d9502d6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d9502d6f49636e22cbdefae73a9d9d5461020872))
+* solucionar ReferenceError en el formulario de solicitud (handleAreaChange) ([d85a14d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d85a14d1f64c4d4d01f281729151426493d1cd6d))
+* soporte para tags con espacio en plantilla Word para profesiones personales ([0e381ca](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0e381ca1d0a21630d0f569663fd5fd27f850852f))
+
 ## [1.75.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.74.3...v1.75.0) (2026-03-19)
 
 
