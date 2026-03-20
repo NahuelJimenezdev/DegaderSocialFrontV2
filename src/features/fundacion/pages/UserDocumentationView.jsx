@@ -17,7 +17,8 @@ import {
   generateCV, 
   generateFHSYL, 
   generateEntrevista, 
-  generateSolicitud 
+  generateSolicitud,
+  generateUserZip
 } from '../utils/docUtils';
 
 export default function UserDocumentationView() {
@@ -92,20 +93,16 @@ export default function UserDocumentationView() {
   };
 
   const downloadAll = async () => {
+    if (!targetUser) return;
     setDownloading(true);
     try {
-      toast.loading('Generando paquete de documentos...');
-      await handleDownload('cv');
-      await new Promise(r => setTimeout(r, 1000));
-      await handleDownload('fhsyl');
-      await new Promise(r => setTimeout(r, 1000));
-      await handleDownload('entrevista');
-      await new Promise(r => setTimeout(r, 1000));
-      await handleDownload('solicitud');
-      toast.dismiss();
-      toast.success('Todos los documentos han sido generados');
+      const loadingToast = toast.loading('Preparando paquete de documentos...');
+      await generateUserZip(targetUser);
+      toast.dismiss(loadingToast);
+      toast.success('¡Paquete descargado con éxito!');
     } catch (error) {
-      toast.error('Ocurrió un error al descargar el paquete');
+      console.error(error);
+      toast.error('Ocurrió un error al generar el ZIP');
     } finally {
       setDownloading(false);
     }
@@ -121,10 +118,30 @@ export default function UserDocumentationView() {
   }
 
   const DOCS = [
-    { id: 'cv', title: 'Hoja de Vida', desc: 'Perfil profesional, educación y experiencia.', status: !!targetUser?.fundacion?.hojaDeVida?.ultimaActualizacion },
-    { id: 'fhsyl', title: 'Aplicativo Argentina', desc: 'Información pastoral y aplicativo FHSYL.', status: !!targetUser?.fundacion?.documentacionFHSYL?.ultimaActualizacion },
-    { id: 'entrevista', title: 'Entrevista Fundación', desc: 'Respuestas a la entrevista de ingreso.', status: !!targetUser?.fundacion?.entrevista?.ultimaActualizacion },
-    { id: 'solicitud', title: 'Solicitud de Ingreso', desc: 'Datos de jerarquía y área asignada.', status: !!targetUser?.fundacion?.nivel }
+    { 
+      id: 'cv', 
+      title: 'Hoja de Vida', 
+      desc: 'Perfil profesional, educación y experiencia.', 
+      status: targetUser?.fundacion?.hojaDeVida?.completado 
+    },
+    { 
+      id: 'fhsyl', 
+      title: 'Aplicativo Argentina', 
+      desc: 'Información pastoral y aplicativo FHSYL.', 
+      status: !!targetUser?.fundacion?.documentacionFHSYL?.ultimaActualizacion 
+    },
+    { 
+      id: 'entrevista', 
+      title: 'Entrevista Fundación', 
+      desc: 'Respuestas a la entrevista de ingreso.', 
+      status: targetUser?.fundacion?.entrevista?.completado 
+    },
+    { 
+      id: 'solicitud', 
+      title: 'Solicitud de Ingreso', 
+      desc: 'Datos de jerarquía y área asignada.', 
+      status: !!targetUser?.fundacion?.nivel 
+    }
   ];
 
   return (
@@ -219,7 +236,7 @@ export default function UserDocumentationView() {
         <div className="relative flex flex-col md:flex-row items-center gap-8">
           <div className="w-24 h-24 rounded-3xl overflow-hidden bg-white/10 p-1 border border-white/20">
              <img 
-               src={targetUser.avatar || '/avatars/default-avatar.png'} 
+               src={targetUser.social?.fotoPerfil || '/avatars/default-avatar.png'} 
                className="w-full h-full object-cover rounded-2xl" 
                alt="Avatar"
              />
