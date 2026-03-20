@@ -25,9 +25,23 @@ const TIPOS_CARPETA = [
 const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEditing }) => {
   const { user } = useAuth();
   
+  // Debug para verificar por qué el usuario pruebas@gmail.com puede ver la opción
+  useEffect(() => {
+    if (isOpen) {
+      console.log('DEBUG: ModalCrearCarpeta Check', {
+        email: user?.email,
+        rolSistema: user?.seguridad?.rolSistema,
+        esMiembro: user?.esMiembroFundacion,
+        estado: user?.fundacion?.estadoAprobacion,
+        cargo: user?.fundacion?.cargo
+      });
+    }
+  }, [isOpen, user]);
+
   // Restricción de creación de carpetas institucionales
+  // Solo Founder o Miembros Aprobados con Cargo
   const puedeCrearInstitucionales = user?.seguridad?.rolSistema === 'Founder' || 
-    (user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
+    (user?.esMiembroFundacion && user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
 
   const tiposDisponibles = TIPOS_CARPETA.filter(tipo => 
     tipo.valor !== 'institucional' || puedeCrearInstitucionales

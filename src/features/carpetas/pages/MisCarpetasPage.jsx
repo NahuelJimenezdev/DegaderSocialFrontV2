@@ -51,7 +51,7 @@ const MisCarpetasPage = () => {
   } = useCarpetas();
 
   const puedeVerInstitucionales = user?.seguridad?.rolSistema === 'Founder' ||
-    (user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
+    (user?.esMiembroFundacion && user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
 
   const abrirCarpeta = (id) => {
     navigate(`/Mis_carpetas/${id}`);
