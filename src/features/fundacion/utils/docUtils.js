@@ -29,14 +29,14 @@ const processSignatureImage = (base64) => {
 const getBinary = async (tagValue) => {
   if (!tagValue || tagValue === '' || tagValue === '---') {
     const binaryString = window.atob(EMPTY_IMAGE);
-    return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i)).buffer;
+    return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
   }
   try {
     const strVal = tagValue.toString();
     if (strVal.startsWith('data:image')) {
       const base64 = strVal.split(',')[1];
       const binaryString = window.atob(base64);
-      return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i)).buffer;
+      return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
     }
     const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
     let finalUrl = strVal;
@@ -44,10 +44,10 @@ const getBinary = async (tagValue) => {
     const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
     const response = await fetch(proxyUrl);
     if (!response.ok) throw new Error('Error proxy');
-    return await response.arrayBuffer();
+    return new Uint8Array(await response.arrayBuffer());
   } catch (e) {
     const binaryString = window.atob(EMPTY_IMAGE);
-    return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i)).buffer;
+    return new Uint8Array(binaryString.length).map((_, i) => binaryString.charCodeAt(i));
   }
 };
 
@@ -55,8 +55,19 @@ export const generateCV = async (userData) => {
   const meta = userData.fundacion || {};
   const formData = meta.hojaDeVida?.datos || {};
   
-  const response = await fetch('/templates/FORMATO HOJA DE VIDA FHISYL.docx');
-  const content = await response.arrayBuffer();
+  // Plantilla configurable desde el usuario o por defecto
+  const templatePath = meta.hojaDeVida?.templatePath || '/templates/FORMATO HOJA DE VIDA FHISYL.docx';
+  
+  const response = await fetch(templatePath);
+  if (!response.ok) {
+    console.warn(`No se pudo cargar la plantilla en ${templatePath}, reintentando con la por defecto.`);
+    const fallbackResponse = await fetch('/templates/FORMATO HOJA DE VIDA FHISYL.docx');
+    if (!fallbackResponse.ok) throw new Error('No se pudo cargar ninguna plantilla de Hoja de Vida.');
+    var content = await fallbackResponse.arrayBuffer();
+  } else {
+    var content = await response.arrayBuffer();
+  }
+  
   const zip = new PizZip(content);
   
   const opts = {

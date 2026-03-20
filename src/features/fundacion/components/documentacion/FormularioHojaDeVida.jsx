@@ -327,19 +327,18 @@ export default function FormularioHojaDeVida() {
             for (let i = 0; i < binaryString.length; i++) {
               bytes[i] = binaryString.charCodeAt(i);
             }
-            return bytes.buffer;
+            return bytes;
           }
 
           try {
             const strVal = tagValue.toString();
             if (strVal.startsWith('data:image')) {
-              const base64 = strVal.split(',')[1];
-              const binaryString = window.atob(base64);
+              const binaryString = window.atob(strVal.split(',')[1]);
               const bytes = new Uint8Array(binaryString.length);
               for (let i = 0; i < binaryString.length; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
               }
-              return bytes.buffer;
+              return bytes;
             }
 
             const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
@@ -351,16 +350,15 @@ export default function FormularioHojaDeVida() {
             const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
             const response = await fetch(proxyUrl);
             if (!response.ok) throw new Error('Error al cargar imagen via proxy');
-            return await response.arrayBuffer();
+            return new Uint8Array(await response.arrayBuffer());
           } catch (error) {
             console.error('Error procesando imagen para Word:', error);
-            // Fallback en caso de error
             const binaryString = window.atob(EMPTY_IMAGE);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
               bytes[i] = binaryString.charCodeAt(i);
             }
-            return bytes.buffer;
+            return bytes;
           }
         },
         getSize: (img, tagValue, tagName) => {
