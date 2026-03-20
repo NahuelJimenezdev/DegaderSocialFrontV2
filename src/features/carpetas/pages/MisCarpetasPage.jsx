@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 import { useCarpetas } from '../hooks/useCarpetas';
 import CarpetasHeader from '../components/CarpetasHeader';
 import CarpetasGrid from '../components/CarpetasGrid';
@@ -12,6 +13,7 @@ import { Filter, Search, Grid, List, X } from 'lucide-react';
 const MisCarpetasPage = () => {
   const navigate = useNavigate();
 
+  const { user } = useAuth();
   const {
     loading,
     carpetasFiltradas,
@@ -47,6 +49,9 @@ const MisCarpetasPage = () => {
     confirmConfig,
     setConfirmConfig,
   } = useCarpetas();
+
+  const puedeVerInstitucionales = user?.seguridad?.rolSistema === 'Founder' ||
+    (user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
 
   const abrirCarpeta = (id) => {
     navigate(`/Mis_carpetas/${id}`);
@@ -121,7 +126,7 @@ const MisCarpetasPage = () => {
                 <option value="">Todos los tipos</option>
                 <option value="personal">Personal</option>
                 <option value="grupal">Grupal</option>
-                <option value="institucional">Institucional</option>
+                {puedeVerInstitucionales && <option value="institucional">Institucional</option>}
               </select>
 
               {/* Solo mostrar filtros de área y cargo para carpetas institucionales */}

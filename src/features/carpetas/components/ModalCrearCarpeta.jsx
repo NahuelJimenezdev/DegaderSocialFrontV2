@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Folder, Users, Globe, Building, Shield, UsersRound } from 'lucide-react';
 import api from '../../../api/config';
+import { useAuth } from '../../../context/AuthContext';
 
 const COLORES_CARPETA = [
   { nombre: 'Azul', valor: '#3B82F6' },
@@ -22,6 +23,16 @@ const TIPOS_CARPETA = [
 ];
 
 const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEditing }) => {
+  const { user } = useAuth();
+  
+  // Restricción de creación de carpetas institucionales
+  const puedeCrearInstitucionales = user?.seguridad?.rolSistema === 'Founder' || 
+    (user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
+
+  const tiposDisponibles = TIPOS_CARPETA.filter(tipo => 
+    tipo.valor !== 'institucional' || puedeCrearInstitucionales
+  );
+
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
@@ -178,7 +189,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Tipo de Carpeta</label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {TIPOS_CARPETA.map((tipo) => (
+              {tiposDisponibles.map((tipo) => (
                 <button
                   key={tipo.valor}
                   type="button"
