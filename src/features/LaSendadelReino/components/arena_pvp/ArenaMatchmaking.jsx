@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
 import { useUserStore } from '../../stores/useUserStore';
+import { useAuth } from '../../../../context/AuthContext';
 import RotationAnnouncement from './RotationAnnouncement';
 import { useArenaStore } from '../../stores/useArenaStore';
 import ArenaInfoBlock from './ArenaInfoBlock';
@@ -8,7 +9,8 @@ import './ArenaMatchmaking.css';
 
 export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
   const { socket } = useSocket();
-  const user = useUserStore();
+  const { user: authUser } = useAuth(); // Global Auth User
+  const arenaStore = useUserStore(); // Arena progression store
   const [isSearching, setIsSearching] = useState(false);
   const [matchData, setMatchData] = useState(null);
   const [showRotationPrompt, setShowRotationPrompt] = useState(false);
@@ -47,7 +49,7 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
 
   const handleStartSearch = () => {
     setIsSearching(true);
-    socket.emit('arena:findMatch', { mode: 'arena', rating: user?.arena?.rankPoints || 0 });
+    socket.emit('arena:findMatch', { mode: 'arena', rating: authUser?.arena?.rankPoints || 0 });
   };
 
   const handleCancelSearch = () => {
@@ -72,14 +74,14 @@ export const ArenaMatchmaking = ({ onMatchFound, theme = 'dark' }) => {
           <div className="vs-player-container vs-p1 animate-slide-in-left">
             <div className="vs-avatar-wrapper">
               <img 
-                src={user?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                src={authUser?.social?.fotoPerfil || '/assets/default-avatar.png'} 
                 alt="Yo" 
                 className="vs-avatar"
               />
             </div>
             <div className="vs-player-badge">
               <span className="vs-label">TÚ</span>
-              <span className="vs-sublabel">LIGA {user?.arena?.league?.toUpperCase() || 'DISCÍPULO'}</span>
+              <span className="vs-sublabel">LIGA {authUser?.arena?.league?.toUpperCase() || 'DISCÍPULO'}</span>
             </div>
           </div>
 

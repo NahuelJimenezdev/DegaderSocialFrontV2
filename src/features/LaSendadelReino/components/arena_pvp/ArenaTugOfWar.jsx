@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSocket } from '../../../../hooks/useSocket';
 import { useUserStore } from '../../stores/useUserStore';
+import { useAuth } from '../../../../context/AuthContext';
 import competitiveBG from '../../assets/fondo_competitivo_one.png';
 import './ArenaTugOfWar.css';
 
@@ -24,7 +25,8 @@ const GridAnswers = ({ options, onSelect, disabled }) => {
 
 export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
     const { socket } = useSocket();
-    const user = useUserStore();
+    const { user: authUser } = useAuth(); // Identidad Global del Creyente
+    const arenaStore = useUserStore();
     
     // Estados del Juego
     const [gameState, setGameState] = useState({
@@ -42,8 +44,8 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
     const [matchWinner, setMatchWinner] = useState(null);
     
     // Identificar quién es P1 y P2 para la UI local
-    const isPlayer1 = matchData?.player1Id === user?._id;
-    console.log('👤 [ARENA_PVP] ¿Soy Player 1?:', isPlayer1, { myId: user?._id, p1Id: matchData?.player1Id });
+    const isPlayer1 = matchData?.player1Id === authUser?._id;
+    console.log('👤 [ARENA_PVP] ¿Soy Player 1?:', isPlayer1, { myId: authUser?._id, p1Id: matchData?.player1Id });
  
     useEffect(() => {
         if (!socket) return;
@@ -134,7 +136,7 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
     };
 
     if (matchWinner) {
-        const iWon = matchWinner === user._id;
+        const iWon = matchWinner === authUser._id;
         return (
             <div className={`tug-match-ended ${iWon ? 'victory' : 'defeat'} animate-fade-in`}>
                 <h1>{iWon ? '¡VICTORIA ÉPICA!' : 'DERROTA'}</h1>
@@ -156,7 +158,7 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
             <header className="tug-header">
                 {/* Player 1 Stats (Izquierda) */}
                 <div className="tug-player-stats left-player">
-                    <img src={user?.social?.fotoPerfil || '/assets/default-avatar.png'} alt="P1" className="miniavatar p1-color"/>
+                    <img src={authUser?.social?.fotoPerfil || '/assets/default-avatar.png'} alt="P1" className="miniavatar p1-color"/>
                     <div className="health-hearts">
                         {Array(3).fill(0).map((_, i) => (
                             <span key={i} className={`heart ${i < gameState.health1 ? 'full' : 'empty'}`}>❤️</span>
@@ -190,7 +192,7 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
                 <div className="stage-avatars-container">
                     <div className="player-avatar-wrapper p1-wrapper animate-slide-in-left">
                         <img 
-                            src={user?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                            src={authUser?.social?.fotoPerfil || '/assets/default-avatar.png'} 
                             alt="Mí" 
                             className="stage-avatar p1-avatar"
                         />
