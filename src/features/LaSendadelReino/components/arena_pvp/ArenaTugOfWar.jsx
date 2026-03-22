@@ -4,31 +4,20 @@ import { useUserStore } from '../../stores/useUserStore';
 import competitiveBG from '../../assets/fondo_competitivo_one.png';
 import './ArenaTugOfWar.css';
 
-// Componente Radial para las respuestas (No vertical)
-const RadialAnswers = ({ options, onSelect, disabled }) => {
-    // Calcula la posición en un radio
-    const radius = 120;
-    
+// Componente Grid 2x2 para las respuestas
+const GridAnswers = ({ options, onSelect, disabled }) => {
     return (
-        <div className="radial-answers-container">
-            {options.map((opt, index) => {
-                // Si son 4 opciones, dividimos 360/4 = 90 grados (en radianes)
-                const angle = (index * (360 / options.length)) * (Math.PI / 180);
-                const x = Math.sin(angle) * radius;
-                const y = -Math.cos(angle) * radius; // negativo para que empiece arriba
-                
-                return (
-                    <button 
-                        key={index}
-                        className={`radial-btn ${disabled ? 'disabled' : ''}`}
-                        style={{ transform: `translate(${x}px, ${y}px)` }}
-                        onClick={() => !disabled && onSelect(opt)}
-                        disabled={disabled}
-                    >
-                        {opt.text}
-                    </button>
-                );
-            })}
+        <div className="grid-answers-container">
+            {options?.map((opt, index) => (
+                <button 
+                    key={opt._id || index}
+                    className={`grid-answer-btn ${disabled ? 'disabled' : ''}`}
+                    onClick={() => !disabled && onSelect(opt)}
+                    disabled={disabled}
+                >
+                    {opt.text}
+                </button>
+            ))}
         </div>
     );
 };
@@ -64,19 +53,16 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
         socket.on('arena:roundStart', (data) => {
             console.log('⚔️ [ARENA_PVP] ¡Nueva ronda recibida!: ', data);
             
-            // Mock de pregunta. En la versión real, la buscas del JSON local usando data.questionId
-            setCurrentQuestion({
-                id: data.questionId,
-                category: "Historia",
-                difficulty: "Normal",
-                text: "¿En qué año cayó el Imperio Romano de Occidente?",
-                options: [
-                    { id: 'a', text: "476 d.C", isCorrect: true },
-                    { id: 'b', text: "395 d.C", isCorrect: false },
-                    { id: 'c', text: "1453 d.C", isCorrect: false },
-                    { id: 'd', text: "410 d.C", isCorrect: false }
-                ]
-            });
+            // Inyectar pregunta Real proveniente de MongoDB
+            if (data.question) {
+                setCurrentQuestion({
+                    id: data.question._id,
+                    category: data.question.category || "Desafío Arena",
+                    difficulty: data.question.difficulty || "Normal",
+                    text: data.question.question,
+                    options: data.question.options // Ya viene [{id, text}]
+                });
+            }
             
             setIsAnswering(false);
             setRoundResult(null);
@@ -133,14 +119,16 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
 
     const handleSelectAnswer = (option) => {
         setIsAnswering(true);
-        setRoundResult(option.isCorrect ? 'correct' : 'incorrect');
+        // Desacoplado: el frontend asume que tocar responde pero no sabe el resultado real. 
+        // El servidor evaluará. Para la UI inmediata podemos mostrar solo que se pulsó.
+        setRoundResult('selected'); 
 
         const timeMs = (10 - timeLeft) * 1000;
         
         socket.emit('arena:submitAnswer', {
             matchId: matchData.matchId,
             questionId: currentQuestion.id,
-            correct: option.isCorrect,
+            selectedOptionId: option.id,
             timeMs: timeMs
         });
     };
@@ -242,9 +230,9 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
                             <h3 className="question-text">{currentQuestion.text}</h3>
                         </div>
 
-                        {/* Botones Radiales Ocultos si respondio */}
-                        <div className={`radial-wrapper ${isAnswering ? 'hide' : 'slide-up'}`}>
-                            <RadialAnswers 
+                        {/* Grid de Botones 2x2 */}
+                        <div className={`grid-wrapper ${isAnswering ? 'hide' : 'slide-up'}`}>
+                            <GridAnswers 
                                 options={currentQuestion.options} 
                                 onSelect={handleSelectAnswer}
                                 disabled={isAnswering}
@@ -254,8 +242,8 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
                         {/* Feedback tras responder (Esperando al rival) */}
                         {isAnswering && !matchWinner && (
                             <div className="waiting-opponent animate-pulse">
-                                {roundResult === 'correct' ? <span className="text-green">¡Respuesta Correcta! Empujando...</span> : <span className="text-red">Incorrecto. Escudos abajo.</span>}
-                                <p>Esperando la resolución de la ronda...</p>
+                                <span className="text-yellow">¡Respuesta Confirmada!</span>
+                                <p>Esperando resultado oficial del servidor...</p>
                             </div>
                         )}
                     </div>

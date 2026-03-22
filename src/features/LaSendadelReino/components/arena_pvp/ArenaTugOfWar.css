@@ -294,65 +294,58 @@
   margin: 10px 0 0 0;
 }
 
-/* Radial Buttons */
-.radial-wrapper {
+/* Grid Buttons 2x2 */
+.grid-wrapper {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  max-width: 500px;
 }
 
-.radial-answers-container {
-  position: relative;
+.grid-answers-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
   width: 100%;
-  height: 100%;
 }
 
-.radial-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  /* transform is handled inline via React (translate(-50%, -50%) translate(X, Y)) */
-  width: 140px;
-  height: 60px;
-  margin-left: -70px;
-  margin-top: -30px;
+.grid-answer-btn {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 30px;
+  border-radius: 12px;
   color: white;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  padding: 15px 10px;
   cursor: pointer;
   transition: all 0.2s;
   backdrop-filter: blur(5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-.radial-btn:hover {
+.grid-answer-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05) !important;
-  /* Will partially conflict with inline, but handled well enough normally or we wrap it */
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+  border-color: rgba(0, 242, 254, 0.5);
 }
 
-/* Fix for radial hover */
-.radial-answers-container>button {
-  transition: background 0.2s, box-shadow 0.2s, opacity 0.3s;
+.grid-answers-container>button {
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 }
 
-.radial-answers-container>button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-  /* No scale transform to avoid overriding inline position */
-}
-
-.radial-btn.disabled {
+.grid-answer-btn.disabled {
   opacity: 0.5;
   pointer-events: none;
+  transform: none;
 }
 
 /* Feedback Overlay */
