@@ -188,28 +188,33 @@ export const ArenaTugOfWar = ({ matchData, onExit, theme = 'dark' }) => {
 
             {/* Escenario Central */}
             <main className="tug-main-stage">
-                {/* Avatares en Círculos (Fondo background_1vs1.png) */}
-                <div className="stage-avatars-container">
-                    <div className="player-avatar-wrapper p1-wrapper animate-slide-in-left">
-                        <img 
-                            src={authUser?.social?.fotoPerfil || '/assets/default-avatar.png'} 
-                            alt="Mí" 
-                            className="stage-avatar p1-avatar"
-                        />
+                {/* Avatares en Círculos - SOLO SE MUESTRAN AL INICIO (INTRO) */}
+                {!currentQuestion && (
+                    <div className="stage-avatars-container">
+                        <div className="player-avatar-wrapper p1-wrapper animate-slide-in-left">
+                            <img 
+                                src={authUser?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                                alt="Mí" 
+                                className="stage-avatar p1-avatar"
+                            />
+                        </div>
+                        <div className="player-avatar-wrapper p2-wrapper animate-slide-in-right">
+                            <img 
+                                src={matchData.opponent?.social?.fotoPerfil || '/assets/default-avatar.png'} 
+                                alt="Rival" 
+                                className="stage-avatar p2-avatar"
+                            />
+                        </div>
                     </div>
-                    <div className="player-avatar-wrapper p2-wrapper animate-slide-in-right">
-                        <img 
-                            src={matchData.opponent?.social?.fotoPerfil || '/assets/default-avatar.png'} 
-                            alt="Rival" 
-                            className="stage-avatar p2-avatar"
-                        />
-                    </div>
-                </div>
+                )}
 
                 {!currentQuestion ? (
-                    <h2 className="animate-pulse">Preparando ronda...</h2>
+                    <div className="intro-stage">
+                         <h2 className="animate-pulse text-2xl font-bold">PREPARANDO DESAFÍO...</h2>
+                         <p className="text-gray-400">La batalla está por comenzar</p>
+                    </div>
                 ) : (
-                    <div className={`question-stage ${isAnswering ? `answered-${roundResult}` : ''}`}>
+                    <div className={`question-stage horizontal-layout ${isAnswering ? `answered-${roundResult}` : ''}`}>
                         
                         {/* Temporizador Circular */}
                         <div className="circular-timer-wrapper">
