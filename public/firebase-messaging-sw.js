@@ -5,12 +5,12 @@ importScripts('https://www.gstatic.com/firebasejs/9.1.1/firebase-messaging-compa
 // ⚠️ NOTA: El usuario DEBE actualizar estos valores con su config real
 // si no se inyectan dinámicamente durante el build.
 firebase.initializeApp({
-    apiKey: "AIzaSyDv8GgqpaFJEGt-O-jPBzRhJdzt8MpkofE",
-    authDomain: "degader-social.firebaseapp.com",
-    projectId: "degader-social",
-    storageBucket: "degader-social.firebasestorage.app",
-    messagingSenderId: "680531037245",
-    appId: "1:680531037245:web:a6b8d931bcb267476eee54"
+    apiKey: "__VITE_FIREBASE_API_KEY__",
+    authDomain: "__VITE_FIREBASE_AUTH_DOMAIN__",
+    projectId: "__VITE_FIREBASE_PROJECT_ID__",
+    storageBucket: "__VITE_FIREBASE_STORAGE_BUCKET__",
+    messagingSenderId: "__VITE_FIREBASE_MESSAGING_SENDER_ID__",
+    appId: "__VITE_FIREBASE_APP_ID__"
 });
 
 const messaging = firebase.messaging();

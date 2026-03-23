@@ -29,6 +29,14 @@ ENV VITE_FIREBASE_MESSAGING_SENDER_ID=$VITE_FIREBASE_MESSAGING_SENDER_ID
 ENV VITE_FIREBASE_APP_ID=$VITE_FIREBASE_APP_ID
 ENV VITE_FIREBASE_VAPID_KEY=$VITE_FIREBASE_VAPID_KEY
 
+# Inyectar variables en el Service Worker durante el build
+RUN sed -i "s/__VITE_FIREBASE_API_KEY__/${VITE_FIREBASE_API_KEY}/g" public/firebase-messaging-sw.js && \
+    sed -i "s/__VITE_FIREBASE_AUTH_DOMAIN__/${VITE_FIREBASE_AUTH_DOMAIN}/g" public/firebase-messaging-sw.js && \
+    sed -i "s/__VITE_FIREBASE_PROJECT_ID__/${VITE_FIREBASE_PROJECT_ID}/g" public/firebase-messaging-sw.js && \
+    sed -i "s/__VITE_FIREBASE_STORAGE_BUCKET__/${VITE_FIREBASE_STORAGE_BUCKET}/g" public/firebase-messaging-sw.js && \
+    sed -i "s/__VITE_FIREBASE_MESSAGING_SENDER_ID__/${VITE_FIREBASE_MESSAGING_SENDER_ID}/g" public/firebase-messaging-sw.js && \
+    sed -i "s/__VITE_FIREBASE_APP_ID__/${VITE_FIREBASE_APP_ID}/g" public/firebase-messaging-sw.js
+
 RUN npm run build
 
 # Stage 2: Serve the application with Nginx
