@@ -24,9 +24,13 @@ const ChatWindow = ({
     mostrarEmojiPicker,
     setMostrarEmojiPicker,
     handleEmojiSelect,
-    handleEnviarMensaje,
     getOtroParticipante,
-    handleCerrarChat // Handler para botón atrás móvil
+    handleCerrarChat, // Handler para botón atrás móvil
+    handleLoadMore,
+    pagination,
+    replyingTo,
+    setReplyingTo,
+    retryMessage
 }) => {
     const otroUsuario = conversacionActual ? getOtroParticipante(conversacionActual) : null;
     const [isTyping, setIsTyping] = React.useState(false);
@@ -132,14 +136,19 @@ const ChatWindow = ({
             }
         `}>
             {!conversacionActual || cargando ? (
-                <div className="flex items-center justify-center h-full">
-                    <div className="text-center">
-                        <MessageCircle size={80} className="text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            {cargando ? 'Cargando...' : 'Selecciona una conversación'}
+                <div className="flex flex-col items-center justify-center h-full">
+                    <div className="text-center p-6">
+                        <div className="relative inline-block mb-6">
+                            <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full"></div>
+                            <MessageCircle size={80} className="text-indigo-500/40 dark:text-indigo-400/40 relative z-10 mx-auto" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                            {cargando ? 'Sincronizando...' : 'Tu espacio de mensajería'}
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400">
-                            {cargando ? 'Espera un momento' : 'Elige una conversación del panel izquierdo para comenzar a chatear'}
+                        <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+                            {cargando 
+                                ? 'Espera un momento mientras recuperamos tus conversaciones.' 
+                                : 'Conecta con tus amigos y grupos de forma segura. Selecciona un chat para comenzar.'}
                         </p>
                     </div>
                 </div>
@@ -182,7 +191,19 @@ const ChatWindow = ({
                     </div>
 
                     {/* Mensajes */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900 min-h-0">
+                    <div 
+                        onScroll={(e) => {
+                            if (e.target.scrollTop === 0) {
+                                handleLoadMore();
+                            }
+                        }}
+                        className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900 min-h-0"
+                    >
+                        {pagination.hasMore && (
+                            <div className="flex justify-center py-2">
+                                <span className="text-xs text-gray-500 italic">Cargando mensajes anteriores...</span>
+                            </div>
+                        )}
                         {mensajes.length === 0 ? (
                             <div className="text-center text-gray-500 dark:text-gray-400 py-8">
                                 <p>No hay mensajes aún. ¡Envía el primero!</p>
@@ -190,9 +211,11 @@ const ChatWindow = ({
                         ) : (
                             mensajes.map((msg, index) => (
                                 <MessageBubble
-                                    key={msg._id || index}
+                                    key={msg._id || msg.clientMessageId || index}
                                     msg={msg}
                                     currentUserId={userId}
+                                    onReply={setReplyingTo}
+                                    onRetry={retryMessage}
                                 />
                             ))
                         )}
@@ -226,6 +249,8 @@ const ChatWindow = ({
                         handleEmojiSelect={handleEmojiSelect}
                         handleEnviarMensaje={handleEnviarMensaje}
                         handleTyping={handleTypingLocal}
+                        replyingTo={replyingTo}
+                        setReplyingTo={setReplyingTo}
                     />
                 </>
             )}

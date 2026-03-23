@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, CheckCheck } from 'lucide-react';
+import { Check, CheckCheck, Clock, AlertCircle, Quote } from 'lucide-react';
 import api from '../../../../api/config';
 import ProgressiveImage from '../../../../shared/components/ProgressiveImage/ProgressiveImage';
 
@@ -21,7 +21,7 @@ const formatearTiempo = (fecha) => {
     return msgDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
 };
 
-const MessageBubble = ({ msg, currentUserId }) => {
+const MessageBubble = ({ msg, currentUserId, onReply, onRetry }) => {
     // Normalizar IDs para comparación robusta (manejar objetos y strings)
     const emisorId = msg.emisor?._id?.toString() || msg.emisor?.toString();
     const userId = currentUserId?.toString();
@@ -51,11 +51,36 @@ const MessageBubble = ({ msg, currentUserId }) => {
     return (
         <div className={`flex ${esMio ? 'justify-end' : 'justify-start'}`}>
             <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2 ${esMio
+                onDoubleClick={() => onReply && onReply(msg)}
+                className={`group relative max-w-[70%] rounded-2xl px-4 py-2 ${esMio
                     ? 'bg-indigo-600 text-white'
                     : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
                     }`}
             >
+                {/* Botón de respuesta rápido (aparece al hover) */}
+                {!esMio && onReply && (
+                   <button 
+                     onClick={() => onReply(msg)}
+                     className="absolute -right-10 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                     title="Responder"
+                   >
+                     <Quote size={14} className="text-gray-500" />
+                   </button>
+                )}
+
+                {/* VISUALIZACIÓN DE RESPUESTA (REPLY) */}
+                {msg.replyTo && (
+                    <div className={`mb-2 p-2 rounded-lg text-xs border-l-4 ${
+                        esMio ? 'bg-indigo-700/50 border-indigo-300' : 'bg-gray-100 dark:bg-gray-700 border-indigo-500'
+                    } opacity-80 truncate`}>
+                        <p className="font-bold mb-1">
+                            {msg.replyTo.sender?.nombres || 'Usuario'}
+                        </p>
+                        <p className="truncate italic">
+                            {msg.replyTo.contenido || (msg.replyTo.tipo === 'imagen' ? '📷 Imagen' : '📎 Archivo')}
+                        </p>
+                    </div>
+                )}
                 {/* Mostrar archivo si existe */}
                 {tieneArchivo && (
                     <div className="mb-2">
@@ -133,8 +158,13 @@ const MessageBubble = ({ msg, currentUserId }) => {
                     </p>
                     {esMio && (
                         <span className="flex items-center" title={msg.estado || (msg.leido ? 'leido' : 'enviado')}>
-                            {/* Lógica de retrocompatibilidad: si 'estado' existe úsalo, si no, usa 'leido' bool */}
-                            {(msg.estado === 'leido' || msg.leido) ? (
+                            {msg.estado === 'sending' ? (
+                                <Clock size={12} className="text-indigo-200 animate-pulse" />
+                            ) : msg.estado === 'failed' ? (
+                                <button onClick={() => onRetry && onRetry(msg)} title="Reintentar">
+                                    <AlertCircle size={14} className="text-red-300" />
+                                </button>
+                            ) : (msg.estado === 'leido' || msg.leido) ? (
                                 <CheckCheck size={16} className="text-cyan-300" />
                             ) : (msg.estado === 'entregado') ? (
                                 <CheckCheck size={16} className="text-indigo-200" />

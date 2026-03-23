@@ -7,6 +7,14 @@ import conversationService from '../../../api/conversationService';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
 import api from '../../../api/config';
 
+// Helper para generar ID temporal único para idempotencia
+const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
 export const useChatController = () => {
     const { id: paramConvId } = useParams();
     const [searchParams] = useSearchParams();
@@ -32,6 +40,9 @@ export const useChatController = () => {
     const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
     const [previsualizacionArchivo, setPrevisualizacionArchivo] = useState(null);
     const [alertConfig, setAlertConfig] = useState({ isOpen: false, variant: 'info', message: '' });
+    const [pagination, setPagination] = useState({ nextCursor: null, hasMore: false });
+    const [replyingTo, setReplyingTo] = useState(null);
+    const [pendingQueue, setPendingQueue] = useState([]); // Cola de mensajes esperando envío/idempotencia
     const mensajesEndRef = useRef(null);
     const timeoutRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -110,29 +121,52 @@ export const useChatController = () => {
         fetchConversaciones();
     }, [userId, tabActiva]);
 
-    const loadMessages = async (conversationId) => {
+    const loadMessages = async (conversationId, cursor = null) => {
         try {
-            const response = await conversationService.getConversationById(conversationId);
-            const conv = response.data?.conversation || response.conversation || response.data;
-            const msgs = conv?.mensajes || [];
-            setMensajes(Array.isArray(msgs) ? msgs : []);
+            if (cursor) setCargando(true);
+            const response = await conversationService.getConversationById(
+                conversationId, 
+                cursor?.createdAt, 
+                cursor?._id
+            );
+            const data = response.data || response;
+            const msgs = data.mensajes || [];
+            
+            if (cursor) {
+                // Paginación (scroll up)
+                setMensajes(prev => [...msgs, ...prev]);
+            } else {
+                // Carga inicial
+                setMensajes(msgs);
+                // Reset optimista del contador
+                setConversaciones(prev => prev.map(c =>
+                    c._id === conversationId
+                        ? {
+                            ...c, mensajesNoLeidos: c.mensajesNoLeidos?.map(m =>
+                                m.usuario?.toString() === userId?.toString() ? { ...m, cantidad: 0 } : m
+                            )
+                        }
+                        : c
+                ));
+                await conversationService.markAsRead(conversationId);
+                setTimeout(() => scrollToBottom(), 100);
+            }
 
-            // Reset optimista del contador de no leídos (UX inmediata)
-            setConversaciones(prev => prev.map(c =>
-                c._id === conversationId
-                    ? {
-                        ...c, mensajesNoLeidos: c.mensajesNoLeidos?.map(m =>
-                            m.usuario?.toString() === userId?.toString() ? { ...m, cantidad: 0 } : m
-                        )
-                    }
-                    : c
-            ));
-
-            await conversationService.markAsRead(conversationId);
-            setTimeout(() => scrollToBottom(), 100);
+            setPagination({
+                nextCursor: data.pagination?.nextCursor,
+                hasMore: data.pagination?.hasMore
+            });
         } catch (error) {
             logger.error('Error al cargar mensajes:', error);
-            setMensajes([]);
+            if (!cursor) setMensajes([]);
+        } finally {
+            if (cursor) setCargando(false);
+        }
+    };
+
+    const handleLoadMore = () => {
+        if (pagination.hasMore && !cargando && conversacionActual) {
+            loadMessages(conversacionActual._id, pagination.nextCursor);
         }
     };
 
@@ -266,6 +300,10 @@ export const useChatController = () => {
             if (conversacionActual && message.conversationId === conversacionActual._id) {
                 logger.log('🔍 [DEBUG] Mensaje de conversación actual, agregando a lista');
                 setMensajes(prev => {
+                    // Si ya existe por clientMessageId (mensaje optimista), lo actualizamos con la data del server
+                    if (message.clientMessageId && prev.some(m => m.clientMessageId === message.clientMessageId)) {
+                        return prev.map(m => m.clientMessageId === message.clientMessageId ? message : m);
+                    }
                     if (prev.some(m => m._id === message._id)) {
                         logger.log('🔍 [DEBUG] Mensaje duplicado detectado, ignorando');
                         return prev;
@@ -273,15 +311,32 @@ export const useChatController = () => {
                     return [...prev, message];
                 });
                 scrollToBottom();
-                if (message.emisor?._id !== userId && message.emisor !== userId) {
-                    // 🆕 Emitir evento socket 'message_read' inmediatamente para actualización en tiempo real (ticks azules)
-                    // en lugar de llamada REST lenta
-                    socket.emit('message_read', {
+
+                // 🆕 Emitir ACK de entrega si el mensaje no es mío
+                if (message.sender?._id !== userId && message.sender !== userId) {
+                    socket.emit('message_delivered', {
                         conversationId: conversacionActual._id,
-                        readerId: userId
+                        messageId: message._id
                     });
+                    
+                    // Si el chat está visible, también marcar como leído
+                    if (document.visibilityState === 'visible') {
+                        socket.emit('message_read', {
+                            conversationId: conversacionActual._id,
+                            messageId: message._id,
+                            readerId: userId
+                        });
+                    }
                 }
             }
+        };
+
+        const handleMessageStatusUpdate = (data) => {
+            logger.log('🚚 [DEBUG] status_update recibido:', data);
+            const { messageId, estado, fechaEntregado, fechaLeido } = data;
+            setMensajes(prev => prev.map(msg => 
+                msg._id === messageId ? { ...msg, estado, fechaEntregado, fechaLeido } : msg
+            ));
         };
 
         const handleConversationRead = (data) => {
@@ -316,6 +371,7 @@ export const useChatController = () => {
         };
 
         socket.on('newMessage', handleNewMessage);
+        socket.on('message_status_update', handleMessageStatusUpdate);
         socket.on('conversationRead', handleConversationRead);
         socket.on('messages_read_update', handleMessagesReadUpdate);
 
@@ -324,10 +380,39 @@ export const useChatController = () => {
             socket.emit('subscribeConversation', { conversationId: conversacionActual._id });
         }
 
+        // Sincronizar cola offline al montar y al reconectar
+        const processOfflineQueue = async () => {
+            if (!navigator.onLine) return;
+            const queue = JSON.parse(localStorage.getItem('chat_pending_queue') || '[]');
+            if (queue.length === 0) return;
+
+            logger.log('📡 [OFFLINE] Procesando cola de mensajes pendientes...');
+            const newQueue = [];
+            
+            for (const msg of queue) {
+                try {
+                    // Solo reintentar si es la conversación actual o si queremos hacerlo en background
+                    // Por simplicidad en esta versión, lo hacemos si es la actual o simplemente intentamos enviar
+                    await conversationService.sendMessage(msg.conversationId, msg.contenido, {
+                        clientMessageId: msg.clientMessageId,
+                        replyTo: msg.replyTo?._id
+                    });
+                } catch (e) {
+                    newQueue.push(msg); // Mantener en cola si falla de nuevo
+                }
+            }
+            localStorage.setItem('chat_pending_queue', JSON.stringify(newQueue));
+        };
+
+        window.addEventListener('online', processOfflineQueue);
+        processOfflineQueue();
+
         return () => {
             socket.off('newMessage', handleNewMessage);
+            socket.off('message_status_update', handleMessageStatusUpdate);
             socket.off('conversationRead', handleConversationRead);
             socket.off('messages_read_update', handleMessagesReadUpdate);
+            window.removeEventListener('online', processOfflineQueue);
             if (conversacionActual?._id) {
                 socket.emit('unsubscribeConversation', { conversationId: conversacionActual._id });
             }
@@ -408,50 +493,106 @@ export const useChatController = () => {
         setMostrarEmojiPicker(false);
     };
 
-    const handleEnviarMensaje = async (e) => {
-        e.preventDefault();
-        if ((!nuevoMensaje.trim() && !archivoSeleccionado) || !conversacionActual) return;
+    const handleEnviarMensaje = async (e, existingMsg = null) => {
+        if (e) e.preventDefault();
+        
+        // Si no hay mensaje nuevo ni archivo ni mensaje existente, salir
+        if (!existingMsg && (!nuevoMensaje.trim() && !archivoSeleccionado) || !conversacionActual) return;
+
+        const clientMessageId = existingMsg ? existingMsg.clientMessageId : generateUUID();
+        const contenido = existingMsg ? existingMsg.contenido : nuevoMensaje.trim();
+        const attachments = existingMsg ? existingMsg.archivo : archivoSeleccionado;
+        const replyingToMsg = existingMsg ? existingMsg.replyTo : replyingTo;
+
+        // Mensaje optimista (o reutilizar el existente si es retry)
+        const optimisticMessage = existingMsg || {
+            clientMessageId,
+            conversationId: conversacionActual._id,
+            sender: { _id: userId, nombres: user.nombres, apellidos: user.apellidos },
+            contenido: contenido || (attachments ? 'Archivo adjunto' : ''),
+            tipo: attachments ? 
+                  (attachments.type?.startsWith('image/') || attachments.tipo?.startsWith('image') ? 'imagen' : 
+                   attachments.type?.startsWith('video/') || attachments.tipo?.startsWith('video') ? 'video' : 'archivo') : 'texto',
+            estado: 'sending',
+            createdAt: new Date().toISOString(),
+            replyTo: replyingToMsg
+        };
+
+        // Si es mensaje nuevo, agregar a la lista
+        if (!existingMsg) {
+            setMensajes(prev => [...prev, optimisticMessage]);
+            setNuevoMensaje('');
+            setReplyingTo(null);
+            scrollToBottom();
+        } else {
+            // Si es retry, asegurar que el estado visual vuelva a 'sending'
+            setMensajes(prev => prev.map(m => m.clientMessageId === clientMessageId ? { ...m, estado: 'sending' } : m));
+        }
+
+        // 🧠 MEJORA DE RESILIENCIA: Guardar en cola local ANTES de enviar 
+        // para que si hay crash/refresh en medio de la petición, no se pierda.
+        saveToOfflineQueue(optimisticMessage);
 
         try {
-            const mensaje = nuevoMensaje.trim();
             let sentMessage = null;
 
-            if (archivoSeleccionado) {
+            if (attachments && !existingMsg) { // Los archivos solo se envían en el primer intento por ahora (simplificación)
                 const formData = new FormData();
-                formData.append('contenido', mensaje || 'Archivo adjunto');
-                formData.append('attachments', archivoSeleccionado);
+                formData.append('contenido', contenido || 'Archivo adjunto');
+                formData.append('attachments', attachments);
+                formData.append('clientMessageId', clientMessageId);
+                if (replyingToMsg) formData.append('replyTo', replyingToMsg._id);
+                
                 const token = localStorage.getItem('token');
                 const response = await api.post(`/conversaciones/${conversacionActual._id}/message`, formData, {
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
                 });
-                sentMessage = response.data.data || response.data; // Capture response for file
+                sentMessage = response.data.data || response.data;
                 handleCancelarArchivo();
             } else {
-                const response = await conversationService.sendMessage(conversacionActual._id, mensaje);
-                sentMessage = response.data.data || response.data || response; // Capture response for text
-            }
-
-            // Immediately update state with the sent message
-            if (sentMessage) {
-                setMensajes(prev => {
-                    if (prev.some(m => m._id === sentMessage._id)) return prev;
-                    return [...prev, sentMessage];
+                const response = await conversationService.sendMessage(conversacionActual._id, contenido, {
+                    clientMessageId,
+                    replyTo: replyingTo?._id
                 });
-                scrollToBottom();
+                sentMessage = response.data.data || response.data || response;
             }
 
-            setNuevoMensaje('');
-            setConversaciones(prev =>
-                prev.map(conv =>
-                    conv._id === conversacionActual._id
-                        ? { ...conv, ultimoMensaje: { contenido: mensaje || 'Archivo adjunto', fecha: new Date() } }
-                        : conv
-                )
-            );
+            // Actualizar el mensaje optimista con el del servidor
+            if (sentMessage) {
+                setMensajes(prev => prev.map(m => 
+                    m.clientMessageId === clientMessageId ? sentMessage : m
+                ));
+                // Eliminar de la cola local al tener éxito
+                removeFromOfflineQueue(clientMessageId);
+            }
         } catch (error) {
             logger.error('Error al enviar mensaje:', error);
-            setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al enviar el mensaje' });
+            // Marcar como fallido para permitir reintento manual
+            setMensajes(prev => prev.map(m => 
+                m.clientMessageId === clientMessageId ? { ...m, estado: 'failed' } : m
+            ));
+            
+            // Si el error no es de red (ej: 400 Bad Request), podríamos querer sacarlo de la cola
+            // Pero por seguridad lo dejamos para retry manual.
         }
+    };
+
+    const saveToOfflineQueue = (msg) => {
+        const queue = JSON.parse(localStorage.getItem('chat_pending_queue') || '[]');
+        if (!queue.some(m => m.clientMessageId === msg.clientMessageId)) {
+            queue.push(msg);
+            localStorage.setItem('chat_pending_queue', JSON.stringify(queue));
+        }
+    };
+
+    const removeFromOfflineQueue = (clientMessageId) => {
+        const queue = JSON.parse(localStorage.getItem('chat_pending_queue') || '[]');
+        const filtered = queue.filter(m => m.clientMessageId !== clientMessageId);
+        localStorage.setItem('chat_pending_queue', JSON.stringify(filtered));
+    };
+
+    const retryMessage = async (msg) => {
+        handleEnviarMensaje(null, msg); 
     };
 
     const handleSeleccionarConversacion = (conv) => {
@@ -643,6 +784,13 @@ export const useChatController = () => {
         setArchivoSeleccionado,
         previsualizacionArchivo,
         setPrevisualizacionArchivo,
+        handleCerrarChat,
+        handleLoadMore,
+        pagination,
+        replyingTo,
+        setReplyingTo,
+        retryMessage,
+        // Restored missing:
         mensajesEndRef,
         fileInputRef,
         handleBusquedaGlobal,
@@ -664,7 +812,6 @@ export const useChatController = () => {
         userId,
         navigate,
         alertConfig,
-        setAlertConfig,
-        handleCerrarChat, // Nuevo handler para botón atrás móvil
+        setAlertConfig
     };
 };

@@ -34,8 +34,12 @@ const conversationService = {
    * @param {string} conversationId - Conversation ID
    * @returns {Promise<Object>} Conversation data with messages
    */
-  getConversationById: async (conversationId) => {
-    const response = await api.get(`/conversaciones/${conversationId}`);
+  getConversationById: async (conversationId, cursorAt = null, cursorId = null) => {
+    let url = `/conversaciones/${conversationId}`;
+    if (cursorAt && cursorId) {
+      url += `?cursorAt=${encodeURIComponent(cursorAt)}&cursorId=${cursorId}`;
+    }
+    const response = await api.get(url);
     return response.data;
   },
 
@@ -55,9 +59,13 @@ const conversationService = {
    * @param {string} contenido - Message content
    * @returns {Promise<Object>} Sent message data
    */
-  sendMessage: async (conversationId, contenido) => {
+  sendMessage: async (conversationId, contenido, payload = {}) => {
     const response = await api.post(`/conversaciones/${conversationId}/message`, {
       contenido,
+      clientMessageId: payload.clientMessageId,
+      replyTo: payload.replyTo,
+      metadata: payload.metadata,
+      tipo: payload.tipo || 'texto'
     });
     return response.data;
   },

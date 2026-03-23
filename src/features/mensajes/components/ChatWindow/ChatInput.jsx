@@ -30,10 +30,32 @@ const ChatInput = ({
     setMostrarEmojiPicker,
     handleEmojiSelect,
     handleEnviarMensaje,
-    handleTyping // Prop para manejar evento de escritura
+    handleTyping, // Prop para manejar evento de escritura
+    replyingTo,
+    setReplyingTo
 }) => {
     return (
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+            {/* Previsualización de respuesta (Reply) */}
+            {replyingTo && (
+                <div className="mb-2 p-2 bg-gray-50 dark:bg-gray-800 border-l-4 border-indigo-500 rounded flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                            Respondiendo a {replyingTo.sender?.nombres || 'Usuario'}
+                        </p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate italic">
+                            {replyingTo.contenido || (replyingTo.tipo === 'imagen' ? '📷 Imagen' : '📎 Archivo')}
+                        </p>
+                    </div>
+                    <button 
+                        onClick={() => setReplyingTo(null)}
+                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+                    >
+                        <X size={14} className="text-gray-500" />
+                    </button>
+                </div>
+            )}
+
             {/* Previsualización de archivo */}
             {previsualizacionArchivo && (
                 <div className="mb-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
