@@ -44,6 +44,7 @@ export const ToastProvider = ({ children }) => {
     try {
       // Inicia el listener continuo
       unsubscribe = onMessageListener((payload) => {
+        console.log('📡 [FOREGROUND_PUSH] Mensaje recibido:', payload);
         if (payload && payload.notification) {
           addToast(
             `${payload.notification.title}: ${payload.notification.body}`, 
