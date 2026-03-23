@@ -57,14 +57,14 @@ const MessageBubble = ({ msg, currentUserId, onReply, onRetry }) => {
                     : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
                     }`}
             >
-                {/* Botón de respuesta rápido (aparece al hover) */}
-                {!esMio && onReply && (
+                {/* Botón de respuesta rápido */}
+                {onReply && (
                    <button 
                      onClick={() => onReply(msg)}
-                     className="absolute -right-10 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 dark:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                     className="absolute -right-8 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 md:opacity-0 group-hover:opacity-100 transition-opacity shadow-sm z-10"
                      title="Responder"
                    >
-                     <Quote size={14} className="text-gray-500" />
+                     <Quote size={12} className="text-indigo-500" />
                    </button>
                 )}
 

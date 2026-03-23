@@ -36,6 +36,8 @@ const ChatWindow = ({
     const [isTyping, setIsTyping] = React.useState(false);
     const typingTimeoutRef = useRef(null);
     const lastTypingEmittedRef = useRef(0);
+    const scrollContainerRef = useRef(null);
+    const lastScrollHeightRef = useRef(0);
 
     // Socket: Escuchar eventos de escritura
     React.useEffect(() => {
@@ -94,6 +96,20 @@ const ChatWindow = ({
             });
         }
     }, [conversacionActual, userId]);
+
+    // 🧠 EFECTO: Mantener posición de scroll al cargar más
+    React.useLayoutEffect(() => {
+        if (scrollContainerRef.current && lastScrollHeightRef.current > 0) {
+            const container = scrollContainerRef.current;
+            const newScrollHeight = container.scrollHeight;
+            const heightDifference = newScrollHeight - lastScrollHeightRef.current;
+            
+            if (heightDifference > 0) {
+                container.scrollTop = heightDifference;
+                lastScrollHeightRef.current = 0; // Reset
+            }
+        }
+    }, [mensajes]);
 
     // Función para manejar el input del usuario y emitir eventos
     const handleTypingLocal = (text) => {
@@ -193,15 +209,25 @@ const ChatWindow = ({
                     {/* Mensajes */}
                     <div 
                         onScroll={(e) => {
-                            if (e.target.scrollTop === 0) {
+                            if (e.target.scrollTop === 0 && pagination.hasMore && !cargando) {
+                                // Guardar el scrollHeight antes de cargar más
+                                lastScrollHeightRef.current = e.target.scrollHeight;
                                 handleLoadMore();
                             }
                         }}
+                        ref={scrollContainerRef}
                         className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900 min-h-0"
                     >
                         {pagination.hasMore && (
                             <div className="flex justify-center py-2">
-                                <span className="text-xs text-gray-500 italic">Cargando mensajes anteriores...</span>
+                                {cargando ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                                        <span className="text-xs text-gray-500 italic">Cargando...</span>
+                                    </div>
+                                ) : (
+                                    <span className="text-xs text-gray-500 italic">Desliza hacia arriba para ver más</span>
+                                )}
                             </div>
                         )}
                         {mensajes.length === 0 ? (

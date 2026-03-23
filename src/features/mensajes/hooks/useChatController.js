@@ -6,6 +6,7 @@ import { getSocket } from '../../../shared/lib/socket';
 import conversationService from '../../../api/conversationService';
 import { usePendingMessageCounter } from '../../../hooks/usePendingMessageCounter';
 import api from '../../../api/config';
+import { requestFirebaseToken } from '../../../shared/lib/firebase';
 
 // Helper para generar ID temporal único para idempotencia
 const generateUUID = () => {
@@ -97,6 +98,20 @@ export const useChatController = () => {
 
         fetchPendingCount();
         const interval = setInterval(fetchPendingCount, 30000);
+        
+        // 🔔 Registrar para Notificaciones Push (FCM)
+        const registerPush = async () => {
+            try {
+                // Pequeño delay para no saturar el inicio
+                setTimeout(async () => {
+                    await requestFirebaseToken(userId);
+                }, 2000);
+            } catch (err) {
+                console.error('Error in push registration:', err);
+            }
+        };
+        registerPush();
+
         return () => clearInterval(interval);
     }, [userId]);
 
@@ -134,6 +149,7 @@ export const useChatController = () => {
             
             if (cursor) {
                 // Paginación (scroll up)
+                // 🧠 MEJORA: Mantener posición de scroll al cargar más (vía ref en el componente)
                 setMensajes(prev => [...msgs, ...prev]);
             } else {
                 // Carga inicial
@@ -530,13 +546,20 @@ export const useChatController = () => {
         }
 
         // 🧠 MEJORA DE RESILIENCIA: Guardar en cola local ANTES de enviar 
-        // para que si hay crash/refresh en medio de la petición, no se pierda.
         saveToOfflineQueue(optimisticMessage);
+
+        // Si no hay internet, no intentar la petición, dejar en 'failed' para reintento
+        if (!navigator.onLine) {
+            setMensajes(prev => prev.map(m => 
+                m.clientMessageId === clientMessageId ? { ...m, estado: 'failed' } : m
+            ));
+            return;
+        }
 
         try {
             let sentMessage = null;
 
-            if (attachments && !existingMsg) { // Los archivos solo se envían en el primer intento por ahora (simplificación)
+            if (attachments && !existingMsg) { 
                 const formData = new FormData();
                 formData.append('contenido', contenido || 'Archivo adjunto');
                 formData.append('attachments', attachments);
@@ -552,7 +575,7 @@ export const useChatController = () => {
             } else {
                 const response = await conversationService.sendMessage(conversacionActual._id, contenido, {
                     clientMessageId,
-                    replyTo: replyingTo?._id
+                    replyTo: replyingToMsg?._id
                 });
                 sentMessage = response.data.data || response.data || response;
             }
