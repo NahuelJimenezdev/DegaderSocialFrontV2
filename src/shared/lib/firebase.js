@@ -16,6 +16,11 @@ const firebaseConfig = {
 
 const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
+console.log('🔰 [FIREBASE_CONFIG] Checking keys presence:');
+console.log('   - project_id:', firebaseConfig.projectId);
+console.log('   - sender_id:', firebaseConfig.messagingSenderId);
+console.log('   - vapid_key:', VAPID_KEY ? `PRESENT (Length: ${VAPID_KEY.length})` : 'MISSING');
+
 let messaging = null;
 
 try {
@@ -59,6 +64,9 @@ export const requestFirebaseToken = async (userId) => {
     }
   } catch (error) {
     console.error('❌ Error al obtener token FCM:', error);
+    if (error.code === 'messaging/token-subscribe-failed') {
+      console.error('🛡️ Tip: Verifica que tu VAPID_KEY sea correcta y que el Service Worker esté sincronizado.');
+    }
   }
   return null;
 };
