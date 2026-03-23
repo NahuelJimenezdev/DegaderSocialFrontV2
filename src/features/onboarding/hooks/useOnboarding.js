@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { getOnboardingStatus, updateOnboardingProgress, completeOnboarding } from './useOnboardingAPI';
+import { requestFirebaseToken } from '../../../shared/lib/firebase';
 
 export const useOnboarding = () => {
     const { user } = useAuth();
@@ -44,6 +45,15 @@ export const useOnboarding = () => {
 
     const handleCloseWelcomePost = async () => {
         console.log('👋 [ONBOARDING] Cerrando mensaje del fundador...');
+        
+        // 🔔 [PUSH] Solicitar permiso de notificaciones de forma proactiva
+        // Se hace aquí porque el clic en "Empezar" del modal es un user-gesture válido
+        if (user?._id) {
+            requestFirebaseToken(user._id).catch(err => 
+                console.error('❌ [PUSH] Error al solicitar token en bienvenida:', err)
+            );
+        }
+
         setShowWelcomePost(false);
         setShowInitialModal(true); // Pasar al modal tradicional de invitación al tour
 

@@ -5,6 +5,7 @@ import { userService } from '../../../api';
 import authService from '../../../api/authService';
 import { ArrowLeft, Settings, Bell, Shield, Moon, Sun, Smartphone, Download, Trash2, Mail, Key } from 'lucide-react';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
+import { requestFirebaseToken } from '../../../shared/lib/firebase';
 import '../../../shared/styles/layout.mobile.css';
 
 const ConfiguracionPage = () => {
@@ -30,6 +31,9 @@ const ConfiguracionPage = () => {
         }
     });
 
+    const [isPushEnabled, setIsPushEnabled] = useState(false);
+    const [pushPermissionStatus, setPushPermissionStatus] = useState('default');
+
     useEffect(() => {
         // Cargar preferencias actuales del usuario
         if (user?.preferencias) {
@@ -39,7 +43,39 @@ const ConfiguracionPage = () => {
             const savedTheme = localStorage.getItem('theme') || 'system';
             setPreferencias(prev => ({ ...prev, tema: savedTheme }));
         }
+
+        // Verificar estado de permisos Push
+        if ('Notification' in window) {
+            setPushPermissionStatus(Notification.permission);
+            setIsPushEnabled(Notification.permission === 'granted');
+        }
     }, [user]);
+
+    const handleTogglePush = async () => {
+        if (!user?._id) return;
+
+        try {
+            setLoading(true);
+            const token = await requestFirebaseToken(user._id);
+            if (token) {
+                setPushPermissionStatus('granted');
+                setIsPushEnabled(true);
+                toast.success('Notificaciones push activadas correctamente');
+            } else {
+                // Si el token es null, puede ser que el usuario denegó el permiso
+                setPushPermissionStatus(Notification.permission);
+                setIsPushEnabled(Notification.permission === 'granted');
+                if (Notification.permission === 'denied') {
+                    toast.error('Permiso denegado. Debes activarlo en la configuración de tu navegador.');
+                }
+            }
+        } catch (error) {
+            console.error('Error al manejar toggle push:', error);
+            toast.error('Error al configurar notificaciones');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleThemeChange = async (newTheme) => {
         // Actualiza LocalStorage y DOM
@@ -202,6 +238,15 @@ const ConfiguracionPage = () => {
                                 value={preferencias.sonidoAlertas}
                                 onChange={(val) => updateConfig('sonidoAlertas', val)}
                                 disabled={loading}
+                            />
+                            <ToggleRow 
+                                label="Alertas del Dispositivo (Push)" 
+                                description={pushPermissionStatus === 'denied' 
+                                    ? "⚠️ Permiso bloqueado en el navegador" 
+                                    : "Recibir notificaciones cuando la app esté cerrada"}
+                                value={isPushEnabled}
+                                onChange={handleTogglePush}
+                                disabled={loading || pushPermissionStatus === 'denied'}
                             />
                             <div className="px-5 py-3 bg-gray-50/30 dark:bg-gray-800/30 text-xs font-semibold text-gray-400 uppercase">Filtros Módulos</div>
                             <ToggleRow 
