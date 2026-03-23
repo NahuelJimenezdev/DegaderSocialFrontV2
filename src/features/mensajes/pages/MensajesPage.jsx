@@ -53,7 +53,12 @@ const MensajesPage = () => {
     navigate,
     alertConfig,
     setAlertConfig,
-    handleCerrarChat, // Para botón atrás móvil
+    handleCerrarChat,
+    handleLoadMore,
+    pagination,
+    replyingTo,
+    setReplyingTo,
+    retryMessage
   } = useChatController();
 
   // Memoizar handlers y helpers para evitar re-renders
@@ -144,6 +149,11 @@ const MensajesPage = () => {
                 handleEnviarMensaje={handleEnviarMensaje}
                 getOtroParticipante={getOtroParticipante}
                 handleCerrarChat={handleCerrarChat}
+                handleLoadMore={handleLoadMore}
+                pagination={pagination}
+                replyingTo={replyingTo}
+                setReplyingTo={setReplyingTo}
+                retryMessage={retryMessage}
               />
             </div>
 
