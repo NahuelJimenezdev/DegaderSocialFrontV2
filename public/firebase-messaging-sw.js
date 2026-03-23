@@ -16,14 +16,19 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Mensaje en segundo plano recibido:', payload);
+    console.log('📬 [SW] Mensaje en segundo plano recibido:', payload);
     
-    const notificationTitle = payload.notification.title;
+    // Extraer datos
+    const notificationTitle = payload.notification?.title || 'Nuevo mensaje';
     const notificationOptions = {
-        body: payload.notification.body,
-        icon: '/favicon-96x96.png', // Ruta absoluta al favicon
-        data: payload.data
+        body: payload.notification?.body || 'Presiona para ver el contenido',
+        icon: '/favicon-96x96.png',
+        badge: '/favicon-96x96.png',
+        data: payload.data,
+        tag: payload.data?.notificationId || 'chat-msg', // Agrupar notificaciones
+        renotify: true
     };
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
+    console.log('🔔 [SW] Mostrando notificación:', notificationTitle);
+    return self.registration.showNotification(notificationTitle, notificationOptions);
 });

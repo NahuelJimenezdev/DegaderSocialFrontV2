@@ -23,9 +23,9 @@ const formatearTiempo = (fecha) => {
 
 const MessageBubble = ({ msg, currentUserId, onReply, onRetry }) => {
     // Normalizar IDs para comparación robusta (manejar objetos y strings)
-    const emisorId = msg.emisor?._id?.toString() || msg.emisor?.toString();
+    const senderId = msg.sender?._id?.toString() || msg.sender?.toString();
     const userId = currentUserId?.toString();
-    const esMio = emisorId === userId;
+    const esMio = senderId === userId;
     const tieneArchivo = msg.archivo && msg.archivo.url;
     const esImagen = msg.tipo === 'imagen' || msg.archivo?.tipo?.startsWith('image');
     const esVideo = msg.tipo === 'video' || msg.archivo?.tipo?.startsWith('video');

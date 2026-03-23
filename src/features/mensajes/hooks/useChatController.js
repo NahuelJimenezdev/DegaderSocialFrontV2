@@ -380,9 +380,9 @@ export const useChatController = () => {
             if (conversacionActual && data.conversationId === conversacionActual._id) {
                 setMensajes(prev => prev.map(msg => {
                     // Convertir a string para asegurar comparación
-                    const emisorId = msg.emisor?._id?.toString() || msg.emisor?.toString();
+                    const senderId = msg.sender?._id?.toString() || msg.sender?.toString();
                     // Si yo soy el emisor, marcar como leído
-                    if (emisorId === userId) {
+                    if (senderId === userId) {
                         return { ...msg, leido: true, estado: 'leido', fechaLeido: data.readAt };
                     }
                     return msg;
