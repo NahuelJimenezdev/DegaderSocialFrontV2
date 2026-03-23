@@ -31,6 +31,15 @@ const initializeTheme = () => {
 
 initializeTheme();
 
+// 🛠️ Registro de Service Worker para PWA e Infraestructura de Mensajería
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(reg => console.log('✅ [SW] Service Worker registrado con éxito:', reg.scope))
+      .catch(err => console.error('❌ [SW] Error al registrar Service Worker:', err));
+  });
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
