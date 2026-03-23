@@ -19,16 +19,24 @@ const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 let messaging = null;
 
 try {
+  console.log('📡 [FIREBASE_INIT] Intentando inicializar con apiKey:', firebaseConfig.apiKey ? 'PRESENTE' : 'AUSENTE');
   if (firebaseConfig.apiKey) {
     const app = initializeApp(firebaseConfig);
     messaging = getMessaging(app);
+    console.log('✅ [FIREBASE_INIT] Messaging inicializado correctamente');
+  } else {
+    console.error('❌ [FIREBASE_INIT] No se pudo inicializar: VITE_FIREBASE_API_KEY es nulo o indefinido');
   }
 } catch (error) {
   console.error('❌ Error al inicializar Firebase:', error);
 }
 
 export const requestFirebaseToken = async (userId) => {
-  if (!messaging) return null;
+  console.log('🔔 [FCM] Intentando obtener token para usuario:', userId);
+  if (!messaging) {
+    console.warn('⚠️ [FCM] Messaging no inicializado, cancelando solicitud.');
+    return null;
+  }
 
   try {
     const permission = await Notification.requestPermission();
