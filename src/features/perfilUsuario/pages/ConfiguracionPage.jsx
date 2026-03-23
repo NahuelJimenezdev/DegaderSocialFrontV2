@@ -10,7 +10,7 @@ import '../../../shared/styles/layout.mobile.css';
 
 const ConfiguracionPage = () => {
     const navigate = useNavigate();
-    const { user, login } = useAuth(); // Usamos login para actualizar el context si cambian datos
+    const { user, updateUser } = useAuth(); // Usamos updateUser para actualizar el context si cambian datos
     const toast = useToast();
     
     const [loading, setLoading] = useState(false);
@@ -118,7 +118,7 @@ const ConfiguracionPage = () => {
             if (res.success) {
                 // Actualizar contexto global
                 if(user) {
-                     login(res.data, localStorage.getItem('token'));
+                     updateUser(res.data);
                 }
                 toast.success('Configuración actualizada');
             }
