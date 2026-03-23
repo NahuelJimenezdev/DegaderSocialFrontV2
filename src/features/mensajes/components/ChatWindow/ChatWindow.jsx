@@ -24,6 +24,7 @@ const ChatWindow = ({
     mostrarEmojiPicker,
     setMostrarEmojiPicker,
     handleEmojiSelect,
+    handleEnviarMensaje,
     getOtroParticipante,
     handleCerrarChat, // Handler para botón atrás móvil
     handleLoadMore,
