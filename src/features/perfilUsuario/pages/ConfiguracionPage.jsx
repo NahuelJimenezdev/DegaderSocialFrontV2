@@ -33,6 +33,8 @@ const ConfiguracionPage = () => {
 
     const [isPushEnabled, setIsPushEnabled] = useState(false);
     const [pushPermissionStatus, setPushPermissionStatus] = useState('default');
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [showInstallBtn, setShowInstallBtn] = useState(false);
 
     useEffect(() => {
         // Cargar preferencias actuales del usuario
@@ -49,7 +51,36 @@ const ConfiguracionPage = () => {
             setPushPermissionStatus(Notification.permission);
             setIsPushEnabled(Notification.permission === 'granted');
         }
+
+        // Manejar prompt de instalación PWA
+        const handleInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setShowInstallBtn(true);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+
+        // Si ya está instalado o no es instalable
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            setShowInstallBtn(false);
+        }
+
+        return () => window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
     }, [user]);
+
+    const handleInstallApp = async () => {
+        if (!deferredPrompt) return;
+        
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+            setShowInstallBtn(false);
+            toast.success('¡Gracias por instalar Degader Social!');
+        }
+        setDeferredPrompt(null);
+    };
 
     const handleTogglePush = async () => {
         if (!user?._id) return;
@@ -180,6 +211,16 @@ const ConfiguracionPage = () => {
                                     <p className="text-xs text-gray-500 dark:text-gray-400">Solicitar copia de mi información</p>
                                 </div>
                             </button>
+
+                            {showInstallBtn && (
+                                <button onClick={handleInstallApp} className="w-full flex items-center gap-4 px-5 py-4 bg-blue-50/50 dark:bg-blue-900/10 hover:bg-blue-100 dark:hover:bg-blue-900/20 transition group">
+                                    <div className="p-2 bg-blue-500 text-white rounded-lg animate-bounce"><Smartphone size={20} /></div>
+                                    <div className="text-left flex-1 border-b-none">
+                                        <p className="text-blue-600 dark:text-blue-400 font-bold">Descargar Aplicación</p>
+                                        <p className="text-xs text-blue-500/70 dark:text-blue-400/70">Instala Degader Social en tu dispositivo</p>
+                                    </div>
+                                </button>
+                            )}
                             <button onClick={() => setIsDeleteModalOpen(true)} className="w-full flex items-center gap-4 px-5 py-4 hover:bg-red-50 dark:hover:bg-red-900/10 transition group">
                                 <div className="p-2 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-lg group-hover:bg-red-100 dark:group-hover:bg-red-900/40"><Trash2 size={20} /></div>
                                 <div className="text-left flex-1 border-b-none">

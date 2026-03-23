@@ -15,8 +15,40 @@ const Sidebar = () => {
   const pendingCount = usePendingMessageCounter(user?._id || user?.id);
   const { canModerate, isFounder } = useUserRole();
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
   const { restartTour } = useOnboardingContext();
   const navigate = useNavigate();
+
+  // Manejar prompt de instalación PWA
+  useEffect(() => {
+    const handleInstallPrompt = (e) => {
+        e.preventDefault();
+        setDeferredPrompt(e);
+        setShowInstallBtn(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+
+    // Si ya está instalado o no es instalable
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        setShowInstallBtn(false);
+    }
+
+    return () => window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+    
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+        setShowInstallBtn(false);
+    }
+    setDeferredPrompt(null);
+  };
 
   return (
     <>
@@ -83,6 +115,17 @@ const Sidebar = () => {
               <HelpCircle size={20} className="items-config-tour" />
               <span className="text-size-sidebar">Tour Guiado</span>
             </button>
+
+            {/* Descargar App Button */}
+            {showInstallBtn && (
+              <button
+                onClick={handleInstallApp}
+                className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-colors text-left mb-2 font-bold"
+              >
+                <Smartphone size={20} className="animate-pulse" />
+                <span className="text-size-sidebar">Descargar App</span>
+              </button>
+            )}
 
             {/* Configuración Button */}
             <button

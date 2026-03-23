@@ -36,6 +36,21 @@ try {
   console.error('❌ Error al inicializar Firebase:', error);
 }
 
+// Generar o recuperar un ID único persistente para este dispositivo físico
+const getDeviceId = () => {
+  let deviceId = localStorage.getItem('fcm_device_id');
+  if (!deviceId) {
+    deviceId = crypto.randomUUID?.() || Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem('fcm_device_id', deviceId);
+  }
+  return deviceId;
+};
+
+// Detectar si la app corre en modo PWA (standalone)
+const isStandalone = () => {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+};
+
 export const requestFirebaseToken = async (userId) => {
   console.log('🔔 [FCM] Intentando obtener token para usuario:', userId);
   if (!messaging) {
@@ -54,10 +69,15 @@ export const requestFirebaseToken = async (userId) => {
     if (token) {
       console.log('🔥 FCM Token obtenido:', token);
       
-      // Registrar el token en el backend
+      const deviceId = getDeviceId();
+      const isPWA = isStandalone();
+
+      // Registrar el token en el backend con metadata de deduplicación
       await api.post('/notificaciones/register-token', {
         token,
-        platform: 'web'
+        deviceId,
+        isPWA,
+        platform: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'android' : 'web'
       });
       
       return token;

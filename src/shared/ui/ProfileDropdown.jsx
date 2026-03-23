@@ -16,6 +16,8 @@ const ProfileDropdown = () => {
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
   const { user, logout } = useAuth();
   const { restartTour, isMobile } = useOnboardingContext();
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
   const { canModerate, isFounder } = useUserRole();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
@@ -38,10 +40,38 @@ const ProfileDropdown = () => {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
+    // Manejar prompt de instalación PWA
+    const handleInstallPrompt = (e) => {
+        e.preventDefault();
+        setDeferredPrompt(e);
+        setShowInstallBtn(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+
+    // Si ya está instalado o no es instalable
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        setShowInstallBtn(false);
+    }
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
     };
   }, [isOpen]);
+
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+    
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+        setShowInstallBtn(false);
+    }
+    setDeferredPrompt(null);
+    setIsOpen(false);
+  };
 
   const handleLogout = () => {
     logout();
@@ -116,6 +146,15 @@ const ProfileDropdown = () => {
       }
     }
   ];
+
+  if (showInstallBtn) {
+    menuItems.splice(1, 0, {
+      icon: Smartphone,
+      label: '📲 Descargar App',
+      onClick: handleInstallApp,
+      highlight: true
+    });
+  }
 
   return (
     <div className="relative" ref={dropdownRef}>
