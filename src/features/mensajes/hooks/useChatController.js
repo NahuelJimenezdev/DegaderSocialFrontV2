@@ -48,6 +48,7 @@ export const useChatController = () => {
     const timeoutRef = useRef(null);
     const fileInputRef = useRef(null);
     const isFetching = useRef(false); // Flag para evitar fetches concurrentes
+    const isSendingMessageRef = useRef(false); // Lock para evitar duplicación por doble click o Enter+Click
     const conversationCreationLock = useRef({}); // Lock para evitar creación duplicada de conversaciones
 
     // Hook para actualizar contador de mensajes pendientes
@@ -102,12 +103,15 @@ export const useChatController = () => {
         // 🔔 Registrar para Notificaciones Push (FCM)
         const registerPush = async () => {
             try {
-                // Pequeño delay para no saturar el inicio
-                setTimeout(async () => {
-                    await requestFirebaseToken(userId);
-                }, 2000);
+                // Si el permiso YA fue concedido anteriormente, podemos pedir el token "silenciosamente" al inicio.
+                // Si es "default", debemos esperar a un gesto del usuario (ej: click en enviar mensaje).
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    setTimeout(async () => {
+                        await requestFirebaseToken(userId);
+                    }, 2000);
+                }
             } catch (err) {
-                console.error('Error in push registration:', err);
+                console.error('Error in silent push registration:', err);
             }
         };
         registerPush();
@@ -407,14 +411,47 @@ export const useChatController = () => {
             
             for (const msg of queue) {
                 try {
-                    // Solo reintentar si es la conversación actual o si queremos hacerlo en background
-                    // Por simplicidad en esta versión, lo hacemos si es la actual o simplemente intentamos enviar
-                    await conversationService.sendMessage(msg.conversationId, msg.contenido, {
-                        clientMessageId: msg.clientMessageId,
-                        replyTo: msg.replyTo?._id
-                    });
-                } catch (e) {
-                    newQueue.push(msg); // Mantener en cola si falla de nuevo
+                    // Update optimistically to 'sending' while processing
+                    setMensajes(prev => prev.map(m => 
+                        m.clientMessageId === msg.clientMessageId ? { ...m, estado: 'sending' } : m
+                    ));
+
+                    // Use raw axio/fetch or the service, but handle the response
+                    let sentMessage = null;
+                    if (msg.archivo && msg.archivo.nombre) {
+                        // We do not currently re-upload files from queue easily if they are File objects 
+                        // because File objects cannot be stored in LocalStorage.
+                        // If it's a file, we might mark it as failed and ask for manual retry.
+                        setMensajes(prev => prev.map(m => 
+                            m.clientMessageId === msg.clientMessageId ? { ...m, estado: 'failed' } : m
+                        ));
+                        continue;
+                    } else {
+                        const response = await conversationService.sendMessage(msg.conversationId, msg.contenido, {
+                            clientMessageId: msg.clientMessageId,
+                            replyTo: msg.replyTo?._id
+                        });
+                        sentMessage = response.data?.data || response.data || response;
+                    }
+
+                    if (sentMessage) {
+                        setMensajes(prev => prev.map(m => 
+                            m.clientMessageId === msg.clientMessageId ? sentMessage : m
+                        ));
+                    }
+                } catch (error) {
+                    // Si es un error de red, mantener en cola. Si es un 4xx/5xx, fallar.
+                    if (!error.response) {
+                        newQueue.push(msg); // Error de red, mantener en cola
+                        setMensajes(prev => prev.map(m => 
+                            m.clientMessageId === msg.clientMessageId ? { ...m, estado: 'queued' } : m
+                        ));
+                    } else {
+                        // Error definitivo del servidor
+                        setMensajes(prev => prev.map(m => 
+                            m.clientMessageId === msg.clientMessageId ? { ...m, estado: 'failed' } : m
+                        ));
+                    }
                 }
             }
             localStorage.setItem('chat_pending_queue', JSON.stringify(newQueue));
@@ -512,8 +549,22 @@ export const useChatController = () => {
     const handleEnviarMensaje = async (e, existingMsg = null) => {
         if (e) e.preventDefault();
         
+        // 🧠 FIXED FCM PUSH BUGS: Solicitar token si aún no tenemos permiso
+        // El navegador solo mostrará el "Popup" nativo si se pide DENTRO de un evento de click del usuario.
+        if ('Notification' in window && Notification.permission === 'default') {
+            requestFirebaseToken(userId).catch(err => console.error('Error FCM post-click', err));
+        }
+        
+        // Prevención estricta de doble-submit (race condition)
+        if (isSendingMessageRef.current && !existingMsg) {
+            logger.log('🔒 [DEDUP] Bloqueando doble envío accidental');
+            return;
+        }
+
         // Si no hay mensaje nuevo ni archivo ni mensaje existente, salir
         if (!existingMsg && (!nuevoMensaje.trim() && !archivoSeleccionado) || !conversacionActual) return;
+
+        isSendingMessageRef.current = true;
 
         const clientMessageId = existingMsg ? existingMsg.clientMessageId : generateUUID();
         const contenido = existingMsg ? existingMsg.contenido : nuevoMensaje.trim();
@@ -546,12 +597,15 @@ export const useChatController = () => {
         }
 
         // 🧠 MEJORA DE RESILIENCIA: Guardar en cola local ANTES de enviar 
-        saveToOfflineQueue(optimisticMessage);
+        const isFile = !!attachments;
+        if (!isFile) {
+            saveToOfflineQueue(optimisticMessage);
+        }
 
-        // Si no hay internet, no intentar la petición, dejar en 'failed' para reintento
+        // Si no hay internet, no intentar la petición, dejar en 'queued' si es texto, 'failed' si es archivo
         if (!navigator.onLine) {
             setMensajes(prev => prev.map(m => 
-                m.clientMessageId === clientMessageId ? { ...m, estado: 'failed' } : m
+                m.clientMessageId === clientMessageId ? { ...m, estado: isFile ? 'failed' : 'queued' } : m
             ));
             return;
         }
@@ -586,17 +640,27 @@ export const useChatController = () => {
                     m.clientMessageId === clientMessageId ? sentMessage : m
                 ));
                 // Eliminar de la cola local al tener éxito
-                removeFromOfflineQueue(clientMessageId);
+                if (!isFile) {
+                    removeFromOfflineQueue(clientMessageId);
+                }
             }
         } catch (error) {
             logger.error('Error al enviar mensaje:', error);
-            // Marcar como fallido para permitir reintento manual
+            // Marcar como failed o queued dependiendo si es error de red
+            const isNetworkError = !error.response;
+            
             setMensajes(prev => prev.map(m => 
-                m.clientMessageId === clientMessageId ? { ...m, estado: 'failed' } : m
+                m.clientMessageId === clientMessageId ? { ...m, estado: (isNetworkError && !isFile) ? 'queued' : 'failed' } : m
             ));
             
-            // Si el error no es de red (ej: 400 Bad Request), podríamos querer sacarlo de la cola
-            // Pero por seguridad lo dejamos para retry manual.
+            if (!isNetworkError || isFile) {
+                removeFromOfflineQueue(clientMessageId);
+            }
+        } finally {
+            // Liberar el lock después de un pequeño delay para permitir envíos rápidos pero evitar doble-clicks en ms
+            setTimeout(() => {
+                isSendingMessageRef.current = false;
+            }, 150);
         }
     };
 

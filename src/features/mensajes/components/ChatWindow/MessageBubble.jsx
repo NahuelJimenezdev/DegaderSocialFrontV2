@@ -160,6 +160,8 @@ const MessageBubble = ({ msg, currentUserId, onReply, onRetry }) => {
                         <span className="flex items-center" title={msg.estado || (msg.leido ? 'leido' : 'enviado')}>
                             {msg.estado === 'sending' ? (
                                 <Clock size={12} className="text-indigo-200 animate-pulse" />
+                            ) : msg.estado === 'queued' ? (
+                                <Clock size={12} className="text-orange-300" title="Esperando conexión..." />
                             ) : msg.estado === 'failed' ? (
                                 <button onClick={() => onRetry && onRetry(msg)} title="Reintentar">
                                     <AlertCircle size={14} className="text-red-300" />

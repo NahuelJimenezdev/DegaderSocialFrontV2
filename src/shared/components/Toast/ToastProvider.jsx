@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
+import { onMessageListener } from '../../lib/firebase';
 
 const ToastContext = createContext();
 
@@ -35,6 +36,33 @@ export const ToastProvider = ({ children }) => {
     info: (message, duration) => addToast(message, 'info', duration),
     warning: (message, duration) => addToast(message, 'warning', duration),
   };
+
+  // 🔥 Escuchar Firebase Push Notifications en Foreground Globamente
+  useEffect(() => {
+    let unsubscribe = () => {};
+    
+    try {
+      // Inicia el listener continuo
+      unsubscribe = onMessageListener((payload) => {
+        if (payload && payload.notification) {
+          addToast(
+            `${payload.notification.title}: ${payload.notification.body}`, 
+            'info', 
+            5000
+          );
+        }
+      });
+    } catch (err) {
+      console.error('Error in foreground push listener:', err);
+    }
+
+    return () => {
+      // Cleanup del listener cuando el componente se desmonte
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
+  }, [addToast]);
 
   return (
     <ToastContext.Provider value={toast}>

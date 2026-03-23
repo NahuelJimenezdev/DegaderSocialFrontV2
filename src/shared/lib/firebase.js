@@ -55,12 +55,9 @@ export const requestFirebaseToken = async (userId) => {
   return null;
 };
 
-export const onMessageListener = () =>
-  new Promise((resolve) => {
-    if (!messaging) return;
-    onMessage(messaging, (payload) => {
-      resolve(payload);
-    });
-  });
+export const onMessageListener = (callback) => {
+  if (!messaging) return () => {};
+  return onMessage(messaging, callback);
+};
 
 export default messaging;
