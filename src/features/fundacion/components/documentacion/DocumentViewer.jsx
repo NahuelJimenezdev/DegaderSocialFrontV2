@@ -127,13 +127,18 @@ export default function DocumentViewer() {
             <div className="mb-8">
               <p className="font-bold mb-2">Nombre de los hijos, y su respectiva edad:</p>
               <ul className="list-disc ml-8 space-y-1">
-                {appData.hijos && appData.hijos.length > 0 ? (
-                  appData.hijos.map((hijo, i) => (
-                    <li key={i}>{hijo.nombre} ({hijo.edad} años)</li>
-                  ))
-                ) : (
-                  <li>Sin registros</li>
-                )}
+                  {(targetUser.fundacion?.documentacionFHSYL?.hijos || []).length > 0 ? (
+                    targetUser.fundacion.documentacionFHSYL.hijos.map((hijo, i) => (
+                      <li key={i} className="text-gray-700 dark:text-gray-300">
+                        <span className="font-bold">{hijo.nombre}</span>
+                        {hijo.edad !== undefined && hijo.edad !== null && hijo.edad !== '' && (
+                          <span className="ml-1 text-gray-500">({hijo.edad} años)</span>
+                        )}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-gray-500 italic">Sin registros</li>
+                  )}
               </ul>
             </div>
 

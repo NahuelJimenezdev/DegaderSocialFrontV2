@@ -257,7 +257,10 @@ const FormularioFHSYL = () => {
         
         <div class="field"><span class="label">Nombre de los hijos, y su respectiva edad:</span></div>
         <ul>
-          ${formData.hijos.filter(h => h.nombre).map(h => `<li>${h.nombre} (${h.edad} años)</li>`).join('')}
+          ${formData.hijos.filter(h => h.nombre).map(h => {
+            const ageText = (h.edad !== undefined && h.edad !== null && h.edad !== '') ? ` (${h.edad} años)` : '';
+            return `<li>${h.nombre}${ageText}</li>`;
+          }).join('')}
         </ul>
         
         <div class="field"><span class="label">Desea ser Coordinador de una Localidad:</span> <span class="value">${formData.deseaSerCoordinadorLocalidad}</span></div>
@@ -419,20 +422,53 @@ const FormularioFHSYL = () => {
               </div>
             </div>
 
-            <div className="mt-8 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 ml-1 italic">Nombre de los hijos y edad</label>
-              <div className="space-y-3">
+            <div className="mt-8 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-3xl border border-gray-100 dark:border-gray-700">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-6 ml-1 italic">Nombre de los hijos y edad</label>
+              <div className="space-y-6">
                 {formData.hijos.map((hijo, index) => (
-                  <div key={index} className="flex gap-3">
-                    <input placeholder="Nombre" type="text" value={hijo.nombre} onChange={(e) => handleObjectArrayChange('hijos', index, 'nombre', e.target.value)} className={`${inputClasses} flex-1`} />
-                    <input placeholder="Edad" type="number" value={hijo.edad} onChange={(e) => handleObjectArrayChange('hijos', index, 'edad', e.target.value)} className={`${inputClasses} w-24`} />
-                    {index > 0 && (
-                      <button type="button" onClick={() => removeHijo(index)} className="px-3 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition font-bold">X</button>
-                    )}
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm relative group">
+                    <div className="space-y-1.5 focus-within:translate-x-1 transition-transform">
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 ml-1 uppercase tracking-wider">Nombre del Hijo/a</label>
+                      <input 
+                        placeholder="Nombre Completo" 
+                        type="text" 
+                        value={hijo.nombre || ''} 
+                        onChange={(e) => handleObjectArrayChange('hijos', index, 'nombre', e.target.value)} 
+                        className={inputClasses} 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 ml-1 uppercase tracking-wider">Edad</label>
+                      <div className="flex gap-3">
+                        <input 
+                          placeholder="Edad" 
+                          type="number" 
+                          value={hijo.edad ?? ''} 
+                          onChange={(e) => handleObjectArrayChange('hijos', index, 'edad', e.target.value)} 
+                          className={`${inputClasses} flex-1`} 
+                        />
+                        {index > 0 && (
+                          <button 
+                            type="button" 
+                            onClick={() => removeHijo(index)} 
+                            className="px-4 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-all font-bold flex items-center justify-center border border-red-100"
+                            title="Eliminar hijo"
+                          >
+                            X
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-              <button type="button" onClick={addHijo} className="mt-4 text-sm text-blue-600 dark:text-blue-400 hover:underline font-bold">+ Agregar otro hijo</button>
+              <button 
+                type="button" 
+                onClick={addHijo} 
+                className="mt-6 w-full md:w-auto px-6 py-3 text-sm bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all font-bold border border-blue-100 dark:border-blue-800/50 flex items-center justify-center gap-2"
+              >
+                + Agregar otro hijo
+              </button>
             </div>
           </div>
 

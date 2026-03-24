@@ -342,7 +342,10 @@ export const generateFHSYL = (userData) => {
     
     <div class="field"><b>Hijos:</b></div>
     <ul>
-      ${(data.hijos || []).map(h => `<li>${h.nombre} (${h.edad} años)</li>`).join('') || '<li>Sin hijos registrados</li>'}
+      ${(data.hijos || []).map(h => {
+        const ageText = (h.edad !== undefined && h.edad !== null && h.edad !== '') ? ` (${h.edad} años)` : '';
+        return `<li>${h.nombre}${ageText}</li>`;
+      }).join('') || '<li>Sin hijos registrados</li>'}
     </ul>
 
     <div class="section">2. COORDINACIÓN Y LIDERAZGO</div>
