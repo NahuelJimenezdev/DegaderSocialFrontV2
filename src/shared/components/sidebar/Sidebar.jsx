@@ -1,5 +1,5 @@
 import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert, HelpCircle } from "lucide-react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavItem from "../navItem/NavItem";
 import { useAuth } from '../../../context/AuthContext';

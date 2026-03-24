@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { X, Folder, Info, UsersRound } from 'lucide-react';
 import api from '../../../api/config';
 import '../styles/ModalCarpeta.css';
