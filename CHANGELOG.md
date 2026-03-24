@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.79.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.78.3...v1.79.0) (2026-03-24)
+
+
+### Features
+
+* **messaging:** deep audit fixes, push permission gesture, and delivered status ui ([460e9d2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/460e9d2c87adc9a0fa37512de2fcfa2f03adc3f0))
+* **messaging:** Phase 7 - Proactive Push Integration (Onboarding & Settings) ([d893d7e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d893d7ebcda55dfa6213807974ccb3b06da25fc0))
+* **messaging:** PWA install button and isPWA/deviceId tracking ([6fe22b0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6fe22b08af29364d75dc2287f73a78cb19823614))
+
+
+### Bug Fixes
+
+* **deploy:** update Dockerfile to accept Firebase build args ([42dbf4f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/42dbf4fd78605d765b227c59c898b76d355df829))
+* **fcm:** added diagnostic logs for production push initialization ([eb5f261](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/eb5f2616e5d66dc59ab148b3b3613dce7314d262))
+* **fundacion:** corregir visualización de hijos y diseño responsivo en Aplicativo Argentina ([4d5d40a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4d5d40a7021cb33bb2787876199d37b0bd617b8a))
+* **hooks:** resolve useEffect ReferenceErrors in Sidebar and ModalCarpeta ([f008089](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f008089e617bd81f986bc967d823537eb05282ca))
+* **iglesia:** protección de UI contra duplicación y visualización de errores de backend ([42afce0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/42afce0cc0d5cff26bbd878cf7f23fe3a7e52f82))
+* **messaging:** normalized sender field and enhanced SW logs ([da9ec20](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/da9ec20cda1dc2693318b1b9e567c03820f0907e))
+* **push:** dynamic firebase-messaging-sw.js config via Docker build args ([3eee96d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3eee96d49711ddebd9a18170aa19a87a84717ff7))
+* **pwa:** add start_url to manifest and register sw in main.jsx ([2788b29](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2788b2903640398d9411ebf7ced1a2e87b485027))
+* **settings:** use updateUser instead of login to refresh context after profile update ([4de6071](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4de6071c42e8c3ac4f616e67355cf0f3882d2777))
+
 ## [1.78.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.78.3...v1.78.0) (2026-03-24)
 
 
