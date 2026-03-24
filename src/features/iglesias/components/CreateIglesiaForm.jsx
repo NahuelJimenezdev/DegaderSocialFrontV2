@@ -9,7 +9,8 @@ const CreateIglesiaForm = ({
     setMostrarForm,
     formIglesia,
     setFormIglesia,
-    onSubmit
+    onSubmit,
+    isCreating
 }) => {
     const formRef = useRef(null);
 
@@ -75,9 +76,10 @@ const CreateIglesiaForm = ({
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                        disabled={isCreating}
+                        className={`px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-opacity ${isCreating ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Crear Iglesia
+                        {isCreating ? 'Creando...' : 'Crear Iglesia'}
                     </button>
                 </div>
             </form>

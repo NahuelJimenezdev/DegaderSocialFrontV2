@@ -41,7 +41,8 @@ export default function IglesiaPage() {
     setAlertConfig,
     cargarIglesias,
     handleCrearIglesia,
-    handleUnirseIglesia
+    handleUnirseIglesia,
+    isCreating
   } = useIglesias(user);
 
   const [globalStats, setGlobalStats] = useState({ churches: 0, members: 0, events: 0 });
@@ -176,6 +177,7 @@ export default function IglesiaPage() {
             formIglesia={formIglesia}
             setFormIglesia={setFormIglesia}
             onSubmit={handleCrearIglesiaWrapper}
+            isCreating={isCreating}
           />
 
           <HeroSection

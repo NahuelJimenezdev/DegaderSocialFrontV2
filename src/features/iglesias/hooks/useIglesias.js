@@ -12,7 +12,8 @@ export const useIglesias = (user) => {
     const toast = useToast();
     const [iglesias, setIglesias] = useState([]);
     const [busquedaIglesia, setBusquedaIglesia] = useState('');
-    const [loadingIglesias, setLoadingIglesias] = useState(false);
+    const [loadingIglesias, setLoadingIglesias] = useState(true);
+    const [isCreating, setIsCreating] = useState(false);
     const [filters, setFilters] = useState({ denominacion: '', ubicacion: '' });
     const [sort, setSort] = useState('newest');
     const [viewMode, setViewMode] = useState('grid');
@@ -101,6 +102,9 @@ export const useIglesias = (user) => {
     // Crear iglesia
     const handleCrearIglesia = async (e, updateUser) => {
         e.preventDefault();
+        if (isCreating) return;
+        
+        setIsCreating(true);
         try {
             await iglesiaService.create({
                 nombre: formIglesia.nombre,
@@ -121,7 +125,9 @@ export const useIglesias = (user) => {
             }
         } catch (error) {
             logger.error('Error creando iglesia:', error);
-            toast.error('Error al crear la iglesia');
+            toast.error(error.response?.data?.message || 'Error al crear la iglesia');
+        } finally {
+            setIsCreating(false);
         }
     };
 
@@ -178,6 +184,7 @@ export const useIglesias = (user) => {
         // Funciones
         cargarIglesias,
         handleCrearIglesia,
-        handleUnirseIglesia
+        handleUnirseIglesia,
+        isCreating
     };
 };
