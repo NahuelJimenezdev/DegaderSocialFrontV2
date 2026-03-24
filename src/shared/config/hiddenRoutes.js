@@ -12,6 +12,8 @@ export const hideAdsSidebarRoutes = [
   /^\/mensajes(\/.*)?$/i,
   // /arena
   /^\/arena$/i,
+  // Fundación - Secciones de documentos (Vista limpia y centrada)
+  /^\/fundacion\/(visor|entrevista|hoja-de-vida)$/i,
 ]
 
 export const hideSidebarRoutes = [
