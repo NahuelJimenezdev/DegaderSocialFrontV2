@@ -137,9 +137,24 @@ export default function UserDocumentationView() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <div className="flex flex-col items-center justify-center min-vh-[60vh] gap-4">
         <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
         <p className="text-gray-500 font-medium animate-pulse">Cargando documentación...</p>
+      </div>
+    );
+  }
+
+  if (!targetUser) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <AlertCircle size={48} className="text-red-500" />
+        <p className="text-gray-500 font-medium">No se pudo cargar la información del usuario.</p>
+        <button 
+          onClick={() => navigate('/fundacion/admin')}
+          className="px-6 py-2 bg-blue-600 text-white rounded-xl"
+        >
+          Volver al Panel
+        </button>
       </div>
     );
   }
