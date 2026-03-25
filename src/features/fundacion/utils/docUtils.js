@@ -298,47 +298,60 @@ export const downloadCV = async (userData, overrideData = null, overridePhotos =
 
 
 const getHtmlBase = (title, bodyContent) => `
-  <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head>
-      <meta charset="utf-8">
-      <title>${title}</title>
-      <!--[if gte mso 9]>
-      <xml>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="utf-8">
+    <title>${title}</title>
+    <!--[if gte mso 9]>
+    <xml>
         <w:WordDocument>
-          <w:View>Print</w:View>
-          <w:Zoom>100</w:Zoom>
-          <w:DoNotOptimizeForBrowser/>
+            <w:View>Print</w:View>
+            <w:Zoom>100</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
         </w:WordDocument>
-      </xml>
-      <![endif]-->
-      <style>
+    </xml>
+    <![endif]-->
+    <style>
         @page { size: 8.5in 11in; margin: 1in; }
-        body { font-family: 'Calibri', 'Arial', sans-serif; color: #333; line-height: 1.5; }
+        body { font-family: 'Calibri', 'Arial', sans-serif; color: #333; line-height: 1.5; font-size: 11pt; }
         .header { text-align: center; border-bottom: 2pt solid #1e3a8a; margin-bottom: 20px; padding-bottom: 10px; }
-        .title { color: #1e3a8a; font-size: 18pt; font-weight: bold; margin: 0; }
+        .title { color: #1e3a8a; font-size: 18pt; font-weight: bold; margin: 0; text-transform: uppercase; }
         .section { background: #f3f4f6; padding: 5pt; font-weight: bold; margin: 15pt 0 5pt 0; border-left: 4pt solid #1e3a8a; color: #1e3a8a; font-size: 12pt; }
-        .field { margin-bottom: 4pt; font-size: 10pt; }
-        .label { font-weight: bold; color: #374151; width: 150pt; display: inline-block; }
+        .field { margin-bottom: 4pt; clear: both; }
+        .label { font-weight: bold; color: #374151; width: 160pt; display: inline-block; }
         .value { color: #000; border-bottom: 0.5pt solid #ddd; padding: 1pt; }
-        .block-text { margin-top: 5pt; padding: 8pt; border: 0.5pt solid #e5e7eb; background: #fff; font-size: 10pt; min-height: 50pt; }
+        .block-text { margin-top: 5pt; padding: 8pt; border: 0.5pt solid #e5e7eb; background: #fafafa; font-size: 10pt; min-height: 40pt; }
         .footer { margin-top: 40pt; border-top: 0.5pt solid #ddd; padding-top: 10pt; font-size: 8pt; color: #666; text-align: center; }
-      </style>
-    </head>
-    <body>
-      <div class="header">
+        .signature-box { margin-top: 30pt; text-align: center; border-top: 1pt solid #000; width: 200pt; padding-top: 5pt; }
+    </style>
+</head>
+<body>
+    <div class="header">
         <h1 class="title">${title}</h1>
-        <p style="margin:0; font-weight:bold; color:#666;">Fundación Humanitaria Internacional Sol y Luna</p>
-      </div>
-      ${bodyContent}
-      <div class="footer">Documento generado el ${new Date().toLocaleDateString()} - Propiedad Intelectual FHSYL</div>
-    </body>
-  </html>
+        <p style="margin:0; font-weight:bold; color:#1e3a8a;">FUNDACIÓN HUMANITARIA INTERNOS SOL Y LUNA</p>
+    </div>
+    ${bodyContent}
+    <div class="footer">
+        Documento Generado el ${new Date().toLocaleDateString()} • DegaderSocial Platform • Propiedad Intelectual FHSYL
+    </div>
+</body>
+</html>
 `;
 
-export const generateFHSYL = (userData) => {
+export const generateFHSYL = async (userData, firmaB64 = null) => {
   const data = userData.fundacion?.documentacionFHSYL || {};
   const nombreC = `${userData.nombres?.primero || ''} ${userData.apellidos?.primero || ''}`;
   
+  let firmaHtml = '';
+  if (firmaB64) {
+    firmaHtml = `
+      <div style="margin-top: 20pt;">
+        <img src="${firmaB64}" width="180" style="display:block; margin-bottom:-10pt;" />
+        <div class="signature-box">Firma del Solicitante</div>
+      </div>
+    `;
+  }
+
   const content = getHtmlBase('Aplicativo República Argentina', `
     <div class="section">1. DATOS PERSONALES</div>
     <div class="field"><span class="label">Nombre completo:</span> <span class="value">${data.nombreCompleto || nombreC}</span></div>
@@ -400,12 +413,25 @@ export const generateFHSYL = (userData) => {
     <div class="field"><span class="label">Profesionales en Iglesia:</span> <span class="value">${data.profesionalesIglesia || 'N/A'}</span></div>
     <div class="field"><b>Proyecto Psicosocial a Desarrollar:</b></div>
     <div class="block-text">${data.proyectoPsicosocial || 'No especificado'}</div>
+    
+    ${firmaHtml}
   `);
-  return new Blob(['\ufeff', content], { type: 'application/msword' });
+  return new Blob(['\ufeff', content], { type: 'application/vnd.ms-word' });
 };
 
-export const generateEntrevista = (userData) => {
+export const generateEntrevista = async (userData, firmaB64 = null) => {
   const resp = userData.fundacion?.entrevista?.respuestas || {};
+  
+  let firmaHtml = '';
+  if (firmaB64) {
+    firmaHtml = `
+      <div style="margin-top: 20pt;">
+        <img src="${firmaB64}" width="180" style="display:block; margin-bottom:-10pt;" />
+        <div class="signature-box">Firma del Postulante</div>
+      </div>
+    `;
+  }
+
   const content = getHtmlBase('Entrevista Institucional', `
     <div class="section">I. INFORMACIÓN Y MINISTERIO</div>
     <div class="field"><span class="label">Postulante:</span> <span class="value">${resp.nombre || ''}</span></div>
@@ -447,8 +473,10 @@ export const generateEntrevista = (userData) => {
     
     <div class="field"><b>Palabras Voluntarias:</b></div>
     <div class="block-text">${resp.palabrasVoluntarias || ''}</div>
+
+    ${firmaHtml}
   `);
-  return new Blob(['\ufeff', content], { type: 'application/msword' });
+  return new Blob(['\ufeff', content], { type: 'application/vnd.ms-word' });
 };
 
 export const generateSolicitud = (userData) => {
@@ -473,26 +501,49 @@ export const generateSolicitud = (userData) => {
     <div class="field"><span class="label">Estado de Aprobación:</span> <span class="value">${(f.estadoAprobacion || 'pendiente').toUpperCase()}</span></div>
     <div class="field"><span class="label">Fecha de Ingreso:</span> <span class="value">${f.fechaIngreso ? new Date(f.fechaIngreso).toLocaleDateString() : 'N/A'}</span></div>
   `);
-  return new Blob(['\ufeff', content], { type: 'application/msword' });
+  return new Blob(['\ufeff', content], { type: 'application/vnd.ms-word' });
 };
 
 export const generateUserZip = async (userData) => {
   const zip = new PizZip();
   const name = `${userData.nombres?.primero || 'Usuario'}_${userData.apellidos?.primero || ''}`.replace(/\s+/g, '_');
   
-  // 1. Hoja de Vida (Word)
+  // 0. Obtener Firma en Base64 para los documentos HTML (porque Word necesita el binario embebido si es HTML)
+  const firmaSource = userData.fundacion?.hojaDeVida?.datos?.get ? userData.fundacion.hojaDeVida.datos.get('firmaUser') || userData.fundacion.hojaDeVida.datos.get('firma_digital') : userData.fundacion?.hojaDeVida?.datos?.firmaUser || userData.fundacion?.hojaDeVida?.datos?.firma_digital;
+  
+  let firmaB64 = null;
+  if (firmaSource) {
+    if (firmaSource.startsWith('data:image')) {
+      firmaB64 = await processSignatureImage(firmaSource);
+    } else {
+        // Si es una URL, necesitamos convertirla a Base64 para que el HTML embebido funcione en Word local
+        try {
+            const blob = await fetch(firmaSource).then(r => r.blob());
+            firmaB64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+            firmaB64 = await processSignatureImage(firmaB64);
+        } catch (e) {
+            console.warn('No se pudo convertir firma URL a Base64 para el ZIP', e);
+        }
+    }
+  }
+
+  // 1. Hoja de Vida (Word .docx nativo)
   const cvBlob = await generateCV(userData);
   zip.file(`1.Hoja_de_Vida_${name}.docx`, await cvBlob.arrayBuffer());
   
-  // 2. FHSYL (Word)
-  const fhsylBlob = generateFHSYL(userData);
+  // 2. FHSYL (Word .doc vía HTML mejorado)
+  const fhsylBlob = await generateFHSYL(userData, firmaB64);
   zip.file(`2.Aplicativo_FHSYL_${name}.doc`, await fhsylBlob.arrayBuffer());
   
-  // 3. Entrevista (Word)
-  const entrevistaBlob = generateEntrevista(userData);
+  // 3. Entrevista (Word .doc vía HTML mejorado)
+  const entrevistaBlob = await generateEntrevista(userData, firmaB64);
   zip.file(`3.Entrevista_${name}.doc`, await entrevistaBlob.arrayBuffer());
   
-  // 4. Solicitud (Word)
+  // 4. Solicitud (Word .doc vía HTML mejorado)
   const solicitudBlob = generateSolicitud(userData);
   zip.file(`4.Solicitud_Ingreso_${name}.doc`, await solicitudBlob.arrayBuffer());
   
