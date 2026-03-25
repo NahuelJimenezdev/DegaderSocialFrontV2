@@ -298,30 +298,39 @@ export const downloadCV = async (userData, overrideData = null, overridePhotos =
 
 
 const getHtmlBase = (title, bodyContent) => `
-  <html>
+  <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
     <head>
       <meta charset="utf-8">
+      <title>${title}</title>
+      <!--[if gte mso 9]>
+      <xml>
+        <w:WordDocument>
+          <w:View>Print</w:View>
+          <w:Zoom>100</w:Zoom>
+          <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+      </xml>
+      <![endif]-->
       <style>
-        body { font-family: 'Arial', sans-serif; color: #333; line-height: 1.4; padding: 20px; }
-        .header { text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 20px; }
-        .title { color: #1e3a8a; font-size: 22px; font-weight: bold; margin: 0; text-transform: uppercase; }
-        .subtitle { color: #444; font-size: 16px; margin-top: 5px; font-weight: bold; }
-        .section { background: #e5e7eb; padding: 8px; font-weight: bold; margin: 15px 0 10px 0; border-left: 5px solid #1e3a8a; color: #1e3a8a; }
-        .field { margin-bottom: 6px; font-size: 12px; }
-        .label { font-weight: bold; color: #374151; width: 180px; display: inline-block; }
-        .value { color: #000; border-bottom: 1px solid #ccc; min-width: 150px; display: inline-block; }
-        .block-text { margin-top: 5px; padding: 10px; border: 1px solid #e5e7eb; background: #fff; font-size: 12px; }
-        .footer { margin-top: 30px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 10px; color: #666; text-align: center; }
-        ul, ol { margin-top: 5px; margin-bottom: 5px; font-size: 12px; }
+        @page { size: 8.5in 11in; margin: 1in; }
+        body { font-family: 'Calibri', 'Arial', sans-serif; color: #333; line-height: 1.5; }
+        .header { text-align: center; border-bottom: 2pt solid #1e3a8a; margin-bottom: 20px; padding-bottom: 10px; }
+        .title { color: #1e3a8a; font-size: 18pt; font-weight: bold; margin: 0; }
+        .section { background: #f3f4f6; padding: 5pt; font-weight: bold; margin: 15pt 0 5pt 0; border-left: 4pt solid #1e3a8a; color: #1e3a8a; font-size: 12pt; }
+        .field { margin-bottom: 4pt; font-size: 10pt; }
+        .label { font-weight: bold; color: #374151; width: 150pt; display: inline-block; }
+        .value { color: #000; border-bottom: 0.5pt solid #ddd; padding: 1pt; }
+        .block-text { margin-top: 5pt; padding: 8pt; border: 0.5pt solid #e5e7eb; background: #fff; font-size: 10pt; min-height: 50pt; }
+        .footer { margin-top: 40pt; border-top: 0.5pt solid #ddd; padding-top: 10pt; font-size: 8pt; color: #666; text-align: center; }
       </style>
     </head>
     <body>
       <div class="header">
-        <p class="title">${title}</p>
-        <p class="subtitle">Fundación Humanitaria Internacional Sol y Luna</p>
+        <h1 class="title">${title}</h1>
+        <p style="margin:0; font-weight:bold; color:#666;">Fundación Humanitaria Internacional Sol y Luna</p>
       </div>
       ${bodyContent}
-      <div class="footer">Este documento es confidencial y propiedad intelectual de la FHSYL - Generado el ${new Date().toLocaleDateString()}</div>
+      <div class="footer">Documento generado el ${new Date().toLocaleDateString()} - Propiedad Intelectual FHSYL</div>
     </body>
   </html>
 `;
@@ -360,21 +369,21 @@ export const generateFHSYL = (userData) => {
     <div class="block-text">${data.llamadoPastoral || 'Pendiente'}</div>
 
     <div class="field"><b>Virtudes Personales:</b></div>
-    <ul>${(data.virtudes || []).map(v => `<li>${v}</li>`).join('')}</ul>
+    <ul>${(data.virtudes || []).map(v => `<li>${v}</li>`).join('') || '<li>N/A</li>'}</ul>
 
     <div class="field"><b>Áreas a Mejorar:</b></div>
-    <ul>${(data.areasMejora || []).map(v => `<li>${v}</li>`).join('')}</ul>
+    <ul>${(data.areasMejora || []).map(v => `<li>${v}</li>`).join('') || '<li>N/A</li>'}</ul>
 
     <div class="field"><b>Eventos de Éxito en Ministerio:</b></div>
-    <ul>${(data.eventosExito || []).map(v => `<li>${v}</li>`).join('')}</ul>
+    <ul>${(data.eventosExito || []).map(v => `<li>${v}</li>`).join('') || '<li>N/A</li>'}</ul>
 
     <div class="field"><span class="label">Congregación que pastorea:</span> <span class="value">${data.nombreCongregacionPastorea || ''}</span></div>
     <div class="field"><span class="label">Alianza / Concilio:</span> <span class="value">${data.alianzaPastores || ''}</span></div>
 
     <div class="section">4. REFERENCIAS Y OTROS</div>
-    ${(data.referencias || []).map((ref, i) => `
-      <div class="field"><b>Ref ${i+1}:</b> ${ref.nombre} (${ref.relacion}) - ${ref.contacto}</div>
-    `).join('')}
+    ${(data.referencias || []).length > 0 
+      ? data.referencias.map((ref, i) => `<div class="field"><b>Ref ${i+1}:</b> ${ref.nombre} (${ref.relacion}) - ${ref.contacto}</div>`).join('') 
+      : '<div class="field">No registra referencias</div>'}
 
     <div class="field"><span class="label">Invitado por el Pastor:</span> <span class="value">${data.pastorQueInvito || ''}</span></div>
     
@@ -383,10 +392,10 @@ export const generateFHSYL = (userData) => {
     <div class="field"><span class="label">¿Iglesia tiene propiedad?:</span> <span class="value">${data.iglesiaTienePropiedad ? 'SÍ' : 'NO'}</span></div>
     
     <div class="field"><b>Necesidades Fam. Pastoral:</b></div>
-    <ul>${(data.necesidadesFamiliaPastoral || []).map(v => `<li>${v}</li>`).join('')}</ul>
+    <ul>${(data.necesidadesFamiliaPastoral || []).map(v => `<li>${v}</li>`).join('') || '<li>N/A</li>'}</ul>
     
     <div class="field"><b>Necesidades Congregación:</b></div>
-    <ul>${(data.necesidadesCongregacion || []).map(v => `<li>${v}</li>`).join('')}</ul>
+    <ul>${(data.necesidadesCongregacion || []).map(v => `<li>${v}</li>`).join('') || '<li>N/A</li>'}</ul>
 
     <div class="field"><span class="label">Profesionales en Iglesia:</span> <span class="value">${data.profesionalesIglesia || 'N/A'}</span></div>
     <div class="field"><b>Proyecto Psicosocial a Desarrollar:</b></div>

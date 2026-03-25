@@ -13,7 +13,7 @@ export const hideAdsSidebarRoutes = [
   // /arena
   /^\/arena$/i,
   // Fundación - Secciones de documentos (Vista limpia y centrada)
-  /^\/fundacion\/(visor|entrevista|hoja-de-vida)$/i,
+  /^\/fundacion\/(visor|entrevista|hoja-de-vida|documentacion-fhsyl)$/i,
 ]
 
 export const hideSidebarRoutes = [
