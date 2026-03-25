@@ -631,9 +631,14 @@ const FormularioFHSYL = () => {
           <button 
             onClick={saveToDatabase}
             disabled={loading}
-            className="w-full md:w-auto px-12 py-4 bg-white dark:bg-gray-950 text-blue-600 dark:text-blue-400 font-extrabold rounded-2xl border border-blue-600/20 dark:border-blue-400/20 shadow-lg hover:shadow-xl hover:bg-blue-50 dark:hover:bg-blue-900/10 hover:border-blue-600/40 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
+            className="w-full md:w-auto px-12 py-4 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 font-extrabold rounded-2xl border border-blue-600/30 dark:border-blue-400/30 shadow-sm hover:shadow-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
           >
-            {loading ? 'Guardando...' : <><Save className="w-6 h-6" /> Guardar Documentación</>}
+            {loading ? 'Guardando...' : (
+              <>
+                <Save className="w-6 h-6 text-blue-700 dark:text-blue-300" /> 
+                <span className="text-blue-700 dark:text-blue-300">Guardar Documentación</span>
+              </>
+            )}
           </button>
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-6 text-center max-w-lg">
             Sus datos se guardarán de forma segura en su perfil institucional de la Fundación Humanitaria Sol y Luna.
