@@ -249,22 +249,40 @@ export default function FundacionAdminDashboard() {
                        </div>
                      </div>
                      <div className="flex-1 min-w-0">
-                       <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight break-words">
+                       <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight break-words uppercase">
                          {u.nombres?.primero} {u.apellidos?.primero}
                        </h4>
+                       <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1">{u.fundacion?.cargo || 'Sin Cargo'}</p>
                      </div>
                   </div>
                   
-                  {u.fundacion?.area && (
-                    <div className="mb-4">
-                      <span className="block w-full text-center text-[10px] font-bold px-3 py-2 bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl uppercase tracking-widest border border-blue-100/50 dark:border-blue-800/30">
-                        {u.fundacion.area}
-                      </span>
+                  <div className="flex-1 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50 mb-4 text-xs space-y-2">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Área / Dirección</span>
+                      <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.area || 'N/A'}</span>
                     </div>
-                  )}
-                  
-                  <div className="text-sm text-center text-gray-600 dark:text-gray-400 mb-6 flex-1">
-                    <p className="font-medium line-clamp-2">{formatRoleLocation(u)}</p>
+                    {u.fundacion?.subArea && (
+                      <div className="flex flex-col border-t border-gray-100 dark:border-gray-800 pt-2">
+                        <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Sub-Área</span>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion.subArea}</span>
+                      </div>
+                    )}
+                    {u.fundacion?.programa && (
+                      <div className="flex flex-col border-t border-gray-100 dark:border-gray-800 pt-2">
+                        <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Programa / Proyecto</span>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion.programa}</span>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 gap-2 border-t border-gray-100 dark:border-gray-800 pt-2">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Nivel Jerárquico</span>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium capitalize">{u.fundacion?.nivel || 'N/A'}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">País de Trabajo</span>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.territorio?.pais || 'N/A'}</span>
+                      </div>
+                    </div>
                   </div>
                   
                   <button 
@@ -291,18 +309,36 @@ export default function FundacionAdminDashboard() {
                   </div>
                   
                   <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 min-w-0">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors mb-0.5 sm:mb-1 truncate">
-                        {u.nombres?.primero} {u.apellidos?.primero}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium truncate mb-1">
-                         {formatRoleLocation(u)}
-                      </p>
-                      {u.fundacion?.area && (
-                        <span className="inline-block text-[10px] sm:text-xs font-semibold px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md uppercase tracking-wider">
-                          {u.fundacion.area}
-                        </span>
-                      )}
+                    <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div>
+                        <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors uppercase truncate">
+                          {u.nombres?.primero} {u.apellidos?.primero}
+                        </h4>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium truncate mb-1">
+                          {u.fundacion?.cargo || 'Sin Cargo'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {u.fundacion?.area || 'N/A'}
+                        </p>
+                        {u.fundacion?.subArea && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300">Sub-Área:</span> {u.fundacion.subArea}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        {u.fundacion?.programa && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300">Proyecto:</span> {u.fundacion.programa}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">Jerarquía:</span> <span className="capitalize">{u.fundacion?.nivel || 'N/A'}</span>
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">País:</span> {u.fundacion?.territorio?.pais || 'N/A'}
+                        </p>
+                      </div>
                     </div>
                     
                     <button 
