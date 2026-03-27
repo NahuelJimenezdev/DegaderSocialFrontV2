@@ -65,12 +65,8 @@ const FeedPage = () => {
               </div>
               
               {showRecommendations && (
-                <div className="w-full relative py-10 my-6 -mx-0 overflow-visible">
-                  <div className="absolute left-1/2 -translate-x-1/2 w-screen max-w-6xl px-4 lg:px-12">
-                    <UserCarousel />
-                  </div>
-                  {/* Espaciador para no tapar los posts siguientes */}
-                  <div className="invisible pointer-events-none">
+                <div className="w-full h-auto flex justify-center py-6 my-4 overflow-visible">
+                  <div className="w-[95vw] sm:w-full max-w-5xl px-2 sm:px-4">
                     <UserCarousel />
                   </div>
                 </div>

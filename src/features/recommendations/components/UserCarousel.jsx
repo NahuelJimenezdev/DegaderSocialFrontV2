@@ -163,11 +163,11 @@ const UserCarousel = () => {
 
   if (loading) {
     return (
-      <div className="user-carousel-container">
+      <div className="user-carousel-container loading-state">
+        <h2 className="carousel-title">Sugerencias para ti</h2>
         <div className="carousel-wrapper">
           <div className="user-cards-container">
-        <h2 className="carousel-title">Sugerencias para ti</h2>
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3].map((i) => (
               <div key={i} className="user-card skeleton">
                 <div className="skeleton-avatar"></div>
                 <div className="skeleton-info">
