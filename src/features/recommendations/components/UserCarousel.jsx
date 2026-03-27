@@ -20,17 +20,25 @@ const UserCarousel = () => {
     variant: 'info'
   });
 
-  // Número de tarjetas visibles a la vez (Dinámico según ancho de pantalla)
+  // Número de tarjetas visibles a la vez
   const [visibleCardsCount, setVisibleCardsCount] = useState(3);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+
+      if (width < 640) {
         setVisibleCardsCount(1);
-      } else if (window.innerWidth < 1024) {
+      } else if (width < 1024) {
         setVisibleCardsCount(2);
-      } else {
+      } else if (width < 1440) {
         setVisibleCardsCount(3);
+      } else if (width < 1600) {
+        setVisibleCardsCount(4);
+      } else {
+        setVisibleCardsCount(5);
       }
     };
 
@@ -80,8 +88,8 @@ const UserCarousel = () => {
     setCurrentStartIndex((prevIndex) => (prevIndex - visibleCardsCount + users.length) % users.length);
   };
 
-  // Calcula qué usuarios mostrar en la página actual
-  const visibleUsers = users.slice(currentStartIndex, currentStartIndex + visibleCardsCount);
+  // Usuarios a mostrar (en mobile todos para scroll nativo, en desktop paginados)
+  const displayUsers = isMobile ? users : users.slice(currentStartIndex, currentStartIndex + visibleCardsCount);
 
   // Helper para obtener la bandera del país (más robusto)
   const getCountryFlag = (countryName) => {
@@ -200,14 +208,14 @@ const UserCarousel = () => {
       <h2 className="carousel-title">Sugerencias para ti</h2>
 
       <div className="carousel-wrapper">
-        {users.length > visibleCardsCount && (
+        {users.length > visibleCardsCount && !isMobile && (
           <button className="nav-button prev-button" onClick={handlePrevPage}>
             &lt;
           </button>
         )}
 
         <div className="user-cards-container">
-          {visibleUsers.map((user) => (
+          {displayUsers.map((user) => (
             <div key={user._id} className={`user-card ${fadingId === user._id ? 'fade-out' : ''}`}>
               <div className="avatar-wrapper">
                 <img 
@@ -251,14 +259,14 @@ const UserCarousel = () => {
           ))}
         </div>
 
-        {users.length > visibleCardsCount && (
+        {users.length > visibleCardsCount && !isMobile && (
           <button className="nav-button next-button" onClick={handleNextPage}>
             &gt;
           </button>
         )}
       </div>
 
-      {totalPages > 1 && (
+      {totalPages > 1 && !isMobile && (
         <div className="pagination-dots">
           {Array.from({ length: totalPages }).map((_, pageIndex) => (
             <span

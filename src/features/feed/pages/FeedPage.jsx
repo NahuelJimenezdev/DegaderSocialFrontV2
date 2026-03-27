@@ -66,7 +66,7 @@ const FeedPage = () => {
               
               {showRecommendations && (
                 <div className="w-full h-auto flex justify-center py-6 my-4 overflow-visible">
-                  <div className="w-[95vw] sm:w-full max-w-5xl px-2 sm:px-4">
+                  <div className="w-[95vw] sm:w-full max-w-[1450px] px-2 sm:px-4">
                     <UserCarousel />
                   </div>
                 </div>
