@@ -21,7 +21,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 40px;
 }
 
 .user-cards-container {
@@ -149,11 +149,11 @@
 }
 
 .prev-button {
-  left: -22px;
+  left: 0;
 }
 
 .next-button {
-  right: -22px;
+  right: 0;
 }
 
 .nav-button:hover {
