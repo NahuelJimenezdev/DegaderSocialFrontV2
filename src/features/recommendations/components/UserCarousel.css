@@ -1,197 +1,187 @@
 .user-carousel-container {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  padding: 40px 20px;
-  background-color: #f8fafc;
-  border-radius: 24px;
-  margin: 40px 0;
+  padding: 40px 0;
+  background-color: transparent;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .carousel-title {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 35px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 25px;
   text-align: left;
-  padding-left: 20px;
+  letter-spacing: -0.02em;
 }
 
 .carousel-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
   width: 100%;
+  padding: 0 10px;
 }
 
 .user-cards-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px;
   width: 100%;
-  transition: all 0.5s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .user-card {
-  background: white;
-  border-radius: 24px;
-  padding: 20px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.02);
-  /* Hacer la card más cuadrada */
-  min-height: 320px;
+  border: 1px solid var(--border-primary);
+  min-height: 340px;
   justify-content: space-between;
 }
 
 .user-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  border-color: rgba(59, 130, 246, 0.2);
-}
-
-.user-card.fade-out {
-  opacity: 0;
-  transform: scale(0.9);
-  pointer-events: none;
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-primary);
 }
 
 .avatar-wrapper {
-  margin-top: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .user-avatar {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #f1f5f9;
-  transition: transform 0.3s ease;
-}
-
-.user-card:hover .user-avatar {
-  transform: scale(1.05);
-  border-color: #e2e8f0;
+  border: 4px solid var(--bg-main);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .user-info {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   width: 100%;
 }
 
 .user-name {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 6px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  color: var(--text-primary);
+  margin-bottom: 6px;
 }
 
-.country-row {
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-position {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin: 0;
+}
+
+.location-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-bottom: 4px;
+  color: var(--text-secondary);
 }
 
 .country-flag {
-  font-size: 18px;
-}
-
-.user-country {
   font-size: 14px;
-  color: #64748b;
-  margin: 0;
 }
 
-.user-role {
+.user-location {
   font-size: 13px;
-  color: #94a3b8;
   margin: 0;
   font-weight: 500;
 }
 
 .connect-button {
-  background-color: #3b82f6;
+  background-color: var(--accent-primary);
   color: white;
   border: none;
-  padding: 14px 0;
+  padding: 12px 0;
   width: 100%;
-  border-radius: 14px;
-  font-size: 15px;
+  border-radius: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
 .connect-button:hover {
-  background-color: #2563eb;
-  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.35);
+  background-color: var(--accent-hover);
+  transform: scale(1.02);
 }
 
-.connect-button.loading {
-  background-color: #93c5fd;
-  cursor: not-allowed;
-}
-
-/* Navegación */
+/* Rediseño de botones de navegación */
 .nav-button {
-  width: 48px;
-  height: 48px;
+  position: absolute;
+  top: 50%;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1px solid #e2e8f0;
-  background: white;
-  color: #64748b;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-  font-size: 22px;
-  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  transform: translateY(-50%);
 }
 
-.nav-button:hover:not(:disabled) {
-  background: #f8fafc;
-  color: #3b82f6;
-  border-color: #3b82f6;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);
+.prev-button {
+  left: -22px;
 }
 
-/* Paginación */
+.next-button {
+  right: -22px;
+}
+
+.nav-button:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Paginación dots */
 .pagination-dots {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 35px;
+  gap: 8px;
+  margin-top: 30px;
 }
 
 .pagination-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 10px;
-  background-color: #cbd5e1;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  background-color: var(--border-secondary);
   transition: all 0.3s ease;
 }
 
 .pagination-dot.active-dot {
-  background-color: #3b82f6;
-  width: 30px;
+  background-color: var(--accent-primary);
+  width: 24px;
 }
 
 /* Responsividad */
@@ -203,29 +193,23 @@
 
 @media (max-width: 640px) {
   .user-carousel-container {
-    padding: 20px 10px;
-    margin: 20px 0;
-    border-radius: 16px;
+    padding: 24px 0;
   }
   
   .carousel-title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    padding-left: 10px;
   }
 
   .user-cards-container {
     grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .user-card {
-    min-height: 300px;
-    border-radius: 20px;
   }
 
   .nav-button {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+    width: 36px;
+    height: 36px;
   }
+
+  .prev-button { left: -5px; }
+  .next-button { right: -5px; }
 }

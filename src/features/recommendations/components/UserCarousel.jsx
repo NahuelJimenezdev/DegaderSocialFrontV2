@@ -166,7 +166,7 @@ const UserCarousel = () => {
       <div className="user-carousel-container">
         <div className="carousel-wrapper">
           <div className="user-cards-container">
-        <h2 className="carousel-title">Quizás te interese</h2>
+        <h2 className="carousel-title">Sugerencias para ti</h2>
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="user-card skeleton">
                 <div className="skeleton-avatar"></div>
@@ -187,7 +187,7 @@ const UserCarousel = () => {
   if (users.length === 0 && !loading) {
     return (
       <div className="user-carousel-container">
-        <h2 className="carousel-title">Quizás te interese</h2>
+        <h2 className="carousel-title">Sugerencias para ti</h2>
         <div className="empty-state">
           <p>No hay más recomendaciones por ahora. ¡Vuelve más tarde!</p>
         </div>
@@ -197,7 +197,7 @@ const UserCarousel = () => {
 
   return (
     <div className="user-carousel-container">
-      <h2 className="carousel-title">Quizás te interese</h2>
+      <h2 className="carousel-title">Sugerencias para ti</h2>
 
       <div className="carousel-wrapper">
         {users.length > visibleCardsCount && (
@@ -224,11 +224,21 @@ const UserCarousel = () => {
                 <h3 className="user-name">
                   {user.name}
                 </h3>
-                <div className="country-row">
-                  <span className="country-flag">{getCountryFlag(user.country)}</span>
-                  <p className="user-country">{user.country || 'No especificado'}</p>
+                <div className="user-details">
+                  <p className="user-position">
+                    {user.fundacion?.cargo || user.role || 'Miembro'}
+                  </p>
+                  <div className="location-row">
+                    <span className="country-flag">{getCountryFlag(user.country)}</span>
+                    <p className="user-location">
+                      {user.personal?.ubicacion?.ciudad && user.personal?.ubicacion?.provincia 
+                        ? `${user.personal.ubicacion.ciudad} / ${user.personal.ubicacion.provincia}`
+                        : user.fundacion?.territorio?.nombre 
+                          ? `${user.fundacion.territorio.nombre} / ${user.country}` 
+                          : (user.country || 'No especificado')}
+                    </p>
+                  </div>
                 </div>
-                <p className="user-role">{user.role || 'Miembro'}</p>
               </div>
               <button 
                 className={`connect-button ${connectingId === user._id ? 'loading' : ''}`}
