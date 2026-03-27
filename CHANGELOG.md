@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.80.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.79.0...v1.80.0) (2026-03-27)
+
+
+### Features
+
+* fundacion reestructuracion visual y territorial ([cc6b74f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cc6b74f3138729bdd6759da0ed9448d140547d5b))
+
+
+### Bug Fixes
+
+* **fcm:** Corrección de AbortError de registro (manifiesto y service worker) ([924f71c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/924f71ca22d2b0e438f1478d80e7fbe1a93dc641))
+* mejorar compatibilidad de Word (Office XML), completar mapeo de FHSYL y ocultar publicidad en aplicativo ([cbae0bb](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cbae0bbe793840605300a74abe72fe981fc65dc8))
+
 ## [1.79.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.78.3...v1.79.0) (2026-03-24)
 
 
