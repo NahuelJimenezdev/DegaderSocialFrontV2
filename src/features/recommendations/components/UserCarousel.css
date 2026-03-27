@@ -43,7 +43,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   border: 1px solid var(--border-primary);
-  min-height: 360px;
+  height: 420px; /* Altura fija para consistencia total */
   justify-content: space-between;
 }
 
@@ -73,19 +73,26 @@
 }
 
 .user-name {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 8px;
-  white-space: nowrap;
+  height: 44px; /* Espacio para 2 líneas */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .user-details {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  height: 60px; /* Espacio fijo para Cargo + Ubicación */
+  justify-content: center;
 }
 
 .user-position {
@@ -93,6 +100,13 @@
   font-weight: 600;
   color: var(--accent-primary);
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .location-row {
@@ -234,7 +248,7 @@
   .user-card {
     flex: 0 0 82%; /* El "Peek" effect: 82% hace que se vea el 18% de la siguiente */
     scroll-snap-align: center;
-    min-height: 350px;
+    height: 400px;
     padding: 25px 15px;
   }
 
