@@ -26,10 +26,11 @@
 
 .user-cards-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
   width: 100%;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: stretch;
+  scroll-behavior: smooth;
 }
 
 .user-card {
@@ -41,13 +42,16 @@
   align-items: center;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   border: 1px solid var(--border-primary);
   height: 400px;
-  max-width: 250px; /* Evita que crezcan demasiado horizontalmente */
-  margin: 0 auto; /* Centrar dentro de su celda del grid */
+  /* Evita que crezcan demasiado horizontalmente */
+  /* max-width: 250px;  */
+  /* Centrar dentro de su celda del grid */
+  /* margin: 0 auto;  */
   width: 100%;
   justify-content: space-between;
+  will-change: transform;
 }
 
 .user-card:hover {
@@ -140,7 +144,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .connect-button:hover {
@@ -149,7 +153,7 @@
 }
 
 /* Navegación Desktop */
-.nav-button {
+/* .nav-button {
   position: absolute;
   top: 50%;
   width: 48px;
@@ -166,26 +170,26 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 50;
   transform: translateY(-50%);
-}
+} */
 
-.prev-button { left: 0; }
-.next-button { right: 0; }
+/* .prev-button { left: 0; }
+.next-button { right: 0; } */
 
-.nav-button:hover {
+/* .nav-button:hover {
   background: var(--accent-primary);
   color: white;
   border-color: var(--accent-primary);
-}
+} */
 
 /* Paginación Dots (Desktop) */
-.pagination-dots {
+/* .pagination-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-top: 35px;
-}
+} */
 
-.pagination-dot {
+/* .pagination-dot {
   width: 8px;
   height: 8px;
   border-radius: 8px;
@@ -196,10 +200,10 @@
 .pagination-dot.active-dot {
   background-color: var(--accent-primary);
   width: 24px;
-}
+} */
 
 /* Breakpoints para Desktop Sincronizados con JS */
-@media (min-width: 1550px) {
+/* @media (min-width: 1550px) {
   .user-cards-container {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -209,14 +213,14 @@
   .user-cards-container {
     grid-template-columns: repeat(5, 1fr);
   }
-}
+} */
 
 /* Tablet / Laptop Pequeña */
-@media (max-width: 1100px) {
+/* @media (max-width: 1100px) {
   .user-cards-container {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+} */
 
 /* MÓVIL: Scroll Nativo y "Peek" Effect */
 @media (max-width: 767px) {
