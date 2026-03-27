@@ -29,16 +29,16 @@ const UserCarousel = () => {
       const width = window.innerWidth;
       setIsMobile(width < 768);
 
-      if (width < 640) {
+      if (width < 768) {
         setVisibleCardsCount(1);
-      } else if (width < 1024) {
+      } else if (width < 1100) {
         setVisibleCardsCount(2);
-      } else if (width < 1440) {
-        setVisibleCardsCount(3);
-      } else if (width < 1600) {
-        setVisibleCardsCount(4);
+      } else if (width < 1550) {
+        setVisibleCardsCount(3); // Portátiles (Standard & Pro)
+      } else if (width < 1850) {
+        setVisibleCardsCount(4); // Monitores Desktop
       } else {
-        setVisibleCardsCount(5);
+        setVisibleCardsCount(5); // Ultra-wide
       }
     };
 

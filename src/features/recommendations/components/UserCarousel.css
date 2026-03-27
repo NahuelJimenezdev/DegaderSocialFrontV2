@@ -43,7 +43,10 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   border: 1px solid var(--border-primary);
-  height: 420px; /* Altura fija para consistencia total */
+  height: 400px;
+  max-width: 250px; /* Evita que crezcan demasiado horizontalmente */
+  margin: 0 auto; /* Centrar dentro de su celda del grid */
+  width: 100%;
   justify-content: space-between;
 }
 
@@ -195,21 +198,21 @@
   width: 24px;
 }
 
-/* Breakpoints para Desktop */
-@media (min-width: 1440px) {
+/* Breakpoints para Desktop Sincronizados con JS */
+@media (min-width: 1550px) {
   .user-cards-container {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@media (min-width: 1600px) {
+@media (min-width: 1850px) {
   .user-cards-container {
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
-/* Tablet */
-@media (max-width: 1024px) {
+/* Tablet / Laptop Pequeña */
+@media (max-width: 1100px) {
   .user-cards-container {
     grid-template-columns: repeat(2, 1fr);
   }
