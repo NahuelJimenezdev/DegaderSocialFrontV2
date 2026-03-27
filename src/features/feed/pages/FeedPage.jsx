@@ -4,6 +4,7 @@ import PostCard from '../../../shared/components/Post/PostCard';
 import CreatePostCard from '../../../shared/components/Post/CreatePostCard';
 import ShareModal from '../components/ShareModal';
 import { useAuth } from '../../../context/AuthContext';
+import UserCarousel from '../../recommendations/components/UserCarousel';
 
 const FeedPage = () => {
   const { user } = useAuth();
@@ -30,23 +31,29 @@ const FeedPage = () => {
 
   const onShareSubmit = async (postId, content) => {
     await handleShare(postId, content);
-    // Optionally refresh feed or show success toast
   };
 
-  // Temporary fix for loadMore:
-  // The hook needs to expose a loadMore function that increments page.
-  // I'll update the hook in next step if needed, but for now let's just render the list.
-
   return (
-    <div className="max-w-2xl mx-auto mb-mobile-30 py-8 px-4">
-      {/* Create Post Widget */}
-      <CreatePostCard currentUser={user} onPostCreated={handleCreatePost} />
+    <div className="w-full mb-mobile-30 py-8 px-4 flex flex-col items-center">
+      {/* Container para el contenido central (CreateCard) */}
+      <div className="w-full max-w-2xl flex flex-col gap-6">
+        <CreatePostCard currentUser={user} onPostCreated={handleCreatePost} />
+      </div>
 
-      <div className="space-y-6">
+      {/* Listado de Posts */}
+      <div className="w-full max-w-2xl flex flex-col gap-6 mt-6">
         {posts.map((post, index) => {
-          if (posts.length === index + 1) {
-            return (
-              <div ref={lastPostElementRef} key={post._id}>
+          const isLast = posts.length === index + 1;
+          
+          // Lógica para mostrar el carrusel de recomendaciones
+          const showRecommendations = 
+            (posts.length === 1 && index === 0) || 
+            (posts.length > 1 && posts.length < 5 && index === 1) || 
+            (posts.length >= 5 && (index + 1) % 10 === 0);
+
+          return (
+            <React.Fragment key={post._id}>
+              <div ref={isLast ? lastPostElementRef : null}>
                 <PostCard
                   variant="feed"
                   post={post}
@@ -56,37 +63,38 @@ const FeedPage = () => {
                   onShare={() => onShareClick(post)}
                 />
               </div>
-            );
-          } else {
-            return (
-              <PostCard
-                key={post._id}
-                variant="feed"
-                post={post}
-                currentUser={user}
-                onLike={handleLike}
-                onAddComment={handleAddComment}
-                onShare={() => onShareClick(post)}
-              />
-            );
-          }
+              
+              {showRecommendations && (
+                <div className="w-screen lg:w-[calc(100%+300px)] lg:-mx-[150px] my-10 flex justify-center">
+                  <div className="w-full max-w-6xl px-4">
+                    <UserCarousel />
+                  </div>
+                </div>
+              )}
+            </React.Fragment>
+          );
         })}
       </div>
 
       {loading && (
-        <div className="flex justify-center py-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="flex justify-center py-10">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
         </div>
       )}
 
       {!loading && posts.length === 0 && (
-        <div className="text-center py-10 text-gray-500">
-          No hay publicaciones aún. ¡Sé el primero en publicar!
+        <div className="w-full flex flex-col items-center gap-8 py-10">
+          <div className="w-full max-w-2xl text-center py-12 text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100">
+            No hay publicaciones aún. ¡Sé el primero en publicar!
+          </div>
+          <div className="w-full max-w-6xl">
+            <UserCarousel />
+          </div>
         </div>
       )}
 
       {error && (
-        <div className="text-center py-4 text-red-500">
+        <div className="text-center py-10 text-red-500 bg-red-50 rounded-xl max-w-2xl w-full">
           Error al cargar el feed: {error}
         </div>
       )}
@@ -104,5 +112,3 @@ const FeedPage = () => {
 };
 
 export default FeedPage;
-
-

@@ -164,6 +164,22 @@ const userService = {
     const response = await api.put('/usuarios/hojaDeVida', { datos });
     return response.data;
   },
+
+  /**
+   * Get user recommendations for the carousel
+   * @param {number} limit - Number of results
+   * @param {Array} excludeIds - IDs to exclude
+   * @returns {Promise<Array>} Array of recommended users
+   */
+  getRecommendations: async (limit = 10, excludeIds = []) => {
+    const response = await api.get('/usuarios/recommendations', {
+      params: { 
+        limit, 
+        excludeIds: JSON.stringify(excludeIds) 
+      },
+    });
+    return response.data;
+  },
 };
 
 export default userService;
