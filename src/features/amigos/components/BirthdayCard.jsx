@@ -1,4 +1,6 @@
+import { getUserAvatar } from '../../../shared/utils/avatarUtils'
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage'
+import styles from '../styles/Birthday.module.css'
 
 const BirthdayCard = ({ user, formatDate, calcAge, onProfileClick, onMessageClick }) => {
   const avatarUrl = getUserAvatar(user)
