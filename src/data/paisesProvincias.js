@@ -31,6 +31,14 @@ export const PAISES_DIVISIONES = {
             "Santiago del Estero",
             "Tierra del Fuego",
             "Tucumán"
+        ],
+        regiones: [
+            "Noroeste Argentino (NOA)",
+            "Noreste Argentino (NEA)",
+            "Región de Cuyo",
+            "Región Pampeana",
+            "Región Patagónica",
+            "Región Metropolitana (AMBA)"
         ]
     },
     "Bolivia": {
@@ -557,4 +565,9 @@ export const getDivisionesPais = (pais) => {
 // Función helper para obtener el tipo de división (provincias, departamentos, estados)
 export const getTipoDivision = (pais) => {
     return PAISES_DIVISIONES[pais]?.tipo || "divisiones";
+};
+
+// Función helper para obtener regiones de un país
+export const getRegionesPais = (pais) => {
+    return PAISES_DIVISIONES[pais]?.regiones || [];
 };

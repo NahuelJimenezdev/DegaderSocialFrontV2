@@ -149,7 +149,7 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
                                     </span>
                                     {' '}
                                     <span className="text-gray-600 dark:text-gray-400">
-                                        en {area || 'un área'}
+                                        en {area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(cargo) ? 'Dirección General' : 'un área')}
                                     </span>
                                 </>
                             )}
@@ -158,7 +158,7 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
                         {/* Mostrar detalles adicionales para solicitudes */}
                         {tipo === 'solicitud_fundacion' && (nivel || area) && (
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                Nivel: {nivel} • Área: {area}
+                                Nivel: {nivel} • Área: {area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(cargo) ? 'Dirección General' : 'N/A')}
                                 {metadata?.subArea && ` • Sub-Área: ${metadata.subArea}`}
                                 {metadata?.programa && ` • Programa: ${metadata.programa}`}
                                 {getTerritorioString(emisor) && ` • ${getTerritorioString(emisor)}`}

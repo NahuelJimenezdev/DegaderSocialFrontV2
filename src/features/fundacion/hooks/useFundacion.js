@@ -4,7 +4,7 @@ import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import userService from '../../../api/userService';
 import folderService from '../../../api/folderService';
 import fundacionService from '../../../api/fundacionService';
-import { getPaisesOrdenados, getDivisionesPais, getTipoDivision } from '../../../data/paisesProvincias';
+import { getPaisesOrdenados, getDivisionesPais, getTipoDivision, getRegionesPais } from '../../../data/paisesProvincias';
 import { getSocket } from '../../../shared/lib/socket';
 
 // ==========================================
@@ -477,11 +477,20 @@ export const useFundacion = (user, updateUser) => {
         return true;
     };
 
+    const requiereRegion = () => {
+        if (!requiereUbicacionExacta()) return false;
+        return formData.nivel === "regional";
+    };
+
     const requiereDepartamento = () => {
         if (!requiereUbicacionExacta()) return false;
         
         // Nacional Level only needs Country
         if (formData.nivel === "nacional") {
+            return false;
+        }
+        // Regional Level uses Region, not Departamento
+        if (formData.nivel === "regional") {
             return false;
         }
         return true;
@@ -490,8 +499,12 @@ export const useFundacion = (user, updateUser) => {
     const requiereMunicipio = () => {
         if (!requiereDepartamento()) return false;
         
-        // Regional Level only needs Country + Dept
+        // Regional Level uses Region
         if (formData.nivel === "regional") {
+            return false;
+        }
+        // Departamental Level uses only Country + Dept/Provincia
+        if (formData.nivel === "departamental") {
             return false;
         }
         return true;
@@ -500,7 +513,7 @@ export const useFundacion = (user, updateUser) => {
     const requiereBarrio = () => {
         if (!requiereMunicipio()) return false;
         
-        // Departamental Level only needs Country + Dept + Mun
+        // Departamental Level only needs Country + Dept/Provincia + Mun
         if (formData.nivel === "departamental") {
             return false;
         }
@@ -554,6 +567,11 @@ export const useFundacion = (user, updateUser) => {
     const getDivisionesTerritoriales = () => {
         if (!formData.pais) return [];
         return getDivisionesPais(formData.pais);
+    };
+
+    const getRegionesTerritoriales = () => {
+        if (!formData.pais) return [];
+        return getRegionesPais(formData.pais);
     };
 
     const getNombreDivisionTerritorial = () => {
@@ -649,7 +667,7 @@ export const useFundacion = (user, updateUser) => {
                 fundacion: {
                     activo: true,
                     nivel: formData.nivel,
-                    area: formData.area || undefined,
+                    area: formData.area || 'Ejecutivo/a',
                     subArea: formData.subArea || undefined,
                     programa: formData.programa || undefined,
                     cargo: cargoSanitizado,
@@ -854,14 +872,21 @@ export const useFundacion = (user, updateUser) => {
         getProgramasDisponibles,
         getCargosDisponibles,
         getRolesDisponibles: () => ROLES_FUNCIONALES,
-        getNivelesDisponibles: () => Object.keys(ESTRUCTURA_FUNDACION),
+        getNivelesDisponibles: () => Object.keys(ESTRUCTURA_FUNDACION).map(nivel => {
+            if (nivel === 'departamental') {
+                return { value: nivel, label: getNombreDivisionTerritorial().toUpperCase() };
+            }
+            return { value: nivel, label: nivel.replace(/_/g, ' ').toUpperCase() };
+        }),
 
         // Funciones para Directores Generales (Territorios)
         esDirectorGeneral,
         getPaisesDisponibles,
         getDivisionesTerritoriales,
+        getRegionesTerritoriales,
         getNombreDivisionTerritorial,
         requiereUbicacionExacta,
+        requiereRegion,
         requiereDepartamento,
         requiereMunicipio,
         requiereBarrio,

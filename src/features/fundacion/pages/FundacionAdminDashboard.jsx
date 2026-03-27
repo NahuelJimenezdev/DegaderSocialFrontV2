@@ -117,7 +117,7 @@ export default function FundacionAdminDashboard() {
             Panel de Control Fundación
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Gestiona el personal bajo tu jurisdicción ({user?.fundacion?.nivel || 'N/A'})
+            Gestiona el personal bajo tu jurisdicción ({user?.fundacion?.nivel || 'N/A'}{user?.fundacion?.area ? ` - ${user.fundacion.area}` : ''})
           </p>
         </div>
         
@@ -259,7 +259,7 @@ export default function FundacionAdminDashboard() {
                   <div className="flex-1 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50 mb-4 text-xs space-y-2">
                     <div className="flex flex-col">
                       <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Área / Dirección</span>
-                      <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.area || 'N/A'}</span>
+                      <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(u.fundacion?.cargo) ? 'Dirección General' : 'N/A')}</span>
                     </div>
                     {u.fundacion?.subArea && (
                       <div className="flex flex-col border-t border-gray-100 dark:border-gray-800 pt-2">
@@ -318,7 +318,7 @@ export default function FundacionAdminDashboard() {
                           {u.fundacion?.cargo || 'Sin Cargo'}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {u.fundacion?.area || 'N/A'}
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {u.fundacion?.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(u.fundacion?.cargo) ? 'Dirección General' : 'N/A')}
                         </p>
                         {u.fundacion?.subArea && (
                           <p className="text-xs text-gray-500 dark:text-gray-400 truncate">

@@ -20,6 +20,7 @@ const FormularioSolicitud = () => {
         getNivelesDisponibles,
         getPaisesDisponibles,
         getDivisionesTerritoriales,
+        getRegionesTerritoriales,
         getNombreDivisionTerritorial,
         handleNivelChange,
         handleCargoChange,
@@ -27,6 +28,7 @@ const FormularioSolicitud = () => {
         handleSubAreaChange,
         handleUpdateProfile,
         requiereUbicacionExacta,
+        requiereRegion,
         requiereDepartamento,
         requiereMunicipio,
         requiereBarrio,
@@ -83,6 +85,25 @@ const FormularioSolicitud = () => {
 
                 <form onSubmit={handleSubmit} className="p-5 md:p-8 space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                             {/* País (Debe ingresarse primero para cargar la jerarquía correspondiente) */}
+                             <div className="space-y-2">
+                                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                    <MapPin size={18} className="text-red-500" />
+                                    País de Trabajo / Residencia
+                                </label>
+                                <select 
+                                    className={selectClasses}
+                                    value={formData.pais}
+                                    onChange={(e) => setFormData({...formData, pais: e.target.value})}
+                                    required
+                                >
+                                    <option value="">Seleccione País</option>
+                                    {getPaisesDisponibles().map(p => (
+                                        <option key={p} value={p}>{p}</option>
+                                    ))}
+                                </select>
+                            </div>
+
                              {/* Nivel Jerárquico */}
                              <div className="space-y-2">
                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
@@ -93,11 +114,13 @@ const FormularioSolicitud = () => {
                                     className={selectClasses}
                                     value={formData.nivel}
                                     onChange={(e) => handleNivelChange(e.target.value)}
+                                    // Disabled si la persona no ha seleccionado país, excepto para niveles que tal vez no lo pidan
+                                    disabled={!formData.pais}
                                     required
                                 >
                                     <option value="">Seleccione Nivel</option>
                                     {getNivelesDisponibles().map(n => (
-                                        <option key={n} value={n}>{n.replace(/_/g, ' ').toUpperCase()}</option>
+                                        <option key={n.value} value={n.value}>{n.label}</option>
                                     ))}
                                 </select>
                             </div>
@@ -194,23 +217,23 @@ const FormularioSolicitud = () => {
                             {/* Ubicación Dinámica */}
                             {requiereUbicacionExacta() && (
                                 <>
-                                    {/* País */}
-                                    <div className="space-y-2">
-                                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
-                                    <MapPin size={18} className="text-red-500" />
-                                    País de Trabajo
-                                </label>
-                                <select 
-                                    className={selectClasses}
-                                    value={formData.pais}
-                                    onChange={(e) => setFormData({...formData, pais: e.target.value})}
-                                    required
-                                >
-                                    {getPaisesDisponibles().map(p => (
-                                        <option key={p} value={p}>{p}</option>
-                                    ))}
-                                </select>
-                            </div>
+                                    {/* Región (Solo para Nivel Regional) */}
+                                    {requiereRegion() && getRegionesTerritoriales().length > 0 && (
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Región</label>
+                                            <select 
+                                                className={selectClasses}
+                                                value={formData.region}
+                                                onChange={(e) => setFormData({...formData, region: e.target.value})}
+                                                required
+                                            >
+                                                <option value="">Seleccione Región</option>
+                                                {getRegionesTerritoriales().map(r => (
+                                                    <option key={r} value={r}>{r}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
 
                             {/* División Territorial (Departamento/Provincia) */}
                             {requiereDepartamento() && (

@@ -36,11 +36,11 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                                 {solicitud.nombres.primero} {solicitud.apellidos.primero}
                             </p>
                             <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">
-                                Solicita: {solicitud.fundacion.cargo}
+                                Solicita: {solicitud.fundacion.cargo} {solicitud.fundacion.area ? `en ${solicitud.fundacion.area}` : ''}
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50 mr-4">
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || 'N/A'}
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(solicitud.fundacion.cargo) ? 'Dirección General' : 'N/A')}
                                 </p>
                                 {solicitud.fundacion.subArea && (
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
