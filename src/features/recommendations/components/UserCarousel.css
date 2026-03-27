@@ -25,15 +25,20 @@
 }
 
 .user-cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: flex;
+  overflow-x: auto;
   gap: 24px;
-  width: 100%;
-  align-items: stretch;
-  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 10px 0 20px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .user-card {
+  flex: 0 0 280px;
+  /* 👈 CLAVE */
+  scroll-snap-align: start;
+
   background: var(--bg-card);
   border-radius: 20px;
   padding: 30px 20px;
@@ -45,13 +50,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   border: 1px solid var(--border-primary);
   height: 400px;
-  /* Evita que crezcan demasiado horizontalmente */
-  /* max-width: 250px;  */
-  /* Centrar dentro de su celda del grid */
-  /* margin: 0 auto;  */
-  width: 100%;
   justify-content: space-between;
-  will-change: transform;
 }
 
 .user-card:hover {
