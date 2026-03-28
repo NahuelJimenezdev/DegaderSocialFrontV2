@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import userService from '../../../api/userService';
 import friendshipService from '../../../api/friendshipService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
@@ -77,19 +77,26 @@ const UserCarousel = () => {
   const totalPages = Math.ceil(users.length / visibleCardsCount);
 
   // Función para ir a la página siguiente
+const scrollRef = useRef(null);
   const handleNextPage = () => {
-    if (users.length === 0) return;
-    setCurrentStartIndex((prevIndex) => (prevIndex + visibleCardsCount) % users.length);
-  };
+  if (scrollRef.current) {
+    // Calculamos el ancho de una card dinámicamente
+    const cardWidth = scrollRef.current.querySelector('.user-card').offsetWidth;
+    const gap = 24; // El gap que pusiste en el CSS
+    scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+  }
+};
 
-  // Función para ir a la página anterior
-  const handlePrevPage = () => {
-    if (users.length === 0) return;
-    setCurrentStartIndex((prevIndex) => (prevIndex - visibleCardsCount + users.length) % users.length);
-  };
+const handlePrevPage = () => {
+  if (scrollRef.current) {
+    const cardWidth = scrollRef.current.querySelector('.user-card').offsetWidth;
+    const gap = 24;
+    scrollRef.current.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+  }
+};
 
   // Usuarios a mostrar (en mobile todos para scroll nativo, en desktop paginados)
-  const displayUsers = isMobile ? users : users.slice(currentStartIndex, currentStartIndex + visibleCardsCount);
+  const displayUsers = users;
 
   // Helper para obtener la bandera del país (más robusto)
   const getCountryFlag = (countryName) => {
@@ -214,9 +221,11 @@ const UserCarousel = () => {
           </button>
         )}
 
-        <div className="user-cards-container">
+        <div className="user-cards-container" ref={scrollRef}>
           {displayUsers.map((user) => (
-            <div key={user._id} className={`user-card ${fadingId === user._id ? 'fade-out' : ''}`}>
+            <div key={user._id} className={`user-card ${fadingId === user._id ? 'fade-out' : ''}`}
+            // Esto permite que el botón de "Next" sepa a dónde scrollear
+            style={{ scrollSnapAlign: 'start' }}>
               <div className="avatar-wrapper">
                 <img 
                   src={getUserAvatar(user)} 
