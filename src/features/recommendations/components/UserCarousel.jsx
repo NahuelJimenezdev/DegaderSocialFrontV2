@@ -78,20 +78,27 @@ const UserCarousel = () => {
 
   // Función para ir a la página siguiente
 const scrollRef = useRef(null);
-  const handleNextPage = () => {
+const handleNextPage = () => {
   if (scrollRef.current) {
-    // Calculamos el ancho de una card dinámicamente
-    const cardWidth = scrollRef.current.querySelector('.user-card').offsetWidth;
-    const gap = 24; // El gap que pusiste en el CSS
-    scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+    const firstCard = scrollRef.current.querySelector('.user-card');
+    if (firstCard) {
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 20; // Debe coincidir con el gap de tu CSS
+      // Scrolleamos exactamente una tarjeta + el espacio
+      scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+    }
   }
 };
 
 const handlePrevPage = () => {
   if (scrollRef.current) {
-    const cardWidth = scrollRef.current.querySelector('.user-card').offsetWidth;
-    const gap = 24;
-    scrollRef.current.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+    const firstCard = scrollRef.current.querySelector('.user-card');
+    if (firstCard) {
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 20; // Sincronizado con handleNextPage
+      // Scrolleamos hacia atrás una tarjeta + el espacio
+      scrollRef.current.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+    }
   }
 };
 
@@ -151,7 +158,7 @@ const handlePrevPage = () => {
                 setFadingId(null);
                 
                 // Si la página se queda vacía y hay más, ajustar el índice
-                if (visibleUsers.length === 1 && currentStartIndex > 0) {
+                if (users.length === 1 && currentStartIndex > 0) {
                     setCurrentStartIndex(prev => Math.max(0, prev - visibleCardsCount));
                 }
             }, 500); // 500ms coincide con la duración de la animación CSS
