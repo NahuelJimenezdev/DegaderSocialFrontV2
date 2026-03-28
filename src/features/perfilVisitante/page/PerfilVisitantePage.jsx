@@ -19,6 +19,8 @@ import { useAuth } from '../../../context/AuthContext';
 import useFeed from '../../feed/hooks/useFeed';
 import PostCard from '../../../shared/components/Post/PostCard';
 
+import obtenerNivel from "../../fundacion/utils/obtenerNivel";  
+
 const PerfilVisitantePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -110,6 +112,8 @@ const PerfilVisitantePage = () => {
     </div>
   );
 
+  const capitalizar = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase(); 
+
   return (
     <div className="max-w-4xl mx-auto pb-10">
       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden">
@@ -171,8 +175,14 @@ const PerfilVisitantePage = () => {
               {usuario.esMiembroFundacion ? (
                 <InfoItem
                   label="Fundación"
-                  value={`Fundación Sol y Luna - ${usuario.fundacion?.cargo || 'Miembro'}`}
-                  icon={Building2Icon}
+                  // value={`FHISYL - ${usuario.fundacion?.cargo || 'Miembro'}`}
+                  value={`${usuario.fundacion.cargo} a nivel ${
+                    obtenerNivel(usuario)} en ${
+                    usuario.fundacion.area?.toLowerCase() !== "director de areas"
+                      ? usuario.fundacion.territorio.pais
+                      : usuario.fundacion.area
+                  }`}
+                  icon={Building2Icon}  
                 />
               ) : (
                 <p className="text-sm text-gray-500 italic">No vinculado a la fundación</p>

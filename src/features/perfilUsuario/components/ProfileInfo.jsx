@@ -11,13 +11,32 @@ const ProfileInfo = memo(({ user, stats }) => {
   const joinDate = useMemo(() => {
     return new Date(user.createdAt).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
   }, [user.createdAt]);
-
+  const capitalizar = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase(); 
+  
   return (
     <div className="max-w-3xl mx-auto px-4">
       <div className="pt-4 space-y-2">
         <p className="text-sm md:text-base text-gray-900 dark:text-white text-justify">
           {user.social?.biografia || '¡Hola! Soy parte de la comunidad Degader 🙏'}
         </p>
+
+        <div className="flex flex-wrap gap-3 md:gap-4 text-xs md:text-sm text-gray-500">
+          {user.fundacion?.cargo && user.fundacion?.area && (
+            <span className="flex items-center gap-1">
+              {user.fundacion.cargo} a nivel {capitalizar(user.fundacion.nivel)} en la {user.fundacion.area}
+            </span>
+          )}
+          <br />
+          {user.personal?.ubicacion?.ciudad && (
+            <span className="flex items-center gap-1">
+              <MapPin size={14} />
+              {user.personal.ubicacion.ciudad}
+            </span>
+          )}
+          <span className="flex items-center gap-1">
+            <Calendar size={14} />
+            Se unió en {joinDate}
+          </span>
 
         {/* Ministerios Minimalista */}
         {user.eclesiastico?.ministerios?.length > 0 && (
@@ -37,23 +56,6 @@ const ProfileInfo = memo(({ user, stats }) => {
             })}
           </div>
         )}
-
-        <div className="flex flex-wrap gap-3 md:gap-4 text-xs md:text-sm text-gray-500">
-          {user.personal?.ubicacion?.ciudad && (
-            <span className="flex items-center gap-1">
-              <MapPin size={14} />
-              {user.personal.ubicacion.ciudad}
-            </span>
-          )}
-          {user.fundacion?.cargo && user.fundacion?.area && (
-            <span className="flex items-center gap-1">
-              {user.fundacion.cargo} - {user.fundacion.area}
-            </span>
-          )}
-          <span className="flex items-center gap-1">
-            <Calendar size={14} />
-            Se unió en {joinDate}
-          </span>
         </div>
 
         <ProfileStats stats={stats} />
