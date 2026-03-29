@@ -650,7 +650,7 @@ const PostCard = ({
                                 }`}
                         >
                             <Heart size={20} className={isLiked ? "fill-current" : ""} />
-                            <span className="text-sm font-medium">{post.likes?.length || 0}</span>
+                            <span className="text-sm font-medium">{post.likesCount ?? post.likes?.length ?? 0}</span>
                         </button>
 
                         {/* Comment */}
@@ -659,7 +659,7 @@ const PostCard = ({
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                         >
                             <MessageCircle size={20} />
-                            <span className="text-sm font-medium">{post.comentarios?.length || 0}</span>
+                            <span className="text-sm font-medium">{post.commentsCount ?? post.comentarios?.length ?? 0}</span>
                         </button>
 
                         {/* Share (feed only) */}
@@ -669,7 +669,7 @@ const PostCard = ({
                                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                             >
                                 <Share2 size={20} />
-                                <span className="text-sm font-medium">{post.compartidos?.length || 0}</span>
+                                <span className="text-sm font-medium">{post.sharesCount ?? post.compartidos?.length ?? 0}</span>
                             </button>
                         )}
 

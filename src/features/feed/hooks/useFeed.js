@@ -77,12 +77,16 @@ const useFeed = (userId = null, currentUser) => {
       // Optimistic update
       setPosts(prevPosts => prevPosts.map(post => {
         if (post._id === postId) {
-          const isLiked = post.likes.includes(currentUser._id);
+          const likesArray = post.likes || [];
+          const isLiked = likesArray.includes(currentUser._id);
+          const currentCount = post.likesCount ?? likesArray.length ?? 0;
+          
           return {
             ...post,
             likes: isLiked
-              ? post.likes.filter(id => id !== currentUser._id)
-              : [...post.likes, currentUser._id]
+              ? likesArray.filter(id => id !== currentUser._id)
+              : [...likesArray, currentUser._id],
+            likesCount: isLiked ? Math.max(0, currentCount - 1) : currentCount + 1
           };
         }
         return post;
@@ -105,6 +109,17 @@ const useFeed = (userId = null, currentUser) => {
     try {
       const response = await postService.addComment(postId, content, parentCommentId, image);
       if (response.success) {
+        // Increment comments count optimistically
+        setPosts(prevPosts => prevPosts.map(post => {
+          if (post._id === postId) {
+            return {
+              ...post,
+              commentsCount: (post.commentsCount || 0) + 1
+            };
+          }
+          return post;
+        }));
+
         const updatedPostData = await postService.getPostById(postId);
         if (updatedPostData.success) {
           setPosts(prevPosts => prevPosts.map(p => p._id === postId ? updatedPostData.data : p));
