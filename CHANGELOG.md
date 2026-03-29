@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.83.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.83.1...v1.83.2) (2026-03-29)
+
+
+### Bug Fixes
+
+* renderizado condicional del departamento en dashboard ([44a4b2d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/44a4b2d3f271f43d2525c8324148f9f0b05be317))
+
 ### [1.83.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.83.0...v1.83.1) (2026-03-29)
 
 
