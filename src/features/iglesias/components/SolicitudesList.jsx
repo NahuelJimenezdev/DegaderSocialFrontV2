@@ -58,7 +58,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                             
                             <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1.5 font-medium">
                                 <Clock size={12} className="text-amber-500" />
-                                {formatFechaSolicitud(solicitud.createdAt)}
+                                {formatFechaSolicitud(solicitud.fundacion?.fechaIngreso || solicitud.createdAt)}
                             </p>
 
                             <p className="text-sm text-gray-600 dark:text-gray-300">
