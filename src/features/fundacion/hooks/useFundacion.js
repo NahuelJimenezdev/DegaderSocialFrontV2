@@ -329,12 +329,12 @@ export const CARGOS_POR_NIVEL = {
     directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
     organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
     organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz"],
-    nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
-    regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
-    departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    local: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
+    nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
+    regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
+    departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    local: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
 };
 
 export const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "voluntario", "pastor"];
@@ -390,7 +390,7 @@ export const useFundacion = (user, updateUser) => {
         }
 
         if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
-            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || cargo === "Director de Areas") {
+            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || cargo === "Sub-Director de Áreas" || cargo === "Secretario/a Sub-Director de Áreas" || cargo === "Director de Areas") {
                  return Object.keys(ESTRUCTURA_FUNDACION[nivel]?.areas || {});
             }
             if (cargo === "Director General" || cargo.includes("Sub-Director") || cargo.includes("secretario Director") || cargo === "Director General (Pastor)") {
