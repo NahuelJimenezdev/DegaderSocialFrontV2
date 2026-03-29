@@ -53,14 +53,17 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                                     </p>
                                 )}
                                 
-                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Territorio:</span> {getTerritorioString(solicitud) || 'N/A'}
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">País:</span> {solicitud.fundacion.territorio.pais}
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Departamento:</span> {solicitud.fundacion.territorio.departamento}
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                     <span className="font-semibold text-gray-700 dark:text-gray-300">Nivel:</span> <span className="capitalize">{solicitud.fundacion.nivel}</span>
                                 </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Departamento:</span> {solicitud.fundacion.territorio.departamento}
+                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Territorio:</span> {getTerritorioString(solicitud) || 'N/A'}
                                 </p>
                             </div>
                         </div>
