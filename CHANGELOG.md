@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.81.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.80.0...v1.81.0) (2026-03-29)
+
+
+### Features
+
+* enhance foundation request cards with detailed territory info ([65f03c5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/65f03c573c6650cf1ad8bae5ac1cc4756a69affe))
+* implement responsive user recommendation carousel UI ([90f59c4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/90f59c4a7257a34e17d725b9a104f39b5b74fb3a))
+* Sistema dinámico de niveles territoriales por país ([19280f5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/19280f5fad2d55d341c1b879eb70183f16cd6423))
+
+
+### Bug Fixes
+
+* Ajuste de márgenes y breakout del carrusel para evitar overflow y mejorar visualización en el Feed ([2d63baf](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2d63bafe88e2d7738b392fb2768de796371e6706))
+* **frontend:** corregido ReferenceError en BirthdayCard ([5765e7c](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5765e7c870e4b5d15855cd80d0ca4eeb95329b9b))
+
 ## [1.80.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.79.0...v1.80.0) (2026-03-27)
 
 
