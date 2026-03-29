@@ -45,11 +45,11 @@ const FeedPage = () => {
         {posts.map((post, index) => {
           const isLast = posts.length === index + 1;
           
-          // Lógica para mostrar el carrusel de recomendaciones
+          // Lógica para mostrar el carrusel de recomendaciones en el Feed
           const showRecommendations = 
-            (posts.length === 1 && index === 0) || 
-            (posts.length > 1 && posts.length < 5 && index === 1) || 
-            (posts.length >= 5 && (index + 1) % 10 === 0);
+            (posts.length === 1 && index === 0) || // Si solo tiene 1 post, se muestra abajo
+            (posts.length > 1 && index === 1) ||   // Siempre mostrar en la 2da posición
+            (index > 2 && (index + 1) % 10 === 0); // Y luego repetir cada 10 posts (10, 20, 30...)
 
           return (
             <React.Fragment key={post._id}>
