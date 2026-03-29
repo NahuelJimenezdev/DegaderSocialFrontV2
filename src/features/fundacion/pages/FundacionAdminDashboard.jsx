@@ -352,9 +352,13 @@ export default function FundacionAdminDashboard() {
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                           <span className="font-semibold text-gray-700 dark:text-gray-300">Jerarquía:</span> <span className="capitalize">{u.fundacion?.nivel || 'N/A'}</span>
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">Dirección:</span> {getTerritorioString(u) || 'N/A'}
-                        </p>
+                        {
+                          getTerritorioString(u) && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                              <span className="font-semibold text-gray-700 dark:text-gray-300">Dirección:</span> {getTerritorioString(u)}
+                            </p>
+                          )
+                        }
                       </div>
                     </div>
                     
