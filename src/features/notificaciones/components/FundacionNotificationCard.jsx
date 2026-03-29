@@ -19,21 +19,19 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
     const { emisor, metadata, createdAt, tipo } = notification;
     const { nivel, area, cargo } = metadata || {};
 
-    // Formatear tiempo relativo
+    // Formatear tiempo (HH:mm DD/MM/YY)
     const formatTime = (dateString) => {
+        if (!dateString) return '';
         const date = new Date(dateString);
-        const now = new Date();
-        const diff = now - date;
+        if (isNaN(date.getTime())) return '';
 
-        const minutes = Math.floor(diff / 60000);
-        if (minutes < 1) return 'ahora';
-        if (minutes < 60) return `hace ${minutes}m`;
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear().toString().slice(-2);
 
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) return `hace ${hours}h`;
-
-        const days = Math.floor(hours / 24);
-        return `hace ${days}d`;
+        return `${hours}:${minutes} ${day}/${month}/${year}`;
     };
 
     const handleAction = async (accion) => {

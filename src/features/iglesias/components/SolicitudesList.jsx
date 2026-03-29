@@ -1,4 +1,25 @@
-import { Users, Check, X } from 'lucide-react';
+import { Users, Check, X, Clock } from 'lucide-react';
+
+/**
+ * Formatea una fecha en formato "HH:mm DD/MM/YY"
+ */
+const formatFechaSolicitud = (dateString) => {
+    if (!dateString) return '';
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+        
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear().toString().slice(-2);
+        
+        return `${hours}:${minutes} ${day}/${month}/${year}`;
+    } catch (e) {
+        return '';
+    }
+};
 
 /**
  * Lista de solicitudes pendientes de aprobación
@@ -34,6 +55,12 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                             <p className="font-semibold text-gray-900 dark:text-white">
                                 {solicitud.nombres.primero} {solicitud.apellidos.primero}
                             </p>
+                            
+                            <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1.5 font-medium">
+                                <Clock size={12} className="text-amber-500" />
+                                {formatFechaSolicitud(solicitud.createdAt)}
+                            </p>
+
                             <p className="text-sm text-gray-600 dark:text-gray-300">
                                 Solicita: <strong>{solicitud.fundacion.cargo}</strong> ({solicitud.fundacion.nivel})
                             </p>
