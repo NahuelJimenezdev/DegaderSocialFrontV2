@@ -301,7 +301,7 @@ const handlePrevPage = () => {
                 onClick={() => handleConnect(user._id)}
                 disabled={connectingId === user._id}
               >
-                {connectingId === user._id ? 'Enviando...' : 'Conectar'}
+                {connectingId === user._id ? 'Enviando...' : 'Seguir'}
               </button>
             </div>
           ))}
