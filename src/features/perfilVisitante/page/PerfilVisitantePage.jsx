@@ -176,11 +176,11 @@ const PerfilVisitantePage = () => {
                 <InfoItem
                   label="Fundación"
                   // value={`FHISYL - ${usuario.fundacion?.cargo || 'Miembro'}`}
-                  value={`${usuario.fundacion.cargo} a nivel ${
+                  value={`${usuario.fundacion?.cargo || 'Miembro'} a nivel ${
                     obtenerNivel(usuario)} en ${
-                    usuario.fundacion.area?.toLowerCase() !== "director de areas"
-                      ? usuario.fundacion.territorio.pais
-                      : usuario.fundacion.area
+                    usuario.fundacion?.area?.toLowerCase() !== "director de areas"
+                      ? usuario.fundacion?.territorio?.pais || 'Global'
+                      : usuario.fundacion?.area || 'General'
                   }`}
                   icon={Building2Icon}  
                 />
