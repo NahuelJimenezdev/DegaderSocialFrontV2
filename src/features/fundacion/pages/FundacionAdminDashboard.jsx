@@ -289,10 +289,10 @@ export default function FundacionAdminDashboard() {
                         <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Departamento</span>
                         <span className="text-gray-800 dark:text-gray-200 font-medium capitalize">{u.fundacion?.territorio?.departamento || 'N/A'}</span>
                       </div>
-                      <div className="flex flex-col">
+                      {getTerritorioString(u) && <div className="flex flex-col">
                         <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Dirección</span>
-                        <span className="text-gray-800 dark:text-gray-200 font-medium">{getTerritorioString(u) || 'N/A'}</span>
-                      </div>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">{getTerritorioString(u)}</span>
+                      </div>}
                     </div>
                   </div>
                   
