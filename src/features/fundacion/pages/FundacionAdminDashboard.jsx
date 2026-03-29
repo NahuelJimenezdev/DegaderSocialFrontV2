@@ -16,6 +16,7 @@ import { useAuth } from '../../../context/AuthContext';
 import fundacionService from '../../../api/fundacionService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import { getTerritorioString } from '../../../shared/utils/userUtils';
 
 export default function FundacionAdminDashboard() {
   const { user } = useAuth();
@@ -281,6 +282,16 @@ export default function FundacionAdminDashboard() {
                       <div className="flex flex-col">
                         <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">País de Trabajo</span>
                         <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.territorio?.pais || 'N/A'}</span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 border-t border-gray-100 dark:border-gray-800 pt-2">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Departamento</span>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium capitalize">{u.fundacion?.territorio?.departamento || 'N/A'}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Dirección</span>
+                        <span className="text-gray-800 dark:text-gray-200 font-medium">{getTerritorioString(u) || 'N/A'}</span>
                       </div>
                     </div>
                   </div>

@@ -50,9 +50,12 @@ export const getNombreDisplay = (user) => {
  */
 export const getTerritorioString = (user) => {
   if (!user?.fundacion?.territorio) return '';
-  const { pais, region, departamento, municipio, barrio } = user.fundacion.territorio;
+  // Antes se visualizaba asi:
+  // const { pais, region, departamento, municipio, barrio } = user.fundacion.territorio;
+  // const parts = [barrio, municipio, departamento, region, pais].filter(Boolean);
 
-  const parts = [barrio, municipio, departamento, region, pais].filter(Boolean);
+  const { municipio, barrio } = user.fundacion.territorio;
+  const parts = [barrio, municipio].filter(Boolean);
 
   // Eliminar duplicados si los hay y unir
   return [...new Set(parts)].join(', ');
