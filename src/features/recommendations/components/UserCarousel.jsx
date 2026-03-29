@@ -5,6 +5,11 @@ import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import IOSAlert from '../../../shared/components/IOSAlert';
 import './UserCarousel.css';
 
+// Caché global a nivel de módulo para evitar peticiones redundantes simultáneas
+let sharedRecsPromise = null;
+let lastFetchTime = 0;
+const CACHE_TTL = 30000; // 30 segundos de caché en memoria para re-montajes
+
 const UserCarousel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,17 +62,26 @@ const UserCarousel = () => {
 
   const loadRecommendations = async () => {
     setLoading(true);
+    setError(null);
     try {
-      // Pedimos un lote inicial (ej: 20 usuarios para tener varias páginas)
-      const res = await userService.getRecommendations(20);
-      if (res.success) {
-        setUsers(res.data);
-      } else {
-        setError('No se pudieron cargar las recomendaciones');
+      const now = Date.now();
+      let fetchPromise = sharedRecsPromise;
+
+      // Si no hay petición en vuelo o ya expiró el caché, pedir una nueva
+      if (!fetchPromise || now - lastFetchTime > CACHE_TTL) {
+        fetchPromise = userService.getRecommendations(20).then(res => {
+          if (res.success) return res.data;
+          throw new Error('No se pudieron cargar las recomendaciones');
+        });
+        sharedRecsPromise = fetchPromise;
+        lastFetchTime = now;
       }
+      
+      const data = await fetchPromise;
+      setUsers(data);
     } catch (err) {
       console.error('Error fetching recommendations:', err);
-      setError('Error de conexión');
+      setError('Error de conexión con el servidor');
     } finally {
       setLoading(false);
     }
@@ -206,6 +220,24 @@ const handlePrevPage = () => {
     );
   }
 
+  if (error && !loading) {
+    return (
+      <div className="user-carousel-container">
+        <h2 className="carousel-title">Sugerencias para ti</h2>
+        <div className="empty-state">
+          <p>Ocurrió un problema al cargar las sugerencias.</p>
+          <button 
+            onClick={loadRecommendations}
+            className="connect-button"
+            style={{ marginTop: '15px' }}
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (users.length === 0 && !loading) {
     return (
       <div className="user-carousel-container">
@@ -255,8 +287,8 @@ const handlePrevPage = () => {
                   <div className="location-row">
                     <span className="country-flag">{getCountryFlag(user.country)}</span>
                     <p className="user-location">
-                      {user.personal?.ubicacion?.ciudad && user.personal?.ubicacion?.provincia 
-                        ? `${user.personal.ubicacion.ciudad} / ${user.personal.ubicacion.provincia}`
+                      {user.personal?.ubicacion?.ciudad && user.personal?.ubicacion?.estado 
+                        ? `${user.personal.ubicacion.ciudad} / ${user.personal.ubicacion.estado}`
                         : user.fundacion?.territorio?.nombre 
                           ? `${user.fundacion.territorio.nombre} / ${user.country}` 
                           : (user.country || 'No especificado')}
