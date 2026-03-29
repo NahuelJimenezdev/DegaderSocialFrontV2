@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.83.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.82.0...v1.83.0) (2026-03-29)
+
+
+### Features
+
+* sincronización final de mejoras visuales en el dashboard ([1896919](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/18969190b06bc55422d4f38cb807f2de48bb9296))
+
 ## [1.82.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.81.1...v1.82.0) (2026-03-29)
 
 
