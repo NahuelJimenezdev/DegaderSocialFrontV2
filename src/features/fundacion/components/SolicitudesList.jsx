@@ -80,18 +80,26 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                                     </p>
                                 )}
                                 
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">País:</span> {solicitud.fundacion.territorio.pais}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Departamento:</span> {solicitud.fundacion.territorio.departamento}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Nivel:</span> <span className="capitalize">{solicitud.fundacion.nivel}</span>
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Territorio:</span> {getTerritorioString(solicitud) || 'N/A'}
-                                </p>
+                                {solicitud.fundacion.territorio?.pais && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">País:</span> {solicitud.fundacion.territorio.pais}
+                                    </p>
+                                )}
+                                {solicitud.fundacion.territorio?.departamento && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Departamento:</span> {solicitud.fundacion.territorio.departamento}
+                                    </p>
+                                )}
+                                {solicitud.fundacion?.nivel && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Nivel:</span> <span className="capitalize">{solicitud.fundacion.nivel}</span>
+                                    </p>
+                                )}
+                                {getTerritorioString(solicitud) && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Territorio:</span> {getTerritorioString(solicitud)}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <div className="flex gap-2">
