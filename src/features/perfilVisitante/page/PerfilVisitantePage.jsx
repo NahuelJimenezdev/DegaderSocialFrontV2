@@ -16,8 +16,8 @@ import {
   Lock as LockIcon
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
-import useFeed from '../../feed/hooks/useFeed';
 import PostCard from '../../../shared/components/Post/PostCard';
+import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 
 import obtenerNivel from "../../fundacion/utils/obtenerNivel";  
 
@@ -223,15 +223,27 @@ const PerfilVisitantePage = () => {
                   ) : posts.length > 0 ? (
                     <>
                       {posts.map(post => (
-                        <PostCard
-                          key={post._id}
-                          post={post}
-                          currentUser={currentUser}
-                          onLike={handleLike}
-                          onAddComment={handleAddComment}
-                          onShare={handleShare}
-                          variant="feed"
-                        />
+                        post.tipo === 'cumpleaños' ? (
+                          <BirthdayPostCard
+                            key={post._id}
+                            post={post}
+                            currentUser={currentUser}
+                            onLike={handleLike}
+                            onAddComment={handleAddComment}
+                            onShare={handleShare}
+                            variant="feed"
+                          />
+                        ) : (
+                          <PostCard
+                            key={post._id}
+                            post={post}
+                            currentUser={currentUser}
+                            onLike={handleLike}
+                            onAddComment={handleAddComment}
+                            onShare={handleShare}
+                            variant="feed"
+                          />
+                        )
                       ))}
                       {hasMore && (
                         <div className="flex justify-center pt-4">

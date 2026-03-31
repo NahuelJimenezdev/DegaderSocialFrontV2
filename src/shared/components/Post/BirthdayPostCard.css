@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700&display=swap');
+
+/* CSS para tu tarjeta de cumpleaños */
+.birthday-card {
+  position: relative;
+  overflow: hidden;
+  /* Fondo crema festiva INVARIABLE (no cambia en dark mode para mantener estética de postal) */
+  background-color: #fffdf7 !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* Capa de confeti difuminada para no estorbar el texto */
+.birthday-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 15% 20%, #ff7675 3px, transparent 4px),
+    radial-gradient(circle at 85% 15%, #74b9ff 4px, transparent 5px),
+    radial-gradient(circle at 50% 80%, #feca57 4px, transparent 5px),
+    radial-gradient(circle at 80% 75%, #55efc4 3px, transparent 4px),
+    radial-gradient(circle at 20% 80%, #a29bfe 3px, transparent 4px),
+    radial-gradient(circle at 40% 30%, #feca57 2px, transparent 3px),
+    radial-gradient(circle at 60% 60%, #ff7675 2px, transparent 3px),
+    radial-gradient(circle at 10% 40%, #55efc4 2.5px, transparent 3.5px),
+    radial-gradient(circle at 90% 45%, #a29bfe 2.5px, transparent 3.5px);
+  background-size: 150px 150px;
+  opacity: 0.15;
+  /* Súper tenue para legibilidad */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Base geométrica para todos los globos */
+.birthday-balloon {
+  position: absolute;
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: inset -8px -8px 15px rgba(0, 0, 0, 0.1), 0 8px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s ease;
+}
+
+/* El nudo del globo */
+.birthday-balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Globo 1: Azul (Arriba Izquierda) */
+.balloon-1 {
+  width: 100px;
+  height: 130px;
+  top: -15px;
+  left: -10px;
+  background: radial-gradient(circle at 35% 25%, #ffffff 0%, #63b3ed 30%, #3182ce 100%);
+  animation: floatBalloons 7s ease-in-out infinite;
+}
+
+.balloon-1::after {
+  background-color: #3182ce;
+}
+
+/* Globo 2: Dorado (Arriba Derecha) */
+.balloon-2 {
+  width: 80px;
+  height: 110px;
+  top: 10px;
+  right: -10px;
+  background: radial-gradient(circle at 35% 25%, #ffffff 0%, #facc15 40%, #d97706 100%);
+  animation: floatBalloons 9s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.balloon-2::after {
+  background-color: #d97706;
+}
+
+/* Grupo de Globos Inferiores (Unidos) */
+.balloon-group-bottom {
+  position: absolute;
+  bottom: -15px;
+  right: 50px;
+  width: 140px;
+  height: 140px;
+  z-index: 2;
+}
+
+.balloon-3 {
+  /* Rosa */
+  width: 70px;
+  height: 95px;
+  bottom: 10px;
+  left: 0;
+  background: radial-gradient(circle at 35% 25%, #ffffff 0%, #f472b6 30%, #db2777 100%);
+  animation: floatBalloons 8s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.balloon-3::after {
+  background-color: #db2777;
+}
+
+.balloon-4 {
+  /* Verde */
+  width: 75px;
+  height: 100px;
+  bottom: -5px;
+  right: 10px;
+  background: radial-gradient(circle at 35% 25%, #ffffff 0%, #34d399 30%, #059669 100%);
+  animation: floatBalloons 10s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.balloon-4::after {
+  background-color: #059669;
+}
+
+/* Globo Central Izquierdo */
+.balloon-5 {
+  width: 60px;
+  height: 80px;
+  top: 40%;
+  left: -15px;
+  background: radial-gradient(circle at 35% 25%, #ffffff 0%, #a78bfa 30%, #7c3aed 100%);
+  animation: floatBalloons 6s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.balloon-5::after {
+  background-color: #7c3aed;
+}
+
+/* Animación de flotado más suave */
+@keyframes floatBalloons {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(4px, -12px) rotate(2deg);
+  }
+
+  66% {
+    transform: translate(-4px, -8px) rotate(-2deg);
+  }
+}
+
+.birthday-card-content {
+  position: relative;
+  z-index: 10;
+  background: transparent;
+}

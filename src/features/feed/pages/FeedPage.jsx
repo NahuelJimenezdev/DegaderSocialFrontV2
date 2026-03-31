@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useState } from 'react';
 import useFeed from '../hooks/useFeed';
 import PostCard from '../../../shared/components/Post/PostCard';
+import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import CreatePostCard from '../../../shared/components/Post/CreatePostCard';
 import ShareModal from '../components/ShareModal';
 import { useAuth } from '../../../context/AuthContext';
@@ -42,6 +43,7 @@ const FeedPage = () => {
 
       {/* Listado de Posts */}
       <div className="w-full max-w-2xl flex flex-col gap-6 mt-6">
+
         {posts.map((post, index) => {
           const isLast = posts.length === index + 1;
           
@@ -54,14 +56,25 @@ const FeedPage = () => {
           return (
             <React.Fragment key={post._id}>
               <div ref={isLast ? lastPostElementRef : null}>
-                <PostCard
-                  variant="feed"
-                  post={post}
-                  currentUser={user}
-                  onLike={handleLike}
-                  onAddComment={handleAddComment}
-                  onShare={() => onShareClick(post)}
-                />
+                {post.tipo === 'cumpleaños' ? (
+                  <BirthdayPostCard
+                    variant="feed"
+                    post={post}
+                    currentUser={user}
+                    onLike={handleLike}
+                    onAddComment={handleAddComment}
+                    onShare={() => onShareClick(post)}
+                  />
+                ) : (
+                  <PostCard
+                    variant="feed"
+                    post={post}
+                    currentUser={user}
+                    onLike={handleLike}
+                    onAddComment={handleAddComment}
+                    onShare={() => onShareClick(post)}
+                  />
+                )}
               </div>
               
               {showRecommendations && (

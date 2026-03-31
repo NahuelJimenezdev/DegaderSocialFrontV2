@@ -8,6 +8,7 @@ const BirthdaySection = ({
   calcAge,
   onProfileClick,
   onMessageClick,
+  onCardSend,
   emptyMessage,
   headerControls
 }) => {
@@ -30,6 +31,7 @@ const BirthdaySection = ({
               calcAge={calcAge}
               onProfileClick={onProfileClick}
               onMessageClick={onMessageClick}
+              onCardSend={onCardSend}
             />
           ))
         )}

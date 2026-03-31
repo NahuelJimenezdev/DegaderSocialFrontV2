@@ -1,5 +1,6 @@
 import React from 'react';
 import PostCard from '../../../shared/components/Post/PostCard';
+import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import { useProfileContext } from '../context/ProfileContext';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -51,13 +52,23 @@ const PostList = ({ activeTab }) => {
   return (
     <>
       {filteredPosts.map(post => (
-        <PostCard
-          key={post._id}
-          variant="profile"
-          post={post}
-          currentUser={authUser} // Usar el usuario autenticado real
-          profileContext={context}
-        />
+        post.tipo === 'cumpleaños' ? (
+          <BirthdayPostCard
+            key={post._id}
+            variant="profile"
+            post={post}
+            currentUser={authUser}
+            profileContext={context}
+          />
+        ) : (
+          <PostCard
+            key={post._id}
+            variant="profile"
+            post={post}
+            currentUser={authUser} // Usar el usuario autenticado real
+            profileContext={context}
+          />
+        )
       ))}
     </>
   );

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import postService from '../services/postService';
 import PostCard from '../../../shared/components/Post/PostCard';
+import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import { ArrowLeft } from 'lucide-react';
 
 const PostPage = () => {
@@ -148,15 +149,27 @@ const PostPage = () => {
                 Volver
             </button>
 
-            <PostCard
-                post={post}
-                currentUser={user}
-                onPostUpdate={handlePostUpdate}
-                onPostDelete={handlePostDelete}
-                highlightCommentId={new URLSearchParams(location.search).get('commentId')}
-                onLike={handleLike}
-                onAddComment={handleAddComment}
-            />
+            {post.tipo === 'cumpleaños' ? (
+                <BirthdayPostCard
+                    post={post}
+                    currentUser={user}
+                    onPostUpdate={handlePostUpdate}
+                    onPostDelete={handlePostDelete}
+                    highlightCommentId={new URLSearchParams(location.search).get('commentId')}
+                    onLike={handleLike}
+                    onAddComment={handleAddComment}
+                />
+            ) : (
+                <PostCard
+                    post={post}
+                    currentUser={user}
+                    onPostUpdate={handlePostUpdate}
+                    onPostDelete={handlePostDelete}
+                    highlightCommentId={new URLSearchParams(location.search).get('commentId')}
+                    onLike={handleLike}
+                    onAddComment={handleAddComment}
+                />
+            )}
         </div>
     );
 };
