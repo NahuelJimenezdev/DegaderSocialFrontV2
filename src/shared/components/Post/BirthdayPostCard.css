@@ -97,6 +97,24 @@
   z-index: 2;
 }
 
+.birthday-title {
+    margin: 0;
+    line-height: 1.2;
+    z-index: 10;
+    color: #0f172a !important; /* Slate 900 forzado */
+    text-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.birthday-message {
+    margin: 0;
+    line-height: 1.6;
+    z-index: 10;
+    color: #334155 !important; /* Slate 700 forzado */
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .balloon-3 {
   /* Rosa */
   width: 70px;
@@ -162,5 +180,17 @@
 .birthday-card-content {
   position: relative;
   z-index: 10;
-  background: transparent;
+  background: transparent;/* Ajustes para los botones de acción en la tarjeta de cumpleaños */
+.birthday-card-container .post-actions-buttons button {
+    color: #475569 !important; /* Slate 600 forzado para iconos */
+}
+
+.birthday-card-container .post-actions-buttons button:hover {
+    background-color: rgba(0,0,0,0.05) !important;
+}
+
+.birthday-card-container .likes-count,
+.birthday-card-container .comments-count {
+    color: #475569 !important;
+}
 }
