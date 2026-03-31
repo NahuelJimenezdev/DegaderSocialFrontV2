@@ -27,6 +27,12 @@ const postService = {
       if (postData.documento) {
         formData.append('documento', postData.documento);
       }
+      if (postData.tipo) {
+        formData.append('tipo', postData.tipo);
+      }
+      if (postData.metadatos) {
+        formData.append('metadatos', JSON.stringify(postData.metadatos));
+      }
     }
 
     const response = await api.post('/publicaciones', formData, {
