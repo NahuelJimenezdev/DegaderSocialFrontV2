@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, CheckCircle2, ChevronRight, MapPin, Briefcase, UserCircle, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
@@ -32,10 +32,23 @@ const FormularioSolicitud = () => {
         requiereDepartamento,
         requiereMunicipio,
         requiereBarrio,
-        necesitaRolFuncional
+        necesitaRolFuncional,
+        // Afiliados
+        esAfiliado,
+        directoresPais,
+        loadingDirectores,
+        cargarDirectoresPais
     } = useFundacion(user, updateUser);
 
     const [success, setSuccess] = useState(false);
+    const isAfiliado = esAfiliado();
+
+    // Cargar directores cuando cambia el país y es afiliado
+    useEffect(() => {
+        if (isAfiliado && formData.pais) {
+            cargarDirectoresPais(formData.pais);
+        }
+    }, [isAfiliado, formData.pais]);
 
     // Protección de ruta: Solo permitir si los 3 documentos anteriores están listos
     React.useEffect(() => {
@@ -125,7 +138,8 @@ const FormularioSolicitud = () => {
                                 </select>
                             </div>
 
-                            {/* Cargo */}
+                            {/* Cargo (Oculto si es Afiliado, se auto-setea) */}
+                            {!isAfiliado && (
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Cargo Institucional</label>
                                 <select 
@@ -141,9 +155,21 @@ const FormularioSolicitud = () => {
                                     ))}
                                 </select>
                             </div>
+                            )}
 
-                            {/* Área */}
-                            {getAreasDisponibles().length > 0 && (
+                            {/* Badge informativo para Afiliados */}
+                            {isAfiliado && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Cargo Institucional</label>
+                                    <div className="w-full p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl text-blue-700 dark:text-blue-300 font-semibold flex items-center gap-2">
+                                        <UserCircle size={18} />
+                                        Afiliado
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Área (Solo si NO es Afiliado) */}
+                            {!isAfiliado && getAreasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Área / Dirección</label>
                                     <select 
@@ -160,8 +186,8 @@ const FormularioSolicitud = () => {
                                 </div>
                             )}
 
-                            {/* SubÁrea */}
-                            {getSubAreasDisponibles().length > 0 && (
+                            {/* SubÁrea (Solo si NO es Afiliado) */}
+                            {!isAfiliado && getSubAreasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Sub-Área</label>
                                     <select 
@@ -178,8 +204,8 @@ const FormularioSolicitud = () => {
                                 </div>
                             )}
 
-                            {/* Programa */}
-                            {getProgramasDisponibles().length > 0 && (
+                            {/* Programa (Solo si NO es Afiliado) */}
+                            {!isAfiliado && getProgramasDisponibles().length > 0 && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Programa / Proyecto</label>
                                     <select 
@@ -196,8 +222,8 @@ const FormularioSolicitud = () => {
                                 </div>
                             )}
 
-                            {/* Rol Funcional */}
-                            {necesitaRolFuncional() && (
+                            {/* Rol Funcional (Solo si NO es Afiliado) */}
+                            {!isAfiliado && necesitaRolFuncional() && (
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Rol Funcional</label>
                                     <select 
@@ -214,8 +240,79 @@ const FormularioSolicitud = () => {
                                 </div>
                             )}
 
-                            {/* Ubicación Dinámica */}
-                            {requiereUbicacionExacta() && (
+                            {/* ============================================ */}
+                            {/* UBICACIÓN REAL para Afiliados (Estadísticas) */}
+                            {/* ============================================ */}
+                            {isAfiliado && (
+                                <>
+                                    {/* Departamento/Provincia */}
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">{getNombreDivisionTerritorial()}</label>
+                                        <select 
+                                            className={selectClasses}
+                                            value={formData.departamento}
+                                            onChange={(e) => setFormData({...formData, departamento: e.target.value})}
+                                            required
+                                        >
+                                            <option value="">Seleccione {getNombreDivisionTerritorial()}</option>
+                                            {getDivisionesTerritoriales().map(d => (
+                                                <option key={d} value={d}>{d}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Municipio / Ciudad */}
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Municipio / Ciudad</label>
+                                        <input 
+                                            type="text"
+                                            className={inputClasses}
+                                            placeholder="Nombre del municipio"
+                                            value={formData.municipio}
+                                            onChange={(e) => setFormData({...formData, municipio: e.target.value})}
+                                        />
+                                    </div>
+
+                                    {/* ============================================ */}
+                                    {/* RESPONSABLE ASIGNADO (Solo Afiliados)        */}
+                                    {/* ============================================ */}
+                                    <div className="md:col-span-2 space-y-2">
+                                        <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                                            <UserCircle size={18} className="text-indigo-500" />
+                                            Responsable Asignado
+                                        </label>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                            Selecciona el director o coordinador que te invitó o gestionará tu membresía.
+                                        </p>
+                                        {loadingDirectores ? (
+                                            <div className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-500 dark:text-gray-400 text-sm">
+                                                Cargando directores...
+                                            </div>
+                                        ) : directoresPais.length === 0 ? (
+                                            <div className="w-full p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl text-amber-700 dark:text-amber-300 text-sm">
+                                                No hay directores registrados en {formData.pais}. Contacta a la fundación.
+                                            </div>
+                                        ) : (
+                                            <select 
+                                                className={selectClasses}
+                                                value={formData.referenteId}
+                                                onChange={(e) => setFormData({...formData, referenteId: e.target.value})}
+                                                required
+                                            >
+                                                <option value="">Seleccione un responsable</option>
+                                                {directoresPais.map(d => (
+                                                    <option key={d._id} value={d._id}>
+                                                        {d.nombreCompleto} - {d.cargo} ({d.territorio?.departamento || d.territorio?.pais || ''})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Ubicación Dinámica (para cargos NO afiliados) */}
+                            {!isAfiliado && requiereUbicacionExacta() && (
                                 <>
                                     {/* Región (Solo para Nivel Regional) */}
                                     {requiereRegion() && getRegionesTerritoriales().length > 0 && (

@@ -18,7 +18,10 @@ export default function FundacionPage() {
     } = useFundacion(user, updateUser);
 
     // Condicion para ver panel admin: Aceptado + Posee cargo (Director, Coordinador, etc.)
+    // Excluir explícitamente a los Afiliados (no tienen poder administrativo)
     const canSeeAdminPanel = user?.fundacion?.estadoAprobacion === 'aprobado' && 
+        user?.fundacion?.cargo !== 'Afiliado' &&
+        user?.fundacion?.nivel !== 'afiliado' &&
         (user?.fundacion?.cargo?.includes('Director') || 
          user?.fundacion?.cargo?.includes('Coordinador') || 
          user?.seguridad?.rolSistema === 'Founder');

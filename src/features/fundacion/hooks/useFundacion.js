@@ -322,6 +322,11 @@ export const ESTRUCTURA_FUNDACION = {
             },
             "Coordinación de Seguridad": { subAreas: {}, programas: {} }
         }
+    },
+
+    // Nivel Afiliado (Sin estructura jerárquica operativa)
+    afiliado: {
+        areas: {}
     }
 };
 
@@ -334,7 +339,8 @@ export const CARGOS_POR_NIVEL = {
     departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
     municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
     local: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"]
+    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    afiliado: ["Afiliado"]
 };
 
 export const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "voluntario", "pastor"];
@@ -360,8 +366,13 @@ export const useFundacion = (user, updateUser) => {
         region: '',
         departamento: '',
         municipio: '',
-        barrio: ''
+        barrio: '',
+        referenteId: '' // Responsable asignado (Solo para Afiliados)
     });
+
+    // Estado para lista de directores del país (para Afiliados)
+    const [directoresPais, setDirectoresPais] = useState([]);
+    const [loadingDirectores, setLoadingDirectores] = useState(false);
 
     // ==========================================
     // 🔹 LÓGICA DE FILTRADO DINÁMICO
@@ -369,6 +380,9 @@ export const useFundacion = (user, updateUser) => {
 
     const getAreasDisponibles = () => {
         if (!formData.nivel || !formData.cargo) return [];
+
+        // Afiliados no tienen áreas
+        if (formData.nivel === 'afiliado') return [];
 
         const nivel = formData.nivel;
         const cargo = formData.cargo;
@@ -455,6 +469,9 @@ export const useFundacion = (user, updateUser) => {
     const requiereUbicacionExacta = () => {
         if (!formData.nivel || !formData.cargo) return false;
 
+        // Afiliados NO necesitan ubicación exacta jerárquica (la piden aparte en el form)
+        if (formData.nivel === 'afiliado') return false;
+
         // FHISYL implies global, no location
         if (formData.area?.includes('FHIS&L') || formData.area === 'FHISYL' || formData.subArea === 'FHISYL') {
             return false;
@@ -523,6 +540,9 @@ export const useFundacion = (user, updateUser) => {
     const necesitaRolFuncional = () => {
         if (!formData.nivel) return false;
         
+        // Afiliados no necesitan rol funcional
+        if (formData.nivel === 'afiliado') return false;
+        
         // No role func required for globals
         if (["directivo_general", "organo_control", "organismo_internacional"].includes(formData.nivel)) {
             return false;
@@ -582,13 +602,15 @@ export const useFundacion = (user, updateUser) => {
 
     // Limpiar campos dependientes cuando cambia un nivel superior
     const handleNivelChange = (nuevoNivel) => {
+        const esAfiliado = nuevoNivel === 'afiliado';
         setFormData({
             ...formData,
             nivel: nuevoNivel,
-            area: '',
+            area: esAfiliado ? 'Afiliado' : '',
             subArea: '',
             programa: '',
-            cargo: ''
+            cargo: esAfiliado ? 'Afiliado' : '',
+            referenteId: esAfiliado ? formData.referenteId : ''
         });
     };
 
@@ -672,6 +694,7 @@ export const useFundacion = (user, updateUser) => {
                     programa: formData.programa || undefined,
                     cargo: cargoSanitizado,
                     rolFuncional: formData.rolFuncional,
+                    referenteId: formData.nivel === 'afiliado' ? formData.referenteId : undefined,
                     territorio: {
                         pais: formData.pais,
                         region: formData.region,
@@ -727,11 +750,13 @@ export const useFundacion = (user, updateUser) => {
                     region: user.fundacion.territorio?.region || '',
                     departamento: user.fundacion.territorio?.departamento || '',
                     municipio: user.fundacion.territorio?.municipio || '',
-                    barrio: user.fundacion.territorio?.barrio || ''
+                    barrio: user.fundacion.territorio?.barrio || '',
+                    referenteId: user.fundacion.referenteId || ''
                 }));
             }
 
-            if (user?.fundacion?.estadoAprobacion === 'aprobado' || user?.seguridad?.rolSistema === 'Founder') {
+            // Afiliados NO deben cargar solicitudes pendientes
+            if ((user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.nivel !== 'afiliado') || user?.seguridad?.rolSistema === 'Founder') {
                 cargarSolicitudesPendientes();
             }
         }
@@ -872,12 +897,18 @@ export const useFundacion = (user, updateUser) => {
         getProgramasDisponibles,
         getCargosDisponibles,
         getRolesDisponibles: () => ROLES_FUNCIONALES,
-        getNivelesDisponibles: () => Object.keys(ESTRUCTURA_FUNDACION).map(nivel => {
-            if (nivel === 'departamental') {
-                return { value: nivel, label: getNombreDivisionTerritorial().toUpperCase() };
-            }
-            return { value: nivel, label: nivel.replace(/_/g, ' ').toUpperCase() };
-        }),
+        getNivelesDisponibles: () => {
+            const niveles = Object.keys(ESTRUCTURA_FUNDACION).map(nivel => {
+                if (nivel === 'departamental') {
+                    return { value: nivel, label: getNombreDivisionTerritorial().toUpperCase() };
+                }
+                if (nivel === 'afiliado') {
+                    return { value: nivel, label: 'AFILIADO' };
+                }
+                return { value: nivel, label: nivel.replace(/_/g, ' ').toUpperCase() };
+            });
+            return niveles;
+        },
 
         // Funciones para Directores Generales (Territorios)
         esDirectorGeneral,
@@ -901,6 +932,27 @@ export const useFundacion = (user, updateUser) => {
         cargarSolicitudesPendientes,
         handleUpdateProfile,
         handleGestionarSolicitud,
-        necesitaRolFuncional
+        necesitaRolFuncional,
+
+        // Afiliados
+        esAfiliado: () => formData.nivel === 'afiliado',
+        directoresPais,
+        loadingDirectores,
+        cargarDirectoresPais: async (pais) => {
+            if (!pais) {
+                setDirectoresPais([]);
+                return;
+            }
+            setLoadingDirectores(true);
+            try {
+                const response = await fundacionService.getDirectoresPorPais(pais);
+                setDirectoresPais(response.data?.directores || []);
+            } catch (error) {
+                logger.error('Error cargando directores:', error);
+                setDirectoresPais([]);
+            } finally {
+                setLoadingDirectores(false);
+            }
+        }
     };
 };

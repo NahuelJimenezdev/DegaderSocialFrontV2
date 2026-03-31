@@ -42,7 +42,7 @@ const ModalCrearCarpeta = ({ isOpen, onClose, onSubmit, jerarquia, carpeta, isEd
   // Restricción de creación de carpetas institucionales
   // Solo Founder o Miembros Aprobados con Cargo
   const puedeCrearInstitucionales = user?.seguridad?.rolSistema === 'Founder' || 
-    (user?.esMiembroFundacion && user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo);
+    (user?.esMiembroFundacion && user?.fundacion?.estadoAprobacion === 'aprobado' && user?.fundacion?.cargo && user?.fundacion?.cargo !== 'Afiliado');
 
   const tiposDisponibles = TIPOS_CARPETA.filter(tipo => 
     tipo.valor !== 'institucional' || puedeCrearInstitucionales

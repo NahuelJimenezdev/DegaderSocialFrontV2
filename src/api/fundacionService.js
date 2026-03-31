@@ -53,6 +53,15 @@ const fundacionService = {
 
     const response = await api.get(`/fundacion/admin/usuarios-jurisdiccion?${params.toString()}`);
     return response.data;
+  },
+
+  /**
+   * Obtener directores aprobados por país
+   * Usado por afiliados para seleccionar su "Responsable asignado"
+   */
+  getDirectoresPorPais: async (pais) => {
+    const response = await api.get(`/fundacion/directores-pais?pais=${encodeURIComponent(pais)}`);
+    return response.data;
   }
 };
 
