@@ -98,21 +98,39 @@
 }
 
 .birthday-title {
-    margin: 0;
-    line-height: 1.2;
-    z-index: 10;
-    color: #0f172a !important; /* Slate 900 forzado */
-    text-shadow: 0 1px 1px rgba(0,0,0,0.05);
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  z-index: 10 !important;
+  color: #0f172a !important; /* Slate 900 */
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+.birthday-card-container {
+  background-color: #fffdf7 !important; /* Crema institucional */
+  border-radius: 2rem !important; /* Coincide con el diseño iOS */
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  margin-bottom: 1rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* FUERZA BRUTA PARA MODO OSCURO: Toda la tarjeta y sus hijos deben ser oscuros */
+.birthday-card-container, 
+.birthday-card-container * {
+    color: #1e293b !important; /* Slate 800 para todo por defecto */
 }
 
 .birthday-message {
-    margin: 0;
-    line-height: 1.6;
-    z-index: 10;
-    color: #334155 !important; /* Slate 700 forzado */
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+  margin: 0 !important;
+  line-height: 1.6 !important;
+  z-index: 10 !important;
+  color: #334155 !important; /* Slate 700 */
+  max-width: 90% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  font-weight: 500 !important;
 }
 
 .balloon-3 {
@@ -181,16 +199,32 @@
   position: relative;
   z-index: 10;
   background: transparent;/* Ajustes para los botones de acción en la tarjeta de cumpleaños */
-.birthday-card-container .post-actions-buttons button {
-    color: #475569 !important; /* Slate 600 forzado para iconos */
+.birthday-card-container .post-actions-buttons button,
+.birthday-card-container .post-actions-buttons svg,
+.birthday-card-container .post-actions-buttons span {
+    color: #475569 !important; /* Slate 600 forzado para iconos y textos de acción */
 }
 
 .birthday-card-container .post-actions-buttons button:hover {
-    background-color: rgba(0,0,0,0.05) !important;
+    background-color: rgba(0,0,0,0.08) !important;
 }
 
 .birthday-card-container .likes-count,
-.birthday-card-container .comments-count {
+.birthday-card-container .comments-count,
+.birthday-card-container .shares-count {
     color: #475569 !important;
+}
+
+/* Corregir nombre de usuario y fechas que suelen heredar del tema oscuro */
+.birthday-card-container .font-semibold,
+.birthday-card-container .text-sm,
+.birthday-card-container .text-gray-500,
+.birthday-card-container .text-xs {
+    color: #475569 !important;
+}
+
+.birthday-card-container a,
+.birthday-card-container h4 {
+    color: #0f172a !important;
 }
 }
