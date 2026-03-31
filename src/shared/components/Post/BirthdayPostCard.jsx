@@ -205,9 +205,16 @@ const BirthdayPostCard = ({
             return;
         }
 
-        if (isFeedMode) {
-            onShare?.(post._id);
-        }
+        // --- RUTA PRO: Copia directa del link optimizado para WhatsApp ---
+        const shareUrl = `${API_BASE_URL}/api/share/post/${post._id}`;
+        
+        navigator.clipboard.writeText(shareUrl)
+            .then(() => {
+                toast.success('¡Enlace festivo copiado al portapapeles!');
+            })
+            .catch(() => {
+                toast.error('No se pudo copiar el enlace.');
+            });
     };
 
     const handleAddCommentWrapper = async (postId, content, parentId, image) => {

@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import api from '../../../api/config';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import { API_URL } from '../../../shared/config/env';
 
 const ShareModal = ({ isOpen, onClose, post }) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -140,7 +141,11 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       icon: '💬',
       color: 'bg-green-500 hover:bg-green-600',
       action: () => {
-        const text = encodeURIComponent(`${shareMessage || post.contenido}\n\nVer más: ${window.location.origin}/post/${post._id}`);
+        const shareUrl = post.tipo === 'cumpleaños' 
+          ? `${API_URL}/share/post/${post._id}`
+          : `${window.location.origin}/post/${post._id}`;
+          
+        const text = encodeURIComponent(`${shareMessage || post.contenido}\n\nVer más: ${shareUrl}`);
         window.open(`https://wa.me/?text=${text}`, '_blank');
       }
     },
@@ -150,7 +155,11 @@ const ShareModal = ({ isOpen, onClose, post }) => {
       icon: '🔗',
       color: 'bg-gray-500 hover:bg-gray-600',
       action: () => {
-        navigator.clipboard.writeText(`${window.location.origin}/post/${post._id}`);
+        const shareUrl = post.tipo === 'cumpleaños' 
+          ? `${API_URL}/share/post/${post._id}`
+          : `${window.location.origin}/post/${post._id}`;
+          
+        navigator.clipboard.writeText(shareUrl);
         setAlertConfig({ isOpen: true, variant: 'success', message: '¡Enlace copiado al portapapeles!' });
         setTimeout(() => onClose(), 1500);
       }
