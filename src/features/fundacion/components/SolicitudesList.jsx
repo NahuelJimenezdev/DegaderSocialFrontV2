@@ -63,7 +63,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                             </p>
 
                             <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">
-                                Solicita: {solicitud.fundacion.cargo} {solicitud.fundacion.area && `en la ${solicitud.fundacion.area}`} {solicitud.fundacion.subArea && `de la ${solicitud.fundacion.subArea}`} {solicitud.fundacion.programa && `del ${solicitud.fundacion.programa}`}
+                                Solicita: {solicitud.fundacion.cargo} {solicitud.fundacion.area && `en la ${solicitud.fundacion.area}`} {solicitud.fundacion.subArea && `de la ${solicitud.fundacion.subArea}`} {solicitud.fundacion.programa && `del ${solicitud.fundacion.programa}`} {solicitud.fundacion.nivel && `a nivel ${solicitud.fundacion.nivel}`} {solicitud.fundacion.territorio?.pais && `en el país ${solicitud.fundacion.territorio.pais}`}
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50 mr-4">
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
