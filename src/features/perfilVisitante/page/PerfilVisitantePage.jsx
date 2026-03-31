@@ -16,6 +16,7 @@ import {
   Lock as LockIcon
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import PostCard from '../../../shared/components/Post/PostCard';
 import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import useFeed from '../../feed/hooks/useFeed';
 
