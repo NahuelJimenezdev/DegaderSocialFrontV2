@@ -94,7 +94,7 @@ const BirthdayPostModal = ({ isOpen, onClose, targetUser, currentUser }) => {
                                         fontSize: '1.4rem',
                                         color: '#1a202c' // Forzamos oscuro en preview clara del modal
                                     }} 
-                                    className="dark:text-white leading-tight"
+                                    className="leading-tight"
                                 >
                                     {title || '¡Feliz Cumpleaños!'}
                                 </h4>
@@ -103,7 +103,7 @@ const BirthdayPostModal = ({ isOpen, onClose, targetUser, currentUser }) => {
                                         fontFamily: textFont,
                                         color: '#4a5568' // Forzamos gris oscuro en preview
                                     }} 
-                                    className="dark:text-gray-200 text-sm whitespace-pre-wrap leading-relaxed"
+                                    className="text-sm whitespace-pre-wrap leading-relaxed"
                                 >
                                     {message || 'Escribe tu mensaje personal aquí...'}
                                 </p>

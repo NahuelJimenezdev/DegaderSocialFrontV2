@@ -304,13 +304,13 @@ const BirthdayPostCard = ({
                             </div>
 
                             <div className="flex-1 min-w-0">
-                                <h3 onClick={handleProfileClick} className="font-bold text-gray-900 dark:text-white text-sm hover:underline cursor-pointer truncate">
+                                <h3 onClick={handleProfileClick} className="font-bold text-gray-900 text-sm hover:underline cursor-pointer truncate">
                                     {getShortName()}
                                 </h3>
                                 <div className="space-y-0.5">
                                     {isFeedMode && post.grupo && (
                                         <div className="flex items-center gap-1 text-[11px] leading-tight">
-                                            <span className="font-medium colorMarcaDegader dark:text-indigo-400 hover:underline cursor-pointer">
+                                            <span className="font-medium colorMarcaDegader hover:underline cursor-pointer">
                                                 {post.grupo.nombre}
                                             </span>
                                             <span className="text-gray-400">
@@ -318,7 +318,7 @@ const BirthdayPostCard = ({
                                             </span>
                                         </div>
                                     )}
-                                    <div className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 leading-tight">
+                                    <div className="flex items-center gap-1 text-[11px] text-gray-500 leading-tight">
                                         <span>
                                             {post.createdAt && !isNaN(new Date(post.createdAt).getTime())
                                                 ? formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: es })
@@ -344,7 +344,7 @@ const BirthdayPostCard = ({
                                     fontWeight: 'bold',
                                     fontSize: isMobile ? '1.5rem' : '2rem'
                                 }}
-                                className="text-slate-900 dark:text-white leading-tight text-center"
+                                className="text-slate-900 leading-tight text-center"
                             >
                                 {post.metadatos.title}
                             </h2>
@@ -356,12 +356,12 @@ const BirthdayPostCard = ({
                                     fontFamily: post.metadatos?.textFont || 'inherit',
                                     fontSize: post.metadatos?.textFont?.includes('Courier') ? '14px' : '16px'
                                 }}
-                                className="text-slate-800 dark:text-gray-200 whitespace-pre-wrap leading-[1.6] text-center"
+                                className="birthday-message whitespace-pre-wrap text-center"
                             >
                                 {post.contenido.split(/(@[a-zA-Z0-9._-]+)/g).map((part, index) => {
                                     if (part.match(/^@[a-zA-Z0-9._-]+$/)) {
                                         return (
-                                            <span key={index} className="colorMarcaDegader dark:text-indigo-400 font-semibold cursor-pointer hover:underline">
+                                            <span key={index} className="colorMarcaDegader font-semibold cursor-pointer hover:underline">
                                                 {part}
                                             </span>
                                         );
@@ -418,8 +418,8 @@ const BirthdayPostCard = ({
                             <button
                                 onClick={handleLikeClick}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors z-20 relative group ${isLiked
-                                    ? 'text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
-                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                    ? 'text-yellow-600 hover:bg-yellow-50'
+                                    : 'text-gray-600 hover:bg-gray-100'
                                     }`}
                             >
                                 <CelebrationIcon isLiked={isLiked} size={22} />
@@ -437,7 +437,7 @@ const BirthdayPostCard = ({
                             {isFeedMode && (
                                 <button
                                     onClick={handleShareClick}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg z-20 relative text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                    className="flex items-center gap-2 px-3 py-2 rounded-lg z-20 relative text-gray-600 hover:bg-gray-100 transition-colors"
                                 >
                                     <Share2 size={20} />
                                     <span className="text-sm font-medium">{post.sharesCount ?? post.compartidos?.length ?? 0}</span>
