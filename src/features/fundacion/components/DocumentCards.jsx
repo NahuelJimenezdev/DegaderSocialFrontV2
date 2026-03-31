@@ -1,17 +1,34 @@
 import React from 'react';
-import { FileText, UserCircle, CheckCircle, Clock } from 'lucide-react';
+import { FileText, UserCircle, CheckCircle, Clock, XCircle } from 'lucide-react';
 
-const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon, locked }) => {
-  const isCompleted = status === 'Completado';
+const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon, locked, overrideButtonText, disableAction }) => {
+  const isCompleted = status === 'Completado' || status === 'Aprobado';
+  const isRejected = status === 'Rechazado';
+  const isEvaluando = status === 'Evaluando' || status === 'Pendiente';
+
+  const getStatusColor = () => {
+    if (isCompleted) return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300';
+    if (isRejected) return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300';
+    return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300';
+  };
+
+  const getIconColor = () => {
+    if (locked) return 'bg-gray-100 dark:bg-gray-700 text-gray-400';
+    if (isCompleted) return 'bg-green-50 dark:bg-green-900/20 text-green-600';
+    if (isRejected) return 'bg-red-50 dark:bg-red-900/20 text-red-600';
+    return 'bg-blue-50 dark:bg-blue-900/20 text-blue-600';
+  };
+
+  const StatusIcon = isCompleted ? CheckCircle : (isRejected ? XCircle : Clock);
+  
+  const finalButtonText = locked ? 'Pendiente completar otros' : (overrideButtonText || (isCompleted ? 'Visualizar documento' : buttonText));
+  const isButtonDisabled = locked || disableAction;
 
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm transition-all group ${locked ? 'opacity-75' : 'hover:shadow-md'}`}>
       <div className="flex items-start gap-4 md:gap-6">
         {/* Icono */}
-        <div className={`flex-shrink-0 p-3.5 rounded-2xl ${
-          locked ? 'bg-gray-100 dark:bg-gray-700 text-gray-400' : 
-          isCompleted ? 'bg-green-50 dark:bg-green-900/20 text-green-600' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-600'
-        } transition-colors ${!locked && 'group-hover:scale-105'} duration-300 h-fit`}>
+        <div className={`flex-shrink-0 p-3.5 rounded-2xl ${getIconColor()} transition-colors ${!locked && 'group-hover:scale-105'} duration-300 h-fit`}>
           <Icon size={28} />
         </div>
 
@@ -22,12 +39,8 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
               {title}
             </h3>
             {!locked ? (
-              <div className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wider ${
-                isCompleted 
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' 
-                  : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
-              }`}>
-                {isCompleted ? <CheckCircle size={14} /> : <Clock size={14} />}
+              <div className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wider ${getStatusColor()}`}>
+                <StatusIcon size={14} />
                 {status}
               </div>
             ) : (
@@ -45,18 +58,18 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
         {/* Acción */}
         <div className="flex-shrink-0 hidden md:block">
           <button
-            onClick={!locked ? onClick : undefined}
-            disabled={locked}
+            onClick={!isButtonDisabled ? onClick : undefined}
+            disabled={isButtonDisabled}
             className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm ${
-              locked
+              isButtonDisabled
                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                : isCompleted
+                : isCompleted || overrideButtonText
                   ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 hover:bg-blue-200'
                   : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-[0.98]'
             }`}
           >
             <FileText size={18} />
-            {locked ? 'Pendiente completar otros' : (isCompleted ? 'Visualizar documento' : buttonText)}
+            {finalButtonText}
           </button>
         </div>
       </div>
@@ -64,18 +77,18 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
       {/* Botón en móvil */}
       <div className="mt-4 md:hidden">
         <button
-          onClick={!locked ? onClick : undefined}
-          disabled={locked}
+          onClick={!isButtonDisabled ? onClick : undefined}
+          disabled={isButtonDisabled}
           className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm ${
-            locked
+            isButtonDisabled
               ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-              : isCompleted
+              : isCompleted || overrideButtonText
                 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30'
                 : 'bg-blue-600 text-white shadow-md'
           }`}
         >
           <FileText size={18} />
-          {locked ? 'Debes completar lo anterior' : (isCompleted ? 'Visualizar documento' : buttonText)}
+          {finalButtonText}
         </button>
       </div>
     </div>
@@ -88,6 +101,29 @@ export default function DocumentCards({ user, onNavigate }) {
   const isEntrevistaDone = !!user?.fundacion?.entrevista?.completado;
   const isHojaDeVidaDone = !!user?.fundacion?.hojaDeVida?.completado;
   const allPrerequisitesMet = isFHSYLDone && isEntrevistaDone && isHojaDeVidaDone;
+
+  const estadoAprobacion = user?.fundacion?.estadoAprobacion;
+  
+  let solicitudStatus = 'Pendiente';
+  let solicitudOverrideButton = null;
+  let disableSolicitudAction = false;
+
+  if (estadoAprobacion === 'aprobado') {
+      solicitudStatus = 'Aprobado';
+      solicitudOverrideButton = 'Aprobado';
+      disableSolicitudAction = true;
+  } else if (estadoAprobacion === 'rechazado') {
+      solicitudStatus = 'Rechazado';
+      solicitudOverrideButton = 'Rehacer documentación';
+      disableSolicitudAction = false;
+  } else if (estadoAprobacion === 'pendiente') {
+      solicitudStatus = 'Pendiente';
+      solicitudOverrideButton = 'Pendiente';
+      disableSolicitudAction = false; // Permitir completar o visualizar
+  } else {
+      // Estado inicial (nulo o undefined)
+      solicitudStatus = 'Pendiente';
+  }
 
   // Documentos lógica de estado
   const docs = [
@@ -130,10 +166,12 @@ export default function DocumentCards({ user, onNavigate }) {
       title: "Solicitud de Ingreso",
       description: "Una vez completados los documentos anteriores, podrás enviar tu solicitud oficial para formar parte de la fundación.",
       buttonText: "Enviar solicitud",
-      status: (user?.fundacion?.estadoAprobacion === 'aprobado' || user?.fundacion?.estadoAprobacion === 'pendiente') ? 'Completado' : 'Pendiente',
+      status: solicitudStatus,
       icon: CheckCircle,
       path: '/fundacion/solicitud',
-      locked: !allPrerequisitesMet
+      locked: !allPrerequisitesMet && estadoAprobacion !== 'rechazado',
+      overrideButtonText: solicitudOverrideButton,
+      disableAction: disableSolicitudAction
     }
   ];
 
