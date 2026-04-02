@@ -1,3 +1,6 @@
+import React from 'react';
+import { renderContentWithItems } from '../../../shared/utils/textUtils';
+
 const GroupInfo = ({ groupData }) => {
   const formatDate = (dateString) => {
     if (!dateString) return 'No disponible';
@@ -119,7 +122,7 @@ const GroupInfo = ({ groupData }) => {
                     </h4>
                   </div>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {groupData?.descripcion || 'Sin descripción'}
+                    {renderContentWithItems(groupData?.descripcion || 'Sin descripción')}
                   </p>
                 </div>
               </div>

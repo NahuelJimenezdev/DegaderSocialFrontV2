@@ -29,6 +29,7 @@ import EditPostModal from './EditPostModal';
 import IOSAlert from '../IOSAlert'; // 🆕 Importar modal estilo iOS
 import { friendshipService as friendApi } from '../../../api'; // Alias para evitar colisión si fuera necesario
 import ProgressiveImage from '../ProgressiveImage/ProgressiveImage';
+import { renderContentWithItems } from '../../utils/textUtils';
 
 const PostCard = ({
     post,
@@ -583,15 +584,9 @@ const PostCard = ({
                 {displayContent && (
                     <div className="px-4 pb-3 pt-1">
                         <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap text-[15px] leading-[1.6]">
-                            {displayContent.split(/(@[a-zA-Z0-9._-]+)/g).map((part, index) => {
-                                if (part.match(/^@[a-zA-Z0-9._-]+$/)) {
-                                    return (
-                                        <span key={index} className="colorMarcaDegader dark:text-indigo-400 font-semibold cursor-pointer hover:underline">
-                                            {part}
-                                        </span>
-                                    );
-                                }
-                                return part;
+                            {renderContentWithItems(displayContent, {
+                                linkClass: "text-blue-500 dark:text-blue-400 hover:underline break-all",
+                                mentionClass: "colorMarcaDegader dark:text-indigo-400 font-semibold cursor-pointer hover:underline"
                             })}
                         </p>
                     </div>

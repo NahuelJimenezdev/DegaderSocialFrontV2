@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../../../../shared/config/env';
 import AudioPlayer from '../../../../shared/components/AudioPlayer/AudioPlayer';
 import ProgressiveImage from '../../../../shared/components/ProgressiveImage/ProgressiveImage';
 import { getUserAvatar } from '../../../../shared/utils/avatarUtils';
+import { renderContentWithItems } from '../../../../shared/utils/textUtils';
 
 // URL base para archivos estáticos (sin /api)
 const getBaseUrl = () => {
@@ -154,7 +155,7 @@ const GroupMessageBubble = ({
                     >
                         {msg.content && (
                             <p className="text-[15px] leading-relaxed whitespace-pre-wrap break-words">
-                                {msg.content}
+                                {renderContentWithItems(msg.content)}
                             </p>
                         )}
                         {msg.error && (
