@@ -6,16 +6,24 @@ import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
 const FilePreviewModal = ({ file, onClose }) => {
     if (!file) return null;
 
-    const isPDF = file.tipo === 'pdf' || /\.pdf$/i.test(file.originalName);
-    const isWord = file.tipo === 'document' || /\.(doc|docx)$/i.test(file.originalName);
-    const isExcel = file.tipo === 'spreadsheet' || /\.(xls|xlsx)$/i.test(file.originalName);
-    const isPPT = file.tipo === 'presentation' || /\.(ppt|pptx)$/i.test(file.originalName);
+    const url = file.url;
+    const name = file.originalName || '';
+    const tipo = file.tipo || '';
+
+    // Lógica EXPLÍCITA de visor
+    const isExcel = tipo === 'spreadsheet' || /\.(xls|xlsx)$/i.test(name);
+    const isPPT = tipo === 'presentation' || /\.(ppt|pptx)$/i.test(name);
+    const isPDF = tipo === 'pdf' || /\.pdf$/i.test(name);
+    const isWord = tipo === 'document' || /\.(doc|docx)$/i.test(name);
+    const isText = tipo === 'text' || /\.txt$/i.test(name);
 
     let viewerUrl = null;
-    if (isPDF || isWord) {
-        viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(file.url)}&embedded=true`;
-    } else if (isExcel || isPPT) {
-        viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(file.url)}`;
+    if (isExcel || isPPT) {
+        // Para Office pesado, priorizamos Microsoft (mejor renderizado)
+        viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(url)}`;
+    } else if (isPDF || isWord || isText) {
+        // Para lectura fija/móvil, priorizamos Google (mejor carga en mobile)
+        viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
     }
 
     const modalContent = (
