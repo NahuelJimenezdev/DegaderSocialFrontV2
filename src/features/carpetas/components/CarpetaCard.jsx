@@ -82,7 +82,7 @@ const CarpetaCard = ({
         <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-3 italic">
           Por {carpeta.propietario?.nombres?.primero} {carpeta.propietario?.apellidos?.primero}
         </p>
-        <p className="carpeta-card-desc text-gray-600 dark:text-gray-400 mb-4 text-justify">
+        <p className="carpeta-card-desc text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 text-sm">
           {carpeta.descripcion}
         </p>
 
