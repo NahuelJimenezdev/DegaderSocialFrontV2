@@ -6,7 +6,11 @@ import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
 const FilePreviewModal = ({ file, onClose }) => {
     if (!file) return null;
 
-    const url = file.url;
+    const rawUrl = file.url || '';
+    // Limpiamos posibles dobles barras en la URL (ej: dev//folders -> dev/folders) 
+    // pero mantenemos la de http:// o https://
+    const url = rawUrl.replace(/([^:]\/)\/+/g, "$1");
+    
     const name = file.originalName || '';
     const tipo = file.tipo || '';
 
