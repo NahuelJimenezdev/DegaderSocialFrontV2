@@ -76,9 +76,12 @@ const CarpetaCard = ({
           </div>
         </div>
 
-        <h3 className="carpeta-card-title font-semibold text-gray-900 dark:text-white mb-2 truncate">
+        <h3 className="carpeta-card-title font-semibold text-gray-900 dark:text-white mb-1 truncate">
           {carpeta.nombre}
         </h3>
+        <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-3 italic">
+          Por {carpeta.propietario?.nombres?.primero} {carpeta.propietario?.apellidos?.primero}
+        </p>
         <p className="carpeta-card-desc text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
           {carpeta.descripcion}
         </p>
