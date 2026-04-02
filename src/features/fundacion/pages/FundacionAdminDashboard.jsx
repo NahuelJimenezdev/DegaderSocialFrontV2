@@ -122,11 +122,22 @@ export default function FundacionAdminDashboard() {
           </p>
         </div>
         
-        <div className="flex gap-3">
-           <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 transition shadow-sm">
-             <Download size={18} />
-             Exportar Reporte
-           </button>
+        <div className="flex items-center gap-6">
+          <div className="text-right">
+            <div className="flex items-center justify-end gap-2 text-blue-600 dark:text-blue-500">
+              <Users size={22} className="opacity-80" />
+              <span className="text-3xl font-black leading-none tracking-tight">
+                {loading ? '...' : (pagination.total || 0)}
+              </span>
+            </div>
+            <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mt-1">
+              Miembros Registrados
+            </p>
+          </div>
+          <button className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 hover:border-blue-500 dark:hover:border-blue-500 transition-all shadow-sm">
+            <Download size={18} className="text-blue-600" />
+            Descargar Base
+          </button>
         </div>
       </div>
 
