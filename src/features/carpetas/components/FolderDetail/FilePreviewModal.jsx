@@ -70,14 +70,16 @@ const FilePreviewModal = ({ file, onClose }) => {
                             </div>
                         </div>
                     )}
-                    {['pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
+                    {(['pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) || 
+                      /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt)$/i.test(file.originalName)) && (
                         <iframe
                             src={`https://docs.google.com/viewer?url=${encodeURIComponent(file.url)}&embedded=true`}
                             className="w-full h-full border-0"
                             title="Document Preview"
                         />
                     )}
-                    {!['image', 'video', 'audio', 'pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
+                    {!['image', 'video', 'audio', 'pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && 
+                     !/\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt)$/i.test(file.originalName) && (
                         <div className="text-center p-8">
                             <File size={80} className="mx-auto mb-6 text-gray-600" />
                             <h3 className="text-xl font-semibold mb-2 text-white">Vista previa no disponible</h3>
