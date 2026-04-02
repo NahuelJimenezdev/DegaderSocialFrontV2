@@ -56,10 +56,12 @@ const GroupLinks = ({ groupData }) => {
     }
   };
 
-  // Obtener favicon de la URL
-  const getFavicon = (url) => {
+  // Obtener favicon de la URL (Fallback de Google solo si no hay otro)
+  const getFavicon = (url, metadataFavicon) => {
+    if (metadataFavicon) return metadataFavicon;
     try {
       const urlObj = new URL(url);
+      // Usamos un servicio más amigable o simplemente devolvemos null para usar el icono de la fuente
       return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`;
     } catch {
       return null;
@@ -115,7 +117,7 @@ const GroupLinks = ({ groupData }) => {
                 : 'Usuario';
 
               const domain = getDomain(enlace.url);
-              const favicon = getFavicon(enlace.url);
+              const favicon = getFavicon(enlace.url, enlace.favicon);
 
               return (
                 <div
