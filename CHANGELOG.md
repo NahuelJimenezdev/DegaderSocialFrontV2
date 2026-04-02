@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.84.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.83.2...v1.84.0) (2026-04-02)
+
+
+### Features
+
+* Agregar icono de visibilidad de contraseña en Login y Registro (móvil y desktop) ([96599b5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/96599b5300934f732ad96db2c90d77ff76ba1862))
+* **frontend:** implementation of birthday card sending system with typography selection and enhanced animations ([f267404](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f2674047770709e27357f5e76595e80c53ad002a))
+* **fundacion:** display fechaSolicitud in request list ([4829e63](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4829e63bb704a89392edfd0e71524acfc0c9542a))
+* **fundacion:** implementar contador total de usuarios en el Panel Administrativo - Se reemplazó la variable inexistente 'contadordetodoslosusuarios' por 'pagination.total'. - Se mejoró la interfaz del Panel de Control Fundación integrando un indicador visual premium del total de miembros registrados bajo la jurisdicción del administrador. - Se añadió un estado de carga visual al contador para mejorar la experiencia de usuario durante la obtención de datos del servidor. - Se optimizó el estilo del botón 'Descargar Base' para alinearse con los estándares estéticos del sistema. ([2759e6d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2759e6d5278180968d8207d3f05b9f6256511305))
+* Implementar cargo Afiliado con doble dimensión (territorial + jerárquica manual via referenteId) ([e04a1d3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e04a1d337b1f668879ff390321f885264c7b64af))
+* **institutional-roles:** add Sub-Director de Áreas and Secretario/a Sub-Director de Áreas positions to frontend hierarchy ([5ae5f9e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5ae5f9e10f407cf82ca0c91e4566a057a95157b8))
+* Mostrar nivel y pais en texto de solicitud pendiente ([61539f9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/61539f95a371a90b1e25757a18e7e66a4ee21b61))
+* Mostrar subArea y programa en SolicitudesList cuando existen en la solicitud ([c9df68f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c9df68f70acbdeaf16240d70b7093c25fe95dd79))
+* **notifications:** add absolute timestamp format to approval requests ([e9f4191](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e9f4191fa1d9cc3188b993bc21db90dae475a46d))
+* Sistema de compartir Pro con copia directa en tarjetas de cumpleaños ([757cfb1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/757cfb17fc16a958b1aca54ed2a53c148de07d83))
+* Sistema de tarjetas de cumpleaños finalizado y correccion de importacion en PerfilVisitante ([4809683](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4809683e6e85a2ecd5158e6c9f805eb674bf5611))
+* **ui:** implementar detección y resaltado de enlaces en mensajes, posts y comentarios - Creada utilidad textUtils para identificar URLs y menciones. - Se aplicó el estilo azul característico de enlaces tanto en modo claro como oscuro. - Se habilitó la apertura de enlaces en nuevas pestañas con seguridad rel='noopener'. - Se integró la funcionalidad en Chat de Grupos, Feed de Grupos, Muro general y Comentarios. ([a968514](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a96851477246e742958b0a8e5218c885f7c981a5))
+
+
+### Bug Fixes
+
+* Eliminacion total de clases dark de Tailwind en BirthdayPostCard ([8ac3a5b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8ac3a5b4c61448a894d046a8d5bf24e50f6fa415))
+* Forzado de colores de texto oscuros en BirthdayPostCard para compatibilidad con modo oscuro ([5653fd6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5653fd653b2cb943d56f202b9288d6b1a6c50b3f))
+* **frontend:** add missing Smartphone icon import for mobile PWA install prompt ([aef0246](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/aef0246952fe2edbdeeab80c45eee18d6979a869))
+* **frontend:** optional chaining on user country to prevent crash on incomplete profiles ([586fdd5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/586fdd5fd72483f5b6472d01487d844a5f6b1adb))
+* **frontend:** UserCarousel logic disappearing for users with 5-9 posts ([383ee49](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/383ee49abd0ee4d4e8c6721ba711c36fe46c7c61))
+* **fundacion:** corregir visibilidad del botón Descargar Base en mobile ([5ccfe7b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5ccfe7b9ae45edab8cf8043fabc1a42175bedc44))
+* **notifications:** use request date instead of account creation date ([c0d04a4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c0d04a4011a6e3a1788a66efa619c12f3a9bef67))
+* Overrides agresivos de CSS para forzar texto oscuro en BirthdayPostCard ([6b2e2b2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6b2e2b20239b70d8a552dd947ff7760f31c5a7bd))
+* Restauracion de import PostCard en PerfilVisitante ([bfe73d0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/bfe73d022d933e6d143ea2f7d10cb18dc0ad1ccf))
+* Solucionado ReferenceError: Smartphone is not defined en Sidebar ([6908331](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/69083311e5eabc99459fda710bd15bd84bbad400))
+* **UI:** prevent phantom requests on suggestion carousel and fix state mapping ([eace2c5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/eace2c5c1b2ba1b9796197cc6603e0b0f226187d))
+* updated PostCard to use likesCount and commentsCount, and added optimistic updates in useFeed ([f035856](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f035856fc80ca10071878e98a8d4e3fa889d400e))
+
 ### [1.83.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.83.1...v1.83.2) (2026-03-29)
 
 
