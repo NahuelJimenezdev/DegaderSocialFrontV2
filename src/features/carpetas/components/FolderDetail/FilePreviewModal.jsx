@@ -6,6 +6,18 @@ import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
 const FilePreviewModal = ({ file, onClose }) => {
     if (!file) return null;
 
+    const isPDF = file.tipo === 'pdf' || /\.pdf$/i.test(file.originalName);
+    const isWord = file.tipo === 'document' || /\.(doc|docx)$/i.test(file.originalName);
+    const isExcel = file.tipo === 'spreadsheet' || /\.(xls|xlsx)$/i.test(file.originalName);
+    const isPPT = file.tipo === 'presentation' || /\.(ppt|pptx)$/i.test(file.originalName);
+
+    let viewerUrl = null;
+    if (isPDF || isWord) {
+        viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(file.url)}&embedded=true`;
+    } else if (isExcel || isPPT) {
+        viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(file.url)}`;
+    }
+
     const modalContent = (
         <div className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4 backdrop-blur-sm">
             <div className="relative w-full max-w-6xl h-[90vh] flex flex-col">
@@ -71,16 +83,14 @@ const FilePreviewModal = ({ file, onClose }) => {
                             </div>
                         </div>
                     )}
-                    {(['pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) || 
-                      /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt)$/i.test(file.originalName)) && (
+                    {viewerUrl && (
                         <iframe
-                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(file.url)}&embedded=true`}
+                            src={viewerUrl}
                             className="w-full h-full border-0"
                             title="Document Preview"
                         />
                     )}
-                    {!['image', 'video', 'audio', 'pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && 
-                     !/\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt)$/i.test(file.originalName) && (
+                    {!viewerUrl && !['image', 'video', 'audio'].includes(file.tipo) && (
                         <div className="text-center p-8">
                             <File size={80} className="mx-auto mb-6 text-gray-600" />
                             <h3 className="text-xl font-semibold mb-2 text-white">Vista previa no disponible</h3>
