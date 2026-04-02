@@ -45,7 +45,7 @@ const FolderHeader = ({
                 </div>
 
                 {/* Main Content Row */}
-                <div className="flex items-start gap-5">
+                <div className="flex items-start gap-5 mb-6">
                     {/* Icon - Always Left */}
                     <div
                         className="flex-shrink-0 p-4 md:p-5 rounded-2xl border-2"
@@ -57,13 +57,12 @@ const FolderHeader = ({
                         <HardDrive style={{ color: carpeta.color }} size={40} />
                     </div>
 
-                    {/* Center Content: Text + Badges */}
+                    {/* Title Content */}
                     <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4">
                             {/* Text */}
                             <div className="flex-1 min-w-0">
                                 <h1 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900 dark:text-white">{carpeta.nombre}</h1>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{carpeta.descripcion}</p>
                             </div>
 
                             {/* Button - Desktop Only (Top Right) */}
@@ -88,39 +87,46 @@ const FolderHeader = ({
                                 )}
                             </div>
                         </div>
-
-                        {/* Badges Row */}
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${carpeta.tipo === 'personal' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
-                                carpeta.tipo === 'grupal' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
-                                    'bg-cyan-500/20 text-cyan-500 border border-cyan-500/30'
-                                }`}>
-                                {carpeta.tipo === 'personal' && <Shield size={14} className="mr-1.5" />}
-                                {carpeta.tipo === 'grupal' && <Users size={14} className="mr-1.5" />}
-                                {carpeta.tipo === 'institucional' && <Building size={14} className="mr-1.5" />}
-                                {carpeta.tipo.charAt(0).toUpperCase() + carpeta.tipo.slice(1)}
-                            </span>
-
-                            {carpeta.visibilidadPorArea?.habilitado && (
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/15 text-indigo-400 dark:text-indigo-300 border border-indigo-500/30">
-                                    <Building size={14} className="mr-1.5" />
-                                    {carpeta.visibilidadPorArea.areas[0]}
-                                </span>
-                            )}
-
-                            {carpeta.visibilidadPorCargo?.habilitado && carpeta.visibilidadPorCargo.cargos.length > 0 && (
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-500/15 text-purple-400 dark:text-purple-300 border border-purple-500/30">
-                                    <Users size={14} className="mr-1.5" />
-                                    {carpeta.visibilidadPorCargo.cargos.join(', ')}
-                                </span>
-                            )}
-
-                            <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-500/12 text-slate-400 dark:text-slate-300 border border-slate-500/25">
-                                <File size={14} className="mr-1.5" />
-                                {carpeta.archivos.length} archivo{carpeta.archivos.length !== 1 ? 's' : ''}
-                            </span>
-                        </div>
                     </div>
+                </div>
+
+                {/* Description Row - Full Width below icon/title */}
+                <div className="mb-6">
+                    <p className="text-gray-500 dark:text-gray-400 text-[15px] md:text-[16px] leading-relaxed text-justify">
+                        {carpeta.descripcion}
+                    </p>
+                </div>
+
+                {/* Footer Row: Badges */}
+                <div className="flex flex-wrap items-center gap-2 border-t border-gray-100 dark:border-gray-700/50 pt-6">
+                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${carpeta.tipo === 'personal' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                        carpeta.tipo === 'grupal' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
+                            'bg-cyan-500/20 text-cyan-500 border border-cyan-500/30'
+                        }`}>
+                        {carpeta.tipo === 'personal' && <Shield size={14} className="mr-1.5" />}
+                        {carpeta.tipo === 'grupal' && <Users size={14} className="mr-1.5" />}
+                        {carpeta.tipo === 'institucional' && <Building size={14} className="mr-1.5" />}
+                        {carpeta.tipo.charAt(0).toUpperCase() + carpeta.tipo.slice(1)}
+                    </span>
+
+                    {carpeta.visibilidadPorArea?.habilitado && (
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/15 text-indigo-400 dark:text-indigo-300 border border-indigo-500/30">
+                            <Building size={14} className="mr-1.5" />
+                            {carpeta.visibilidadPorArea.areas[0]}
+                        </span>
+                    )}
+
+                    {carpeta.visibilidadPorCargo?.habilitado && carpeta.visibilidadPorCargo.cargos.length > 0 && (
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-500/15 text-purple-400 dark:text-purple-300 border border-purple-500/30">
+                            <Users size={14} className="mr-1.5" />
+                            {carpeta.visibilidadPorCargo.cargos.join(', ')}
+                        </span>
+                    )}
+
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-500/12 text-slate-400 dark:text-slate-300 border border-slate-500/25">
+                        <File size={14} className="mr-1.5" />
+                        {carpeta.archivos.length} archivo{carpeta.archivos.length !== 1 ? 's' : ''}
+                    </span>
                 </div>
             </div>
         </div>

@@ -100,8 +100,17 @@ const FolderDetailAdvanced = () => {
 
   const tienePermisoEscritura = () => {
     if (!carpeta || !user) return false;
-    if (carpeta.propietario._id === user._id) return true;
-    const compartido = carpeta.compartidaCon.find(c => c.usuario._id === user._id);
+    const userId = (user._id || user.id || '').toString();
+    const ownerId = (carpeta.propietario?._id || carpeta.propietario || '').toString();
+
+    // Propietario
+    if (ownerId && userId && ownerId === userId) return true;
+
+    // Compartido con permiso
+    const compartido = carpeta.compartidaCon?.find(c => {
+      const compartidoId = (c.usuario?._id || c.usuario || '').toString();
+      return compartidoId === userId;
+    });
     return compartido && ['escritura', 'admin'].includes(compartido.permisos);
   };
 

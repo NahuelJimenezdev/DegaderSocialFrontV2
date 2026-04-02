@@ -6,7 +6,7 @@ const FilePreviewModal = ({ file, onClose }) => {
     if (!file) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-black/95 z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
             <div className="relative w-full max-w-6xl h-[90vh] flex flex-col">
                 {/* Modal Header */}
                 <div className="flex justify-between items-center mb-6 px-4">
@@ -77,7 +77,14 @@ const FilePreviewModal = ({ file, onClose }) => {
                             title="PDF Preview"
                         />
                     )}
-                    {!['image', 'video', 'audio', 'pdf'].includes(file.tipo) && (
+                    {['document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
+                        <iframe
+                            src={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(file.url)}`}
+                            className="w-full h-full border-0"
+                            title="Office Preview"
+                        />
+                    )}
+                    {!['image', 'video', 'audio', 'pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
                         <div className="text-center p-8">
                             <File size={80} className="mx-auto mb-6 text-gray-600" />
                             <h3 className="text-xl font-semibold mb-2 text-white">Vista previa no disponible</h3>
