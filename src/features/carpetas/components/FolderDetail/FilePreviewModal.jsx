@@ -1,12 +1,13 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Download, X, Music, File, HardDrive, Calendar } from 'lucide-react';
 import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
 
 const FilePreviewModal = ({ file, onClose }) => {
     if (!file) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black/95 z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
+    const modalContent = (
+        <div className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4 backdrop-blur-sm">
             <div className="relative w-full max-w-6xl h-[90vh] flex flex-col">
                 {/* Modal Header */}
                 <div className="flex justify-between items-center mb-6 px-4">
@@ -98,6 +99,8 @@ const FilePreviewModal = ({ file, onClose }) => {
             </div>
         </div>
     );
+
+    return createPortal(modalContent, document.getElementById('modal-root') || document.body);
 };
 
 export default FilePreviewModal;
