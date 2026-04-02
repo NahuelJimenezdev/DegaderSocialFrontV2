@@ -10,8 +10,8 @@ export const renderContentWithItems = (content, options = {}) => {
   if (!content || typeof content !== 'string') return content;
 
   const {
-    linkClass = "text-blue-500 dark:text-blue-400 hover:underline break-all",
-    mentionClass = "text-indigo-600 dark:text-indigo-400 font-semibold cursor-pointer hover:underline"
+    linkClass = "!text-blue-600 dark:!text-blue-400 font-bold hover:underline break-all",
+    mentionClass = "!text-indigo-600 dark:!text-indigo-400 font-bold cursor-pointer hover:underline"
   } = options;
 
   // Regex combinada para capturar URLs y menciones

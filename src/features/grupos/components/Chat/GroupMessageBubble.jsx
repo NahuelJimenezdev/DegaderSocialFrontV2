@@ -182,6 +182,72 @@ const GroupMessageBubble = ({
                                 </a>
                             </div>
                         )}
+                        
+                        {/* Previsualización de Enlace (URL Metadata) - Diseño Sutil y Elegante */}
+                        {msg.metadata?.urlPreview && (
+                            <a 
+                                href={msg.metadata.urlPreview.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`mt-2 flex overflow-hidden rounded-xl border transition-all group max-w-full ${
+                                    isMyMessage 
+                                        ? 'bg-white/10 border-white/20 hover:bg-white/20' 
+                                        : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-primary/30 shadow-sm'
+                                }`}
+                            >
+                                {msg.metadata.urlPreview.image ? (
+                                    <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 overflow-hidden relative">
+                                        <img 
+                                            src={msg.metadata.urlPreview.image} 
+                                            alt="preview" 
+                                            referrerPolicy="no-referrer"
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                            onError={(e) => {
+                                                const container = e.target.closest('.flex-shrink-0');
+                                                if (container) container.style.display = 'none';
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/5 dark:bg-white/5 pointer-events-none" />
+                                    </div>
+                                ) : (
+                                    <div className="w-16 h-20 sm:w-20 sm:h-24 flex-shrink-0 flex items-center justify-center bg-gray-50 dark:bg-gray-900/50">
+                                        <span className="material-symbols-outlined text-gray-400 opacity-50 text-3xl">link</span>
+                                    </div>
+                                )}
+                                
+                                <div className="p-3 flex-1 min-w-0 flex flex-col justify-center">
+                                    {msg.metadata.urlPreview.siteName && (
+                                        <div className="text-[9px] uppercase font-bold tracking-[0.1em] text-blue-500 dark:text-blue-400 mb-0.5 truncate opacity-90">
+                                            {msg.metadata.urlPreview.siteName}
+                                        </div>
+                                    )}
+                                    <h4 className={`text-[14px] font-bold line-clamp-1 leading-tight ${
+                                        isMyMessage ? 'text-white' : 'text-gray-900 dark:text-white'
+                                    }`}>
+                                        {msg.metadata.urlPreview.title}
+                                    </h4>
+                                    {msg.metadata.urlPreview.description && (
+                                        <p className={`text-[12px] mt-1 line-clamp-2 leading-snug opacity-90 ${
+                                            isMyMessage ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'
+                                        }`}>
+                                            {msg.metadata.urlPreview.description}
+                                        </p>
+                                    )}
+                                    <div className="flex items-center gap-1.5 mt-1.5 text-[9px] opacity-50 font-medium">
+                                        <span className="material-symbols-outlined text-[12px]">public</span>
+                                        <span className="truncate">
+                                            {(() => {
+                                                try {
+                                                    return new URL(msg.metadata.urlPreview.url).hostname.replace('www.', '');
+                                                } catch (e) {
+                                                    return msg.metadata.urlPreview.url;
+                                                }
+                                            })()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        )}
 
                         {/* Attachments */}
                         {msg.attachments && msg.attachments.length > 0 && (

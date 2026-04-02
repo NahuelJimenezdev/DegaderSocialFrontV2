@@ -129,31 +129,52 @@ const GroupLinks = ({ groupData }) => {
                     className="block p-4"
                   >
                     <div className="flex items-start gap-3">
-                      {/* Favicon */}
-                      {favicon && (
-                        <img
-                          src={favicon}
-                          alt="favicon"
-                          className="w-5 h-5 mt-0.5 flex-shrink-0 rounded"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                      )}
+                      {/* Preview Image or Icon */}
+                      <div className="flex-shrink-0">
+                        {enlace.image ? (
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 overflow-hidden rounded-xl border border-gray-100 dark:border-gray-700 relative">
+                            <img
+                              src={enlace.image}
+                              alt="preview"
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+                          </div>
+                        ) : (
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-blue-50 dark:bg-blue-900/10 rounded-xl">
+                            {favicon ? (
+                              <img
+                                src={favicon}
+                                alt="favicon"
+                                className="w-8 h-8 opacity-80"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                }}
+                              />
+                            ) : (
+                              <span className="material-symbols-outlined text-blue-400 text-3xl">link</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-gray-900 dark:text-white line-clamp-1 text-sm">
+                        <h3 className="font-bold text-blue-600 dark:text-blue-400 line-clamp-1 text-[15px] leading-tight mb-1">
                           {enlace.title || enlace.url}
                         </h3>
                         {enlace.description && (
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
+                          <p className="text-[13px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-snug">
                             {enlace.description}
                           </p>
                         )}
                         <div className="flex items-center gap-2 mt-2">
-                          <span className="text-xs text-gray-400 dark:text-gray-500">
-                            {domain}
+                          <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
+                            {enlace.siteName || domain}
                           </span>
                           <span className="text-gray-300 dark:text-gray-600">•</span>
                           <span className="text-xs text-gray-400 dark:text-gray-500">

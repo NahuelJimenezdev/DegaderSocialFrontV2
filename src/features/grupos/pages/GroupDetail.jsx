@@ -344,7 +344,7 @@ const GroupDetail = () => {
       {/* Backdrop para móvil */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-[250]"
+          className="fixed inset-0 bg-black/50 z-[1055]"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -356,7 +356,7 @@ const GroupDetail = () => {
           transition-transform duration-300 ease-in-out lg:transition-none
           ${isMobile && activeSection === 'chat' ? 'top-0' : 'top-[65px]'}
           ${isMobile
-            ? `right-0 z-[260] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
+            ? `right-0 z-[1060] sidebar-right-mobile ${sidebarOpen ? 'open' : ''}`
             : 'left-0 z-40 translate-x-0'}
         `}
         style={{ backgroundColor: 'var(--bg-card)' }}
@@ -377,7 +377,7 @@ const GroupDetail = () => {
       <div className={`
         w-full h-full overflow-y-auto overflow-x-hidden scrollbar-thin
         ${activeSection === 'chat'
-          ? 'max-md:fixed max-md:inset-0 max-md:z-[240]'
+          ? 'max-md:fixed max-md:inset-0 max-md:z-[1050]'
           : 'mb-mobile-67'}
       `} style={{ backgroundColor: 'var(--bg-main)' }}>
         <div className={activeSection === 'chat' ? 'h-full' : 'p-4 md:p-8 pt-0'}>
