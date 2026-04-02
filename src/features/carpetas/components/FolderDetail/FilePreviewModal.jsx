@@ -70,18 +70,11 @@ const FilePreviewModal = ({ file, onClose }) => {
                             </div>
                         </div>
                     )}
-                    {file.tipo === 'pdf' && (
+                    {['pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
                         <iframe
-                            src={file.url}
-                            className="w-full h-full"
-                            title="PDF Preview"
-                        />
-                    )}
-                    {['document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
-                        <iframe
-                            src={`https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(file.url)}`}
+                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(file.url)}&embedded=true`}
                             className="w-full h-full border-0"
-                            title="Office Preview"
+                            title="Document Preview"
                         />
                     )}
                     {!['image', 'video', 'audio', 'pdf', 'document', 'spreadsheet', 'presentation'].includes(file.tipo) && (
