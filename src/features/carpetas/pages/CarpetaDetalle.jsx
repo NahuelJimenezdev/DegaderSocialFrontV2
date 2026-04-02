@@ -10,6 +10,7 @@ import folderService from '../../../api/folderService';
 import { useAuth } from '../../../hooks/useAuth';
 import { AlertDialog } from '../../../shared/components/AlertDialog';
 import { ConfirmDialog } from '../../../shared/components/ConfirmDialog';
+import FilePreviewModal from '../components/FolderDetail/FilePreviewModal';
 
 const CarpetaDetalle = () => {
   const { id } = useParams();
@@ -270,49 +271,10 @@ const CarpetaDetalle = () => {
       </div>
 
       {/* Preview Modal */}
-      {previewFile && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
-          <div className="relative w-full max-w-5xl h-[80vh] flex flex-col">
-            <div className="flex justify-between items-center text-white mb-4">
-              <h3 className="text-lg font-medium truncate">{previewFile.originalName}</h3>
-              <div className="flex items-center gap-4">
-                <a
-                  href={previewFile.url}
-                  download
-                  className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                >
-                  <Download size={18} /> Descargar
-                </a>
-                <button onClick={() => setPreviewFile(null)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                  <X size={24} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex-1 bg-black rounded-xl overflow-hidden flex items-center justify-center border border-gray-800">
-              {previewFile.tipo === 'image' && (
-                <img src={previewFile.url} alt={previewFile.originalName} className="max-w-full max-h-full object-contain" />
-              )}
-              {previewFile.tipo === 'video' && (
-                <video src={previewFile.url} controls className="max-w-full max-h-full" />
-              )}
-              {previewFile.tipo === 'audio' && (
-                <audio src={previewFile.url} controls className="w-full max-w-md" />
-              )}
-              {previewFile.tipo === 'pdf' && (
-                <iframe src={previewFile.url} className="w-full h-full" title="PDF Preview" />
-              )}
-              {!['image', 'video', 'audio', 'pdf'].includes(previewFile.tipo) && (
-                <div className="text-center text-gray-400">
-                  <File size={64} className="mx-auto mb-4 opacity-50" />
-                  <p>Vista previa no disponible para este tipo de archivo.</p>
-                  <p className="text-sm mt-2">Por favor descarga el archivo para verlo.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <FilePreviewModal
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
 
       {/* AlertDialog Component */}
       <AlertDialog
