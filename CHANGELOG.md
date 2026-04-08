@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.86.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.0...v1.86.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* **fundacion:** fix firma digital not loading in Hoja de Vida ([65b360d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/65b360dde761482fadab6bfe6fa67200b465015e))
+
 ## [1.86.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.85.0...v1.86.0) (2026-04-08)
 
 
