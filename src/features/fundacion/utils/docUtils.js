@@ -149,11 +149,23 @@ const getBinary = async (tagValue) => {
     }
     return bytes;
   }
+/**
+ * Convierte un Map o Objeto de datos en un objeto plano para generadores de documentos
+ */
+const ensurePlainObject = (data) => {
+  if (!data) return {};
+  if (typeof data.get === 'function' && typeof data.forEach === 'function') {
+    const obj = {};
+    data.forEach((v, k) => { obj[k] = v; });
+    return obj;
+  }
+  return data;
 };
 
 export const generateCV = async (userData, overrideData = null, overridePhotos = null) => {
   const meta = userData.fundacion || {};
-  const formData = overrideData || meta.hojaDeVida?.datos || {};
+  const rawFormData = overrideData || meta.hojaDeVida?.datos || {};
+  const formData = ensurePlainObject(rawFormData);
   
   // Plantilla configurable desde el usuario o por defecto
   const templatePath = meta.hojaDeVida?.templatePath || '/templates/FORMATO HOJA DE VIDA FHISYL.docx';
@@ -359,11 +371,33 @@ export const generateFHSYL = async (userData, firmaB64 = null) => {
   const data = userData.fundacion?.documentacionFHSYL || {};
   const nombreC = `${userData.nombres?.primero || ''} ${userData.apellidos?.primero || ''}`;
   
+  // Si no llega firma por parámetro, intentar obtenerla del usuario
+  let finalFirmaB64 = firmaB64;
+  if (!finalFirmaB64) {
+    const firmaUrl = userData.fundacion?.hojaDeVida?.datos?.firma_digital || 
+                     userData.fundacion?.hojaDeVida?.datos?.get?.('firma_digital') ||
+                     userData.social?.firma; 
+    if (firmaUrl) {
+      try {
+        const binary = await getBinary(firmaUrl);
+        // Convertir binary (Uint8Array) a base64 para el HTML
+        const blob = new Blob([binary], { type: 'image/png' });
+        finalFirmaB64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch (err) {
+        console.warn('No se pudo cargar la firma para FHSYL:', err);
+      }
+    }
+  }
+
   let firmaHtml = '';
-  if (firmaB64) {
+  if (finalFirmaB64) {
     firmaHtml = `
       <div style="margin-top: 20pt;">
-        <img src="${firmaB64}" width="180" style="display:block; margin-bottom:-10pt;" />
+        <img src="${finalFirmaB64}" width="180" style="display:block; margin-bottom:-10pt;" />
         <div class="signature-box">Firma del Solicitante</div>
       </div>
     `;
@@ -437,13 +471,40 @@ export const generateFHSYL = async (userData, firmaB64 = null) => {
 };
 
 export const generateEntrevista = async (userData, firmaB64 = null) => {
-  const resp = userData.fundacion?.entrevista?.respuestas || {};
+  // Manejar si respuestas es un Map o un Object
+  let resp = userData.fundacion?.entrevista?.respuestas || {};
+  if (typeof resp.get === 'function') {
+    const plainResp = {};
+    resp.forEach((v, k) => { plainResp[k] = v; });
+    resp = plainResp;
+  }
   
+  // Si no llega firma por parámetro, intentar obtenerla
+  let finalFirmaB64 = firmaB64;
+  if (!finalFirmaB64) {
+    const firmaUrl = userData.fundacion?.hojaDeVida?.datos?.firma_digital || 
+                     userData.fundacion?.hojaDeVida?.datos?.get?.('firma_digital') ||
+                     userData.social?.firma;
+    if (firmaUrl) {
+      try {
+        const binary = await getBinary(firmaUrl);
+        const blob = new Blob([binary], { type: 'image/png' });
+        finalFirmaB64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch (err) {
+        console.warn('No se pudo cargar la firma para Entrevista:', err);
+      }
+    }
+  }
+
   let firmaHtml = '';
-  if (firmaB64) {
+  if (finalFirmaB64) {
     firmaHtml = `
       <div style="margin-top: 20pt;">
-        <img src="${firmaB64}" width="180" style="display:block; margin-bottom:-10pt;" />
+        <img src="${finalFirmaB64}" width="180" style="display:block; margin-bottom:-10pt;" />
         <div class="signature-box">Firma del Postulante</div>
       </div>
     `;
@@ -496,9 +557,43 @@ export const generateEntrevista = async (userData, firmaB64 = null) => {
   return new Blob(['\ufeff', content], { type: 'application/vnd.ms-word' });
 };
 
-export const generateSolicitud = (userData) => {
+export const generateSolicitud = async (userData, firmaB64 = null) => {
   const f = userData.fundacion || {};
   const t = f.territorio || {};
+  
+  // Intentar obtener firma si no se proporciona
+  let finalFirmaB64 = firmaB64;
+  if (!finalFirmaB64) {
+    const firmaUrl = userData.fundacion?.hojaDeVida?.datos?.firma_digital || 
+                     userData.fundacion?.hojaDeVida?.datos?.get?.('firma_digital') ||
+                     userData.social?.firma;
+    if (firmaUrl) {
+      try {
+        const binary = await getBinary(firmaUrl);
+        const blob = new Blob([binary], { type: 'image/png' });
+        finalFirmaB64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch (err) {
+        console.warn('No se pudo cargar la firma para Solicitud:', err);
+      }
+    }
+  }
+
+  let firmaHtml = '';
+  if (finalFirmaB64) {
+    firmaHtml = `
+      <div style="margin-top: 30pt; text-align: center;">
+        <img src="${finalFirmaB64}" width="180" style="display:inline-block;" />
+        <div style="margin-top: 5pt; border-top: 1pt solid #000; width: 220pt; margin-left: auto; margin-right: auto; padding-top: 5pt;">
+          Firma del Solicitante / Miembro
+        </div>
+      </div>
+    `;
+  }
+
   const content = getHtmlBase('Solicitud de Ingreso', `
     <div class="section">ESTRUCTURA ORGANIZACIONAL</div>
     <div class="field"><span class="label">Nivel Jerárquico:</span> <span class="value">${(f.nivel || '').replace(/_/g, ' ').toUpperCase()}</span></div>
@@ -517,6 +612,8 @@ export const generateSolicitud = (userData) => {
     <div class="section">ESTADO DE CUENTA</div>
     <div class="field"><span class="label">Estado de Aprobación:</span> <span class="value">${(f.estadoAprobacion || 'pendiente').toUpperCase()}</span></div>
     <div class="field"><span class="label">Fecha de Ingreso:</span> <span class="value">${f.fechaIngreso ? new Date(f.fechaIngreso).toLocaleDateString() : 'N/A'}</span></div>
+
+    ${firmaHtml}
   `);
   return new Blob(['\ufeff', content], { type: 'application/vnd.ms-word' });
 };

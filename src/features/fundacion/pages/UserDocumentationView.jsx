@@ -67,17 +67,17 @@ export default function UserDocumentationView() {
           return; // downloadCV ya maneja el saveAs
         case 'fhsyl':
           console.log('Generando Aplicativo Argentina...');
-          blob = generateFHSYL(targetUser);
+          blob = await generateFHSYL(targetUser);
           filename = `FHSYL_Argentina_${nameStr}.doc`;
           break;
         case 'entrevista':
           console.log('Generando Entrevista...');
-          blob = generateEntrevista(targetUser);
+          blob = await generateEntrevista(targetUser);
           filename = `Entrevista_${nameStr}.doc`;
           break;
         case 'solicitud':
           console.log('Generando Solicitud...');
-          blob = generateSolicitud(targetUser);
+          blob = await generateSolicitud(targetUser);
           filename = `Solicitud_Ingreso_${nameStr}.doc`;
           break;
         default: return;
