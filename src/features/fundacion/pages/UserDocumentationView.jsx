@@ -9,7 +9,9 @@ import {
   User, 
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
+  MessageCircle,
+  Mail
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import userService from '../../../api/userService';
@@ -274,10 +276,12 @@ export default function UserDocumentationView() {
       </div>
       
       {/* Quick Bio Card */}
-      <div className="mt-12 bg-gradient-to-r from-gray-900 to-blue-900 p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
+      <div className="mt-12 bg-white dark:bg-gray-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-xl relative overflow-hidden group">
+        {/* Decorative Background */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 dark:bg-blue-900/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50 transition-transform group-hover:scale-110 duration-700" />
+        
         <div className="relative flex flex-col md:flex-row items-center gap-8">
-          <div className="w-24 h-24 rounded-3xl overflow-hidden bg-white/10 p-1 border border-white/20">
+          <div className="w-24 h-24 rounded-3xl overflow-hidden bg-gray-50 dark:bg-white/10 p-1 border border-gray-200 dark:border-white/20 shadow-inner">
              <img 
                src={targetUser.social?.fotoPerfil || '/avatars/default-avatar.png'} 
                className="w-full h-full object-cover rounded-2xl" 
@@ -285,15 +289,30 @@ export default function UserDocumentationView() {
              />
           </div>
           <div className="flex-1 text-center md:text-left">
-            <h4 className="text-xl font-bold">{targetUser.nombres?.primero || 'Usuario'} {targetUser.apellidos?.primero || ''}</h4>
-            <p className="text-blue-200 mt-1 uppercase tracking-widest text-xs font-bold">
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white">
+              {targetUser.nombres?.primero || 'Usuario'} {targetUser.apellidos?.primero || ''}
+            </h4>
+            <p className="text-blue-600 dark:text-blue-300 mt-1 uppercase tracking-widest text-xs font-bold">
               {targetUser.fundacion?.cargo || 'Sin Cargo'} • {targetUser.fundacion?.area || 'Sin Área'}
             </p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
-              <span className="flex items-center gap-2 text-sm bg-white/10 px-4 py-1.5 rounded-xl border border-white/10">
-                <User size={16} className="text-blue-300" />
+            
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-5">
+              <span className="flex items-center gap-2 text-sm bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-300 px-4 py-2 rounded-xl border border-gray-100 dark:border-white/10">
+                <Mail size={16} className="text-blue-500" />
                 {targetUser.email}
               </span>
+
+              {targetUser.personal?.celular && (
+                <a 
+                  href={`https://wa.me/${targetUser.personal.celular.replace(/\D/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm bg-[#25D366] hover:bg-[#128C7E] text-white px-5 py-2 rounded-xl font-bold shadow-lg shadow-green-500/20 transition-all active:scale-95 border border-green-400/20"
+                >
+                  <MessageCircle size={18} />
+                  WhatsApp
+                </a>
+              )}
             </div>
           </div>
         </div>
