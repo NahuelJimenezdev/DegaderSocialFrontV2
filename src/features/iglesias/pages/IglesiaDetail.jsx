@@ -94,7 +94,17 @@ const IglesiaDetail = ({ churchId }) => {
       case 'ex_miembros':
         return <IglesiaExMiembrosContent iglesiaId={id} />;
       case 'member_profile':
-        return <MemberProfileContent userId={memberIdParam} iglesiaId={id} isPastor={isPastor} />;
+        return <MemberProfileContent 
+          userId={memberIdParam} 
+          iglesiaId={id} 
+          isPastor={isPastor} 
+          onMemberRemoved={() => {
+            searchParams.delete('member');
+            setSearchParams(searchParams);
+            setActiveSection('members');
+            refetch();
+          }}
+        />;
       case 'settings':
         return <IglesiaSettings iglesiaData={iglesiaData} refetch={refetch} />;
       case 'chat':

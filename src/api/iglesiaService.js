@@ -108,6 +108,12 @@ const iglesiaService = {
   deleteTestimonio: async (id, testimonioId) => {
     const response = await api.delete(`/iglesias/${id}/testimonios/${testimonioId}`);
     return response.data;
+  },
+
+  // Expulsar miembro (solo pastor)
+  expulsarMiembro: async (iglesiaId, userId, motivo) => {
+    const response = await api.delete(`/iglesias/${iglesiaId}/miembros/${userId}`, { data: { motivo } });
+    return response.data;
   }
 };
 

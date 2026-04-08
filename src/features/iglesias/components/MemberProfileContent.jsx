@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { userService } from '../../../api';
+import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
-import { Calendar, Cake, MapPin, Heart, Clock, Phone } from 'lucide-react';
+import { Calendar, Cake, MapPin, Heart, Clock, Phone, UserMinus, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import SeccionAdministrativaMinisterios from './SeccionAdministrativaMinisterios';
 import { MINISTERIOS_DISPONIBLES } from '../hooks/useMinisterios';
 
-const MemberProfileContent = ({ userId, iglesiaId, isPastor }) => {
+const MemberProfileContent = ({ userId, iglesiaId, isPastor, onMemberRemoved }) => {
     const { user: currentUser, refreshProfile } = useAuth();
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showExpulsionModal, setShowExpulsionModal] = useState(false);
+    const [expulsionMotivo, setExpulsionMotivo] = useState('');
+    const [expulsionLoading, setExpulsionLoading] = useState(false);
 
     useEffect(() => {
         loadUserInfo();
@@ -210,6 +214,101 @@ const MemberProfileContent = ({ userId, iglesiaId, isPastor }) => {
                     isPastor={isPastor}
                     onUpdate={loadUserInfo}
                 />
+            )}
+
+            {/* Botón Expulsar Miembro - Solo visible para el pastor y no sobre sí mismo */}
+            {isPastor && userId !== currentUser?._id && userId !== currentUser?.id && (
+                <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl border border-red-200 dark:border-red-900/50 p-6 shadow-sm">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 flex items-center gap-2">
+                                <AlertTriangle className="w-5 h-5" />
+                                Zona de administración
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                Remover a este miembro de la iglesia
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => setShowExpulsionModal(true)}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium text-sm"
+                        >
+                            <UserMinus className="w-4 h-4" />
+                            Expulsar miembro
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Confirmación de Expulsión */}
+            {showExpulsionModal && (
+                <div className="fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-full">
+                                <UserMinus className="w-6 h-6 text-red-600 dark:text-red-400" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                                    Expulsar miembro
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    {fullName}
+                                </p>
+                            </div>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                            Esta acción removerá al miembro de la iglesia. Se registrará en el historial de salidas y el miembro recibirá una notificación.
+                        </p>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Motivo (opcional)
+                            </label>
+                            <textarea
+                                value={expulsionMotivo}
+                                onChange={(e) => setExpulsionMotivo(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                                rows={3}
+                                placeholder="Ej: Inactividad prolongada, conducta inapropiada..."
+                                maxLength={300}
+                            />
+                        </div>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => { setShowExpulsionModal(false); setExpulsionMotivo(''); }}
+                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                                disabled={expulsionLoading}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        setExpulsionLoading(true);
+                                        await iglesiaService.expulsarMiembro(iglesiaId, userId, expulsionMotivo);
+                                        setShowExpulsionModal(false);
+                                        setExpulsionMotivo('');
+                                        if (onMemberRemoved) onMemberRemoved(userId);
+                                    } catch (err) {
+                                        logger.error('Error al expulsar miembro:', err);
+                                        alert(err.response?.data?.message || 'Error al expulsar miembro');
+                                    } finally {
+                                        setExpulsionLoading(false);
+                                    }
+                                }}
+                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
+                                disabled={expulsionLoading}
+                            >
+                                {expulsionLoading ? (
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                                ) : (
+                                    <UserMinus className="w-4 h-4" />
+                                )}
+                                {expulsionLoading ? 'Expulsando...' : 'Confirmar expulsión'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
