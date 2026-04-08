@@ -23,6 +23,23 @@ const formatFechaSolicitud = (dateString) => {
 };
 
 /**
+ * Formatea la información de fundación de un usuario para mostrar en etiquetas
+ */
+const formatInfoFundacion = (f) => {
+    if (!f) return '';
+    const partes = [
+        f.cargo,
+        f.area && `en la ${f.area}`,
+        f.subArea && `de la ${f.subArea}`,
+        f.programa && `del ${f.programa}`,
+        f.nivel && `a nivel ${f.nivel}`,
+        f.territorio?.pais && `en el país ${f.territorio.pais}`
+    ];
+    const info = partes.filter(Boolean).join(' ');
+    return info ? `(${info})` : '';
+};
+
+/**
  * Lista de solicitudes pendientes de aprobación
  */
 const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
@@ -47,24 +64,46 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                 Solicitudes Pendientes ({solicitudes.length})
             </h3>
             <div className="space-y-4">
-                {solicitudes.map((solicitud) => (
-                    <div
-                        key={solicitud._id}
-                        className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                    >
-                        <div className="flex-1">
-                            <p className="font-semibold text-gray-900 dark:text-white uppercase text-lg">
-                                {solicitud.nombres.primero} {solicitud.apellidos.primero}
-                            </p>
-                            
-                            <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1.5 font-medium">
-                                <Clock size={12} className="text-amber-500" />
-                                {formatFechaSolicitud(solicitud.fundacion?.fechaSolicitud || solicitud.fundacion?.fechaIngreso || solicitud.createdAt)}
-                            </p>
+                {solicitudes.map((solicitud) => {
+                    const f = solicitud.fundacion;
 
-                            <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">
-                                Solicita: {solicitud.fundacion.cargo} {solicitud.fundacion.area && `en la ${solicitud.fundacion.area}`} {solicitud.fundacion.subArea && `de la ${solicitud.fundacion.subArea}`} {solicitud.fundacion.programa && `del ${solicitud.fundacion.programa}`} {solicitud.fundacion.nivel && `a nivel ${solicitud.fundacion.nivel}`} {solicitud.fundacion.territorio?.pais && `en el país ${solicitud.fundacion.territorio.pais}`}
-                            </p>
+                    const nombreReferente = f.referenteId?.nombres
+                        ? `${f.referenteId.nombres.primero} ${f.referenteId.apellidos?.primero || ''} ${formatInfoFundacion(f.referenteId.fundacion)}`.trim()
+                        : f.referenteId || 'su referente';
+
+                    const textoAfiliado = `es afiliado de ${nombreReferente}`;
+
+                    const textoNormal = [
+                        f.cargo,
+                        f.area && `en la ${f.area}`,
+                        f.subArea && `de la ${f.subArea}`,
+                        f.programa && `del ${f.programa}`,
+                        f.nivel && `a nivel ${f.nivel}`,
+                        f.territorio?.pais && `en el país ${f.territorio.pais}`
+                    ]
+                        .filter(Boolean)
+                        .join(' ');
+
+                    return (
+                        <div
+                            key={solicitud._id}
+                            className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                        >
+                            <div className="flex-1">
+                                <p className="font-semibold text-gray-900 dark:text-white uppercase text-lg">
+                                    {solicitud.nombres.primero} {solicitud.apellidos.primero}
+                                </p>
+                                
+                                <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1.5 font-medium">
+                                    <Clock size={12} className="text-amber-500" />
+                                    {formatFechaSolicitud(solicitud.fundacion?.fechaSolicitud || solicitud.fundacion?.fechaIngreso || solicitud.createdAt)}
+                                </p>
+
+                                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">
+                                    {/* Ternario de la funcion Solicitud */}
+                                    Solicita: {f.nivel === 'afiliado' ? textoAfiliado : textoNormal}
+                                    {/* Ternario de la funcion Solicitud */}
+                                </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50 mr-4">
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                     <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(solicitud.fundacion.cargo) ? 'Dirección General' : 'N/A')}
@@ -118,8 +157,9 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                                 <Check size={20} />
                             </button>
                         </div>
-                    </div>
-                ))}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
