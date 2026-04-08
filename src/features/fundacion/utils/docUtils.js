@@ -79,7 +79,7 @@ const processSignatureImage = (base64) => {
  * Obtiene el contenido binario de una imagen (Base64 o URL vía proxy)
  */
 const getBinary = async (tagValue) => {
-  console.log('getBinary invocado con:', tagValue);
+  console.log('getBinary invocado con:', typeof tagValue === 'string' ? tagValue.substring(0, 80) + '...' : tagValue);
   // Fallback a imagen transparente 1x1 para evitar errores de length de docxtemplater
   if (!tagValue || tagValue === '' || tagValue === '---' || typeof tagValue !== 'string') {
     const binaryString = window.atob(EMPTY_IMAGE);
@@ -105,7 +105,7 @@ const getBinary = async (tagValue) => {
       return bytes;
     }
 
-    // Caso 2: Es una URL de imagen (requiere proxy para evitar CORS)
+    // Caso 2: Es una URL de imagen
     const baseUrl = import.meta.env.VITE_API_URL || 'https://degadersocial.com/api';
     let finalUrl = strVal;
     
@@ -115,13 +115,30 @@ const getBinary = async (tagValue) => {
       finalUrl = `${baseUrl.replace('/api', '')}${leadingSlash}${strVal}`;
     }
 
+    // Caso 2a: URLs de R2 (directamente accesibles sin proxy)
+    if (finalUrl.includes('.r2.dev/') || finalUrl.includes('r2.cloudflarestorage.com')) {
+      console.log('getBinary: descargando directamente desde R2:', finalUrl);
+      try {
+        const response = await fetch(finalUrl);
+        if (response.ok) {
+          const buffer = await response.arrayBuffer();
+          console.log('getBinary: descarga directa R2 exitosa, tamaño:', buffer.byteLength);
+          return new Uint8Array(buffer);
+        }
+        console.warn('getBinary: descarga directa R2 falló (HTTP', response.status, '), intentando proxy...');
+      } catch (directErr) {
+        console.warn('getBinary: fetch directo R2 falló, intentando proxy...', directErr.message);
+      }
+    }
+
+    // Caso 2b: Usar proxy para evitar CORS
     console.log('getBinary: descargando vía proxy:', finalUrl);
     const proxyUrl = `${baseUrl}/upload/proxy?url=${encodeURIComponent(finalUrl)}`;
     const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error(`HTTP ${response.status} al descargar imagen`);
+    if (!response.ok) throw new Error(`HTTP ${response.status} al descargar imagen vía proxy`);
 
     const buffer = await response.arrayBuffer();
-    console.log('getBinary: descarga exitosa, tamaño:', buffer.byteLength);
+    console.log('getBinary: descarga vía proxy exitosa, tamaño:', buffer.byteLength);
     return new Uint8Array(buffer);
   } catch (error) {
     console.warn('Error en getBinary, usando fallback vacío:', error.message);

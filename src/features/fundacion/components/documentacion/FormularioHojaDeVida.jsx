@@ -212,7 +212,10 @@ export default function FormularioHojaDeVida() {
       }
 
       if (savedData.firma_digital) {
-        setFirmaPreview(savedData.firma_digital);
+        const firmaUrl = getFullImageUrl(savedData.firma_digital);
+        console.log('DEBUG - Firma URL guardada:', savedData.firma_digital);
+        console.log('DEBUG - Firma URL procesada:', firmaUrl);
+        setFirmaPreview(firmaUrl);
       }
     }
   }, [user]);
