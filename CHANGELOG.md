@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.86.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.85.0...v1.86.0) (2026-04-08)
+
+
+### Features
+
+* **iglesia:** add expulsion UI with confirmation modal ([dd60c81](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/dd60c810e0fbf608881e61616a8782b5b0fdf60a))
+
+
+### Bug Fixes
+
+* **folders:** add missing ProgressiveImage import to FilePreviewModal ([fb0a8c2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/fb0a8c29ac97b8a25815ee6743da958b972a4efd))
+
 ## [1.85.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.84.0...v1.85.0) (2026-04-08)
 
 
