@@ -2,6 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { Download, X, Music, File, HardDrive, Calendar } from 'lucide-react';
 import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
+import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
 const FilePreviewModal = ({ file, onClose }) => {
     if (!file) return null;
