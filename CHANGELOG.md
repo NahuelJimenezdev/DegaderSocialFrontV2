@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.86.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.3...v1.86.4) (2026-04-08)
+
+
+### Bug Fixes
+
+* **build:** fix syntax error and upgrade Node to 20 for Vite 7 ([ef46acd](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ef46acd7b0597b42db0872a6b80f78e6feb96dfc))
+
 ### [1.86.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.2...v1.86.3) (2026-04-08)
 
 
