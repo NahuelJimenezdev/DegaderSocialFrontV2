@@ -149,6 +149,8 @@ const getBinary = async (tagValue) => {
     }
     return bytes;
   }
+};
+
 /**
  * Convierte un Map o Objeto de datos en un objeto plano para generadores de documentos
  */
