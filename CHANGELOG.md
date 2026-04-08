@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.85.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.84.0...v1.85.0) (2026-04-08)
+
+
+### Features
+
+* **folders:** add owner name to folder card with minimalist styling ([aa0fe0e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/aa0fe0e0cc2b194f7ad0184f27843730756757b6))
+* **folders:** improve preview, styling, and permissions ([23b03d0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/23b03d0905702c5d67780f4581106efc480f55cc))
+* **fundacion:** se mejoró la visualización de solicitudes pendientes, incluyendo información detallada del referente para afiliados y eliminando etiquetas 'undefined' mediante filtrado de campos vacíos ([8e3ad1d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8e3ad1d81bbeedf508ccf595865863cb60361b76))
+* link previews, typography improvements, and mobile z-index fix ([9144f58](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9144f583e9492035e010b74a62881a8cfc7a00c4))
+* rich link preview UI, improved typography for accessibility, and mobile z-index layering fix ([99b88c5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/99b88c540bab5050fb111b38dd74d4b6b5628722))
+
+
+### Bug Fixes
+
+* **folders:** add robust extension check for document preview (PPT fix) ([7203a6d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7203a6d090cf231973508780d6b7047ae33204f6))
+* **folders:** clean up double slashes in URLs to ensure Microsoft Viewer works ([bd362ba](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/bd362baccd331fe91df16eeb81b8558c82df7c1b))
+* **folders:** ensure CarpetaCard truncation and styling are fully committed and pushed ([8c6e69e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8c6e69eb48294bc63534c938cd077824afbcb0b5))
+* **folders:** explicitly prioritize Microsoft for PPT/Excel and Google for PDF/Word ([9851a2b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9851a2b7966d9a208269c81fcac8ce73a0fdb5d3))
+* **folders:** implement hybrid viewer (Google for PDF/Word, Microsoft for Excel/PPT) and Portal fix ([e05df24](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e05df24287570154372a8144bd7aa329b43e57eb))
+* **folders:** replace inline modal with FilePreviewModal component to fix z-index and mobile preview ([0b62092](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0b620927135d7ffaf0437ef4fb2cd7e87147f867))
+* **folders:** switch to Google Docs Viewer for unified document preview (mobile fix) ([0db30c2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0db30c20af8ef2d51b6dfc1a9808309f62028aef))
+* **ui:** implement React Portal for FilePreviewModal to fix z-index issues on mobile ([4a3a920](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4a3a92040b07604b75c3ab7cfa0f90e2595fea26))
+
 ## [1.84.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.83.2...v1.84.0) (2026-04-02)
 
 
