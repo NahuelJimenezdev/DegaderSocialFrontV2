@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.89.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.88.0...v1.89.0) (2026-04-09)
+
+
+### Features
+
+* **fundacion:** integrar botón de descarga de base Excel en el panel administrativo ([4a610ec](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4a610ecce46fd6354c9dcfd484f64d1a9e31da55))
+
 ## [1.88.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.87.0...v1.88.0) (2026-04-09)
 
 
