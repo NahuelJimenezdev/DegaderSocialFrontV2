@@ -24,6 +24,7 @@ import {
   downloadCV
 } from '../utils/docUtils';
 import { getWhatsAppLink } from '../../whatsapp/utils/whatsappHelper';
+import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 
 export default function UserDocumentationView() {
   const { id } = useParams();
@@ -284,9 +285,10 @@ export default function UserDocumentationView() {
         <div className="relative flex flex-col md:flex-row items-center gap-8">
           <div className="w-24 h-24 rounded-3xl overflow-hidden bg-gray-50 dark:bg-white/10 p-1 border border-gray-200 dark:border-white/20 shadow-inner">
              <img 
-               src={targetUser.social?.fotoPerfil || '/avatars/default-avatar.png'} 
+               src={getUserAvatar(targetUser)} 
                className="w-full h-full object-cover rounded-2xl" 
-               alt="Avatar"
+               alt={`${targetUser.nombres?.primero || 'Usuario'}`}
+               onError={handleImageError}
              />
           </div>
           <div className="flex-1 text-center md:text-left">

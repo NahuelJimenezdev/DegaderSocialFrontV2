@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../../../context/AuthContext';
 import fundacionService from '../../../api/fundacionService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
-import { getUserAvatar } from '../../../shared/utils/avatarUtils';
+import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 import { getTerritorioString } from '../../../shared/utils/userUtils';
 
 export default function FundacionAdminDashboard() {
@@ -289,7 +289,7 @@ export default function FundacionAdminDashboard() {
                          src={getUserAvatar(u)} 
                          alt={`${u.nombres?.primero || ''} ${u.apellidos?.primero || ''}`}
                          className="w-16 h-16 rounded-full object-cover shadow-sm bg-gray-100 dark:bg-gray-700"
-                         onError={(e) => { e.currentTarget.src = '/avatars/default-avatar.png'; }}
+                         onError={handleImageError}
                        />
                        <div className="absolute -bottom-1 -right-1 p-1 bg-green-500 rounded-full text-white border-2 border-white dark:border-gray-800">
                          <UserCheck size={12} fill="currentColor" />
@@ -358,7 +358,7 @@ export default function FundacionAdminDashboard() {
                       src={getUserAvatar(u)} 
                       alt={`${u.nombres?.primero || ''} ${u.apellidos?.primero || ''}`}
                       className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-sm bg-gray-100 dark:bg-gray-700"
-                      onError={(e) => { e.currentTarget.src = '/avatars/default-avatar.png'; }}
+                      onError={handleImageError}
                     />
                     <div className="absolute -bottom-1 -right-1 p-1 sm:p-1.5 bg-green-500 rounded-full text-white border-2 border-white dark:border-gray-800">
                       <UserCheck size={12} className="sm:w-[14px] sm:h-[14px]" fill="currentColor" />
