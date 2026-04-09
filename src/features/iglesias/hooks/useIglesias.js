@@ -21,10 +21,17 @@ export const useIglesias = (user) => {
     const [formIglesia, setFormIglesia] = useState({
         nombre: '',
         denominacion: '',
-        pais: 'Colombia',
+        pais: user?.personal?.ubicacion?.pais || '',
         ciudad: '',
         direccion: ''
     });
+
+    // Sincronizar país del usuario cuando el perfil cargue
+    useEffect(() => {
+        if (user?.personal?.ubicacion?.pais && !formIglesia.pais) {
+            setFormIglesia(prev => ({ ...prev, pais: user.personal.ubicacion.pais }));
+        }
+    }, [user?.personal?.ubicacion?.pais]);
     const [alertConfig, setAlertConfig] = useState({
         isOpen: false,
         variant: 'info',
