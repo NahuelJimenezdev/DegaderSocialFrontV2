@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.89.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.89.0...v1.89.1) (2026-04-09)
+
+
+### Bug Fixes
+
+* **fundacion:** mejorar visualización de niveles jerárquicos y territorios en el perfil ([ca936a7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ca936a7151e2b179f3ab107bfc84926e8925da2f))
+
 ## [1.89.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.88.0...v1.89.0) (2026-04-09)
 
 
