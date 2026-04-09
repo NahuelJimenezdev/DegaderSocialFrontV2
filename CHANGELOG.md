@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.90.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.89.2...v1.90.0) (2026-04-09)
+
+
+### Features
+
+* **iglesia:** mostrar información de vinculación a fundación en el perfil de miembro ([b286f92](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b286f9223a34b7b7cf036ebe487378e3bc761635))
+* **iglesia:** pre-cargar país del usuario al registrar una nueva iglesia ([a94c493](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a94c49351671c71885a6425a5fa4605adb889d23))
+
+
+### Bug Fixes
+
+* **iglesia:** mostrar card de fundación en la vista incrustada de perfil de miembro ([518af41](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/518af415ad59f23572dff09d4b1d554710f84de3))
+
 ### [1.89.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.89.1...v1.89.2) (2026-04-09)
 
 
