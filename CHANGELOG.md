@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.88.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.87.0...v1.88.0) (2026-04-09)
+
+
+### Features
+
+* **whatsapp:** update greeting message with blessings and formatting ([9121593](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9121593a6fd9aa2e3f64354bcc26e71dca6a38c8))
+
 ## [1.87.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.6...v1.87.0) (2026-04-09)
 
 
