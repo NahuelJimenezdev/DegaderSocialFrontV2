@@ -62,6 +62,28 @@ const fundacionService = {
   getDirectoresPorPais: async (pais) => {
     const response = await api.get(`/fundacion/directores-pais?pais=${encodeURIComponent(pais)}`);
     return response.data;
+  },
+
+  /**
+   * Descargar base de miembros en formato Excel (.xlsx)
+   * Respeta la jurisdicción del usuario logueado
+   */
+  descargarBase: async (filters = {}) => {
+    const params = new URLSearchParams();
+
+    if (filters.nivel) params.append('nivel', filters.nivel);
+    if (filters.area) params.append('area', filters.area);
+    if (filters.cargo) params.append('cargo', filters.cargo);
+    if (filters.pais) params.append('pais', filters.pais);
+    if (filters.region) params.append('region', filters.region);
+    if (filters.departamento) params.append('departamento', filters.departamento);
+    if (filters.municipio) params.append('municipio', filters.municipio);
+    if (filters.search) params.append('search', filters.search);
+
+    const response = await api.get(`/fundacion/admin/descargar-base?${params.toString()}`, {
+      responseType: 'blob'
+    });
+    return response;
   }
 };
 

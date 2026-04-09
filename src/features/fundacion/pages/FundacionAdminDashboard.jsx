@@ -10,7 +10,8 @@ import {
   ChevronRight,
   UserCheck,
   LayoutGrid,
-  List
+  List,
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import fundacionService from '../../../api/fundacionService';
@@ -39,6 +40,7 @@ export default function FundacionAdminDashboard() {
   const [pagination, setPagination] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [downloading, setDownloading] = useState(false);
   
   // Rango de permisos del usuario logueado
   const isPrivileged = user?.seguridad?.rolSistema === 'Founder' || user?.fundacion?.nivel === 'directivo_general';
@@ -65,6 +67,31 @@ export default function FundacionAdminDashboard() {
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value, page: 1 }));
+  };
+
+  // Descargar base Excel
+  const handleDescargarBase = async () => {
+    setDownloading(true);
+    try {
+      const response = await fundacionService.descargarBase(filters);
+      const blob = new Blob([response.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Base_Miembros_FHSYL_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success(`Base descargada exitosamente (${pagination.total || 0} registros)`);
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al descargar la base de datos');
+    } finally {
+      setDownloading(false);
+    }
   };
 
   // Debounce para búsqueda
@@ -134,9 +161,17 @@ export default function FundacionAdminDashboard() {
               Miembros Registrados
             </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 hover:border-blue-500 dark:hover:border-blue-500 transition-all shadow-sm text-sm sm:text-base">
-            <Download size={18} className="text-blue-600" />
-            <span className="inline-block">Descargar Base</span>
+          <button 
+            onClick={handleDescargarBase}
+            disabled={downloading}
+            className={`flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-700 dark:text-gray-300 font-bold hover:bg-gray-50 hover:border-blue-500 dark:hover:border-blue-500 transition-all shadow-sm text-sm sm:text-base ${downloading ? 'opacity-60 cursor-wait' : ''}`}
+          >
+            {downloading ? (
+              <Loader2 size={18} className="text-blue-600 animate-spin" />
+            ) : (
+              <Download size={18} className="text-blue-600" />
+            )}
+            <span className="inline-block">{downloading ? 'Descargando...' : 'Descargar Base'}</span>
           </button>
         </div>
       </div>
