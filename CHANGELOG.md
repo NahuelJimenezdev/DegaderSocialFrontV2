@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.89.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.89.1...v1.89.2) (2026-04-09)
+
+
+### Bug Fixes
+
+* **fundacion:** corregir visualización de avatares en documentación ([b346ab5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b346ab57714ad1ed171bd9425ad4dadf6a050afd))
+
 ### [1.89.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.89.0...v1.89.1) (2026-04-09)
 
 
