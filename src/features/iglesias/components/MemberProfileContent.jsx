@@ -4,11 +4,12 @@ import iglesiaService from '../../../api/iglesiaService';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
-import { Calendar, Cake, MapPin, Heart, Clock, Phone, UserMinus, AlertTriangle } from 'lucide-react';
+import { Calendar, Cake, MapPin, Heart, Clock, Phone, UserMinus, AlertTriangle, Building2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import SeccionAdministrativaMinisterios from './SeccionAdministrativaMinisterios';
 import { MINISTERIOS_DISPONIBLES } from '../hooks/useMinisterios';
+import { formatNivelDetallado } from '../../fundacion/utils/obtenerNivel';
 
 const MemberProfileContent = ({ userId, iglesiaId, isPastor, onMemberRemoved }) => {
     const { user: currentUser, refreshProfile } = useAuth();
@@ -203,6 +204,29 @@ const MemberProfileContent = ({ userId, iglesiaId, isPastor, onMemberRemoved }) 
                         />
                     )}
                 </InfoCard>
+
+                {/* Información de Fundación */}
+                {(userInfo.esMiembroFundacion || userInfo.fundacion?.nivel) && (
+                    <InfoCard
+                        icon={Building2}
+                        title="Fundación"
+                        iconColor="text-indigo-600"
+                        bgColor="bg-indigo-50 dark:bg-indigo-900/20"
+                    >
+                        <div className="flex items-start gap-3">
+                            <div className="flex-1">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                                    Cargo y Jurisdicción
+                                </p>
+                                <p className="text-base text-gray-900 dark:text-white leading-relaxed">
+                                    Se desempeña como <span className="font-bold">{userInfo.fundacion?.cargo || 'Miembro'}</span> 
+                                    {userInfo.fundacion?.area ? ` en la ${userInfo.fundacion.area}` : ''}
+                                    {' '}{formatNivelDetallado(userInfo)}
+                                </p>
+                            </div>
+                        </div>
+                    </InfoCard>
+                )}
             </div>
 
             {/* Sección Administrativa de Ministerios */}
