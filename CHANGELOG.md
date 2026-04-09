@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.87.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.6...v1.87.0) (2026-04-09)
+
+
+### Features
+
+* **whatsapp:** add personalized message structure for WhatsApp contact ([2dee6da](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2dee6da7a4369bcc3aadd26ebfc52430efb6393d))
+
 ### [1.86.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.5...v1.86.6) (2026-04-09)
 
 ### [1.86.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.86.4...v1.86.5) (2026-04-08)
