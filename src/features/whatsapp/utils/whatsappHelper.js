@@ -11,7 +11,7 @@ export const getWhatsAppLink = (userData) => {
   const apellido = userData.apellidos?.primero || '';
   const fullName = `${nombre} ${apellido}`.trim();
   
-  const message = `Hola ${fullName}, ¿Cómo estás? En Degader Social deseamos que estés bien.`;
+  const message = `Hola ${fullName} *Dios te bendiga ¿Cómo estás?*, En _Degader Social_ deseamos que estés bien.`;
   
   // Limpiar el número de teléfono (solo dígitos)
   const cleanPhone = userData.personal.celular.replace(/\D/g, '');
