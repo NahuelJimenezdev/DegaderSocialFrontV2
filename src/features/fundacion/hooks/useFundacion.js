@@ -689,7 +689,8 @@ export const useFundacion = (user, updateUser) => {
                 fundacion: {
                     activo: true,
                     nivel: formData.nivel,
-                    area: formData.area || 'Ejecutivo/a',
+                    // Antes Area era: area: formData.area || 'Ejecutivo/a',
+                    area: formData.area || 'Dirección y organismo Ejecutivo',
                     subArea: formData.subArea || undefined,
                     programa: formData.programa || undefined,
                     cargo: cargoSanitizado,

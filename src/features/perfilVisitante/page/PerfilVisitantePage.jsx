@@ -20,7 +20,7 @@ import PostCard from '../../../shared/components/Post/PostCard';
 import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import useFeed from '../../feed/hooks/useFeed';
 
-import obtenerNivel from "../../fundacion/utils/obtenerNivel";  
+import obtenerNivel, { formatNivelDetallado } from "../../fundacion/utils/obtenerNivel";  
 
 const PerfilVisitantePage = () => {
   const { id } = useParams();
@@ -177,12 +177,9 @@ const PerfilVisitantePage = () => {
                 <InfoItem
                   label="Fundación"
                   // value={`FHISYL - ${usuario.fundacion?.cargo || 'Miembro'}`}
-                  value={`${usuario.fundacion?.cargo || 'Miembro'} a nivel ${
-                    obtenerNivel(usuario)} en ${
-                    usuario.fundacion?.area?.toLowerCase() !== "director de areas"
-                      ? usuario.fundacion?.territorio?.pais || 'Global'
-                      : usuario.fundacion?.area || 'General'
-                  }`}
+                  value={`Se desempeña como ${usuario.fundacion?.cargo || 'Miembro'} ${
+                    usuario.fundacion?.area ? `en la ${usuario.fundacion.area}` : ''
+                  } ${formatNivelDetallado(usuario)}`}
                   icon={Building2Icon}  
                 />
               ) : (
@@ -329,10 +326,8 @@ const PerfilVisitantePage = () => {
                       <InfoCard title="Fundación Sol y Luna" icon={Building2Icon}>
                         <InfoItem label="Cargo" value={usuario.fundacion?.cargo} icon={BriefcaseIcon} />
                         <InfoItem label="Área" value={usuario.fundacion?.area} />
-                        <InfoItem label="Nivel" value={`Nivel ${usuario.fundacion?.nivel}`} />
-                        {usuario.fundacion?.territorio?.pais && (
-                          <InfoItem label="Territorio" value={`${usuario.fundacion.territorio.pais} ${usuario.fundacion.territorio.departamento ? '- ' + usuario.fundacion.territorio.departamento : ''}`} />
-                        )}
+                        <InfoItem label="Jurisdicción" value={formatNivelDetallado(usuario)} />
+                        
                         <span className="inline-block mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
                           Miembro Activo
                         </span>
