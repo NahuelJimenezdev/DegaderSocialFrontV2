@@ -4,7 +4,7 @@ import { userService } from '../../../api';
 import { getUserAvatar } from '../../../shared/utils/avatarUtils';
 import { logger } from '../../../shared/utils/logger';
 import { useAuth } from '../../../context/AuthContext';
-import { ArrowLeft, Calendar, Cake, MapPin, Heart, Clock, Mail, Phone } from 'lucide-react';
+import { ArrowLeft, Calendar, Cake, MapPin, Heart, Clock, Mail, Phone, Building2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import SeccionAdministrativaMinisterios from '../components/SeccionAdministrativaMinisterios';
@@ -13,6 +13,7 @@ import { useIglesiaData } from '../hooks/useIglesiaData';
 import { getIglesiaMenuItems } from '../utils/menuHelpers';
 import { MINISTERIOS_DISPONIBLES } from '../hooks/useMinisterios';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
+import { formatNivelDetallado } from '../../fundacion/utils/obtenerNivel';
 
 const MemberProfilePage = () => {
     const { iglesiaId, userId } = useParams();
@@ -283,6 +284,29 @@ const MemberProfilePage = () => {
                                         />
                                     )}
                                 </InfoCard>
+
+                                {/* Información de Fundación */}
+                                {userInfo.esMiembroFundacion && (
+                                    <InfoCard
+                                        icon={Building2}
+                                        title="Fundación"
+                                        iconColor="text-indigo-600"
+                                        bgColor="bg-indigo-50 dark:bg-indigo-900/20"
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <div className="flex-1">
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                                                    Cargo y Jurisdicción
+                                                </p>
+                                                <p className="text-base text-gray-900 dark:text-white leading-relaxed">
+                                                    Se desempeña como <span className="font-bold">{userInfo.fundacion?.cargo || 'Miembro'}</span> 
+                                                    {userInfo.fundacion?.area ? ` en la ${userInfo.fundacion.area}` : ''}
+                                                    {' '}{formatNivelDetallado(userInfo)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </InfoCard>
+                                )}
                             </div>
                         </div>
                     </div>
