@@ -23,6 +23,7 @@ import {
   generateUserZip,
   downloadCV
 } from '../utils/docUtils';
+import { getWhatsAppLink } from '../../whatsapp/utils/whatsappHelper';
 
 export default function UserDocumentationView() {
   const { id } = useParams();
@@ -304,7 +305,7 @@ export default function UserDocumentationView() {
 
               {targetUser.personal?.celular && (
                 <a 
-                  href={`https://wa.me/${targetUser.personal.celular.replace(/\D/g, '')}`}
+                  href={getWhatsAppLink(targetUser)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm bg-[#25D366] hover:bg-[#128C7E] text-white px-5 py-2 rounded-xl font-bold shadow-lg shadow-green-500/20 transition-all active:scale-95 border border-green-400/20"
