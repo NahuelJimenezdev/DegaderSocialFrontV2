@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { Eye, EyeOff } from 'lucide-react';
+import { authService } from '../../../api';
+import IosModal from '../../../shared/components/IosModal';
+import { useToast } from '../../../shared/components/Toast/ToastProvider';
 
 import "../styles/loginStyles.css";
 import "../styles/loginStylesMobile.css";
@@ -15,6 +18,10 @@ const Login = () => {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const toast = useToast();
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -80,6 +87,23 @@ const Login = () => {
       setError(authError || 'Error al iniciar sesión. Verifica tus credenciales.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    if (!resetEmail) return toast.error('El email es obligatorio');
+    
+    try {
+      setResetLoading(true);
+      const res = await authService.forgotPassword(resetEmail);
+      toast.success(res.message);
+      setShowForgotModal(false);
+      setResetEmail('');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error al procesar la solicitud');
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -211,7 +235,14 @@ const Login = () => {
               </div>
             </div>
 
-            <Link to="#" className="mobile-forgot-pass">
+            <Link 
+              to="#" 
+              className="mobile-forgot-pass"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowForgotModal(true);
+              }}
+            >
               ¿Olvidaste tu contraseña?
             </Link>
 
@@ -346,10 +377,51 @@ const Login = () => {
                   Regístrate aquí
                 </Link>
               </p>
+              <button 
+                onClick={() => setShowForgotModal(true)}
+                className="mt-4 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                type="button"
+              >
+                ¿Has olvidado tu contraseña?
+              </button>
             </div>
           </div>
         </div>
       </div>
+ 
+      {/* Modal de recuperación - iOS Style */}
+      <IosModal
+        isOpen={showForgotModal}
+        onClose={() => setShowForgotModal(false)}
+        title="Recuperar Contraseña"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500 text-center">
+            Ingresa tu email registrado y te enviaremos un enlace para restablecer tu contraseña.
+          </p>
+          <form onSubmit={handleForgotPassword} className="space-y-4">
+            <input 
+              type="email"
+              value={resetEmail}
+              onChange={e => setResetEmail(e.target.value)}
+              placeholder="tu@email.com"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
+              required
+              disabled={resetLoading}
+            />
+            <button 
+              type="submit"
+              disabled={resetLoading}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all disabled:opacity-50"
+            >
+              {resetLoading ? 'Enviando...' : 'Enviar Enlace'}
+            </button>
+            <p className="text-[10px] text-gray-400 text-center italic">
+              Por seguridad, se verificará tu identidad mediante un enlace único enviado a tu correo.
+            </p>
+          </form>
+        </div>
+      </IosModal>
     </div>
   );
 };

@@ -48,6 +48,7 @@ import SystemNotificationPage from './features/notificaciones/pages/SystemNotifi
 import ArenaPage from './features/LaSendadelReino/components/ArenaPage'
 import ConfiguracionPage from './features/perfilUsuario/pages/ConfiguracionPage'
 import PrivacidadPage from './features/perfilUsuario/pages/PrivacidadPage'
+import ResetPasswordPage from './features/auth/pages/ResetPasswordPage'
 import PublicRoute from './features/auth/components/PublicRoute'
 
 export const router = createBrowserRouter([
@@ -65,6 +66,14 @@ export const router = createBrowserRouter([
     element: (
       <PublicRoute>
         <Register />
+      </PublicRoute>
+    )
+  },
+  {
+    path: '/reset-password/:token',
+    element: (
+      <PublicRoute>
+        <ResetPasswordPage />
       </PublicRoute>
     )
   },

@@ -80,6 +80,19 @@ export function useFounderUsers(initialFilters = {}) {
         }
     };
 
+    // Resetear contraseña (Admin)
+    const resetUserPassword = async (userId, newPassword) => {
+        try {
+            setLoading(true);
+            const authService = (await import('../../api/authService')).default;
+            await authService.adminResetPassword(userId, newPassword);
+        } catch (err) {
+            throw new Error(err.response?.data?.message || 'Error al resetear contraseña');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         users,
         stats,
@@ -90,6 +103,7 @@ export function useFounderUsers(initialFilters = {}) {
         createUser,
         updateRole,
         removeUser,
+        resetUserPassword,
         refresh: fetchUsers
     };
 }

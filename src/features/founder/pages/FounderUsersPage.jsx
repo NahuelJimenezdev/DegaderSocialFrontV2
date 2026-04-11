@@ -3,6 +3,7 @@ import { Users, UserPlus, Shield, Ban, Search, Edit2, Trash2 } from 'lucide-reac
 import { useFounderUsers } from '../../../shared/hooks/useFounderUsers';
 import RoleBadge from '../components/RoleBadge';
 import CreateUserModal from '../components/CreateUserModal';
+import IosModal from '../../../shared/components/IosModal';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 
 /**
@@ -17,6 +18,9 @@ export default function FounderUsersPage() {
         page: 1,
         limit: 20
     });
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showResetModal, setShowResetModal] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
 
     const {
         users,
@@ -27,7 +31,8 @@ export default function FounderUsersPage() {
         fetchUsers,
         createUser,
         updateRole,
-        removeUser
+        removeUser,
+        resetUserPassword
     } = useFounderUsers(filters);
 
     const toast = useToast();
@@ -61,6 +66,18 @@ export default function FounderUsersPage() {
         try {
             await removeUser(userId);
             toast.success('Usuario eliminado exitosamente');
+        } catch (err) {
+            toast.error(err.message);
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        try {
+            await resetUserPassword(selectedUser._id, newPassword);
+            toast.success('Contraseña actualizada exitosamente');
+            setShowResetModal(false);
+            setNewPassword('');
         } catch (err) {
             toast.error(err.message);
         }
@@ -237,10 +254,13 @@ export default function FounderUsersPage() {
                                                             <option value="admin">Admin</option>
                                                         </select>
                                                         <button
-                                                            onClick={() => handleDeleteUser(user._id)}
+                                                            onClick={() => {
+                                                                setSelectedUser(user);
+                                                                setShowResetModal(true);
+                                                            }}
                                                             disabled={user.seguridad.estadoCuenta === 'eliminado'}
                                                             className="colorMarcaDegader dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 disabled:opacity-30 disabled:cursor-not-allowed"
-                                                            title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta eliminada' : 'Editar usuario'}
+                                                            title={user.seguridad.estadoCuenta === 'eliminado' ? 'Cuenta eliminada' : 'Resetear contraseña'}
                                                         >
                                                             <Edit2 className="w-5 h-5" />
                                                         </button>
@@ -295,6 +315,40 @@ export default function FounderUsersPage() {
                 onClose={() => setShowCreateModal(false)}
                 onSubmit={handleCreateUser}
             />
+
+            {/* Modal para resetear contraseña - Estilo iOS */}
+            <IosModal
+                isOpen={showResetModal}
+                onClose={() => setShowResetModal(false)}
+                title="Cambiar Contraseña"
+            >
+                <div>
+                    <p className="text-sm text-gray-500 mb-4">
+                        Vas a modificar la contraseña de <strong>{selectedUser?.username}</strong>. 
+                        El usuario deberá usar esta nueva contraseña para ingresar.
+                    </p>
+                    <form onSubmit={handleResetPassword} className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Nueva Contraseña</label>
+                            <input 
+                                type="text" 
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
+                                placeholder="Escribe la nueva clave..."
+                                required
+                                minLength={6}
+                            />
+                        </div>
+                        <button 
+                            type="submit"
+                            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all"
+                        >
+                            Confirmar Cambio
+                        </button>
+                    </form>
+                </div>
+            </IosModal>
         </div>
     );
 }

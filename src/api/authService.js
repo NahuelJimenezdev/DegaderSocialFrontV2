@@ -136,6 +136,30 @@ const authService = {
   isAuthenticated: () => {
     return !!localStorage.getItem('token');
   },
+
+  /**
+   * Solicitar recuperación de contraseña
+   */
+  forgotPassword: async (email) => {
+    const response = await api.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  /**
+   * Resetear contraseña con token
+   */
+  resetPassword: async (token, password) => {
+    const response = await api.post(`/auth/reset-password/${token}`, { password });
+    return response.data;
+  },
+
+  /**
+   * Resetear contraseña por admin (Founder)
+   */
+  adminResetPassword: async (userId, newPassword) => {
+    const response = await api.post('/auth/admin/reset-password', { userId, newPassword });
+    return response.data;
+  },
 };
 
 export default authService;

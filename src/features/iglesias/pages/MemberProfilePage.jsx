@@ -286,7 +286,7 @@ const MemberProfilePage = () => {
                                 </InfoCard>
 
                                 {/* Información de Fundación */}
-                                {userInfo.esMiembroFundacion && (
+                                {(userInfo.esMiembroFundacion || userInfo.fundacion?.nivel) && (
                                     <InfoCard
                                         icon={Building2}
                                         title="Fundación"
