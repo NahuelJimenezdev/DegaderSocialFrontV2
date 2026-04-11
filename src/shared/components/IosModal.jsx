@@ -8,32 +8,37 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
     const [shouldRender, setShouldRender] = useState(isOpen);
     const [animationState, setAnimationState] = useState('hidden'); // hidden, entry, visible, exit
 
+    // Efecto 1: Manejar estados de renderizado y animación
     useEffect(() => {
         if (isOpen) {
             setShouldRender(true);
-            // Pequeño delay para disparar la animación
-            setTimeout(() => setAnimationState('entry'), 10);
-            setTimeout(() => setAnimationState('visible'), 50);
+            const t1 = setTimeout(() => setAnimationState('entry'), 10);
+            const t2 = setTimeout(() => setAnimationState('visible'), 50);
+            return () => {
+                clearTimeout(t1);
+                clearTimeout(t2);
+            };
         } else {
             setAnimationState('exit');
             const timer = setTimeout(() => {
                 setShouldRender(false);
                 setAnimationState('hidden');
-            }, 300); // Duración de la animación de salida
+            }, 300);
             return () => clearTimeout(timer);
         }
     }, [isOpen]);
 
-    // Bloquear scroll del body cuando está abierto
+    // Efecto 2: Bloquear scroll del body (Siempre declarado, ejecución condicional interna)
     useEffect(() => {
-        if (!shouldRender) return;
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
+        if (shouldRender) {
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = 'unset';
+            };
+        }
+        // No hay cleanup necesario si no se aplicó el estilo
+        return undefined;
     }, [shouldRender]);
-
-    if (!shouldRender) return null;
 
     const backdropStyles = {
         position: 'fixed',
@@ -47,10 +52,12 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
         padding: '16px',
         transition: 'opacity 300ms cubic-bezier(0.4, 0, 0.2, 1)',
         opacity: animationState === 'visible' ? 1 : 0,
+        visibility: shouldRender ? 'visible' : 'hidden',
+        pointerEvents: isOpen ? 'all' : 'none',
     };
 
     const modalStyles = {
-        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Estilo glassmorphism iOS
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
         backdropFilter: 'saturate(180%) blur(20px)',
         borderRadius: '16px',
         width: '100%',
@@ -72,6 +79,9 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
         alignItems: 'center',
     };
 
+    // Retorno condicional desplazado al final para no violar las reglas de hooks
+    if (!shouldRender && animationState === 'hidden') return null;
+
     return (
         <div style={backdropStyles} onClick={onClose}>
             <div 
@@ -88,7 +98,7 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
                         <X size={20} className="text-gray-500" />
                     </button>
                 </div>
-                <div className="p-6">
+                <div className="p-6 text-gray-800 dark:text-gray-200">
                     {children}
                 </div>
             </div>
