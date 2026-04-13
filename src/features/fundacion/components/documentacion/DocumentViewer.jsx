@@ -255,6 +255,7 @@ export default function DocumentViewer() {
         );
 
       case 'Hoja de Vida':
+      case 'HojaDeVida':
         const cvData = targetUser.fundacion?.hojaDeVida?.datos || {};
         return (
           <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
@@ -386,9 +387,19 @@ export default function DocumentViewer() {
         </button>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:flex gap-2 sm:gap-3 w-full md:w-auto">
-          {(type === 'Aplicativo' || type === 'Solicitud') && (
-             <button 
-              onClick={() => navigate('/fundacion/documentacion-fhsyl')}
+          {/* Botón Modificar - Solo visible si el usuario está viendo su propio documento */}
+          {(targetUser?._id === user?._id) && (
+            <button 
+              onClick={() => {
+                const routes = {
+                  'Aplicativo': '/fundacion/documentacion-fhsyl',
+                  'Entrevista': '/fundacion/entrevista',
+                  'Hoja de Vida': '/fundacion/hoja-de-vida',
+                  'HojaDeVida': '/fundacion/hoja-de-vida',
+                  'Solicitud': '/fundacion/solicitud'
+                };
+                if (routes[type]) navigate(routes[type]);
+              }}
               className="flex items-center justify-center gap-1.5 px-3 py-2 md:px-4 md:py-2 bg-amber-100 text-amber-700 rounded-xl font-bold hover:bg-amber-200 transition text-sm md:text-base"
             >
               <Edit3 size={16} className="md:w-[18px]" />
