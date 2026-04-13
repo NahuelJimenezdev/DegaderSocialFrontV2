@@ -333,7 +333,7 @@ export const ESTRUCTURA_FUNDACION = {
 export const CARGOS_POR_NIVEL = {
     directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
     organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
-    organismo_internacional: ["Salvación Mundial", "Misión Internacional de Paz"],
+    organismo_internacional: ["Salvación Mundial", "Secretario Salvación Mundial", "Misión Internacional de Paz", "Secretario Misión Internacional de Paz"],
     nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
     regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
     departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
@@ -399,8 +399,8 @@ export const useFundacion = (user, updateUser) => {
         }
 
         if (nivel === "organismo_internacional") {
-            if (cargo === "Salvación Mundial") return ["Salvación Latinoamérica", "Embajadores"];
-            if (cargo === "Misión Internacional de Paz") return ["FHISYL", "Nacional"];
+            if (cargo.includes("Salvación Mundial")) return ["Salvación Latinoamérica", "Embajadores"];
+            if (cargo.includes("Misión Internacional de Paz")) return ["FHISYL", "Nacional"];
         }
 
         if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
@@ -429,7 +429,7 @@ export const useFundacion = (user, updateUser) => {
              }
         }
 
-        if (nivel === "organismo_internacional" && cargo === "Salvación Mundial") {
+        if (nivel === "organismo_internacional" && cargo.includes("Salvación Mundial")) {
              if (area === "Salvación Latinoamérica" || area === "Embajadores") {
                  return ["FHISYL", "Nacional"];
              }
