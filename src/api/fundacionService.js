@@ -48,6 +48,7 @@ const fundacionService = {
     if (filters.departamento) params.append('departamento', filters.departamento);
     if (filters.municipio) params.append('municipio', filters.municipio);
     if (filters.search) params.append('search', filters.search);
+    if (filters.estado) params.append('estado', filters.estado);
     if (filters.page) params.append('page', filters.page);
     if (filters.limit) params.append('limit', filters.limit);
 

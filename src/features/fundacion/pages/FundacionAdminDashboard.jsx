@@ -35,7 +35,8 @@ export default function FundacionAdminDashboard() {
     pais: user?.fundacion?.nivel === 'nacional' ? user?.fundacion?.territorio?.pais : '',
     region: '',
     municipio: '',
-    search: ''
+    search: '',
+    estado: ''
   });
   const [pagination, setPagination] = useState({});
   const [showFilters, setShowFilters] = useState(false);
@@ -243,8 +244,19 @@ export default function FundacionAdminDashboard() {
               onChange={handleFilterChange}
               className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
             />
+
+            <select 
+              name="estado" 
+              value={filters.estado} 
+              onChange={handleFilterChange}
+              className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
+            >
+              <option value="">Estado (Todos)</option>
+              <option value="completado">Completados</option>
+              <option value="pendiente">Pendientes</option>
+            </select>
   
-            <div className="md:col-span-2 flex gap-4">
+            <div className="md:col-span-1 lg:col-span-1 flex gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <input 
@@ -342,13 +354,25 @@ export default function FundacionAdminDashboard() {
                     </div>
                   </div>
                   
-                  <button 
-                    onClick={() => navigate(`/fundacion/admin/usuario/${u._id}/documentacion`)}
-                    className="w-full mt-auto py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
-                  >
-                    Ver Documentación
-                    <ChevronRight size={18} />
-                  </button>
+                  {(() => {
+                    const isCompleted = u.fundacion?.hojaDeVida?.completado && 
+                                      u.fundacion?.entrevista?.completado && 
+                                      u.fundacion?.documentacionFHSYL?.testimonioConversion;
+                    
+                    return (
+                      <button 
+                        onClick={() => navigate(`/fundacion/admin/usuario/${u._id}/documentacion`)}
+                        className={`w-full mt-auto py-2.5 font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${
+                          isCompleted 
+                            ? 'bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white' 
+                            : 'bg-yellow-500 text-white hover:bg-yellow-600 shadow-sm border-b-4 border-yellow-700 active:border-b-0 active:translate-y-1'
+                        }`}
+                      >
+                        {isCompleted ? 'Ver Documentación' : 'Documentación Pendiente'}
+                        <ChevronRight size={18} />
+                      </button>
+                    );
+                  })()}
                 </>
               ) : (
                 // --- LIST VIEW ---
@@ -408,14 +432,26 @@ export default function FundacionAdminDashboard() {
                       </div>
                     </div>
                     
-                    <button 
-                      onClick={() => navigate(`/fundacion/admin/usuario/${u._id}/documentacion`)}
-                      className="w-full sm:w-auto flex-shrink-0 px-4 py-2 sm:py-2.5 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2"
-                    >
-                      <span className="hidden xs:inline">Ver Documentación</span>
-                      <span className="xs:hidden">Ver Docs</span>
-                      <ChevronRight size={18} />
-                    </button>
+                    {(() => {
+                      const isCompleted = u.fundacion?.hojaDeVida?.completado && 
+                                        u.fundacion?.entrevista?.completado && 
+                                        u.fundacion?.documentacionFHSYL?.testimonioConversion;
+                      
+                      return (
+                        <button 
+                          onClick={() => navigate(`/fundacion/admin/usuario/${u._id}/documentacion`)}
+                          className={`w-full sm:w-auto flex-shrink-0 px-4 py-2 sm:py-2.5 text-sm sm:text-base font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${
+                            isCompleted 
+                              ? 'bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white' 
+                              : 'bg-yellow-500 text-white hover:bg-yellow-600 border-b-2 border-yellow-700'
+                          }`}
+                        >
+                          <span className="hidden xs:inline">{isCompleted ? 'Ver Documentación' : 'Doc. Pendiente'}</span>
+                          <span className="xs:hidden">{isCompleted ? 'Ver Docs' : 'Pendiente'}</span>
+                          <ChevronRight size={18} />
+                        </button>
+                      );
+                    })()}
                   </div>
                 </>
               )}
