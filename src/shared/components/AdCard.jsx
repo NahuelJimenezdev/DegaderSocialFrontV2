@@ -94,7 +94,7 @@ const AdCard = ({ ad }) => {
       </div>
 
       {/* Imagen del anuncio */}
-      <div className="relative w-full h-48 overflow-hidden">
+      <div className="relative w-full h-40 overflow-hidden">
         <ProgressiveImage
           src={ad.imagenUrl}
           medium={ad.images?.medium}
