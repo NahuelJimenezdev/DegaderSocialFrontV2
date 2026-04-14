@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Download, FileText, Printer, Edit3 } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
@@ -257,6 +257,17 @@ export default function DocumentViewer() {
       case 'Hoja de Vida':
       case 'HojaDeVida':
         const cvData = targetUser.fundacion?.hojaDeVida?.datos || {};
+        
+        // Helper para renderizar valor o placeholder
+        const cv = (key, fallback = '---') => cvData[key] || fallback;
+        
+        // Helper para renderizar foto/firma
+        const getImgUrl = (val) => {
+          if (!val) return null;
+          if (typeof val === 'string' && (val.startsWith('http') || val.startsWith('data:'))) return val;
+          return null;
+        };
+
         return (
           <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
             <div className="text-center mb-10">
@@ -267,27 +278,154 @@ export default function DocumentViewer() {
                 Fundación Humanitaria Sol y Luna
               </h2>
             </div>
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-2">Información Personal</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                  <p><strong>Nombre Completo:</strong> {cvData.nombre_completo || `${targetUser.nombres?.primero} ${targetUser.apellidos?.primero}`}</p>
-                  <p><strong>Cédula:</strong> {cvData.cedula || '---'}</p>
-                  <p><strong>Nacionalidad:</strong> {cvData.nacionalidad || '---'}</p>
-                  <p><strong>Lugar de Nacimiento:</strong> {cvData.lugar_nacimiento || '---'}</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-2">Perfil Profesional</h3>
-                <p className="text-sm italic">{cvData.perfil_profesional || 'Sin descripción'}</p>
-              </div>
 
-              {/* Más campos pueden añadirse aquí según necesidad */}
-              <div className="text-center py-10 text-gray-400 italic">
-                Cargando más secciones de la Hoja de Vida...
+            {/* Foto de perfil */}
+            {getImgUrl(cvData.foto_perfil_form) && (
+              <div className="flex justify-center mb-6">
+                <img src={getImgUrl(cvData.foto_perfil_form)} alt="Foto" className="w-32 h-32 rounded-2xl object-cover border-2 border-gray-200 dark:border-gray-600 shadow-md" />
+              </div>
+            )}
+
+            {/* INFORMACIÓN PERSONAL */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Información Personal</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                <p><strong>Nombre Completo:</strong> {cv('nombre_completo', `${targetUser.nombres?.primero || ''} ${targetUser.apellidos?.primero || ''}`)}</p>
+                <p><strong>Documento N°:</strong> {cv('documento_num')}</p>
+                <p><strong>Lugar Expedición:</strong> {cv('lugar_expedicion')}</p>
+                <p><strong>Fecha Nacimiento:</strong> {cv('fecha_nacimiento')}</p>
+                <p><strong>Nacionalidad:</strong> {cv('nacionalidad')}</p>
+                <p><strong>Estado Civil:</strong> {cv('estado_civil')}</p>
+                <p><strong>Departamento/Estado:</strong> {cv('departamento_estado_provincia')}</p>
+                <p><strong>Municipio:</strong> {cv('municipio')}</p>
+                <p><strong>Dirección:</strong> {cv('direccion')}</p>
+                <p><strong>Teléfono:</strong> {cv('telefono')}</p>
+                <p><strong>Email:</strong> {cv('email')}</p>
+              </div>
+              {cv('frase_identificadora', '') && (
+                <p className="mt-3 italic text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-600 pt-2">
+                  <strong>Frase Identificadora:</strong> {cv('frase_identificadora')}
+                </p>
+              )}
+              {cv('descripcion_breve_ministerio_profesion', '') && (
+                <p className="mt-2 italic text-gray-600 dark:text-gray-400">
+                  <strong>Descripción Ministerio/Profesión:</strong> {cv('descripcion_breve_ministerio_profesion')}
+                </p>
+              )}
+            </div>
+
+            {/* NIVEL EDUCATIVO */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Nivel Educativo</h3>
+              <p className="text-sm mb-2"><strong>Educación Básica:</strong> {cv('completa/incompleta', 'completa')}</p>
+              {[1,2,3].map(n => cv(`nombreTitulo_${n}`, '') ? (
+                <div key={n} className="text-sm mb-1">
+                  <strong>Título {n}:</strong> {cv(`nombreTitulo_${n}`)}
+                  {cv(`numero_aprobado_${n}`, '') && <span className="ml-2 text-gray-500">({cv(`numero_aprobado_${n}`)} semestres)</span>}
+                </div>
+              ) : null)}
+            </div>
+
+            {/* EXPERIENCIA LABORAL */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Experiencia Laboral</h3>
+              {[
+                { emp: 'empresa_actual', cargo: 'cargo_empresa', dir: 'dirección_empresa', depto: 'departamento_empresa', mun: 'municipio_empresa', tel: 'teléfono_emrpesa', email: 'email_empresa', di: 'dia_inicio', mi: 'mes_inicio', ai: 'año_inicio', df: 'dia_fin', mf: 'mes_fin', af: 'año_fin', sector: 'sector_empresa' },
+                { emp: 'empresa_dos', cargo: 'cargo_empresa2', dir: 'dirección_empresa2', depto: 'departamento_empresa2', mun: 'municipio_empresa2', tel: 'teléfono_emrpesa2', email: 'email_empresa2', di: 'dia_inicio2', mi: 'mes_inicio2', ai: 'año_inicio2', df: 'dia_fin2', mf: 'mes_fin2', af: 'año_fin2', sector: 'sector_empresa2' },
+                { emp: 'empresa_tres', cargo: 'cargo_empresa3', dir: 'dirección_empresa3', depto: 'departamento_empresa3', mun: 'municipio_empresa3', tel: 'teléfono_emrpesa3', email: 'email_empresa3', di: 'dia_inicio3', mi: 'mes_inicio3', ai: 'año_inicio3', df: 'dia_fin3', mf: 'mes_fin3', af: 'año_fin3', sector: 'sector_empresa3' }
+              ].map((exp, idx) => cv(exp.emp, '') ? (
+                <div key={idx} className="mb-3 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-600 text-sm">
+                  <p className="font-bold text-blue-800 dark:text-blue-400 mb-1">Empresa {idx + 1}: {cv(exp.emp)}</p>
+                  <div className="grid grid-cols-2 gap-1">
+                    <p><strong>Cargo:</strong> {cv(exp.cargo)}</p>
+                    <p><strong>Sector:</strong> {cv(exp.sector)}</p>
+                    <p><strong>Dirección:</strong> {cv(exp.dir)}</p>
+                    <p><strong>Departamento:</strong> {cv(exp.depto)}</p>
+                    <p><strong>Inicio:</strong> {[cv(exp.di,''), cv(exp.mi,''), cv(exp.ai,'')].filter(Boolean).join('/') || '---'}</p>
+                    <p><strong>Fin:</strong> {[cv(exp.df,''), cv(exp.mf,''), cv(exp.af,'')].filter(Boolean).join('/') || '---'}</p>
+                  </div>
+                </div>
+              ) : null)}
+              {!cv('empresa_actual', '') && <p className="text-gray-400 italic text-sm">Sin experiencia laboral registrada</p>}
+            </div>
+
+            {/* DATOS IGLESIA */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Datos de la Iglesia</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                <p><strong>Nombre Iglesia:</strong> {cv('nombre_iglesia')}</p>
+                <p><strong>Pastor:</strong> {cv('nombre_pastor')}</p>
+                <p><strong>Teléfono Pastor:</strong> {cv('telefono_pastor')}</p>
+                <p><strong>País:</strong> {cv('país_iglesia')}</p>
+                <p><strong>Ciudad:</strong> {cv('ciudad_iglesia')}</p>
+                <p><strong>Dirección:</strong> {cv('direccion_iglesia')}</p>
               </div>
             </div>
+
+            {/* IDIOMAS */}
+            {(cv('idioma_1', '') || cv('idioma_2', '') || cv('idioma_3', '')) && (
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+                <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Idiomas</h3>
+                <table className="w-full text-sm">
+                  <thead><tr className="border-b"><th className="text-left py-1">Idioma</th><th>Habla</th><th>Lee</th><th>Escribe</th></tr></thead>
+                  <tbody>
+                    {[1,2,3].map(n => cv(`idioma_${n}`, '') ? (
+                      <tr key={n} className="border-b border-gray-100 dark:border-gray-700">
+                        <td className="py-1 font-medium">{cv(`idioma_${n}`)}</td>
+                        <td className="text-center">{cv(`habla_${n}`)}</td>
+                        <td className="text-center">{cv(`lee_${n}`)}</td>
+                        <td className="text-center">{cv(`escribe_${n}`)}</td>
+                      </tr>
+                    ) : null)}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* CARGO */}
+            {cv('cargo_en_FHISYL', '') && (
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800 mb-4">
+                <p className="text-sm"><strong>Cargo en FHIS&L:</strong> {cv('cargo_en_FHISYL')}</p>
+                <p className="text-sm"><strong>Autoriza verificación:</strong> {cvData.autorizo_si ? 'Sí' : cvData.autorizo_no ? 'No' : '---'}</p>
+              </div>
+            )}
+
+            {/* REFERENCIAS FAMILIARES */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Referencias Familiares</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {[1,2,3].map(n => cv(`nombre_familia_${n}`, '') ? (
+                  <div key={n} className="text-sm p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <p className="font-bold">{cv(`nombre_familia_${n}`)}</p>
+                    <p className="text-gray-500">Parentesco: {cv(`parentezco_${n}`)}</p>
+                    <p className="text-gray-500">Profesión: {cv(`profesion_${n}`)}</p>
+                    <p className="text-gray-500">Tel: {cv(`telefonofam_${n}`)}</p>
+                  </div>
+                ) : null)}
+              </div>
+            </div>
+
+            {/* REFERENCIAS PERSONALES */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 mb-4">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3 text-lg border-b border-gray-200 dark:border-gray-600 pb-2">Referencias Personales</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {[1,2,3].map(n => cv(`nombre_personales_${n}`, '') ? (
+                  <div key={n} className="text-sm p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <p className="font-bold">{cv(`nombre_personales_${n}`)}</p>
+                    <p className="text-gray-500">Profesión: {cv(`profesion_personal_${n}`)}</p>
+                    <p className="text-gray-500">Tel: {cv(`telefonopers_${n}`)}</p>
+                  </div>
+                ) : null)}
+              </div>
+            </div>
+
+            {/* FIRMA DIGITAL */}
+            {getImgUrl(cvData.firma_digital) && (
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 text-center">
+                <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-3">Firma Digital</h3>
+                <img src={getImgUrl(cvData.firma_digital)} alt="Firma Digital" className="max-h-24 mx-auto" />
+              </div>
+            )}
           </div>
         );
 

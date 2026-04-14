@@ -70,7 +70,33 @@ export default function FormularioEntrevista() {
     return { ...defaultRespuestas, ...savedRespuestas };
   };
 
-  const [respuestas, setRespuestas] = useState(getInitialState());
+  const LOCALSTORAGE_KEY = `fundacion_entrevista_${user?._id || 'draft'}`;
+
+  // 🔧 FIX: Restaurar datos desde localStorage al montar (respaldo anti-pérdida)
+  const [respuestas, setRespuestas] = useState(() => {
+    const initial = getInitialState();
+    try {
+      const saved = localStorage.getItem(LOCALSTORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Mezclar: localStorage tiene prioridad sobre defaults, pero no sobre datos del servidor
+        const serverData = user?.fundacion?.entrevista?.respuestas || {};
+        const hasServerData = Object.keys(serverData).some(k => serverData[k] && String(serverData[k]).trim());
+        if (!hasServerData) {
+          console.log('📦 [ENTREVISTA] Restaurando datos desde localStorage');
+          return { ...initial, ...parsed };
+        }
+      }
+    } catch (e) { /* Ignorar errores de parse */ }
+    return initial;
+  });
+
+  // 🔧 FIX: Auto-guardar en localStorage al cambiar cualquier campo
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(respuestas));
+    } catch (e) { /* Ignorar errores de storage lleno */ }
+  }, [respuestas, LOCALSTORAGE_KEY]);
 
   React.useEffect(() => {
     // Scroll window and main content to top on mount
@@ -114,12 +140,18 @@ export default function FormularioEntrevista() {
     try {
       const response = await userService.saveInterview(respuestas);
       if (response.success) {
+        // 🔧 FIX: Actualizar contexto de usuario con los datos del servidor
+        if (response.data) {
+          updateUser(response.data);
+        }
+        // 🔧 FIX: Limpiar localStorage — guardado exitoso confirmado por backend
+        try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
         toast.success('Entrevista guardada exitosamente');
         navigate('/fundacion');
       }
     } catch (error) {
       console.error(error);
-      toast.error('Error al guardar la entrevista');
+      toast.error('Error al guardar. Tus datos están respaldados localmente.');
     } finally {
       setLoading(false);
     }

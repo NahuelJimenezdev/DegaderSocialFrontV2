@@ -27,7 +27,7 @@ const SECTIONS = [
 ];
 
 export default function FormularioHojaDeVida() {
-  const { user, refreshProfile } = useAuth();
+  const { user, updateUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('personal');
@@ -220,16 +220,58 @@ export default function FormularioHojaDeVida() {
     }
   }, [user]);
 
+  const LOCALSTORAGE_KEY = `fundacion_hdv_${user?._id || 'draft'}`;
+
+  // 🔧 FIX: Restaurar desde localStorage al montar SI no hay datos del servidor
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LOCALSTORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const hojaDeVidaDatos = user?.fundacion?.hojaDeVida?.datos || {};
+        const hasServerData = Object.keys(hojaDeVidaDatos).some(k => {
+          const v = hojaDeVidaDatos[k];
+          return v && String(v).trim();
+        });
+        if (!hasServerData && Object.keys(parsed).length > 0) {
+          console.log('📦 [HDV] Restaurando datos desde localStorage');
+          setFormData(prev => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch (e) { /* Ignorar errores de parse */ }
+  }, []); // Solo al montar
+
+  // 🔧 FIX: Auto-guardar en localStorage al cambiar campos (debounced implícito por React batching)
+  useEffect(() => {
+    // No guardar imágenes pesadas en localStorage para evitar errores de quota
+    try {
+      const dataToCache = { ...formData };
+      if (dataToCache.foto_perfil_form && dataToCache.foto_perfil_form.length > 50000) {
+        delete dataToCache.foto_perfil_form;
+      }
+      if (dataToCache.firma_digital && typeof dataToCache.firma_digital === 'string' && dataToCache.firma_digital.length > 50000) {
+        delete dataToCache.firma_digital;
+      }
+      localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(dataToCache));
+    } catch (e) { /* Ignorar errores de storage lleno */ }
+  }, [formData, LOCALSTORAGE_KEY]);
+
   const handleSave = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      await userService.saveHojaDeVida(formData);
-      await refreshProfile();
+      // 🔧 FIX: Usar la respuesta directa del PUT para actualizar el contexto
+      // en vez de hacer un segundo GET que puede tener race condition
+      const response = await userService.saveHojaDeVida(formData);
+      if (response?.success && response?.data) {
+        updateUser(response.data);
+      }
+      // 🔧 FIX: Limpiar localStorage — guardado exitoso confirmado por backend
+      try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
       if (!silent) toast.success('Información guardada correctamente');
       return true;
     } catch (error) {
       console.error('Error al guardar Hoja de Vida:', error);
-      if (!silent) toast.error('Error al guardar la información');
+      if (!silent) toast.error('Error al guardar. Tus datos están respaldados localmente.');
       return false;
     } finally {
       if (!silent) setLoading(false);

@@ -133,6 +133,31 @@ const FormularioFHSYL = () => {
     }
   }, [user]);
 
+  const LOCALSTORAGE_KEY = `fundacion_fhsyl_${user?._id || 'draft'}`;
+
+  // 🔧 FIX: Restaurar desde localStorage al montar SI no hay datos del servidor
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LOCALSTORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const docFHSYL = user?.fundacion?.documentacionFHSYL || {};
+        const hasServerData = !!(docFHSYL.testimonioConversion || docFHSYL.ocupacion || docFHSYL.estadoCivil);
+        if (!hasServerData && Object.keys(parsed).length > 0) {
+          console.log('📦 [FHSYL] Restaurando datos desde localStorage');
+          setFormData(prev => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch (e) { /* Ignorar errores de parse */ }
+  }, []); // Solo al montar
+
+  // 🔧 FIX: Auto-guardar en localStorage al cambiar campos
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));
+    } catch (e) { /* Ignorar errores de storage lleno */ }
+  }, [formData, LOCALSTORAGE_KEY]);
+
   const hydrateArray = (arr, size) => {
     let newArr = Array(size).fill('');
     if (arr && Array.isArray(arr)) {
@@ -216,12 +241,14 @@ const FormularioFHSYL = () => {
         if (response.data) {
           updateUser(response.data);
         }
+        // 🔧 FIX: Limpiar localStorage — guardado exitoso confirmado por backend
+        try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
         toast.success('Documentación guardada correctamente');
         setTimeout(() => navigate('/fundacion'), 2000);
       }
     } catch (err) {
       console.error(err);
-      toast.error('Error al guardar la documentación');
+      toast.error('Error al guardar. Tus datos están respaldados localmente.');
     } finally {
       setLoading(false);
     }
