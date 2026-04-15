@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.3...v1.92.4) (2026-04-15)
+
+
+### Bug Fixes
+
+* **ui:** cambiar color del toast de exito de azul a verde - El toast de success usaba colores azules identicos al fondo de la pagina de login haciendolo invisible - Ahora usa verde (bg-green-50, text-green-800, border-green-200) que es el estandar universal para notificaciones de exito - El toast de info mantiene su color azul original para diferenciarlos visualmente ([e944b07](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e944b0721db18f2b65b4f429e55cfd731ee35ea1))
+
 ### [1.92.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.2...v1.92.3) (2026-04-15)
 
 
