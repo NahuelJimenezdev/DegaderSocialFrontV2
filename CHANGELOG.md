@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.92.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.91.0...v1.92.0) (2026-04-15)
+
+
+### Features
+
+* **fundacion:** rediseño premium de formularios de Entrevista y Hoja de Vida ([ac0b1c5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ac0b1c57ededd22a35e019443eed4381761449c9))
+
+
+### Bug Fixes
+
+* **fundacion:** corregir filtro Buscar por Cargo en panel de administracion - Se reemplazo el input de texto por un select dropdown con todos los cargos validos del enum CARGOS_FUNDACION - Los cargos estan organizados por categoria con optgroup: Directivo General, Organos de Control, Organismos Internacionales, Direcciones Territoriales, Niveles Operativos y Afiliados - El match exacto del backend ahora funciona correctamente sin necesidad de debounce ni regex ([3717f47](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3717f47353d2f21d214bf582013034b2bcb2b92f))
+
 ## [1.91.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.90.0...v1.91.0) (2026-04-15)
 
 
