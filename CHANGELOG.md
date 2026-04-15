@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.91.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.90.0...v1.91.0) (2026-04-15)
+
+
+### Features
+
+* add Secretary roles for International Organizations (Salvacion Mundial and Mision Internacional de Paz) ([56f803a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/56f803a1e27e4b4b4e1aa6c8c98eabb9bf935f35))
+* **auth:** complete password recovery system (front-end) ([f557374](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f55737472fab212d3abfd9fe05f7dbefbaad86b2))
+* **fundacion:** add edit button to DocumentViewer for all document types ([5965553](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/59655530c12d8666401df441f6a370e52e974c6b))
+* **fundacion:** mejorar UX del panel admin con filtros de estado e indicadores visuales ([115bf28](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/115bf280685129ebc3c2d1c2878204d76c895828))
+* ocultar anuncios en el panel de administración de la fundación ([3350097](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3350097a8df1ed5e892f2967a6d166d26c7d5f1e))
+
+
+### Bug Fixes
+
+* **fundacion:** corregir error de 'Invalid time value' en formularios ([28dc952](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/28dc952cf0731ad55515551179ee2365c698f5b7))
+* **fundacion:** sincronización de datos, respaldo localStorage y DocumentViewer completo ([b19e41f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b19e41f2b814fdf557c2182d62cb0fa0a00ff2d7))
+* **shared:** move hooks before conditional return in IosModal to resolve React error ([b29e0fc](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b29e0fc97d0090949a97f251f34cf94407a29f8d))
+* **shared:** rewrite IosModal to strictly follow rules of hooks ([359679a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/359679a4fe6043229d09d29e6df78517962c10da))
+
 ## [1.90.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.89.2...v1.90.0) (2026-04-09)
 
 
