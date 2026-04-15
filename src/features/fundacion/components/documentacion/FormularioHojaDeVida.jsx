@@ -274,21 +274,67 @@ export default function FormularioHojaDeVida() {
   };
 
   const FormSection = ({ title, icon: Icon, children }) => (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm mb-8">
-      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-50 dark:border-gray-700/50">
-        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
-          <Icon size={24} strokeWidth={2.5} />
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-[2rem] p-6 md:p-8 border border-gray-100 dark:border-gray-700/50 shadow-sm mb-8 transition-all hover:shadow-md">
+      <div className="flex items-center gap-4 mb-8 pb-4 border-b border-gray-100 dark:border-gray-700/30">
+        <div className="p-3 bg-blue-600/10 text-blue-600 dark:text-blue-400 rounded-2xl">
+          <Icon size={22} strokeWidth={2.5} />
         </div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+        <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{title}</h2>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-7">
         {children}
       </div>
     </div>
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 pt-16 pb-32 md:py-12">
+    <div className="max-w-6xl mx-auto px-4 pt-16 pb-48 md:py-12 relative">
+      <style>{`
+        .label-premium {
+          display: block;
+          font-size: 0.7rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 0.5rem;
+          margin-left: 0.25rem;
+          color: #64748b; /* slate-500 */
+        }
+        .dark .label-premium {
+          color: #94a3b8; /* slate-400 */
+        }
+        .form-input-premium {
+          width: 100%;
+          padding: 0.875rem 1rem;
+          background-color: #ffffff;
+          border: 1.5px solid #f1f5f9;
+          border-radius: 1rem;
+          font-size: 0.9375rem;
+          font-weight: 500;
+          color: #1e293b;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          outline: none;
+        }
+        .dark .form-input-premium {
+          background-color: #0f172a; /* slate-900 */
+          border-color: #1e293b; /* slate-800 */
+          color: #f1f5f9;
+        }
+        .form-input-premium:focus {
+          border-color: #3b82f6;
+          background-color: #ffffff;
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .dark .form-input-premium:focus {
+          background-color: #020617;
+          border-color: #60a5fa;
+          box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+        }
+        .form-input-premium::placeholder {
+          color: #94a3b8;
+          font-weight: 400;
+        }
+      `}</style>
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <button onClick={() => navigate('/fundacion')} className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold transition-all group">
