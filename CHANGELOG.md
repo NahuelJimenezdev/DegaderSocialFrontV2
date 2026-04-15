@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.6...v1.92.7) (2026-04-15)
+
+
+### Bug Fixes
+
+* **auth:** centrado vertical de iconos de ojo en reset password tanto en desktop como mobile ([5438899](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5438899fde10e53c42fa90287c323fd7e0714048))
+* **auth:** corregir centrado vertical de iconos de ojo en reset password - Se reemplazo el metodo top-1/2 por inset-y-0 con flexbox para un centrado mas robusto y preciso - Corregido tanto en vista desktop como mobile para asegurar que los iconos no se vean desplazados hacia arriba ([164d3fa](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/164d3fae426e1cbafde07786322e728a0873ac63))
+
 ### [1.92.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.5...v1.92.6) (2026-04-15)
 
 
