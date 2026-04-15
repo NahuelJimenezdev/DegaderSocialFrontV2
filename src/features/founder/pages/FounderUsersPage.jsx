@@ -334,7 +334,7 @@ export default function FounderUsersPage() {
                                 type="text" 
                                 value={newPassword}
                                 onChange={e => setNewPassword(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                                 placeholder="Escribe la nueva clave..."
                                 required
                                 minLength={6}

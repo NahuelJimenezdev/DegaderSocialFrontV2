@@ -89,7 +89,7 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
                 onClick={e => e.stopPropagation()}
             >
                 <div style={headerStyles}>
-                    <h3 style={{ color: '#111827', fontSize: '1.125rem', fontWeight: 700 }}>{title}</h3>
+                    <h3 style={{ color: '#1e3a5f', fontSize: '1.125rem', fontWeight: 700 }}>{title}</h3>
                     <button 
                         onClick={onClose}
                         className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
