@@ -37,7 +37,11 @@ export default function FormularioEntrevista() {
   const getInitialState = () => {
     const defaultRespuestas = {
       nombre: user?.nombres ? `${user.nombres.primero} ${user.apellidos?.primero || ''}`.trim() : '',
-      fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
+      fechaNacimiento: (() => {
+        if (!user?.personal?.fechaNacimiento) return '';
+        const d = new Date(user.personal.fechaNacimiento);
+        return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
+      })(),
       upzLocalidad: user?.fundacion?.documentacionFHSYL?.upz || '',
       llamado: user?.fundacion?.documentacionFHSYL?.llamadoPastoral || '',
       loQueMasGusta: '',

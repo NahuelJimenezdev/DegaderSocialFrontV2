@@ -153,7 +153,11 @@ export default function FormularioHojaDeVida() {
         email: user.email || '',
         telefono: user.personal?.celular || user.personal?.telefonoFijo || '',
         direccion: user.personal?.direccion || '',
-        fecha_nacimiento: user.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : '',
+        fecha_nacimiento: (() => {
+          if (!user.personal?.fechaNacimiento) return '';
+          const d = new Date(user.personal.fechaNacimiento);
+          return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
+        })(),
         nacionalidad: user.personal?.nacionalidad || user.personal?.ubicacion?.pais || '',
         departamento_estado_provincia: user.personal?.ubicacion?.departamento || user.personal?.ubicacion?.provincia || user.fundacion?.territorio?.region || user.personal?.ubicacion?.estado || '',
         municipio: user.personal?.ubicacion?.ciudad || user.personal?.ubicacion?.municipio || user.fundacion?.territorio?.zona || user.fundacion?.territorio?.municipio || '',
