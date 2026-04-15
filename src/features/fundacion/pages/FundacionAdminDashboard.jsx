@@ -236,14 +236,57 @@ export default function FundacionAdminDashboard() {
               <option value="barrial">Barrial</option>
             </select>
   
-            <input 
-              type="text" 
+            <select 
               name="cargo" 
-              placeholder="Buscar por Cargo..."
-              value={filters.cargo || ''}
+              value={filters.cargo} 
               onChange={handleFilterChange}
               className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
-            />
+            >
+              <option value="">Cargo (Todos)</option>
+              <optgroup label="Directivo General">
+                <option value="Director Ejecutivo">Director Ejecutivo</option>
+                <option value="Secretario Ejecutivo">Secretario Ejecutivo</option>
+                <option value="Miembro de Junta Directiva">Miembro de Junta Directiva</option>
+                <option value="Equipo de Licitación y Adquisiciones">Equipo de Licitación y Adquisiciones</option>
+              </optgroup>
+              <optgroup label="Órganos de Control">
+                <option value="Dirección de Control Interno y Seguimiento">Dir. Control Interno y Seguimiento</option>
+                <option value="Dirección Asuntos Ético">Dir. Asuntos Ético</option>
+                <option value="Auditor">Auditor</option>
+                <option value="Miembro Comité Ético">Miembro Comité Ético</option>
+              </optgroup>
+              <optgroup label="Organismos Internacionales">
+                <option value="Salvación Mundial">Salvación Mundial</option>
+                <option value="Secretario Salvación Mundial">Secretario Salvación Mundial</option>
+                <option value="Misión Internacional de Paz">Misión Internacional de Paz</option>
+                <option value="Secretario Misión Internacional de Paz">Secretario Misión Internacional de Paz</option>
+                <option value="Delegado Internacional">Delegado Internacional</option>
+              </optgroup>
+              <optgroup label="Direcciones Territoriales">
+                <option value="Director General (Pastor)">Director General (Pastor)</option>
+                <option value="Director General">Director General</option>
+                <option value="Sub-Director General">Sub-Director General</option>
+                <option value="secretario Director General">Secretario Director General</option>
+                <option value="secretario Sub-Director General">Secretario Sub-Director General</option>
+                <option value="Director de Áreas">Director de Áreas</option>
+                <option value="Secretario/a Director de Áreas">Secretario/a Director de Áreas</option>
+                <option value="Sub-Director de Áreas">Sub-Director de Áreas</option>
+                <option value="Secretario/a Sub-Director de Áreas">Secretario/a Sub-Director de Áreas</option>
+              </optgroup>
+              <optgroup label="Niveles Operativos">
+                <option value="Director Nacional">Director Nacional</option>
+                <option value="Director Regional">Director Regional</option>
+                <option value="Director Departamental">Director Departamental</option>
+                <option value="Coordinador Municipal">Coordinador Municipal</option>
+                <option value="Coordinador">Coordinador</option>
+                <option value="Director">Director</option>
+                <option value="Subdirector">Subdirector</option>
+                <option value="Secretario/a">Secretario/a</option>
+              </optgroup>
+              <optgroup label="Afiliados">
+                <option value="Afiliado">Afiliado</option>
+              </optgroup>
+            </select>
 
             <select 
               name="estado" 
