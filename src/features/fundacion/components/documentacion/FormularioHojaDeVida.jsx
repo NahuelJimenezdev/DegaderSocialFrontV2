@@ -234,6 +234,36 @@ export default function FormularioHojaDeVida() {
   }, [formData, LOCALSTORAGE_KEY]);
 
   const handleSave = async (silent = false) => {
+    // 🔍 VALIDACIÓN: Solo si no es un guardado silencioso (auto-save)
+    if (!silent) {
+       const required = [
+         { key: 'nombre_completo', label: 'Nombre Completo' },
+         { key: 'documento_num', label: 'Número de Documento' },
+         { key: 'lugar_expedicion', label: 'Lugar de Expedición' },
+         { key: 'fecha_nacimiento', label: 'Fecha de Nacimiento' },
+         { key: 'nacionalidad', label: 'País / Nacionalidad' },
+         { key: 'direccion', label: 'Dirección' },
+         { key: 'telefono', label: 'Teléfono' },
+         { key: 'email', label: 'E-mail' },
+         { key: 'nombre_iglesia', label: 'Nombre de la Iglesia' },
+         { key: 'cargo_en_FHISYL', label: 'Cargo al que aspira' }
+       ];
+
+       const missing = required.filter(f => !formData[f.key] || !String(formData[f.key]).trim());
+       
+       if (missing.length > 0) {
+         toast.error(`Falta el campo obligatorio: ${missing[0].label}`);
+         setLoading(false);
+         return false;
+       }
+
+       if (!formData.autorizo_si && !formData.autorizo_no) {
+         toast.error('Debe marcar si Autoriza o No el tratamiento de datos');
+         setLoading(false);
+         return false;
+       }
+    }
+
     if (!silent) setLoading(true);
     try {
       const response = await userService.saveHojaDeVida(formData);

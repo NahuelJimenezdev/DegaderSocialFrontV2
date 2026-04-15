@@ -205,6 +205,49 @@ const FormularioFHSYL = () => {
   };
 
   const saveToDatabase = async () => {
+    // 🔍 VALIDACIÓN ESTRICTA: Todos los campos deben estar llenos
+    const requiredFields = [
+      { key: 'direccion', label: 'Dirección de Residencia' },
+      { key: 'localidad', label: 'Localidad' },
+      { key: 'barrio', label: 'Barrio' },
+      { key: 'celular', label: 'Celular' },
+      { key: 'upz', label: 'UPZ' },
+      { key: 'ocupacion', label: 'Ocupación' },
+      { key: 'estadoCivil', label: 'Estado Civil' },
+      { key: 'testimonioConversion', label: 'Testimonio de Conversión' },
+      { key: 'llamadoPastoral', label: 'Llamado Pastoral' },
+      { key: 'tieneCasaPropia', label: '¿Tiene casa propia?' },
+      { key: 'iglesiaTienePropiedad', label: '¿Iglesia tiene propiedad?' },
+      { key: 'profesionalesIglesia', label: 'Profesionales en su iglesia' },
+      { key: 'proyectoPsicosocial', label: 'Proyecto Psico-social' }
+    ];
+
+    const missing = requiredFields.filter(f => !formData[f.key] || String(formData[f.key]).trim() === '');
+    
+    // Validar arreglos (deben tener al menos un valor real)
+    const validVirtudes = formData.virtudes.filter(v => v.trim() !== '');
+    const validAreas = formData.areasMejora.filter(v => v.trim() !== '');
+    const validEventos = formData.eventosExito.filter(v => v.trim() !== '');
+    const validRefs = formData.referencias.filter(r => r.nombre.trim() !== '' && r.contacto.trim() !== '');
+
+    if (missing.length > 0) {
+      toast.error(`Faltan campos obligatorios: ${missing[0].label}`);
+      return;
+    }
+
+    if (validVirtudes.length < 3) return toast.error('Debe completar las 3 virtudes');
+    if (validAreas.length < 2) return toast.error('Debe completar las 2 áreas a mejorar');
+    if (validEventos.length < 2) return toast.error('Debe completar los 2 eventos de éxito');
+    if (validRefs.length < 2) return toast.error('Debe completar al menos 2 referencias con nombre y contacto');
+
+    if (!formData.testimonioConversion || formData.testimonioConversion.length < 100) {
+      return toast.error('El testimonio de conversión debe ser más detallado (mín. 100 caracteres)');
+    }
+
+    if (!formData.llamadoPastoral || formData.llamadoPastoral.length < 50) {
+      return toast.error('El llamado pastoral debe ser más detallado (mín. 50 caracteres)');
+    }
+
     setLoading(true);
     try {
       const payload = {
@@ -221,12 +264,12 @@ const FormularioFHSYL = () => {
         localidadCoordinar: formData.localidadCoordinar,
         testimonioConversion: formData.testimonioConversion,
         llamadoPastoral: formData.llamadoPastoral,
-        virtudes: formData.virtudes.filter(v => v.trim() !== ''),
-        areasMejora: formData.areasMejora.filter(v => v.trim() !== ''),
-        eventosExito: formData.eventosExito.filter(v => v.trim() !== ''),
+        virtudes: validVirtudes,
+        areasMejora: validAreas,
+        eventosExito: validEventos,
         nombreCongregacionPastorea: formData.nombreCongregacionPastorea,
         alianzaPastores: formData.alianzaPastores,
-        referencias: formData.referencias.filter(r => r.nombre.trim() !== ''),
+        referencias: validRefs,
         pastorQueInvito: formData.pastorQueInvito,
         tieneCasaPropia: formData.tieneCasaPropia === "SI" ? true : formData.tieneCasaPropia === "NO" ? false : null,
         iglesiaTienePropiedad: formData.iglesiaTienePropiedad === "SI" ? true : formData.iglesiaTienePropiedad === "NO" ? false : null,
