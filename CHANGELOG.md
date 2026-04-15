@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.93.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.93.0...v1.93.1) (2026-04-15)
+
+
+### Bug Fixes
+
+* **fundacion:** corregir perdida de foco y scroll automatico en formularios de documentacion ([70a08c2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/70a08c202b162d00e5689d8ce9e48ea4ec74cf2a))
+
 ## [1.93.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.7...v1.93.0) (2026-04-15)
 
 
