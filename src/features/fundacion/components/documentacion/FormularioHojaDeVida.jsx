@@ -750,15 +750,15 @@ export default function FormularioHojaDeVida() {
          </div>
       </FormSection>
 
-      {/* --- PANEL DE ACCIONES FLOTANTE --- */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 z-50">
-         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl p-4 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-2xl flex items-center justify-between">
-            <div className="hidden md:block pl-4">
-               <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase leading-none">Guardado Inteligente</p>
-               <p className="text-[8px] text-gray-400 font-medium tracking-tight">Datos sincronizados con la nube</p>
+      {/* --- PANEL DE ACCIONES --- */}
+      <div className="mt-16 w-full max-w-4xl mx-auto px-4">
+         <div className="bg-white dark:bg-gray-900/80 backdrop-blur-2xl p-6 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left pl-0 md:pl-4">
+               <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase leading-none mb-1">Guardado Inteligente</p>
+               <p className="text-[8px] text-gray-400 font-medium tracking-tight uppercase">Datos sincronizados automáticamente</p>
             </div>
             
-            <div className="flex w-full sm:w-auto gap-4">
+            <div className="flex flex-col sm:flex-row w-full md:w-auto gap-4">
                <button
                   onClick={() => handleSave(false)}
                   disabled={loading}
@@ -783,6 +783,9 @@ export default function FormularioHojaDeVida() {
                </button>
             </div>
          </div>
+         <p className="mt-8 text-center text-[10px] text-gray-400 font-bold uppercase tracking-widest opacity-50">
+           Fundación Humanitaria Internacional Sol y Luna • Formato Oficial 2026
+         </p>
       </div>
 
     </div>
