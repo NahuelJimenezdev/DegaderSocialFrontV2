@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.1...v1.92.2) (2026-04-15)
+
+
+### Bug Fixes
+
+* **perfil:** actualizar nombre completo de la fundacion en descripcion de afiliados - Cambiar Fundacion por Fundacion Humanitaria Internacional Sol y Luna en los 3 componentes de perfil ([ded5707](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/ded570717330294f709dcfabe4e7c49e4bcda3b4))
+
 ### [1.92.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.0...v1.92.1) (2026-04-15)
 
 
