@@ -84,10 +84,11 @@ const ResetPasswordPage = () => {
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden flex max-w-4xl w-full" style={{ minHeight: '500px' }}>
         {/* Left decoration */}
         <div className="hidden md:flex w-1/2 bg-blue-600 p-12 flex-col justify-center items-center text-white space-y-6 text-center">
-           <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+           <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center overflow-hidden">
               <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Logo"
+                className="rounded-full"
                 style={{ width: '70%', height: '70%', objectFit: 'contain' }}
               />
            </div>
