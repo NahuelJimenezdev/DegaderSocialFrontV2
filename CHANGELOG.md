@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.4...v1.92.5) (2026-04-15)
+
+
+### Bug Fixes
+
+* **auth:** redondear logo en pagina de restablecimiento de contrasena - La imagen del logo se mostraba cuadrada dentro del contenedor circular - Se agrego rounded-full a la imagen y overflow-hidden al contenedor para que el logo se recorte correctamente al circulo ([131ffe5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/131ffe573ab48d2a5d599f0544392401cbd920d4))
+* **auth:** redondear logo en vista mobile de restablecimiento de contrasena - Mismo fix aplicado a la version mobile: overflow-hidden en contenedor y rounded-full en imagen ([2209f17](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/2209f1776c19331f60b6da082739adf3ffeb51b6))
+
 ### [1.92.4](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.3...v1.92.4) (2026-04-15)
 
 
