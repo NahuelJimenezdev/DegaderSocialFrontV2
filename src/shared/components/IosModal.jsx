@@ -86,11 +86,10 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
         <div style={backdropStyles} onClick={onClose}>
             <div 
                 style={modalStyles} 
-                className="dark:bg-gray-800/90 dark:backdrop-blur-xl" 
                 onClick={e => e.stopPropagation()}
             >
                 <div style={headerStyles}>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
+                    <h3 style={{ color: '#111827', fontSize: '1.125rem', fontWeight: 700 }}>{title}</h3>
                     <button 
                         onClick={onClose}
                         className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
@@ -98,7 +97,7 @@ const IosModal = ({ isOpen, onClose, title, children }) => {
                         <X size={20} className="text-gray-500" />
                     </button>
                 </div>
-                <div className="p-6 text-gray-800 dark:text-gray-200">
+                <div className="p-6" style={{ color: '#1f2937' }}>
                     {children}
                 </div>
             </div>
