@@ -17,6 +17,21 @@ import {
 import userService from '../../../../api/userService';
 import { useToast } from '../../../../shared/components/Toast/ToastProvider';
 
+// Componente de sección extraído para evitar re-montajes innecesarios que causan pérdida de foco y reinicio de animaciones
+const FormSection = ({ title, icon: Icon, children }) => (
+  <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-50 dark:border-gray-700/50">
+      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
+        <Icon size={24} strokeWidth={2.5} />
+      </div>
+      <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {children}
+    </div>
+  </div>
+);
+
 export default function FormularioEntrevista() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
@@ -88,6 +103,7 @@ export default function FormularioEntrevista() {
   }, [respuestas, LOCALSTORAGE_KEY]);
 
   useEffect(() => {
+    // Solo scrollear al inicio si entramos por primera vez
     window.scrollTo(0, 0);
     const mainContent = document.querySelector('.main-content');
     if (mainContent) mainContent.scrollTo(0, 0);
@@ -124,21 +140,6 @@ export default function FormularioEntrevista() {
       setLoading(false);
     }
   };
-
-  // Helper para renderizar secciones con diseño premium
-  const FormSection = ({ title, icon: Icon, children }) => (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-50 dark:border-gray-700/50">
-        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
-          <Icon size={24} strokeWidth={2.5} />
-        </div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {children}
-      </div>
-    </div>
-  );
 
   return (
     <div className="max-w-4xl mx-auto px-4 pt-16 pb-24 md:py-12">
@@ -330,4 +331,3 @@ export default function FormularioEntrevista() {
     </div>
   );
 }
-

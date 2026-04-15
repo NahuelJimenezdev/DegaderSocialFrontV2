@@ -18,6 +18,21 @@ import { toast } from 'react-hot-toast';
 import userService from '../../../../api/userService';
 import { downloadCV } from '../../utils/docUtils';
 
+// Componente de sección extraído para evitar re-montajes que causan pérdida de foco
+const FormSection = ({ title, icon: Icon, children }) => (
+  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-[2rem] p-6 md:p-8 border border-gray-100 dark:border-gray-700/50 shadow-sm mb-8 transition-all hover:shadow-md">
+    <div className="flex items-center gap-4 mb-8 pb-4 border-b border-gray-100 dark:border-gray-700/30">
+      <div className="p-3 bg-blue-600/10 text-blue-600 dark:text-blue-400 rounded-2xl">
+        <Icon size={22} strokeWidth={2.5} />
+      </div>
+      <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{title}</h2>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-7">
+      {children}
+    </div>
+  </div>
+);
+
 export default function FormularioHojaDeVida() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
@@ -128,6 +143,7 @@ export default function FormularioHojaDeVida() {
   };
 
   useEffect(() => {
+    // Solo scrollear al inicio si entramos por primera vez
     window.scrollTo(0, 0);
     const mainContent = document.querySelector('.main-content');
     if (mainContent) mainContent.scrollTo(0, 0);
@@ -272,20 +288,6 @@ export default function FormularioHojaDeVida() {
       setLoading(false);
     }
   };
-
-  const FormSection = ({ title, icon: Icon, children }) => (
-    <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-[2rem] p-6 md:p-8 border border-gray-100 dark:border-gray-700/50 shadow-sm mb-8 transition-all hover:shadow-md">
-      <div className="flex items-center gap-4 mb-8 pb-4 border-b border-gray-100 dark:border-gray-700/30">
-        <div className="p-3 bg-blue-600/10 text-blue-600 dark:text-blue-400 rounded-2xl">
-          <Icon size={22} strokeWidth={2.5} />
-        </div>
-        <h2 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">{title}</h2>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-7">
-        {children}
-      </div>
-    </div>
-  );
 
   return (
     <div className="max-w-6xl mx-auto px-4 pt-16 pb-48 md:py-12 relative">
@@ -656,12 +658,12 @@ export default function FormularioHojaDeVida() {
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Aspiración Institucional</h4>
             <div className="space-y-6 bg-blue-50/30 dark:bg-blue-900/10 p-6 rounded-[2rem] border border-blue-100 dark:border-blue-900/30">
                 <div>
-                  <label className="label-premium text-blue-700 dark:text-blue-300">Cargo al que aspira en la Fundación</label>
-                  <input name="cargo_en_FHISYL" value={formData.cargo_en_FHISYL} onChange={handleChange} className="form-input-premium w-full" placeholder="Escribe el nombre del cargo..." />
+                   <label className="label-premium text-blue-700 dark:text-blue-300">Cargo al que aspira en la Fundación</label>
+                   <input name="cargo_en_FHISYL" value={formData.cargo_en_FHISYL} onChange={handleChange} className="form-input-premium w-full" placeholder="Escribe el nombre del cargo..." />
                 </div>
                 <div>
-                  <label className="label-premium text-blue-700 dark:text-blue-300">Breve descripción de su ministerio / profesión</label>
-                  <textarea name="descripcion_breve_ministerio_profesion" value={formData.descripcion_breve_ministerio_profesion} onChange={handleChange} className="form-input-premium w-full h-32 pt-4 shadow-inner" placeholder="Explica brevemente tu experiencia y propósito..." />
+                   <label className="label-premium text-blue-700 dark:text-blue-300">Breve descripción de su ministerio / profesión</label>
+                   <textarea name="descripcion_breve_ministerio_profesion" value={formData.descripcion_breve_ministerio_profesion} onChange={handleChange} className="form-input-premium w-full h-32 pt-4 shadow-inner" placeholder="Explica brevemente tu experiencia y propósito..." />
                 </div>
             </div>
          </div>

@@ -58,13 +58,15 @@ const FormularioFHSYL = () => {
   });
 
   useEffect(() => {
-    // Scroll window and main content to top on mount
+    // Scroll inicial solo al montar
     window.scrollTo(0, 0);
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
       mainContent.scrollTo(0, 0);
     }
+  }, []); // Solo al montar
 
+  useEffect(() => {
     if (user) {
       const docFHSYL = user.fundacion?.documentacionFHSYL || {};
       
@@ -92,7 +94,6 @@ const FormularioFHSYL = () => {
           localidadCoordinar: docFHSYL.localidadCoordinar || '',
           testimonioConversion: docFHSYL.testimonioConversion || '',
           
-          // --- SINCRONIZACIÓN CROSS-FORM (FALLBACKS) ---
           llamadoPastoral: docFHSYL.llamadoPastoral || 
                            user.fundacion?.entrevista?.respuestas?.llamado || '',
           
