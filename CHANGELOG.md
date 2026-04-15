@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.2...v1.92.3) (2026-04-15)
+
+
+### Bug Fixes
+
+* **auth:** corregir estilos del modal Recuperar Contrasena en la pagina de login - El titulo era blanco sobre fondo blanco (invisible) por herencia de dark mode - El input de email tenia fondo oscuro (dark:bg-gray-900) en un modal claro - Se removieron clases dark: del IosModal para forzar siempre estilo claro tipo iOS glassmorphism - Se corrigio el input en Login.jsx con colores explicitos (bg-white text-gray-900) ([d4f031e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d4f031edb2ba0e11da8ad93b2ac1bbb69f09a366))
+
 ### [1.92.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.1...v1.92.2) (2026-04-15)
 
 
