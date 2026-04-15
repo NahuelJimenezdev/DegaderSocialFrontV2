@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.0...v1.92.1) (2026-04-15)
+
+
+### Bug Fixes
+
+* **perfil:** corregir descripcion redundante de Afiliados en perfil de usuario - Antes mostraba: Se desempena como Afiliado en la Afiliado a nivel afiliado en Argentina - Ahora muestra: Actualmente Afiliado a la Fundacion con pais - Los demas cargos mantienen el formato detallado con area y jurisdiccion - Corregido en 3 archivos: PerfilVisitantePage, MemberProfilePage, MemberProfileContent ([295e07d](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/295e07ddee82c766f2115d83dd7cb2e451725a1b))
+
 ## [1.92.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.91.0...v1.92.0) (2026-04-15)
 
 
