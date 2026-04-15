@@ -78,20 +78,20 @@ export default function FormularioHojaDeVida() {
 
     // EXPERIENCIA LABORAL 1
     empresa_actual: '', departamento_empresa: '', municipio_empresa: '', email_empresa: '',
-    teléfono_emrpesa: '', dia_inicio: '', mes_inicio: '', año_inicio: '',
-    dia_fin: '', mes_fin: '', año_fin: '', cargo_empresa: '', dirección_empresa: '',
+    telefono_empresa: '', dia_inicio: '', mes_inicio: '', año_inicio: '',
+    dia_fin: '', mes_fin: '', año_fin: '', cargo_empresa: '', direccion_empresa: '',
     sector_empresa: 'privada', 
 
     // EXPERIENCIA LABORAL 2
     empresa_dos: '', departamento_empresa2: '', municipio_empresa2: '', email_empresa2: '',
-    teléfono_emrpesa2: '', dia_inicio2: '', mes_inicio2: '', año_inicio2: '',
-    dia_fin2: '', mes_fin2: '', año_fin2: '', cargo_empresa2: '', dirección_empresa2: '',
+    telefono_empresa2: '', dia_inicio2: '', mes_inicio2: '', año_inicio2: '',
+    dia_fin2: '', mes_fin2: '', año_fin2: '', cargo_empresa2: '', direccion_empresa2: '',
     sector_empresa2: 'privada',
 
     // EXPERIENCIA LABORAL 3
     empresa_tres: '', departamento_empresa3: '', municipio_empresa3: '', email_empresa3: '',
-    teléfono_emrpesa3: '', dia_inicio3: '', mes_inicio3: '', año_inicio3: '',
-    dia_fin3: '', mes_fin3: '', año_fin3: '', cargo_empresa3: '', dirección_empresa3: '',
+    telefono_empresa3: '', dia_inicio3: '', mes_inicio3: '', año_inicio3: '',
+    dia_fin3: '', mes_fin3: '', año_fin3: '', cargo_empresa3: '', direccion_empresa3: '',
     sector_empresa3: 'privada',
 
     // DATOS DE LA IGLESIA
@@ -179,13 +179,16 @@ export default function FormularioHojaDeVida() {
       Object.entries(hojaDeVidaDatos).forEach(([key, value]) => {
         if (value !== null && value !== undefined && value !== '') {
           savedData[key] = value;
-          // Corregir typos históricos
-          if (key === 'profesion_personal2') savedData['profesion_personal_2'] = value;
-          if (key === 'profesion_personal3') savedData['profesion_personal_3'] = value;
-          if (key === 'profesion2_personal') savedData['profesion_personal_2'] = value;
-          if (key === 'profesion3_personal') savedData['profesion_personal_3'] = value;
+          if (key === 'profesion_personal2' || key === 'profesion2_personal') savedData['profesion_personal_2'] = value;
+          if (key === 'profesion_personal3' || key === 'profesion3_personal') savedData['profesion_personal_3'] = value;
           if (key === 'doc_num' || key === 'documento') savedData['documento_num'] = value;
           if (key === 'lugar_exp' || key === 'expedicion') savedData['lugar_expedicion'] = value;
+          if (key === 'teléfono_emrpesa') savedData['telefono_empresa'] = value;
+          if (key === 'teléfono_emrpesa2') savedData['telefono_empresa2'] = value;
+          if (key === 'teléfono_emrpesa3') savedData['telefono_empresa3'] = value;
+          if (key === 'dirección_empresa') savedData['direccion_empresa'] = value;
+          if (key === 'dirección_empresa2') savedData['direccion_empresa2'] = value;
+          if (key === 'dirección_empresa3') savedData['direccion_empresa3'] = value;
         }
       });
 
@@ -569,7 +572,7 @@ export default function FormularioHojaDeVida() {
                     <div> <label className="label-premium text-[9px]">Departamento</label> <input name={`departamento_empresa${exp.prefix}`} value={formData[`departamento_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
                     <div> <label className="label-premium text-[9px]">Municipio / Ciudad</label> <input name={`municipio_empresa${exp.prefix}`} value={formData[`municipio_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
                     <div> <label className="label-premium text-[9px]">Email Empresa</label> <input name={`email_empresa${exp.prefix}`} value={formData[`email_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
-                    <div> <label className="label-premium text-[9px]">Teléfono Empresa</label> <input name={`teléfono_emrpesa${exp.prefix}`} value={formData[`teléfono_emrpesa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                    <div> <label className="label-premium text-[9px]">Teléfono Empresa</label> <input name={`telefono_empresa${exp.prefix}`} value={formData[`telefono_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
                     <div className="lg:col-span-2">
                        <label className="label-premium text-[9px]">Fecha de Ingreso (DD/MM/AAAA)</label>
                        <div className="grid grid-cols-3 gap-2">
@@ -586,7 +589,7 @@ export default function FormularioHojaDeVida() {
                           <input name={`año_fin${exp.prefix}`} value={formData[`año_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="AAAA" />
                        </div>
                     </div>
-                    <div className="lg:col-span-4"> <label className="label-premium text-[9px]">Dirección Completa de la Empresa</label> <input name={`dirección_empresa${exp.prefix}`} value={formData[`dirección_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                    <div className="lg:col-span-4"> <label className="label-premium text-[9px]">Dirección Completa de la Empresa</label> <input name={`direccion_empresa${exp.prefix}`} value={formData[`direccion_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
                   </div>
                 </div>
               ))}
