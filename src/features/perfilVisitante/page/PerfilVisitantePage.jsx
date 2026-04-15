@@ -177,7 +177,9 @@ const PerfilVisitantePage = () => {
                 <InfoItem
                   label="Fundación"
                   // value={`FHISYL - ${usuario.fundacion?.cargo || 'Miembro'}`}
-                  value={`Se desempeña como ${usuario.fundacion?.cargo || 'Miembro'} ${
+                  value={usuario.fundacion?.nivel === 'afiliado' 
+                    ? `Actualmente Afiliado a la Fundación${usuario.fundacion?.territorio?.pais ? ` — ${usuario.fundacion.territorio.pais}` : ''}`
+                    : `Se desempeña como ${usuario.fundacion?.cargo || 'Miembro'} ${
                     usuario.fundacion?.area ? `en la ${usuario.fundacion.area}` : ''
                   } ${formatNivelDetallado(usuario)}`}
                   icon={Building2Icon}  

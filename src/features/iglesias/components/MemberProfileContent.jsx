@@ -219,9 +219,15 @@ const MemberProfileContent = ({ userId, iglesiaId, isPastor, onMemberRemoved }) 
                                     Cargo y Jurisdicción
                                 </p>
                                 <p className="text-base text-gray-900 dark:text-white leading-relaxed">
+                                    {userInfo.fundacion?.nivel === 'afiliado' ? (
+                                        <>Actualmente <span className="font-bold">Afiliado a la Fundación</span>{userInfo.fundacion?.territorio?.pais ? ` — ${userInfo.fundacion.territorio.pais}` : ''}</>
+                                    ) : (
+                                        <>
                                     Se desempeña como <span className="font-bold">{userInfo.fundacion?.cargo || 'Miembro'}</span> 
                                     {userInfo.fundacion?.area ? ` en la ${userInfo.fundacion.area}` : ''}
                                     {' '}{formatNivelDetallado(userInfo)}
+                                        </>
+                                    )}
                                 </p>
                             </div>
                         </div>
