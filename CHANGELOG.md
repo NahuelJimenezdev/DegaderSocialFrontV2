@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.93.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.7...v1.93.0) (2026-04-15)
+
+
+### Features
+
+* **birthday:** mejorar identidad visual y jerarquia de tarjetas de cumpleaños - Aumentado z-index del modal (2000) para evitar superposicion con Navbar - Implementado diseño de 'Avatar Dual' (Autor y Destinatario superpuestos) en el encabezado - Agregado texto descriptivo 'Autor ➔ Destinatario' con links a perfiles para mayor claridad en el feed ([3d5d43e](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/3d5d43ecb2dcdd33d943c462879998416ee4f754))
+
 ### [1.92.7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.6...v1.92.7) (2026-04-15)
 
 
