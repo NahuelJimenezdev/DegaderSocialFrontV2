@@ -174,7 +174,7 @@ export default function UserDocumentationView() {
       id: 'fhsyl', 
       title: 'Aplicativo Argentina', 
       desc: 'Información pastoral y aplicativo FHSYL.', 
-      status: !!targetUser?.fundacion?.documentacionFHSYL?.ultimaActualizacion 
+      status: targetUser?.fundacion?.documentacionFHSYL?.completado || !!targetUser?.fundacion?.documentacionFHSYL?.testimonioConversion 
     },
     { 
       id: 'entrevista', 

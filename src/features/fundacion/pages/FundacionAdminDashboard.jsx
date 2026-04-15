@@ -400,7 +400,7 @@ export default function FundacionAdminDashboard() {
                   {(() => {
                     const isCompleted = u.fundacion?.hojaDeVida?.completado && 
                                       u.fundacion?.entrevista?.completado && 
-                                      u.fundacion?.documentacionFHSYL?.testimonioConversion;
+                                      (u.fundacion?.documentacionFHSYL?.completado || !!u.fundacion?.documentacionFHSYL?.testimonioConversion);
                     
                     return (
                       <button 

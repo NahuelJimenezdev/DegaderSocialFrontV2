@@ -229,13 +229,37 @@ export const generateCV = async (userData, overrideData = null, overridePhotos =
 
   const rawData = { ...formData };
   
+  // 🔍 DEBUG: Log de datos que llegan para renderizar
+  console.log('📄 [DOC GEN] Datos antes de renderizar CV:', {
+    hasFormData: Object.keys(formData).length > 0,
+    nombre: formData.nombre_completo || 'N/D',
+    completado: meta.hojaDeVida?.completado
+  });
+
+  // 🆕 1. ASEGURAR QUE TENEMOS DATOS BÁSICOS SI NO VIENEN EN EL FORM (Fallback agresivo)
+  if (!rawData.nombre_completo && userData.nombres) {
+    rawData.nombre_completo = `${userData.nombres.primero} ${userData.nombres.segundo || ''} ${userData.apellidos?.primero || ''} ${userData.apellidos?.segundo || ''}`.trim().replace(/\s+/g, ' ');
+  }
+  if (!rawData.email && userData.email) rawData.email = userData.email;
+  if (!rawData.telefono && userData.personal?.celular) rawData.telefono = userData.personal.celular;
+  if (!rawData.direccion && userData.personal?.direccion) rawData.direccion = userData.personal.direccion;
+  if (!rawData.municipio && userData.personal?.ubicacion?.ciudad) rawData.municipio = userData.personal.ubicacion.ciudad;
+  if (!rawData.departamento_estado_provincia && userData.personal?.ubicacion?.estado) {
+    rawData.departamento_estado_provincia = userData.personal.ubicacion.estado;
+  }
+  
   // Soporte para variaciones de nombres de campos (Fuzzy Mapping)
   if (rawData.profesion_personal2) rawData.profesion_personal_2 = rawData.profesion_personal2;
   if (rawData.profesion_personal3) rawData.profesion_personal_3 = rawData.profesion_personal3;
   if (rawData.profesion2_personal) rawData.profesion_personal_2 = rawData.profesion2_personal;
   if (rawData.profesion3_personal) rawData.profesion_personal_3 = rawData.profesion3_personal;
-  if (!rawData.documento_num && (rawData.doc_num || rawData.documento)) {
-    rawData.documento_num = rawData.doc_num || rawData.documento;
+  
+  // Asegurar que las referencias tengan el espacio correcto (algunos templates tienen 'profesion_personal _2' con espacio)
+  if (rawData.profesion_personal_2) rawData['profesion_personal _2'] = rawData.profesion_personal_2;
+  if (rawData.profesion_personal_3) rawData['profesion_personal _3'] = rawData.profesion_personal_3;
+
+  if (!rawData.documento_num && (rawData.doc_num || rawData.documento || rawData.cedula)) {
+    rawData.documento_num = rawData.doc_num || rawData.documento || rawData.cedula;
   }
   if (!rawData.lugar_expedicion && (rawData.lugar_exp || rawData.expedicion)) {
     rawData.lugar_expedicion = rawData.lugar_exp || rawData.expedicion;
@@ -660,7 +684,7 @@ export const generateUserZip = async (userData) => {
   zip.file(`3.Entrevista_${name}.doc`, await entrevistaBlob.arrayBuffer());
   
   // 4. Solicitud (Word .doc vía HTML mejorado)
-  const solicitudBlob = generateSolicitud(userData);
+  const solicitudBlob = await generateSolicitud(userData, firmaB64);
   zip.file(`4.Solicitud_Ingreso_${name}.doc`, await solicitudBlob.arrayBuffer());
   
   const content = zip.generate({ type: 'blob' });
