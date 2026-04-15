@@ -89,7 +89,7 @@ const ResetPasswordPage = () => {
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Logo"
                 className="rounded-full"
-                style={{ width: '70%', height: '70%', objectFit: 'contain' }}
+                style={{ width: '92%', height: '92%', objectFit: 'contain' }}
               />
            </div>
            <h2 className="text-3xl font-bold">Crea tu nueva clave</h2>
@@ -170,7 +170,7 @@ const ResetPasswordPage = () => {
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Logo"
                 className="rounded-full"
-                style={{ width: '60%', height: '60%', objectFit: 'contain' }}
+                style={{ width: '88%', height: '88%', objectFit: 'contain' }}
             />
         </div>
         <span className="font-bold text-gray-800">DEGADER SOCIAL</span>
