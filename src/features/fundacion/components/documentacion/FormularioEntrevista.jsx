@@ -1,36 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { 
   Heart, 
   ChevronLeft, 
-  ChevronRight, 
   Save, 
   User, 
   Briefcase, 
   Shield, 
   Star, 
   Users, 
-  Clock 
+  Clock,
+  CheckCircle2,
+  FileText
 } from 'lucide-react';
 import userService from '../../../../api/userService';
 import { useToast } from '../../../../shared/components/Toast/ToastProvider';
-
-const SECTIONS = [
-  { id: 'info', title: 'Información General', icon: User },
-  { id: 'ministerio', title: 'Ministerio', icon: Star },
-  { id: 'caracter', title: 'Carácter', icon: Shield },
-  { id: 'sujecion', title: 'Sujeción y Legal', icon: Users },
-  { id: 'dones', title: 'Dones y Talentos', icon: Briefcase },
-  { id: 'familia', title: 'Familia y Devoción', icon: Heart },
-  { id: 'otros', title: 'Compromiso y Tiempo', icon: Clock }
-];
 
 export default function FormularioEntrevista() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
-  const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   
   // Función para obtener estado inicial con mezcla (merge)
@@ -69,46 +59,38 @@ export default function FormularioEntrevista() {
       palabrasVoluntarias: ''
     };
 
-    // Mezclar datos guardados con los por defecto para asegurar que todas las llaves existan
     const savedRespuestas = user?.fundacion?.entrevista?.respuestas || {};
     return { ...defaultRespuestas, ...savedRespuestas };
   };
 
   const LOCALSTORAGE_KEY = `fundacion_entrevista_${user?._id || 'draft'}`;
 
-  // 🔧 FIX: Restaurar datos desde localStorage al montar (respaldo anti-pérdida)
   const [respuestas, setRespuestas] = useState(() => {
     const initial = getInitialState();
     try {
       const saved = localStorage.getItem(LOCALSTORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Mezclar: localStorage tiene prioridad sobre defaults, pero no sobre datos del servidor
         const serverData = user?.fundacion?.entrevista?.respuestas || {};
         const hasServerData = Object.keys(serverData).some(k => serverData[k] && String(serverData[k]).trim());
         if (!hasServerData) {
-          console.log('📦 [ENTREVISTA] Restaurando datos desde localStorage');
           return { ...initial, ...parsed };
         }
       }
-    } catch (e) { /* Ignorar errores de parse */ }
+    } catch (e) { /* noop */ }
     return initial;
   });
 
-  // 🔧 FIX: Auto-guardar en localStorage al cambiar cualquier campo
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(respuestas));
-    } catch (e) { /* Ignorar errores de storage lleno */ }
+    } catch (e) { /* noop */ }
   }, [respuestas, LOCALSTORAGE_KEY]);
 
-  React.useEffect(() => {
-    // Scroll window and main content to top on mount
+  useEffect(() => {
     window.scrollTo(0, 0);
     const mainContent = document.querySelector('.main-content');
-    if (mainContent) {
-      mainContent.scrollTo(0, 0);
-    }
+    if (mainContent) mainContent.scrollTo(0, 0);
   }, []);
 
   const handleChange = (e) => {
@@ -116,39 +98,21 @@ export default function FormularioEntrevista() {
     setRespuestas(prev => ({ ...prev, [name]: value }));
   };
 
-  const validateStep = (step) => {
-    let fieldsToValidate = [];
-    switch (step) {
-      case 0: fieldsToValidate = ['nombre', 'fechaNacimiento', 'upzLocalidad']; break;
-      case 1: fieldsToValidate = ['llamado', 'loQueMasGusta', 'sacrificioPastoral']; break;
-      case 2: fieldsToValidate = ['caracterAmigos', 'caracterCompañeros', 'situacionDificil', 'respuestaSituacion', 'cambioSituacion']; break;
-      case 3: fieldsToValidate = ['autoridadEspiritual', 'personeriaJuridica', 'manejoDiferencias']; break;
-      case 4: fieldsToValidate = ['dones', 'talentos', 'profesion', 'enfrentamientoConflictos', 'porqueCoordinador', 'manejaOffice']; break;
-      case 5: fieldsToValidate = ['vinculoFamiliar', 'familiaInvolucrada', 'formaEspiritual']; break;
-      case 6: fieldsToValidate = ['tiempoPastoreando', 'permanenciaMinisterio', 'disponibilidadTiempo', 'palabrasVoluntarias']; break;
-      default: break;
-    }
-
-    const missingFields = fieldsToValidate.filter(field => !respuestas[field]?.trim());
-    
-    if (missingFields.length > 0) {
-      toast.error('Todos los campos de esta sección son obligatorios para continuar.');
-      return false;
-    }
-    return true;
-  };
-
   const handleSave = async () => {
-    if (!validateStep(currentStep)) return;
+    // Validación mínima: Al menos los campos básicos
+    const required = ['nombre', 'fechaNacimiento', 'upzLocalidad', 'llamado'];
+    const missing = required.filter(f => !respuestas[f]?.trim());
+    
+    if (missing.length > 0) {
+      toast.error('Por favor, completa los campos básicos al inicio del formulario.');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await userService.saveInterview(respuestas);
       if (response.success) {
-        // 🔧 FIX: Actualizar contexto de usuario con los datos del servidor
-        if (response.data) {
-          updateUser(response.data);
-        }
-        // 🔧 FIX: Limpiar localStorage — guardado exitoso confirmado por backend
+        if (response.data) updateUser(response.data);
         try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
         toast.success('Entrevista guardada exitosamente');
         navigate('/fundacion');
@@ -161,302 +125,209 @@ export default function FormularioEntrevista() {
     }
   };
 
-  const nextStep = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, SECTIONS.length - 1));
-    }
-  };
-  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
-
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Información General</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Nombre Completo</label>
-                <input name="nombre" value={respuestas.nombre} onChange={handleChange} className="form-input-premium w-full" readOnly />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Fecha de Nacimiento</label>
-                <input type="date" name="fechaNacimiento" value={respuestas.fechaNacimiento} onChange={handleChange} className="form-input-premium w-full" />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">UPZ y Localidad</label>
-                <input name="upzLocalidad" value={respuestas.upzLocalidad} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: UPZ 45 - Kennedy" />
-              </div>
-            </div>
-          </div>
-        );
-      case 1:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Ministerio</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Cuál es su llamado?</label>
-                <textarea name="llamado" value={respuestas.llamado} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Describe tu llamado ministerial..." />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué es lo que más le gusta hacer y lo hace muy bien?</label>
-                <textarea name="loQueMasGusta" value={respuestas.loQueMasGusta} onChange={handleChange} className="form-input-premium w-full h-24" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">En el ministerio pastoral, ¿en qué área ha estado más dispuesto a hacer un sacrificio?</label>
-                <textarea name="sacrificioPastoral" value={respuestas.sacrificioPastoral} onChange={handleChange} className="form-input-premium w-full h-24" />
-              </div>
-            </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Carácter</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué dirían de usted sus Amigos?</label>
-                  <input name="caracterAmigos" value={respuestas.caracterAmigos} onChange={handleChange} className="form-input-premium w-full" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué dirían sus Compañeros de trabajo?</label>
-                  <input name="caracterCompañeros" value={respuestas.caracterCompañeros} onChange={handleChange} className="form-input-premium w-full" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Cuénteme de un momento en que se encontró en una situación difícil.</label>
-                <textarea name="situacionDificil" value={respuestas.situacionDificil} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Describe la situación..." />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Cómo respondió?</label>
-                  <textarea name="respuestaSituacion" value={respuestas.respuestaSituacion} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Tu respuesta..." />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué cambiaría?</label>
-                  <textarea name="cambioSituacion" value={respuestas.cambioSituacion} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Lo que cambiarías..." />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Sujeción y Situación Legal</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Quién es su autoridad espiritual directa?</label>
-                <input name="autoridadEspiritual" value={respuestas.autoridadEspiritual} onChange={handleChange} className="form-input-premium w-full" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿La denominación que usted pastorea cuenta con Personería jurídica especial? ¿O está bajo cobertura de otra?</label>
-                <input name="personeriaJuridica" value={respuestas.personeriaJuridica} onChange={handleChange} className="form-input-premium w-full" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Cómo maneja sus situaciones difíciles o diferencias frente a sus autoridades espirituales?</label>
-                <textarea name="manejoDiferencias" value={respuestas.manejoDiferencias} onChange={handleChange} className="form-input-premium w-full h-24" />
-              </div>
-            </div>
-          </div>
-        );
-      case 4:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Dones y Talentos</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Con qué dones aportaría usted al equipo?</label>
-                  <textarea name="dones" value={respuestas.dones} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Dones espirituales..." />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Y con qué talentos naturales?</label>
-                  <textarea name="talentos" value={respuestas.talentos} onChange={handleChange} className="form-input-premium w-full h-24" placeholder="Talentos, habilidades..." />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Profesión</label>
-                <input name="profesion" value={respuestas.profesion} onChange={handleChange} className="form-input-premium w-full" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Cómo enfrenta usted los conflictos?</label>
-                <input name="enfrentamientoConflictos" value={respuestas.enfrentamientoConflictos} onChange={handleChange} className="form-input-premium w-full" />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué experiencias ha tenido que le hace creer que sería bueno para Coordinador?</label>
-                <textarea name="porqueCoordinador" value={respuestas.porqueCoordinador} onChange={handleChange} className="form-input-premium w-full h-24" />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Sabe manejar Excel y Word para llenar formatos de seguimiento?</label>
-                <input name="manejaOffice" value={respuestas.manejaOffice} onChange={handleChange} className="form-input-premium w-full" placeholder="Sí / No / Nivel" />
-              </div>
-            </div>
-          </div>
-        );
-      case 5:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Familia y Devoción</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Quiénes componen su vínculo familiar?</label>
-                <textarea name="vinculoFamiliar" value={respuestas.vinculoFamiliar} onChange={handleChange} className="form-input-premium w-full h-20" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Cómo está involucrada su familia en el ministerio?</label>
-                <textarea name="familiaInvolucrada" value={respuestas.familiaInvolucrada} onChange={handleChange} className="form-input-premium w-full h-20" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Qué hace usted para mantenerse en buena forma espiritual?</label>
-                <textarea name="formaEspiritual" value={respuestas.formaEspiritual} onChange={handleChange} className="form-input-premium w-full h-20" />
-              </div>
-            </div>
-          </div>
-        );
-      case 6:
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Compromiso y Tiempo</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">¿Por cuánto tiempo ha pastoreado la iglesia?</label>
-                  <input name="tiempoPastoreando" value={respuestas.tiempoPastoreando} onChange={handleChange} className="form-input-premium w-full" />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">A pesar de las adversidades, ¿qué le ha hecho permanecer en el ministerio?</label>
-                  <textarea name="permanenciaMinisterio" value={respuestas.permanenciaMinisterio} onChange={handleChange} className="form-input-premium w-full h-24" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">La coordinación va a requerir tiempo para socializar la visión. ¿Tiene usted el tiempo necesario?</label>
-                <input name="disponibilidadTiempo" value={respuestas.disponibilidadTiempo} onChange={handleChange} className="form-input-premium w-full" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Palabras Voluntarias que quiera aportar:</label>
-                <textarea name="palabrasVoluntarias" value={respuestas.palabrasVoluntarias} onChange={handleChange} className="form-input-premium w-full h-24" />
-              </div>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  // Helper para renderizar secciones con diseño premium
+  const FormSection = ({ title, icon: Icon, children }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-50 dark:border-gray-700/50">
+        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
+          <Icon size={24} strokeWidth={2.5} />
+        </div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {children}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-16 pb-8 md:py-8">
-      <button onClick={() => navigate('/fundacion')} className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-6 font-medium transition-colors">
-        <ChevronLeft size={20} />
-        Volver a Fundación
-      </button>
-
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-        <div className="p-5 md:p-8 border-b border-gray-100 dark:border-gray-700">
-          <div className="section-header">
-              <div className="section-header__icon-box">
-                  <Heart className="section-header__icon" strokeWidth={2.5} size={32} />
-              </div>
-              <div className="section-header__content">
-                  <h1 className="section-header__title section-header__title--heavy">
-                      Entrevista Fundación
-                  </h1>
-                  <p className="section-header__subtitle">
-                      Complementa tu perfil para la Fundación Humanitaria Internacional Sol y Luna.
-                  </p>
-              </div>
+    <div className="max-w-4xl mx-auto px-4 pt-16 pb-24 md:py-12">
+      <div className="flex items-center justify-between mb-8">
+        <button onClick={() => navigate('/fundacion')} className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold transition-all group">
+          <div className="p-2 rounded-xl group-hover:bg-blue-50 transition-colors">
+            <ChevronLeft size={20} />
           </div>
-
-          {/* Progress Bar */}
-          <div className="mt-6">
-            <div className="flex justify-between text-xs font-bold mb-2 uppercase tracking-wider text-gray-500 dark:text-gray-400">
-              <span>Sección {currentStep + 1} de {SECTIONS.length}</span>
-              <span>{Math.round(((currentStep + 1) / SECTIONS.length) * 100)}% Completado</span>
-            </div>
-            <div className="h-2 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(37,99,235,0.3)]" 
-                style={{ width: `${((currentStep + 1) / SECTIONS.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+          Volver
+        </button>
+        
+        <div className="text-right">
+          <span className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Documento Oficial</span>
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white leading-none">Entrevista de Ingreso</h1>
         </div>
+      </div>
 
-        <div className="flex flex-col md:flex-row min-h-[500px]">
-          {/* Sidebar Navigation */}
-          <div className="w-full md:w-72 bg-gray-50 dark:bg-gray-900/50 p-6 border-r border-gray-100 dark:border-gray-700 hidden md:block">
-            <div className="space-y-2">
-              {SECTIONS.map((section, idx) => {
-                const Icon = section.icon;
-                const isActive = currentStep === idx;
-                const isPast = currentStep > idx;
-
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => {
-                      if (idx <= currentStep || validateStep(currentStep)) {
-                        setCurrentStep(idx);
-                      }
-                    }}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl text-sm font-bold transition-all ${
-                      isActive 
-                        ? 'bg-blue-600 text-white shadow-md' 
-                        : isPast 
-                          ? 'text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20' 
-                          : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }`}
-                  >
-                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-white/20' : isPast ? 'bg-blue-100 dark:bg-blue-900/30' : 'bg-gray-200 dark:bg-gray-700'}`}>
-                      <Icon size={16} />
-                    </div>
-                    {section.title}
-                  </button>
-                );
-              })}
-            </div>
+      <div className="mb-10 p-6 bg-blue-600 rounded-[2.5rem] shadow-xl shadow-blue-500/20 text-white relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+        <div className="relative flex items-center gap-6">
+          <div className="p-4 bg-white/20 backdrop-blur-md rounded-2xl">
+            <FileText size={32} />
           </div>
-
-          {/* Form Content */}
-          <div className="flex-1 p-5 md:p-8">
-            {renderStepContent()}
-
-            <div className="mt-12 pt-8 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-              <button
-                onClick={prevStep}
-                disabled={currentStep === 0}
-                className="px-6 py-2.5 rounded-xl font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:pointer-events-none transition-all flex items-center gap-2"
-              >
-                <ChevronLeft size={20} />
-                Anterior
-              </button>
-
-              {currentStep === SECTIONS.length - 1 ? (
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="px-8 py-2.5 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 hover:shadow-lg transition-all flex items-center gap-2 active:scale-95"
-                >
-                  {loading ? 'Guardando...' : 'Finalizar y Guardar'}
-                  <Save size={20} />
-                </button>
-              ) : (
-                <button
-                  onClick={nextStep}
-                  className="px-8 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 hover:shadow-lg transition-all flex items-center gap-2 active:scale-95"
-                >
-                  Siguiente
-                  <ChevronRight size={20} />
-                </button>
-              )}
-            </div>
+          <div>
+            <h3 className="text-xl font-bold">¡Bienvenido al Proceso de Selección!</h3>
+            <p className="text-blue-100 text-sm mt-1 max-w-md">
+              Esta entrevista es fundamental para conocer tu corazón, tu llamado y cómo podemos servir juntos en la Fundación.
+            </p>
           </div>
         </div>
       </div>
 
+      <FormSection title="Información General" icon={User}>
+        <div className="md:col-span-2">
+          <label className="label-premium">Nombre Completo</label>
+          <input name="nombre" value={respuestas.nombre} onChange={handleChange} className="form-input-premium w-full bg-gray-50/50" readOnly />
+          <p className="text-[10px] text-gray-400 mt-1 italic">Este campo se toma de tu perfil maestro.</p>
+        </div>
+        <div>
+          <label className="label-premium">Fecha de Nacimiento</label>
+          <input type="date" name="fechaNacimiento" value={respuestas.fechaNacimiento} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">UPZ y Localidad / Sector</label>
+          <input name="upzLocalidad" value={respuestas.upzLocalidad} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: UPZ 45 - Kennedy" />
+        </div>
+      </FormSection>
+
+      <FormSection title="Vida y Ministerio" icon={Star}>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Cuál es su llamado?</label>
+          <textarea name="llamado" value={respuestas.llamado} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" placeholder="Describe tu llamado ministerial..." />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Qué es lo que más le gusta hacer y lo hace muy bien?</label>
+          <textarea name="loQueMasGusta" value={respuestas.loQueMasGusta} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿En qué área ha estado más dispuesto a hacer un sacrificio por el ministerio?</label>
+          <textarea name="sacrificioPastoral" value={respuestas.sacrificioPastoral} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+      </FormSection>
+
+      <FormSection title="Carácter y Resiliencia" icon={Shield}>
+        <div>
+          <label className="label-premium">¿Qué dirían de usted sus amigos?</label>
+          <input name="caracterAmigos" value={respuestas.caracterAmigos} onChange={handleChange} className="form-input-premium w-full" placeholder="Honestidad, lealtad..." />
+        </div>
+        <div>
+          <label className="label-premium">¿Qué dirían sus compañeros de trabajo?</label>
+          <input name="caracterCompañeros" value={respuestas.caracterCompañeros} onChange={handleChange} className="form-input-premium w-full" placeholder="Responsabilidad, equipo..." />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">Cuéntenos de un momento de dificultad o crisis que haya enfrentado.</label>
+          <textarea name="situacionDificil" value={respuestas.situacionDificil} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" placeholder="Describe la situación de forma breve..." />
+        </div>
+        <div>
+          <label className="label-premium">¿Cómo respondió ante eso?</label>
+          <textarea name="respuestaSituacion" value={respuestas.respuestaSituacion} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+        <div>
+          <label className="label-premium">¿Qué cambiaría si pudiera volver atrás?</label>
+          <textarea name="cambioSituacion" value={respuestas.cambioSituacion} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+      </FormSection>
+
+      <FormSection title="Sujeción y Autoridad" icon={Users}>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Quién es su autoridad espiritual directa?</label>
+          <input name="autoridadEspiritual" value={respuestas.autoridadEspiritual} onChange={handleChange} className="form-input-premium w-full" placeholder="Nombre de su pastor o cobertura" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Su denominación cuenta con personería jurídica o está bajo cobertura?</label>
+          <input name="personeriaJuridica" value={respuestas.personeriaJuridica} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Cómo maneja diferencias de criterio frente a sus autoridades?</label>
+          <textarea name="manejoDiferencias" value={respuestas.manejoDiferencias} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+      </FormSection>
+
+      <FormSection title="Dones, Talentos y Profesión" icon={Briefcase}>
+        <div>
+          <label className="label-premium">Dones Espirituales (Aporte al equipo)</label>
+          <textarea name="dones" value={respuestas.dones} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+        <div>
+          <label className="label-premium">Talentos Naturales / Habilidades</label>
+          <textarea name="talentos" value={respuestas.talentos} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+        <div>
+          <label className="label-premium">Profesión u Oficio</label>
+          <input name="profesion" value={respuestas.profesion} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Manejo de Word/Excel (Herramientas)</label>
+          <input name="manejaOffice" value={respuestas.manejaOffice} onChange={handleChange} className="form-input-premium w-full" placeholder="Básico, medio, avanzado..." />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Cómo suele enfrentar los conflictos interpersonales?</label>
+          <input name="enfrentamientoConflictos" value={respuestas.enfrentamientoConflictos} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Qué experiencias previas cree que le califican para ser un Coordinador?</label>
+          <textarea name="porqueCoordinador" value={respuestas.porqueCoordinador} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+      </FormSection>
+
+      <FormSection title="Familia y Devoción" icon={Heart}>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Quiénes componen su vínculo familiar primario?</label>
+          <textarea name="vinculoFamiliar" value={respuestas.vinculoFamiliar} onChange={handleChange} className="form-input-premium w-full h-20 pt-2" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Cómo está involucrada su familia en su labor ministerial?</label>
+          <textarea name="familiaInvolucrada" value={respuestas.familiaInvolucrada} onChange={handleChange} className="form-input-premium w-full h-20 pt-2" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Qué disciplinas practica para mantenerse en buena forma espiritual?</label>
+          <textarea name="formaEspiritual" value={respuestas.formaEspiritual} onChange={handleChange} className="form-input-premium w-full h-20 pt-2" placeholder="Oración, ayuno, lectura..." />
+        </div>
+      </FormSection>
+
+      <FormSection title="Compromiso Institucional" icon={Clock}>
+        <div>
+          <label className="label-premium">Tiempo dedicado al pastorado (Años/Meses)</label>
+          <input name="tiempoPastoreando" value={respuestas.tiempoPastoreando} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">A pesar de las pruebas, ¿qué le ha sostenido en el ministerio?</label>
+          <textarea name="permanenciaMinisterio" value={respuestas.permanenciaMinisterio} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">¿Cuenta con la disponibilidad de tiempo que requiere la coordinación?</label>
+          <input name="disponibilidadTiempo" value={respuestas.disponibilidadTiempo} onChange={handleChange} className="form-input-premium w-full" placeholder="Describe tu disposición horaria..." />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">Palabras adicionales que desee aportar:</label>
+          <textarea name="palabrasVoluntarias" value={respuestas.palabrasVoluntarias} onChange={handleChange} className="form-input-premium w-full h-24 pt-3" />
+        </div>
+      </FormSection>
+
+      <div className="sticky bottom-6 md:static mt-12 flex justify-center">
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className="group relative flex items-center justify-center gap-3 px-10 py-4 bg-green-600 hover:bg-green-700 text-white rounded-[2rem] font-black text-lg transition-all shadow-2xl shadow-green-600/30 hover:shadow-green-500/40 active:scale-95 disabled:opacity-50 overflow-hidden"
+        >
+          {loading ? (
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span>Guardando...</span>
+            </div>
+          ) : (
+            <>
+              <Save size={24} className="group-hover:rotate-12 transition-transform" />
+              <span>Finalizar y Enviar Entrevista</span>
+              <CheckCircle2 size={24} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+            </>
+          )}
+        </button>
+      </div>
+
+      <div className="mt-8 text-center">
+        <p className="text-gray-400 text-xs font-medium uppercase tracking-tighter">
+          Fundación Humanitaria Internacional Sol y Luna • Todos los derechos reservados
+        </p>
+      </div>
     </div>
   );
 }
+

@@ -7,41 +7,32 @@ import {
   User, 
   Briefcase, 
   BookOpen, 
-  Cross, 
   Users,
-  AlertCircle
+  AlertCircle,
+  FileText,
+  CheckCircle2,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import userService from '../../../../api/userService';
 import { downloadCV } from '../../utils/docUtils';
 
-const SECTIONS = [
-  { id: 'personal', title: 'Datos Generales', icon: User },
-  { id: 'educacion', title: 'Nivel Educativo', icon: BookOpen },
-  { id: 'experiencia', title: 'Experiencia', icon: Briefcase },
-  { id: 'iglesia_talleres', title: 'Iglesia y Talleres', icon: Users },
-  { id: 'idiomas_cargo', title: 'Idiomas y Cargo', icon: BookOpen },
-  { id: 'referencias', title: 'Referencias', icon: Users },
-  { id: 'firma', title: 'Firma Digital', icon: Save }
-];
-
 export default function FormularioHojaDeVida() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [activeSection, setActiveSection] = useState('personal');
   const [photoPreview, setPhotoPreview] = useState(null);
   const [firmaPreview, setFirmaPreview] = useState(null);
 
-  // Estado del formulario
+  // Estado del formulario (Mantenido exactamente igual para no perder datos)
   const [formData, setFormData] = useState({
     // DATOS GENERALES
     nombre_completo: '',
     documento_num: '',
     lugar_expedicion: '',
     fecha_nacimiento: '',
-    nacionalidad: '', // Usado para "Lugar de nacimiento" y "Pais"
+    nacionalidad: '', 
     estado_civil: '',
     departamento_estado_provincia: '',
     municipio: '',
@@ -74,7 +65,7 @@ export default function FormularioHojaDeVida() {
     empresa_actual: '', departamento_empresa: '', municipio_empresa: '', email_empresa: '',
     teléfono_emrpesa: '', dia_inicio: '', mes_inicio: '', año_inicio: '',
     dia_fin: '', mes_fin: '', año_fin: '', cargo_empresa: '', dirección_empresa: '',
-    sector_empresa: 'privada', // 'publica' o 'privada'
+    sector_empresa: 'privada', 
 
     // EXPERIENCIA LABORAL 2
     empresa_dos: '', departamento_empresa2: '', municipio_empresa2: '', email_empresa2: '',
@@ -137,17 +128,11 @@ export default function FormularioHojaDeVida() {
   };
 
   useEffect(() => {
-    // Scroll window and main content to top on mount
     window.scrollTo(0, 0);
     const mainContent = document.querySelector('.main-content');
-    if (mainContent) {
-      mainContent.scrollTo(0, 0);
-    }
+    if (mainContent) mainContent.scrollTo(0, 0);
 
     if (user) {
-      console.log('DEBUG - Cargando datos para Hoja de Vida. User:', user);
-      
-      // 1. Datos base del perfil maestro
       const baseData = {
         nombre_completo: user.nombres ? `${user.nombres.primero} ${user.nombres.segundo || ''} ${user.apellidos?.primero || ''} ${user.apellidos?.segundo || ''}`.trim() : '',
         email: user.email || '',
@@ -164,31 +149,21 @@ export default function FormularioHojaDeVida() {
         documento_num: user.personal?.documentoNumero || user.personal?.documento || user.documento || '',
         lugar_expedicion: user.personal?.lugarExpedicion || user.personal?.expedicion || '',
         estado_civil: user.fundacion?.documentacionFHSYL?.estadoCivil || user.personal?.estadoCivil || '',
-        
-        // --- SINCRONIZACIÓN CROSS-FORM (FALLBACKS) ---
-        // 1. Llamado Pastoral (ELIMINADO: Son datos distintos según el usuario)
-          
-        // 2. Referencias Personales (desde FHSYL si existen)
         nombre_personales_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.nombre || '',
         profesion_personal_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.relacion || '',
         telefonopers_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.contacto || '',
         nombre_personales_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.nombre || '',
         profesion_personal_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.relacion || '',
         telefonopers_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.contacto || '',
-        
         nombre_iglesia: user.eclesiastico?.iglesia?.nombre || ''
       };
 
-      // 2. Datos persistidos de Hoja de Vida (Prioritarios)
       const hojaDeVidaDatos = user.fundacion?.hojaDeVida?.datos || {};
-      
-      // Convertir Map a objeto y aplicar mapeo "fuzzy" para corregir typos históricos
       const savedData = {};
       Object.entries(hojaDeVidaDatos).forEach(([key, value]) => {
         if (value !== null && value !== undefined && value !== '') {
           savedData[key] = value;
-          
-          // Soporte para variaciones de nombres de campos (con/sin guion bajo)
+          // Corregir typos históricos
           if (key === 'profesion_personal2') savedData['profesion_personal_2'] = value;
           if (key === 'profesion_personal3') savedData['profesion_personal_3'] = value;
           if (key === 'profesion2_personal') savedData['profesion_personal_2'] = value;
@@ -198,17 +173,8 @@ export default function FormularioHojaDeVida() {
         }
       });
 
-      console.log('DEBUG - Mapping - baseData:', baseData);
-      console.log('DEBUG - Mapping - savedData Keys Found:', Object.keys(savedData));
-
-      // 3. Unificar (savedData tiene la prioridad máxima)
-      setFormData(prev => ({
-        ...prev,
-        ...baseData,
-        ...savedData
-      }));
-
-      // 4. Previews de imágenes
+      setFormData(prev => ({ ...prev, ...baseData, ...savedData }));
+      
       if (savedData.foto_perfil_form) {
         setPhotoPreview(savedData.foto_perfil_form);
       } else if (user.social?.fotoPerfil) {
@@ -216,66 +182,48 @@ export default function FormularioHojaDeVida() {
       }
 
       if (savedData.firma_digital) {
-        const firmaUrl = getFullImageUrl(savedData.firma_digital);
-        console.log('DEBUG - Firma URL guardada:', savedData.firma_digital);
-        console.log('DEBUG - Firma URL procesada:', firmaUrl);
-        setFirmaPreview(firmaUrl);
+        setFirmaPreview(getFullImageUrl(savedData.firma_digital));
       }
     }
   }, [user]);
 
   const LOCALSTORAGE_KEY = `fundacion_hdv_${user?._id || 'draft'}`;
 
-  // 🔧 FIX: Restaurar desde localStorage al montar SI no hay datos del servidor
+  // Restaurar de localStorage si no hay data en el servidor
   useEffect(() => {
     try {
       const saved = localStorage.getItem(LOCALSTORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        const hojaDeVidaDatos = user?.fundacion?.hojaDeVida?.datos || {};
-        const hasServerData = Object.keys(hojaDeVidaDatos).some(k => {
-          const v = hojaDeVidaDatos[k];
-          return v && String(v).trim();
-        });
+        const serverData = user?.fundacion?.hojaDeVida?.datos || {};
+        const hasServerData = Object.keys(serverData).some(k => serverData[k] && String(serverData[k]).trim());
         if (!hasServerData && Object.keys(parsed).length > 0) {
-          console.log('📦 [HDV] Restaurando datos desde localStorage');
           setFormData(prev => ({ ...prev, ...parsed }));
         }
       }
-    } catch (e) { /* Ignorar errores de parse */ }
-  }, []); // Solo al montar
+    } catch (e) { /* noop */ }
+  }, []);
 
-  // 🔧 FIX: Auto-guardar en localStorage al cambiar campos (debounced implícito por React batching)
+  // Auto-guardado local
   useEffect(() => {
-    // No guardar imágenes pesadas en localStorage para evitar errores de quota
     try {
       const dataToCache = { ...formData };
-      if (dataToCache.foto_perfil_form && dataToCache.foto_perfil_form.length > 50000) {
-        delete dataToCache.foto_perfil_form;
-      }
-      if (dataToCache.firma_digital && typeof dataToCache.firma_digital === 'string' && dataToCache.firma_digital.length > 50000) {
-        delete dataToCache.firma_digital;
-      }
+      if (dataToCache.foto_perfil_form?.length > 50000) delete dataToCache.foto_perfil_form;
+      if (dataToCache.firma_digital?.length > 50000) delete dataToCache.firma_digital;
       localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(dataToCache));
-    } catch (e) { /* Ignorar errores de storage lleno */ }
+    } catch (e) { /* noop */ }
   }, [formData, LOCALSTORAGE_KEY]);
 
   const handleSave = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      // 🔧 FIX: Usar la respuesta directa del PUT para actualizar el contexto
-      // en vez de hacer un segundo GET que puede tener race condition
       const response = await userService.saveHojaDeVida(formData);
-      if (response?.success && response?.data) {
-        updateUser(response.data);
-      }
-      // 🔧 FIX: Limpiar localStorage — guardado exitoso confirmado por backend
+      if (response?.success && response?.data) updateUser(response.data);
       try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
       if (!silent) toast.success('Información guardada correctamente');
       return true;
     } catch (error) {
-      console.error('Error al guardar Hoja de Vida:', error);
-      if (!silent) toast.error('Error al guardar. Tus datos están respaldados localmente.');
+      if (!silent) toast.error('Error al guardar. Datos respaldados localmente.');
       return false;
     } finally {
       if (!silent) setLoading(false);
@@ -307,594 +255,485 @@ export default function FormularioHojaDeVida() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const processSignatureImage = (base64) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        
-        // Convertir blanco (o casi blanco) a transparente
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          // Si es muy claro, hacerlo transparente
-          if (r > 200 && g > 200 && b > 200) {
-            data[i + 3] = 0;
-          }
-        }
-        
-        ctx.putImageData(imageData, 0, 0);
-        resolve(canvas.toDataURL('image/png'));
-      };
-      img.src = base64;
-    });
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
   const generateWord = async () => {
-    // Primero guardamos la información por defecto para no perder cambios locales
     const saved = await handleSave(true);
-    if (!saved) {
-      toast.error('No se pudo guardar la información antes de descargar. Inténtalo de nuevo.');
-      return;
-    }
-
+    if (!saved) return toast.error('Error al guardar antes de descargar.');
     setLoading(true);
     try {
-      // Usar la función unificada de docUtils para garantizar consistencia total ( Admin == Usuario )
-      // Pasamos formData, photoPreview y firmaPreview para que use los datos locales recién guardados o editados
-      const success = await downloadCV(user, formData, { 
-        photo: photoPreview, 
-        firma: firmaPreview 
-      });
-      
-      if (success) toast.success('¡Hoja de Vida generada con éxito!');
+      const success = await downloadCV(user, formData, { photo: photoPreview, firma: firmaPreview });
+      if (success) toast.success('Hoja de Vida generada con éxito.');
     } catch (error) {
-      console.error('Error generando Word:', error);
-      toast.error('Error al generar el documento. Verifica la plantilla.');
+      toast.error('Error al generar el documento.');
     } finally {
       setLoading(false);
     }
   };
 
-  const renderContent = () => {
-    const inputClasses = "w-full p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100";
-    const labelClasses = "block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5 ml-1";
-    const textareaClasses = "w-full p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-900 dark:text-gray-100 min-h-[120px]";
-    const sectionTitleClasses = "text-lg font-black text-blue-600 dark:text-blue-400 mb-6 flex items-center gap-2 border-b border-blue-100 dark:border-blue-900/30 pb-2";
-
-    const handleCheckboxChange = (name) => {
-      setFormData(prev => ({ ...prev, [name]: !prev[name] }));
-    };
-
-    switch (activeSection) {
-      case 'personal':
-        return (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className={sectionTitleClasses}><User size={20} /> Datos Generales</div>
-            {/* Foto de Perfil */}
-            <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-50 dark:bg-gray-900/50 rounded-3xl border border-gray-100 dark:border-gray-700">
-              <div className="relative group">
-                <div className="w-32 h-40 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden shadow-inner">
-                  {photoPreview ? (
-                    <img src={photoPreview} alt="Perfil" className="w-full h-full object-cover" />
-                  ) : (
-                    <User size={40} className="text-gray-300" />
-                  )}
-                </div>
-                <label className="absolute -bottom-2 -right-2 p-2 bg-blue-600 text-white rounded-xl shadow-lg cursor-pointer hover:bg-blue-700 transition-all active:scale-90">
-                  <Download size={16} className="rotate-180" />
-                  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                </label>
-              </div>
-              <div className="flex-1 text-center md:text-left">
-                <h4 className="font-bold text-gray-900 dark:text-white mb-1">Foto para Hoja de Vida</h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
-                  Sube una foto profesional. Se redimensionará automáticamente.
-                </p>
-                <div className="mt-3 flex gap-2 justify-center md:justify-start">
-                  <button onClick={() => setPhotoPreview(user?.social?.fotoPerfil)} className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                    Usar foto de perfil actual
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label className={labelClasses}>Nombre Completo</label>
-                <input name="nombre_completo" value={formData.nombre_completo} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Número de Documento</label>
-                <input name="documento_num" value={formData.documento_num} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Lugar de Expedición</label>
-                <input name="lugar_expedicion" value={formData.lugar_expedicion} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Fecha de Nacimiento</label>
-                <input type="date" name="fecha_nacimiento" value={formData.fecha_nacimiento} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Lugar de Nacimiento / País</label>
-                <input name="nacionalidad" value={formData.nacionalidad} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Estado Civil</label>
-                <input name="estado_civil" value={formData.estado_civil} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Departamento / Prov / Estado</label>
-                <input name="departamento_estado_provincia" value={formData.departamento_estado_provincia} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Municipio / Ciudad</label>
-                <input name="municipio" value={formData.municipio} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div className="md:col-span-2">
-                <label className={labelClasses}>Dirección de Residencia</label>
-                <input name="direccion" value={formData.direccion} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div>
-                <label className={labelClasses}>Teléfono</label>
-                <input name="telefono" value={formData.telefono} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div className="md:col-span-2">
-                <label className={labelClasses}>Email</label>
-                <input name="email" value={formData.email} onChange={handleChange} className={inputClasses} />
-              </div>
-              <div className="md:col-span-2">
-                <label className={labelClasses}>Frase Identificadora</label>
-                <input name="frase_identificadora" value={formData.frase_identificadora} onChange={handleChange} className={inputClasses} placeholder="Una frase que te identifique..." />
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'educacion':
-        return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div>
-              <div className={sectionTitleClasses}><BookOpen size={20} /> Educación Básica</div>
-              <div className="bg-gray-50 dark:bg-gray-900/40 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 space-y-6">
-                <div>
-                  <label className={labelClasses}>Estado de Educación Básica</label>
-                  <div className="flex gap-4">
-                    {['completa', 'incompleta'].map(val => (
-                      <button
-                        key={val}
-                        onClick={() => setFormData(prev => ({ ...prev, 'completa/incompleta': val }))}
-                        className={`flex-1 py-2 rounded-xl font-bold transition ${formData['completa/incompleta'] === val ? 'bg-blue-600 text-white shadow-md' : 'bg-white dark:bg-gray-800 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
-                      >
-                        {val.toUpperCase()}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className={labelClasses}>Grados Cursados (Marca los aprobados)</label>
-                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => {
-                      const key = `grado${num}`;
-                      return (
-                        <button
-                          key={num}
-                          onClick={() => setFormData(prev => ({ ...prev, [key]: prev[key] === 'X' ? '' : 'X' }))}
-                          className={`p-2 rounded-lg text-sm font-bold border transition ${formData[key] === 'X' ? 'bg-indigo-100 dark:bg-indigo-900/40 border-indigo-300 text-indigo-700 dark:text-indigo-300' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400'}`}
-                        >
-                          {num}°
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className={labelClasses}>Mes de Grado</label>
-                    <input name="fecha_mes_grado" value={formData.fecha_mes_grado} onChange={handleChange} className={inputClasses} placeholder="Ej: Junio" />
-                  </div>
-                  <div>
-                    <label className={labelClasses}>Año de Grado</label>
-                    <input name="fecha_año_grado" value={formData.fecha_año_grado} onChange={handleChange} className={inputClasses} placeholder="Ej: 2015" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><BookOpen size={20} /> Educación Superior</div>
-              <div className="space-y-6">
-                <div className="flex flex-wrap gap-4 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700">
-                  {[
-                    { id: 'seleccionar_tecnica', label: 'Técnica' },
-                    { id: 'seleccionar_tecnologica', label: 'Tecnológica' },
-                    { id: 'seleccionar_universitario', label: 'Universitaria' },
-                    { id: 'seleccionar_posgrado', label: 'Posgrado' }
-                  ].map(item => (
-                    <label key={item.id} className="flex items-center gap-2 cursor-pointer group">
-                      <input type="checkbox" checked={formData[item.id]} onChange={() => handleCheckboxChange(item.id)} className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                      <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-600 transition">{item.label}</span>
-                    </label>
-                  ))}
-                </div>
-
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-4 shadow-sm">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="md:col-span-2">
-                        <label className={labelClasses}>Título o Estudio {i}</label>
-                        <input name={`nombreTitulo_${i}`} value={formData[`nombreTitulo_${i}`]} onChange={handleChange} className={inputClasses} />
-                      </div>
-                      <div>
-                        <label className={labelClasses}>Semestres</label>
-                        <input name={`numero_aprobado_${i}`} value={formData[`numero_aprobado_${i}`]} onChange={handleChange} className={inputClasses} placeholder="N°" />
-                      </div>
-                      <div className="flex items-center gap-4 pt-6">
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" checked={formData[`graduadoSi_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoSi_${i}`]: !prev[`graduadoSi_${i}`], [`graduadoNo_${i}`]: false }))} className="rounded" />
-                          <span className="text-xs font-bold text-green-600">SÍ</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" checked={formData[`graduadoNo_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoNo_${i}`]: !prev[`graduadoNo_${i}`], [`graduadoSi_${i}`]: false }))} className="rounded" />
-                          <span className="text-xs font-bold text-red-600">NO</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'experiencia':
-        return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div>
-              <div className={sectionTitleClasses}><Briefcase size={20} /> Prácticas Formativas</div>
-              <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700">
-                    <div className="md:col-span-2">
-                        <label className={labelClasses}>Corporación / Universidad {i}</label>
-                        <input name={`aplica/noAplica${i}`} value={formData[`aplica/noAplica${i}`]} onChange={handleChange} className={inputClasses} />
-                    </div>
-                    <div>
-                        <label className={labelClasses}>Horas</label>
-                        <input name={`numero_horas${i}`} value={formData[`numero_horas${i}`]} onChange={handleChange} className={inputClasses} />
-                    </div>
-                    <div className="flex items-center gap-4 pt-6">
-                        <label className="text-xs font-black text-gray-400 uppercase mr-1">Aprobado:</label>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" checked={formData[`exp_si${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_si${i}`]: !prev[`exp_si${i}`], [`exp_no${i}`]: false }))} className="rounded" />
-                          <span className="text-xs font-bold text-green-600">SÍ</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer">
-                          <input type="checkbox" checked={formData[`exp_no${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_no${i}`]: !prev[`exp_no${i}`], [`exp_si${i}`]: false }))} className="rounded" />
-                          <span className="text-xs font-bold text-red-600">NO</span>
-                        </label>
-                      </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><Briefcase size={20} /> Experiencia Laboral</div>
-              <div className="space-y-8">
-                {[
-                  { prefix: '', label: 'Actual o Última' },
-                  { prefix: '2', label: 'Anterior' },
-                  { prefix: '3', label: 'Anterior' }
-                ].map((exp, idx) => (
-                  <div key={idx} className="p-6 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm space-y-6">
-                    <h5 className="font-black text-gray-400 text-sm uppercase tracking-widest">{exp.label} Empresa</h5>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="md:col-span-1">
-                        <label className={labelClasses}>Empresa o Entidad</label>
-                        <input name={exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`} value={formData[exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`]} onChange={handleChange} className={inputClasses} />
-                      </div>
-                      <div className="md:col-span-1">
-                        <label className={labelClasses}>Sector</label>
-                        <select 
-                          name={`sector_empresa${exp.prefix}`} 
-                          value={formData[`sector_empresa${exp.prefix}`]} 
-                          onChange={handleChange} 
-                          className={inputClasses}
-                        >
-                          <option value="privada">Privada</option>
-                          <option value="publica">Pública</option>
-                        </select>
-                      </div>
-                      <div> <label className={labelClasses}>Departamento</label> <input name={`departamento_empresa${exp.prefix}`} value={formData[`departamento_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
-                      <div> <label className={labelClasses}>Municipio</label> <input name={`municipio_empresa${exp.prefix}`} value={formData[`municipio_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
-                      <div> <label className={labelClasses}>E-mail Empresa</label> <input name={`email_empresa${exp.prefix}`} value={formData[`email_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
-                      <div> <label className={labelClasses}>Teléfono Empresa</label> <input name={`teléfono_emrpesa${exp.prefix}`} value={formData[`teléfono_emrpesa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
-                      <div className="md:col-span-2 grid grid-cols-3 gap-2">
-                        <div className="col-span-3"><label className={labelClasses}>Fecha de Ingreso (DD/MM/AAAA)</label></div>
-                        <input name={`dia_inicio${exp.prefix}`} value={formData[`dia_inicio${exp.prefix}`]} onChange={handleChange} className={inputClasses} placeholder="DD" />
-                        <input name={`mes_inicio${exp.prefix}`} value={formData[`mes_inicio${exp.prefix}`]} onChange={handleChange} className={inputClasses} placeholder="MM" />
-                        <input name={`año_inicio${exp.prefix}`} value={formData[`año_inicio${exp.prefix}`]} onChange={handleChange} className={inputClasses} placeholder="AAAA" />
-                      </div>
-                      <div className="md:col-span-2 grid grid-cols-3 gap-2">
-                        <div className="col-span-3"><label className={labelClasses}>Fecha de Retiro (DD/MM/AAAA)</label></div>
-                        <input name={`dia_fin${exp.prefix}`} value={formData[`dia_fin${exp.prefix}`]} onChange={handleChange} className={inputClasses} placeholder="DD" />
-                        <input name={`mes_fin${exp.prefix}`} value={formData[`mes_fin${exp.prefix}`]} onChange={handleChange} className={inputClasses} placeholder="MM" />
-                        <input name={`año_fin${exp.prefix}`} value={formData[`año_fin${exp.prefix}`]} onChange={handleChange} className={inputClasses} placeholder="AAAA" />
-                      </div>
-                      <div className="md:col-span-2"> <label className={labelClasses}>Cargo o Contrato</label> <input name={`cargo_empresa${exp.prefix}`} value={formData[`cargo_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
-                      <div className="md:col-span-2"> <label className={labelClasses}>Dirección de la Empresa</label> <input name={`dirección_empresa${exp.prefix}`} value={formData[`dirección_empresa${exp.prefix}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'iglesia_talleres':
-        return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div>
-              <div className={sectionTitleClasses}><Users size={20} /> Datos de la Iglesia</div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2"> <label className={labelClasses}>Nombre de la Iglesia</label> <input name="nombre_iglesia" value={formData.nombre_iglesia} onChange={handleChange} className={inputClasses} /> </div>
-                <div> <label className={labelClasses}>Nombre del Pastor</label> <input name="nombre_pastor" value={formData.nombre_pastor} onChange={handleChange} className={inputClasses} /> </div>
-                <div> <label className={labelClasses}>Teléfono Pastor</label> <input name="telefono_pastor" value={formData.telefono_pastor} onChange={handleChange} className={inputClasses} /> </div>
-                <div> <label className={labelClasses}>País</label> <input name="país_iglesia" value={formData.país_iglesia} onChange={handleChange} className={inputClasses} /> </div>
-                <div> <label className={labelClasses}>Ciudad</label> <input name="ciudad_iglesia" value={formData.ciudad_iglesia} onChange={handleChange} className={inputClasses} /> </div>
-                <div className="md:col-span-2"> <label className={labelClasses}>Dirección</label> <input name="direccion_iglesia" value={formData.direccion_iglesia} onChange={handleChange} className={inputClasses} /> </div>
-                <div className="md:col-span-2"> <label className={labelClasses}>Departamento / Prov / Estado</label> <input name="estado_iglesia" value={formData.estado_iglesia} onChange={handleChange} className={inputClasses} /> </div>
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><BookOpen size={20} /> Talleres y Congresos Ministeriales</div>
-              <div className="space-y-4">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3">
-                    <div className="md:col-span-4"> <label className={labelClasses}>Academia</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-4"> <label className={labelClasses}>Título</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-2"> <label className={labelClasses}>Horas</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-2"> <label className={labelClasses}>Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'idiomas_cargo':
-        return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div>
-              <div className={sectionTitleClasses}><BookOpen size={20} /> Talleres y Congresos Profesionales</div>
-              <div className="space-y-4">
-                {[5, 6, 7, 8].map(i => (
-                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3">
-                    <div className="md:col-span-4"> <label className={labelClasses}>Academia</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-4"> <label className={labelClasses}>Título</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-2"> <label className={labelClasses}>Horas</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-2"> <label className={labelClasses}>Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><BookOpen size={20} /> Idiomas</div>
-              <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div> <label className={labelClasses}>Idioma {i}</label> <input name={`idioma_${i}`} value={formData[`idioma_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div> <label className={labelClasses}>Habla</label> <input name={`habla_${i}`} value={formData[`habla_${i}`]} onChange={handleChange} className={inputClasses} placeholder="Bajo/Medio/Alto" /> </div>
-                    <div> <label className={labelClasses}>Lee</label> <input name={`lee_${i}`} value={formData[`lee_${i}`]} onChange={handleChange} className={inputClasses} placeholder="Bajo/Medio/Alto" /> </div>
-                    <div> <label className={labelClasses}>Escribe</label> <input name={`escribe_${i}`} value={formData[`escribe_${i}`]} onChange={handleChange} className={inputClasses} placeholder="Bajo/Medio/Alto" /> </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><User size={20} /> Cargo a Desempeñar en la Fundación</div>
-              <div className="space-y-4">
-                <div>
-                  <label className={labelClasses}>Cargo que aspira</label>
-                  <input name="cargo_en_FHISYL" value={formData.cargo_en_FHISYL} onChange={handleChange} className={inputClasses} placeholder="Nombre del cargo que aspira..." />
-                </div>
-                <div>
-                  <label className={labelClasses}>Breve descripción del ministerio / profesión</label>
-                  <textarea name="descripcion_breve_ministerio_profesion" value={formData.descripcion_breve_ministerio_profesion} onChange={handleChange} className={textareaClasses} placeholder="Describe tu ministerio o profesión..." />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'referencias':
-        return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div>
-              <div className={sectionTitleClasses}><Users size={20} /> Referencias Familiares</div>
-              <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="p-5 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2"> <label className={labelClasses}>Nombre Completo {i}</label> <input name={`nombre_familia_${i}`} value={formData[`nombre_familia_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div> <label className={labelClasses}>Parentesco</label> <input name={`parentezco_${i}`} value={formData[`parentezco_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div> <label className={labelClasses}>Profesión</label> <input name={`profesion_${i}`} value={formData[`profesion_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div className="md:col-span-2"> <label className={labelClasses}>Teléfono</label> <input name={`telefonofam_${i}`} value={formData[`telefonofam_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><Users size={20} /> Referencias Personales</div>
-              <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="p-5 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2"> <label className={labelClasses}>Nombre Completo {i}</label> <input name={`nombre_personales_${i}`} value={formData[`nombre_personales_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div> <label className={labelClasses}>Profesión</label> <input name={`profesion_personal_${i}`} value={formData[`profesion_personal_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                    <div> <label className={labelClasses}>Teléfono</label> <input name={`telefonopers_${i}`} value={formData[`telefonopers_${i}`]} onChange={handleChange} className={inputClasses} /> </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'firma':
-        return (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div>
-              <div className={sectionTitleClasses}><AlertCircle size={20} /> Autorización de Datos</div>
-              <div className="p-8 bg-amber-50 dark:bg-amber-900/10 rounded-3xl border border-amber-100 dark:border-amber-900/30 text-center">
-                <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed mb-6 font-medium">
-                  AUTORIZO A LA FUNDACIÓN HUMANITARIA SOL Y LUNA A USAR LA INFORMACIÓN AQUÍ SUMINISTRADA PARA EL TRATAMIENTO DE MIS DATOS, ÚNICAMENTE PARA FINES Y PROPÓSITOS RELACIONADAS CON LAS FUNCIONES ASIGNADAS A MI CARGO Y BAJO LOS OBJETIVOS DE LA MISIÓN Y VISIÓN DE LA FUNDACIÓN. CERTIFICO QUE LOS DATOS SON VERACES (LEY 1581 DE 2012).
-                </p>
-                <div className="flex justify-center gap-6">
-                  <label className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" checked={formData.autorizo_si} onChange={() => setFormData(prev => ({ ...prev, autorizo_si: !prev.autorizo_si, autorizo_no: false }))} className="w-6 h-6 rounded-lg border-amber-300 text-amber-600 focus:ring-amber-500" />
-                    <span className="font-black text-amber-700 dark:text-amber-400">SÍ, AUTORIZO</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" checked={formData.autorizo_no} onChange={() => setFormData(prev => ({ ...prev, autorizo_no: !prev.autorizo_no, autorizo_si: false }))} className="w-6 h-6 rounded-lg border-amber-300 text-red-600 focus:ring-amber-500" />
-                    <span className="font-black text-red-700 dark:text-red-400">NO AUTORIZO</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div className={sectionTitleClasses}><Save size={20} /> Firma Digital</div>
-              <div className="flex flex-col items-center gap-6 p-10 bg-gray-50 dark:bg-gray-900/50 rounded-3xl border border-gray-100 dark:border-gray-700 border-dashed">
-                <div className="w-64 h-32 bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center overflow-hidden shadow-inner relative">
-                  {firmaPreview ? (
-                    <img src={firmaPreview} alt="Firma" className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-gray-300 text-xs font-bold uppercase tracking-widest text-center px-4">Sube una imagen de tu firma o trazo digital</span>
-                  )}
-                </div>
-                <label className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg cursor-pointer hover:bg-indigo-700 transition active:scale-95 flex items-center gap-2">
-                  <Download size={18} className="rotate-180" />
-                  Subir Firma
-                  <input type="file" accept="image/*" onChange={handleFirmaChange} className="hidden" />
-                </label>
-              </div>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
+  const FormSection = ({ title, icon: Icon, children }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 shadow-sm mb-8">
+      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-50 dark:border-gray-700/50">
+        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
+          <Icon size={24} strokeWidth={2.5} />
+        </div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {children}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 pt-16 pb-8 md:py-8">
-      {/* Botón Volver */}
-      <button 
-        onClick={() => navigate('/fundacion')} 
-        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 font-bold transition-all group"
-      >
-        <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
-        Volver a Fundación
-      </button>
-
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row">
-        {/* Sidebar */}
-        <div className="w-full md:w-80 bg-gray-50 dark:bg-gray-900/40 p-6 border-r border-gray-100 dark:border-gray-700">
-          <div className="mb-8">
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white leading-tight">
-              Hoja de Vida
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
-              Completa tu información para generar el formato oficial de la fundación.
-            </p>
+    <div className="max-w-5xl mx-auto px-4 pt-16 pb-32 md:py-12">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <button onClick={() => navigate('/fundacion')} className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold transition-all group">
+          <div className="p-2 rounded-xl group-hover:bg-blue-50 transition-colors">
+            <ChevronLeft size={20} />
           </div>
-
-          <nav className="space-y-2">
-            {SECTIONS.map((section) => {
-              const Icon = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`w-full flex items-center gap-3 p-4 rounded-2xl text-left font-bold transition-all ${
-                    activeSection === section.id
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20 active:scale-[0.98]'
-                      : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <Icon size={20} />
-                  {section.title}
-                </button>
-              );
-            })}
-          </nav>
-
-          <div className="mt-12 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-100 dark:border-amber-900/30">
-            <div className="flex gap-3 text-amber-700 dark:text-amber-400">
-              <AlertCircle size={20} className="shrink-0" />
-              <p className="text-xs leading-relaxed">
-                Los datos se pre-cargan desde tu perfil, pero puedes modificarlos aquí solo para el documento.
-              </p>
-            </div>
-          </div>
+          Volver
+        </button>
+        <div className="text-right">
+          <span className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Formato Oficial</span>
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white leading-none">Hoja de Vida FHISYL</h1>
         </div>
+      </div>
 
-        {/* Main Content */}
-        <div className="flex-1 p-6 md:p-10 flex flex-col">
-          <div className="flex-1">
-            {renderContent()}
+      <div className="mb-10 p-8 bg-blue-600 rounded-[2.5rem] shadow-xl shadow-blue-500/20 text-white relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-blue-400 rounded-full blur-3xl opacity-20" />
+        <div className="relative flex flex-col md:flex-row items-center gap-8">
+          {/* Avatar Formulario */}
+          <div className="relative shrink-0">
+            <div className="w-32 h-40 bg-white/20 backdrop-blur-md rounded-2xl border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-2xl transition-transform hover:scale-105 duration-300">
+              {photoPreview ? (
+                <img src={photoPreview} alt="Perfil" className="w-full h-full object-cover" />
+              ) : (
+                <User size={64} className="text-white/40" />
+              )}
+            </div>
+            <label className="absolute -bottom-3 -right-3 p-3 bg-white text-blue-600 rounded-2xl shadow-xl cursor-pointer hover:bg-gray-50 transition-all active:scale-90 border-2 border-blue-600">
+              <ImageIcon size={18} />
+              <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+            </label>
           </div>
-
-          <div className="mt-12 pt-8 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row gap-4 justify-between items-center">
-            <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-              * El diseño del Word se mantendrá intacto.
+          <div>
+            <h3 className="text-2xl font-black italic">Tu Perfil Oficial</h3>
+            <p className="text-blue-100 text-sm mt-2 max-w-xl leading-relaxed">
+              Completa cada sección para generar el documento de Hoja de Vida. Recuerda que la veracidad de los datos es fundamental.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => handleSave(false)}
-                disabled={loading}
-                className="w-full sm:w-auto px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95"
-              >
-                <Save size={22} />
-                Guardar Información
-              </button>
-              <button
-                onClick={generateWord}
-                disabled={loading}
-                className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95"
-              >
-                {loading ? (
-                  <>Procesando...</>
-                ) : (
-                  <>
-                    <Download size={22} />
-                    Descargar Word (.docx)
-                  </>
-                )}
-              </button>
+            <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase font-bold tracking-wider">
+               <span className="px-3 py-1 bg-white/10 rounded-full">Sincronizado con Perfil</span>
+               <span className="px-3 py-1 bg-white/10 rounded-full font-black text-white">130 CAMPOS ACTORES</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* --- SECCIÓN 1: DATOS GENERALES --- */}
+      <FormSection title="Datos Generales" icon={User}>
+        <div className="md:col-span-2 lg:col-span-3">
+          <label className="label-premium">Nombre Completo</label>
+          <input name="nombre_completo" value={formData.nombre_completo} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Número de Documento</label>
+          <input name="documento_num" value={formData.documento_num} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Lugar de Expedición</label>
+          <input name="lugar_expedicion" value={formData.lugar_expedicion} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Fecha de Nacimiento</label>
+          <input type="date" name="fecha_nacimiento" value={formData.fecha_nacimiento} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">País / Nacionalidad</label>
+          <input name="nacionalidad" value={formData.nacionalidad} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Estado Civil</label>
+          <input name="estado_civil" value={formData.estado_civil} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Departamento / Provincia / Estado</label>
+          <input name="departamento_estado_provincia" value={formData.departamento_estado_provincia} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Municipio / Ciudad</label>
+          <input name="municipio" value={formData.municipio} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div className="md:col-span-2">
+          <label className="label-premium">Dirección de Residencia</label>
+          <input name="direccion" value={formData.direccion} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Teléfono</label>
+          <input name="telefono" value={formData.telefono} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div className="md:col-span-2 lg:col-span-3">
+          <label className="label-premium">E-mail</label>
+          <input name="email" value={formData.email} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div className="md:col-span-2 lg:col-span-3">
+          <label className="label-premium">Frase Identificadora</label>
+          <input name="frase_identificadora" value={formData.frase_identificadora} onChange={handleChange} className="form-input-premium w-full" placeholder="Una frase que te identifique..." />
+        </div>
+      </FormSection>
+
+      {/* --- SECCIÓN 2: EDUCACIÓN --- */}
+      <FormSection title="Nivel Educativo" icon={BookOpen}>
+        <div className="md:col-span-2 lg:col-span-3 bg-gray-50 dark:bg-gray-900/40 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700">
+           <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Educación Básica</h4>
+           <div className="flex gap-4 mb-6">
+              {['completa', 'incompleta'].map(val => (
+                <button
+                  key={val}
+                  onClick={() => setFormData(prev => ({ ...prev, 'completa/incompleta': val }))}
+                  className={`flex-1 py-3 rounded-2xl font-black text-sm transition-all ${formData['completa/incompleta'] === val ? 'bg-blue-600 text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-500 border border-gray-200 dark:border-gray-700'}`}
+                >
+                  {val.toUpperCase()}
+                </button>
+              ))}
+            </div>
+            <label className="label-premium mb-3">Grados Aprobados (Clic para marcar)</label>
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-11 gap-2 mb-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => (
+                <button
+                  key={num}
+                  onClick={() => setFormData(prev => ({ ...prev, [`grado${num}`]: prev[`grado${num}`] === 'X' ? '' : 'X' }))}
+                  className={`py-3 rounded-xl text-xs font-black border-2 transition-all ${formData[`grado${num}`] === 'X' ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 text-gray-400'}`}
+                >
+                  {num}°
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div> <label className="label-premium text-[10px]">Mes de Grado</label> <input name="fecha_mes_grado" value={formData.fecha_mes_grado} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: Diciembre" /> </div>
+              <div> <label className="label-premium text-[10px]">Año de Grado</label> <input name="fecha_año_grado" value={formData.fecha_año_grado} onChange={handleChange} className="form-input-premium w-full" placeholder="AAAA" /> </div>
+            </div>
+        </div>
+
+        <div className="md:col-span-2 lg:col-span-3 mt-4">
+          <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Educación Superior</h4>
+          <div className="flex flex-wrap gap-6 mb-6 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-50 dark:border-gray-700">
+              {[
+                { id: 'seleccionar_tecnica', label: 'Técnica' },
+                { id: 'seleccionar_tecnologica', label: 'Tecnológica' },
+                { id: 'seleccionar_universitario', label: 'Pregrado' },
+                { id: 'seleccionar_posgrado', label: 'Posgrado' }
+              ].map(item => (
+                <label key={item.id} className="flex items-center gap-2 cursor-pointer group">
+                  <input type="checkbox" name={item.id} checked={formData[item.id]} onChange={handleChange} className="w-5 h-5 rounded-lg border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <span className="text-xs font-black text-gray-600 dark:text-gray-300 group-hover:text-blue-600 transition tracking-tight">{item.label}</span>
+                </label>
+              ))}
+          </div>
+          
+          <div className="space-y-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div className="md:col-span-2">
+                  <label className="label-premium text-[10px]">Título u Obra Realizada {i}</label>
+                  <input name={`nombreTitulo_${i}`} value={formData[`nombreTitulo_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
+                </div>
+                <div>
+                  <label className="label-premium text-[10px]">Semestres / Años</label>
+                  <input name={`numero_aprobado_${i}`} value={formData[`numero_aprobado_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
+                </div>
+                <div className="flex justify-center gap-4 bg-white dark:bg-gray-800 p-3 rounded-2xl border border-gray-100 dark:border-gray-700">
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" checked={formData[`graduadoSi_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoSi_${i}`]: !prev[`graduadoSi_${i}`], [`graduadoNo_${i}`]: false }))} className="rounded" />
+                    <span className="text-[10px] font-black text-green-600">SÍ</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input type="checkbox" checked={formData[`graduadoNo_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoNo_${i}`]: !prev[`graduadoNo_${i}`], [`graduadoSi_${i}`]: false }))} className="rounded" />
+                    <span className="text-[10px] font-black text-red-600">NO</span>
+                  </label>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </FormSection>
+
+      {/* --- SECCIÓN 3: EXPERIENCIA --- */}
+      <FormSection title="Experiencia Laboral" icon={Briefcase}>
+        <div className="md:col-span-2 lg:col-span-3">
+          <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Prácticas Formativas (Solo Estudiantes)</h4>
+          <div className="space-y-3">
+             {[1, 2, 3].map(i => (
+                <div key={i} className="flex flex-col md:flex-row gap-3 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700">
+                  <div className="flex-1">
+                    <label className="label-premium text-[9px]">Corporación / Empresa {i}</label>
+                    <input name={`aplica/noAplica${i}`} value={formData[`aplica/noAplica${i}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" />
+                  </div>
+                  <div className="w-full md:w-32">
+                    <label className="label-premium text-[9px]">Horas Totales</label>
+                    <input name={`numero_horas${i}`} value={formData[`numero_horas${i}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" />
+                  </div>
+                  <div className="flex items-center gap-4 px-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input type="checkbox" checked={formData[`exp_si${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_si${i}`]: !prev[`exp_si${i}`], [`exp_no${i}`]: false }))} className="rounded" />
+                      <span className="text-[10px] font-black text-green-600">SÍ</span>
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input type="checkbox" checked={formData[`exp_no${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_no${i}`]: !prev[`exp_no${i}`], [`exp_si${i}`]: false }))} className="rounded" />
+                      <span className="text-[10px] font-black text-red-600">NO</span>
+                    </label>
+                  </div>
+                </div>
+             ))}
+          </div>
+        </div>
+
+        <div className="md:col-span-2 lg:col-span-3 mt-8">
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6">Trayectoria Profesional / Ministerial</h4>
+            <div className="space-y-12">
+              {[
+                { prefix: '', label: 'Actual o Último Cargo' },
+                { prefix: '2', label: 'Cargo Anterior' },
+                { prefix: '3', label: 'Cargo Anterior' }
+              ].map((exp, idx) => (
+                <div key={idx} className="relative p-6 md:p-8 bg-gray-50 dark:bg-gray-900/40 rounded-[2.5rem] border border-gray-100 dark:border-gray-700">
+                  <span className="absolute -top-3 left-8 px-4 py-1 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase shadow-lg">{exp.label}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="lg:col-span-2">
+                       <label className="label-premium">Empresa o Entidad</label>
+                       <input name={exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`} value={formData[exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
+                    </div>
+                    <div>
+                       <label className="label-premium">Sector</label>
+                       <select name={`sector_empresa${exp.prefix}`} value={formData[`sector_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800">
+                          <option value="privada">📍 PRIVADA</option>
+                          <option value="publica">🏛️ PÚBLICA</option>
+                       </select>
+                    </div>
+                    <div>
+                       <label className="label-premium">Cargo Desempeñado</label>
+                       <input name={`cargo_empresa${exp.prefix}`} value={formData[`cargo_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
+                    </div>
+                    <div> <label className="label-premium text-[9px]">Departamento</label> <input name={`departamento_empresa${exp.prefix}`} value={formData[`departamento_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                    <div> <label className="label-premium text-[9px]">Municipio / Ciudad</label> <input name={`municipio_empresa${exp.prefix}`} value={formData[`municipio_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                    <div> <label className="label-premium text-[9px]">Email Empresa</label> <input name={`email_empresa${exp.prefix}`} value={formData[`email_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                    <div> <label className="label-premium text-[9px]">Teléfono Empresa</label> <input name={`teléfono_emrpesa${exp.prefix}`} value={formData[`teléfono_emrpesa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                    <div className="lg:col-span-2">
+                       <label className="label-premium text-[9px]">Fecha de Ingreso (DD/MM/AAAA)</label>
+                       <div className="grid grid-cols-3 gap-2">
+                          <input name={`dia_inicio${exp.prefix}`} value={formData[`dia_inicio${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="DD" />
+                          <input name={`mes_inicio${exp.prefix}`} value={formData[`mes_inicio${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="MM" />
+                          <input name={`año_inicio${exp.prefix}`} value={formData[`año_inicio${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="AAAA" />
+                       </div>
+                    </div>
+                    <div className="lg:col-span-2">
+                       <label className="label-premium text-[9px]">Fecha de Retiro (DD/MM/AAAA)</label>
+                       <div className="grid grid-cols-3 gap-2">
+                          <input name={`dia_fin${exp.prefix}`} value={formData[`dia_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="DD" />
+                          <input name={`mes_fin${exp.prefix}`} value={formData[`mes_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="MM" />
+                          <input name={`año_fin${exp.prefix}`} value={formData[`año_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="AAAA" />
+                       </div>
+                    </div>
+                    <div className="lg:col-span-4"> <label className="label-premium text-[9px]">Dirección Completa de la Empresa</label> <input name={`dirección_empresa${exp.prefix}`} value={formData[`dirección_empresa${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" /> </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+        </div>
+      </FormSection>
+
+      {/* --- SECCIÓN 4: IGLESIA Y TALLERES --- */}
+      <FormSection title="Vida Eclesiástica y Formación" icon={Users}>
+         <div className="md:col-span-2 lg:col-span-3">
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Congregación</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+               <div className="md:col-span-3"> <label className="label-premium">Nombre de la Iglesia</label> <input name="nombre_iglesia" value={formData.nombre_iglesia} onChange={handleChange} className="form-input-premium w-full" /> </div>
+               <div> <label className="label-premium">Nombre del Pastor</label> <input name="nombre_pastor" value={formData.nombre_pastor} onChange={handleChange} className="form-input-premium w-full" /> </div>
+               <div> <label className="label-premium">Teléfono Pastor</label> <input name="telefono_pastor" value={formData.telefono_pastor} onChange={handleChange} className="form-input-premium w-full" /> </div>
+               <div> <label className="label-premium">País</label> <input name="país_iglesia" value={formData.país_iglesia} onChange={handleChange} className="form-input-premium w-full" /> </div>
+               <div> <label className="label-premium">Ciudad / Municipio</label> <input name="ciudad_iglesia" value={formData.ciudad_iglesia} onChange={handleChange} className="form-input-premium w-full" /> </div>
+               <div> <label className="label-premium">Dep. / Estado</label> <input name="estado_iglesia" value={formData.estado_iglesia} onChange={handleChange} className="form-input-premium w-full" /> </div>
+               <div className="md:col-span-3"> <label className="label-premium">Dirección de la Iglesia</label> <input name="direccion_iglesia" value={formData.direccion_iglesia} onChange={handleChange} className="form-input-premium w-full" /> </div>
+            </div>
+         </div>
+
+         <div className="md:col-span-2 lg:col-span-3 mt-8">
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Talleres y Congresos Ministeriales</h4>
+            <div className="space-y-3">
+               {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Academia / Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Título Obtenido</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">H. Inten.</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+      </FormSection>
+
+      {/* --- SECCIÓN 5: IDIOMAS Y CARGO --- */}
+      <FormSection title="Habilidades y Aspiración" icon={FileText}>
+          <div className="md:col-span-2 lg:col-span-3">
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Talleres y Congresos Profesionales</h4>
+            <div className="space-y-3">
+               {[5, 6, 7, 8].map(i => (
+                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Título Obtenido</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">Horas</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+
+         <div className="md:col-span-2 lg:col-span-3 mt-8">
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Idiomas</h4>
+            <div className="grid grid-cols-1 gap-4">
+               {[1, 2, 3].map(i => (
+                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div> <label className="label-premium">Idioma {i}</label> <input name={`idioma_${i}`} value={formData[`idioma_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                    <div> <label className="label-premium text-[10px]">Habla (%)</label> <input name={`habla_${i}`} value={formData[`habla_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 80%" /> </div>
+                    <div> <label className="label-premium text-[10px]">Lee (%)</label> <input name={`lee_${i}`} value={formData[`lee_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 90%" /> </div>
+                    <div> <label className="label-premium text-[10px]">Escribe (%)</label> <input name={`escribe_${i}`} value={formData[`escribe_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 70%" /> </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+
+         <div className="md:col-span-2 lg:col-span-3 mt-8">
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Aspiración Institucional</h4>
+            <div className="space-y-6 bg-blue-50/30 dark:bg-blue-900/10 p-6 rounded-[2rem] border border-blue-100 dark:border-blue-900/30">
+                <div>
+                  <label className="label-premium text-blue-700 dark:text-blue-300">Cargo al que aspira en la Fundación</label>
+                  <input name="cargo_en_FHISYL" value={formData.cargo_en_FHISYL} onChange={handleChange} className="form-input-premium w-full" placeholder="Escribe el nombre del cargo..." />
+                </div>
+                <div>
+                  <label className="label-premium text-blue-700 dark:text-blue-300">Breve descripción de su ministerio / profesión</label>
+                  <textarea name="descripcion_breve_ministerio_profesion" value={formData.descripcion_breve_ministerio_profesion} onChange={handleChange} className="form-input-premium w-full h-32 pt-4 shadow-inner" placeholder="Explica brevemente tu experiencia y propósito..." />
+                </div>
+            </div>
+         </div>
+      </FormSection>
+
+      {/* --- SECCIÓN 6: REFERENCIAS --- */}
+      <FormSection title="Referencias" icon={Users}>
+         <div className="md:col-span-2 lg:col-span-3">
+            <h4 className="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-4">Relaciones Familiares</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700 hover:border-emerald-200 transition-all">
+                    <div className="mb-4"> <label className="label-premium text-[9px]">Nombre Completo {i}</label> <input name={`nombre_familia_${i}`} value={formData[`nombre_familia_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                       <div> <label className="label-premium text-[9px]">Parentesco</label> <input name={`parentezco_${i}`} value={formData[`parentezco_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                       <div> <label className="label-premium text-[9px]">Profesión</label> <input name={`profesion_${i}`} value={formData[`profesion_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                    </div>
+                    <div> <label className="label-premium text-[9px]">Contacto / Celular</label> <input name={`telefonofam_${i}`} value={formData[`telefonofam_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                  </div>
+                ))}
+            </div>
+         </div>
+
+         <div className="md:col-span-2 lg:col-span-3 mt-8">
+            <h4 className="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-4">Relaciones Personales</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700 hover:border-indigo-200 transition-all">
+                    <div className="mb-4"> <label className="label-premium text-[10px]">Nombre Completo {i}</label> <input name={`nombre_personales_${i}`} value={formData[`nombre_personales_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                    <div className="mb-4"> <label className="label-premium text-[10px]">Profesión</label> <input name={`profesion_personal_${i}`} value={formData[`profesion_personal_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                    <div> <label className="label-premium text-[10px]">Contacto / Celular</label> <input name={`telefonopers_${i}`} value={formData[`telefonopers_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                  </div>
+                ))}
+            </div>
+         </div>
+      </FormSection>
+
+      {/* --- SECCIÓN 7: AUTORIZACIÓN Y FIRMA --- */}
+      <FormSection title="Compromiso Legal y Firma" icon={CheckCircle2}>
+         <div className="md:col-span-2 lg:col-span-3">
+            <div className="p-8 bg-amber-50 dark:bg-amber-900/10 rounded-[2.5rem] border border-amber-100 dark:border-amber-900/30 font-medium">
+               <div className="flex gap-4 items-start mb-6">
+                 <AlertCircle className="shrink-0 text-amber-600" size={24} />
+                 <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
+                   AUTORIZO A LA FUNDACIÓN HUMANITARIA SOL Y LUNA A USAR LA INFORMACIÓN AQUÍ SUMINISTRADA PARA EL TRATAMIENTO DE MIS DATOS, ÚNICAMENTE PARA FINES Y PROPÓSITOS RELACIONADAS CON LAS FUNCIONES ASIGNADAS A MI CARGO Y BAJO LOS OBJETIVOS DE LA MISIÓN Y VISIÓN DE LA FUNDACIÓN. CERTIFICO QUE LOS DATOS SON VERACES (LEY 1581 DE 2012).
+                 </p>
+               </div>
+               <div className="flex justify-center gap-8">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" name="autorizo_si" checked={formData.autorizo_si} onChange={() => setFormData(prev => ({ ...prev, autorizo_si: !prev.autorizo_si, autorizo_no: false }))} className="w-6 h-6 rounded-lg text-emerald-600" />
+                    <span className="font-black text-amber-700 dark:text-amber-400 text-sm">SÍ, AUTORIZO</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" name="autorizo_no" checked={formData.autorizo_no} onChange={() => setFormData(prev => ({ ...prev, autorizo_no: !prev.autorizo_no, autorizo_si: false }))} className="w-6 h-6 rounded-lg text-red-600" />
+                    <span className="font-black text-red-700 dark:text-red-400 text-sm">NO AUTORIZO</span>
+                  </label>
+               </div>
+            </div>
+         </div>
+
+         <div className="md:col-span-2 lg:col-span-3 mt-8">
+            <h4 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-center mb-6">Trazo Digital / Firma</h4>
+            <div className="flex flex-col items-center gap-8 p-10 bg-gray-50 dark:bg-gray-900/50 rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-gray-800 shadow-inner">
+                <div className="w-full max-w-sm h-40 bg-white dark:bg-gray-800 rounded-3xl border-2 border-gray-100 dark:border-gray-700 flex items-center justify-center overflow-hidden shadow-2xl relative group">
+                  {firmaPreview ? (
+                    <img src={firmaPreview} alt="Firma" className="w-full h-full object-contain p-4 transition-transform group-hover:scale-110 duration-500" />
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-gray-300">
+                      <ImageIcon size={32} />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Sube tu firma</span>
+                    </div>
+                  )}
+                </div>
+                <label className="px-10 py-5 bg-indigo-600 text-white rounded-[2rem] font-black shadow-xl shadow-indigo-500/30 cursor-pointer hover:bg-indigo-700 transition-all active:scale-95 flex items-center gap-3">
+                  <Download size={22} className="rotate-180" />
+                  SELECCIONAR FIRMA
+                  <input type="file" accept="image/*" onChange={handleFirmaChange} className="hidden" />
+                </label>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">PNG, JPG recomendado (Fondo blanco)</p>
+            </div>
+         </div>
+      </FormSection>
+
+      {/* --- PANEL DE ACCIONES FLOTANTE --- */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 z-50">
+         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl p-4 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-2xl flex items-center justify-between">
+            <div className="hidden md:block pl-4">
+               <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase leading-none">Guardado Inteligente</p>
+               <p className="text-[8px] text-gray-400 font-medium tracking-tight">Datos sincronizados con la nube</p>
+            </div>
+            
+            <div className="flex w-full sm:w-auto gap-4">
+               <button
+                  onClick={() => handleSave(false)}
+                  disabled={loading}
+                  className="flex-1 sm:flex-none px-10 py-4 bg-emerald-600 text-white rounded-[2rem] font-black hover:bg-emerald-700 hover:shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-lg shadow-emerald-500/20"
+               >
+                  <Save size={20} />
+                  <span>Guardar</span>
+               </button>
+               <button
+                  onClick={generateWord}
+                  disabled={loading}
+                  className="flex-1 sm:flex-none px-10 py-4 bg-blue-600 text-white rounded-[2rem] font-black hover:bg-blue-700 hover:shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95 shadow-lg shadow-blue-500/20"
+               >
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Download size={20} />
+                      <span>Descargar Word</span>
+                    </>
+                  )}
+               </button>
+            </div>
+         </div>
+      </div>
+
     </div>
   );
 }
