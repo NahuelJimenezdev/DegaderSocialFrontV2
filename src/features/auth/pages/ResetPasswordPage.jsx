@@ -165,10 +165,11 @@ const ResetPasswordPage = () => {
   const renderMobile = () => (
     <div className="min-h-screen bg-white p-6 flex flex-col">
       <div className="flex items-center space-x-3 mb-8">
-        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center overflow-hidden">
             <ProgressiveImage
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Logo"
+                className="rounded-full"
                 style={{ width: '60%', height: '60%', objectFit: 'contain' }}
             />
         </div>
