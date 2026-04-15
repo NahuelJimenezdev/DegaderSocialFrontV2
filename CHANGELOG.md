@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.5...v1.92.6) (2026-04-15)
+
+
+### Bug Fixes
+
+* **founder:** corregir estilos del modal Reset Password - Input ahora es legible en modo oscuro (removidas clases dark:) - Titulo del IosModal actualizado a color marca ([#1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/issues/1)e3a5f) para mejor integracion de diseño ([8510da9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8510da91946c3a33dfb69be6061a16667bbf08f0)), closes [#1e3a5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/issues/1e3a5)
+
 ### [1.92.5](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.92.4...v1.92.5) (2026-04-15)
 
 
