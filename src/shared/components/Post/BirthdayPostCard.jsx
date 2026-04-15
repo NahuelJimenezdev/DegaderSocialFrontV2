@@ -9,7 +9,8 @@ import {
     Globe,
     Users,
     Lock,
-    ArrowLeft
+    ArrowLeft,
+    ChevronRight
 } from 'lucide-react';
 import { getUserAvatar } from '../../utils/avatarUtils';
 import ImageGallery from '../../../features/feed/components/ImageGallery';
@@ -292,28 +293,89 @@ const BirthdayPostCard = ({
                 <div className="birthday-card-content">
                     {/* Header */}
                     <div className="p-4 relative">
-                        <div className="flex items-start gap-3 pr-8">
-                            <div onClick={handleProfileClick} className="relative group cursor-pointer flex-shrink-0">
-                                <ProgressiveImage
-                                    src={avatar}
-                                    medium={user?.social?.fotoPerfilObj?.medium}
-                                    large={user?.social?.fotoPerfilObj?.large}
-                                    blurHash={user?.social?.fotoPerfilObj?.blurHash}
-                                    alt={fullName}
-                                    className="w-10 h-10 rounded-full object-cover aspect-square ring-2 ring-transparent group-hover:ring-indigo-500 transition-all block"
-                                    style={{ clipPath: 'circle(50%)' }}
-                                    aspectRatio="1/1"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`;
-                                    }}
-                                />
-                            </div>
+                        <div className="flex items-start gap-4 pr-8">
+                            {/* Avatares Combinados (Autor y Cumpleañero) */}
+                            {post.metadatos?.targetUser ? (
+                                <div className="relative h-12 w-16 flex-shrink-0">
+                                    {/* Avatar Autor (Arriba/Izquierda) - El que envía */}
+                                    <div 
+                                        onClick={handleProfileClick} 
+                                        className="absolute top-0 left-0 z-20 cursor-pointer hover:z-30 transition-all group"
+                                        title={`Enviado por ${fullName}`}
+                                    >
+                                        <ProgressiveImage
+                                            src={avatar}
+                                            medium={user?.social?.fotoPerfilObj?.medium}
+                                            large={user?.social?.fotoPerfilObj?.large}
+                                            blurHash={user?.social?.fotoPerfilObj?.blurHash}
+                                            alt={fullName}
+                                            className="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-indigo-500"
+                                            style={{ clipPath: 'circle(50%)' }}
+                                            aspectRatio="1/1"
+                                        />
+                                    </div>
+                                    
+                                    {/* Icono Conexión (Pequeña Flecha) */}
+                                    <div className="absolute top-1/2 left-[45%] -translate-x-1/2 -translate-y-1/2 z-30 bg-white rounded-full p-0.5 shadow-sm border border-gray-100">
+                                        <ChevronRight size={10} className="text-gray-400" />
+                                    </div>
+
+                                    {/* Avatar Destinatario (Abajo/Derecha) - El cumpleañero */}
+                                    <div 
+                                        onClick={() => navigate(`/perfil/${post.metadatos.targetUser._id || post.metadatos.targetUser}`)}
+                                        className="absolute bottom-0 right-0 z-10 cursor-pointer hover:z-30 transition-all group"
+                                        title={`Para ${post.metadatos.targetUser.nombres?.primero || 'Cumpleañero'}`}
+                                    >
+                                        <ProgressiveImage
+                                            src={getUserAvatar(post.metadatos.targetUser)}
+                                            className="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm group-hover:ring-blue-500"
+                                            style={{ clipPath: 'circle(50%)' }}
+                                            aspectRatio="1/1"
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
+                                /* Avatar Único (Autor) - Fallback si no hay targetUser o datos incompletos */
+                                <div onClick={handleProfileClick} className="relative group cursor-pointer flex-shrink-0">
+                                    <ProgressiveImage
+                                        src={avatar}
+                                        medium={user?.social?.fotoPerfilObj?.medium}
+                                        large={user?.social?.fotoPerfilObj?.large}
+                                        blurHash={user?.social?.fotoPerfilObj?.blurHash}
+                                        alt={fullName}
+                                        className="w-10 h-10 rounded-full object-cover aspect-square ring-2 ring-transparent group-hover:ring-indigo-500 transition-all block"
+                                        style={{ clipPath: 'circle(50%)' }}
+                                        aspectRatio="1/1"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3b82f6&color=fff&size=128`;
+                                        }}
+                                    />
+                                </div>
+                            )}
 
                             <div className="flex-1 min-w-0">
-                                <h3 onClick={handleProfileClick} className="font-bold text-gray-900 text-sm hover:underline cursor-pointer truncate">
-                                    {getShortName()}
-                                </h3>
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                    <h3 onClick={handleProfileClick} className="font-bold text-gray-900 text-sm hover:underline cursor-pointer truncate max-w-[120px] md:max-w-none">
+                                        {getShortName()}
+                                    </h3>
+                                    
+                                    {post.metadatos?.targetUser && (
+                                        <>
+                                            <ChevronRight size={14} className="text-gray-400 flex-shrink-0" />
+                                            <h3 
+                                                onClick={() => navigate(`/perfil/${post.metadatos.targetUser._id || post.metadatos.targetUser}`)}
+                                                className="font-bold text-blue-600 text-sm hover:underline cursor-pointer truncate max-w-[120px] md:max-w-none"
+                                            >
+                                                {post.metadatos.targetUser.nombres 
+                                                    ? `${post.metadatos.targetUser.nombres.primero} ${post.metadatos.targetUser.apellidos?.primero || ''}`
+                                                    : 'Cumpleañero'
+                                                }
+                                            </h3>
+                                        </>
+                                    )}
+                                </div>
+                                
                                 <div className="space-y-0.5">
                                     {isFeedMode && post.grupo && (
                                         <div className="flex items-center gap-1 text-[11px] leading-tight">
