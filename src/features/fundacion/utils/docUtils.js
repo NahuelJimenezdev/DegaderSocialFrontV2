@@ -559,37 +559,56 @@ export const generateEntrevista = async (userData, firmaB64 = null) => {
     <div class="field"><b>¿Cuál es su llamado?:</b></div>
     <div class="block-text">${resp.llamado || ''}</div>
     
-    <div class="field"><b>¿Qué es lo que más le gusta hacer?:</b></div>
+    <div class="field"><b>¿Qué es lo que más le gusta hacer y lo hace muy bien?:</b></div>
     <div class="block-text">${resp.loQueMasGusta || ''}</div>
 
-    <div class="section">II. CARÁCTER Y SUJECIÓN</div>
+    <div class="field"><b>Área de sacrificio por el ministerio:</b></div>
+    <div class="block-text">${resp.sacrificioPastoral || ''}</div>
+
+    <div class="section">II. CARÁCTER Y RESILIENCIA</div>
     <div class="field"><span class="label">Amigos dirían:</span> <span class="value">${resp.caracterAmigos || ''}</span></div>
     <div class="field"><span class="label">Compañeros dirían:</span> <span class="value">${resp.caracterCompañeros || ''}</span></div>
     
-    <div class="field"><b>Respuesta ante situaciones difíciles:</b></div>
+    <div class="field"><b>Momento de dificultad o crisis:</b></div>
+    <div class="block-text">${resp.situacionDificil || ''}</div>
+
+    <div class="field"><b>Respuesta ante esa situación:</b></div>
     <div class="block-text">${resp.respuestaSituacion || ''}</div>
 
-    <div class="field"><span class="label">Autoridad Espiritual:</span> <span class="value">${resp.autoridadEspiritual || ''}</span></div>
-    <div class="field"><span class="label">Manejo de Diferencias:</span> <span class="value">${resp.manejoDiferencias || ''}</span></div>
+    <div class="field"><b>¿Qué cambiaría si pudiera volver atrás?:</b></div>
+    <div class="block-text">${resp.cambioSituacion || ''}</div>
 
-    <div class="section">III. DONES Y COMPETENCIAS</div>
-    <div class="field"><b>Dones espirituales:</b></div>
-    <div class="block-text">${resp.dones || ''}</div>
+    <div class="section">III. SUJECIÓN Y AUTORIDAD</div>
+    <div class="field"><span class="label">Autoridad Espiritual Directa:</span> <span class="value">${resp.autoridadEspiritual || ''}</span></div>
+    <div class="field"><span class="label">¿Tiene Personería Jurídica?:</span> <span class="value">${resp.personeriaJuridica || ''}</span></div>
     
-    <div class="field"><b>Talentos naturales:</b></div>
-    <div class="block-text">${resp.talentos || ''}</div>
+    <div class="field"><b>Manejo de diferencias de criterio:</b></div>
+    <div class="block-text">${resp.manejoDiferencias || ''}</div>
 
-    <div class="field"><span class="label">Profesión:</span> <span class="value">${resp.profesion || ''}</span></div>
-    <div class="field"><span class="label">Maneja Word/Excel:</span> <span class="value">${resp.manejaOffice || ''}</span></div>
+    <div class="field"><b>Enfrentamiento de conflictos interpersonales:</b></div>
+    <div class="block-text">${resp.enfrentamientoConflictos || ''}</div>
 
-    <div class="section">IV. FAMILIA Y COMPROMISO</div>
-    <div class="field"><b>Vínculo Familiar:</b></div>
+    <div class="field"><b>Experiencias que califican como Coordinador:</b></div>
+    <div class="block-text">${resp.porqueCoordinador || ''}</div>
+
+    <div class="section">IV. FAMILIA Y DEVOCIÓN</div>
+    <div class="field"><b>Vínculo Familiar Primario:</b></div>
     <div class="block-text">${resp.vinculoFamiliar || ''}</div>
-    
+
+    <div class="field"><b>Involucramiento familiar en la labor:</b></div>
+    <div class="block-text">${resp.familiaInvolucrada || ''}</div>
+
+    <div class="field"><b>Disciplinas espirituales:</b></div>
+    <div class="block-text">${resp.formaEspiritual || ''}</div>
+
+    <div class="section">V. COMPROMISO INSTITUCIONAL</div>
     <div class="field"><span class="label">Tiempo Pastoreando:</span> <span class="value">${resp.tiempoPastoreando || ''}</span></div>
     <div class="field"><span class="label">Disponibilidad de Tiempo:</span> <span class="value">${resp.disponibilidadTiempo || ''}</span></div>
     
-    <div class="field"><b>Palabras Voluntarias:</b></div>
+    <div class="field"><b>¿Qué le ha sostenido en el ministerio?:</b></div>
+    <div class="block-text">${resp.permanenciaMinisterio || ''}</div>
+
+    <div class="field"><b>Palabras Adicionales:</b></div>
     <div class="block-text">${resp.palabrasVoluntarias || ''}</div>
 
     ${firmaHtml}

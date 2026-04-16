@@ -461,49 +461,119 @@ export default function DocumentViewer() {
 
             <div className="space-y-6">
               <section>
-                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">Ministerio</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100 uppercase tracking-wider">Ministerio y Llamado</h3>
                 <div className="space-y-4 px-2">
                   <div>
                     <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cuál es su llamado?</p>
-                    <p className="italic">{entRes.llamado || '---'}</p>
+                    <p className="italic text-sm">{entRes.llamado || '---'}</p>
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué es lo que más le gusta de servir?</p>
-                    <p className="italic">{entRes.loQueMasGusta || '---'}</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué es lo que más le gusta hacer y lo hace muy bien?</p>
+                    <p className="italic text-sm">{entRes.loQueMasGusta || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿En qué área ha estado más dispuesto a hacer un sacrificio por el ministerio?</p>
+                    <p className="italic text-sm">{entRes.sacrificioPastoral || '---'}</p>
                   </div>
                 </div>
               </section>
               
               <section>
-                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">Carácter</h3>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100 uppercase tracking-wider">Carácter y Resiliencia</h3>
                 <div className="space-y-4 px-2">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué dicen sus amigos?</p>
-                      <p className="italic">{entRes.caracterAmigos || '---'}</p>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué dirían de usted sus amigos?</p>
+                      <p className="italic text-sm">{entRes.caracterAmigos || '---'}</p>
                     </div>
                     <div>
-                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué dicen sus compañeros?</p>
-                      <p className="italic">{entRes.caracterCompañeros || '---'}</p>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué dirían sus compañeros de trabajo?</p>
+                      <p className="italic text-sm">{entRes.caracterCompañeros || '---'}</p>
                     </div>
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cómo reacciona ante situaciones difíciles?</p>
-                    <p className="italic">{entRes.situacionDificil || '---'}</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Momento de dificultad o crisis enfrentado:</p>
+                    <p className="italic text-sm">{entRes.situacionDificil || '---'}</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cómo respondió ante eso?</p>
+                      <p className="italic text-sm">{entRes.respuestaSituacion || '---'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué cambiaría si pudiera volver atrás?</p>
+                      <p className="italic text-sm">{entRes.cambioSituacion || '---'}</p>
+                    </div>
                   </div>
                 </div>
               </section>
 
               <section>
-                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100">Compromiso</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
-                  <div>
-                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Tiempo pastoreando:</p>
-                    <p className="italic">{entRes.tiempoPastoreando || '---'}</p>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100 uppercase tracking-wider">Sujeción y Autoridad</h3>
+                <div className="space-y-4 px-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Quién es su autoridad espiritual directa?</p>
+                      <p className="italic text-sm">{entRes.autoridadEspiritual || '---'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Denominación con personería jurídica?</p>
+                      <p className="italic text-sm">{entRes.personeriaJuridica || '---'}</p>
+                    </div>
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Disponibilidad de tiempo:</p>
-                    <p className="italic">{entRes.disponibilidadTiempo || '---'}</p>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cómo maneja diferencias de criterio frente a sus autoridades?</p>
+                    <p className="italic text-sm">{entRes.manejoDiferencias || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cómo suele enfrentar los conflictos interpersonales?</p>
+                    <p className="italic text-sm">{entRes.enfrentamientoConflictos || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué experiencias previas le califican para ser Coordinador?</p>
+                    <p className="italic text-sm">{entRes.porqueCoordinador || '---'}</p>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100 uppercase tracking-wider">Familia y Devoción</h3>
+                <div className="space-y-4 px-2">
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Quiénes componen su vínculo familiar primario?</p>
+                    <p className="italic text-sm">{entRes.vinculoFamiliar || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Cómo está involucrada su familia en su labor ministerial?</p>
+                    <p className="italic text-sm">{entRes.familiaInvolucrada || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué disciplinas practica para mantenerse en forma espiritual?</p>
+                    <p className="italic text-sm">{entRes.formaEspiritual || '---'}</p>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <h3 className="bg-gray-100 dark:bg-gray-700 p-2 font-bold text-[16px] border-l-4 border-blue-900 dark:border-blue-400 mb-3 text-blue-900 dark:text-blue-100 uppercase tracking-wider">Compromiso Institucional</h3>
+                <div className="space-y-4 px-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Tiempo dedicado al pastorado:</p>
+                      <p className="italic text-sm">{entRes.tiempoPastoreando || '---'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Disponibilidad de tiempo para coordinación:</p>
+                      <p className="italic text-sm">{entRes.disponibilidadTiempo || '---'}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">¿Qué le ha sostenido en el ministerio a pesar de las pruebas?</p>
+                    <p className="italic text-sm">{entRes.permanenciaMinisterio || '---'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm text-blue-800 dark:text-blue-400">Palabras adicionales:</p>
+                    <p className="italic text-sm">{entRes.palabrasVoluntarias || '---'}</p>
                   </div>
                 </div>
               </section>
