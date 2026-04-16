@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.94.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.94.0...v1.94.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* **fundacion:** permitir acceso al panel administrativo a roles de Secretario ([e279dcd](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/e279dcda3fe18a65c71445260076fe8e586514ee))
+
 ## [1.94.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.93.1...v1.94.0) (2026-04-16)
 
 
