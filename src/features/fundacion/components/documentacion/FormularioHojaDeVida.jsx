@@ -14,7 +14,7 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { useAuth } from '../../../../context/AuthContext';
-import { toast } from 'react-hot-toast';
+import { useToast } from '../../../../shared/components/Toast/ToastProvider';
 import userService from '../../../../api/userService';
 import { downloadCV } from '../../utils/docUtils';
 
@@ -35,6 +35,7 @@ const FormSection = ({ title, icon: Icon, children }) => (
 
 export default function FormularioHojaDeVida() {
   const { user, updateUser } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -55,7 +56,10 @@ export default function FormularioHojaDeVida() {
     telefono: '',
     email: '',
     frase_identificadora: '',
+    cargo_en_FHISYL: '',
     descripcion_breve_ministerio_profesion: '',
+    autorizo_si: false,
+    autorizo_no: false,
 
     // NIVEL EDUCATIVO - EDUCACIÓN BÁSICA
     'completa/incompleta': 'completa',
@@ -146,7 +150,8 @@ export default function FormularioHojaDeVida() {
         nombre_personales_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.nombre || '',
         profesion_personal_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.relacion || '',
         telefonopers_2: user.fundacion?.documentacionFHSYL?.referencias?.[1]?.contacto || '',
-        nombre_iglesia: user.eclesiastico?.iglesia?.nombre || ''
+        nombre_iglesia: user.eclesiastico?.iglesia?.nombre || '',
+        cargo_en_FHISYL: user.fundacion?.cargo || ''
       };
 
       const hojaDeVidaDatos = user.fundacion?.hojaDeVida?.datos || {};

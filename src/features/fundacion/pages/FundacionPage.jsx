@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { Heart, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Heart, ShieldCheck, ArrowRight, FileText, Loader2 } from 'lucide-react';
 import { useFundacion } from '../hooks/useFundacion';
-import DocumentCards from '../components/DocumentCards';
 import SolicitudesList from '../components/SolicitudesList';
 import '../../../shared/styles/headers.style.css';
 
@@ -26,6 +25,15 @@ export default function FundacionPage() {
          user?.fundacion?.cargo?.includes('Coordinador') || 
          user?.fundacion?.cargo?.toLowerCase().includes('secretario') ||
          user?.seguridad?.rolSistema === 'Founder');
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+                <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+                <p className="text-blue-200 font-medium tracking-wide">Cargando información de la Fundación...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="page-container max-w-7xl mx-auto px-4 pt-16 pb-8 md:py-8">
@@ -78,17 +86,24 @@ export default function FundacionPage() {
                         </button>
                     </div>
                 )}
-
-                {/* Sección de Documentos */}
-                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-6 flex items-center gap-2">
-                    <span className="w-1.5 h-6 bg-blue-600 rounded-full"></span>
-                    Documentación Requerida
-                </h3>
-                
-                <DocumentCards 
-                    user={user} 
-                    onNavigate={(path, options) => navigate(path, options)} 
-                />
+                <div className="mb-10 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-transform hover:scale-[1.01]">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                            <FileText size={32} />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Documentación Requerida</h3>
+                            <p className="text-gray-600 dark:text-gray-400 font-medium">Completa los siguientes pasos obligatorios para avanzar en tu proceso dentro de la Fundación Humanitaria Internacional Sol y Luna.</p>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={() => navigate('/fundacion/documentos')}
+                        className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition flex items-center gap-2 shadow-md active:scale-95"
+                    >
+                        Completar Documentación
+                        <ArrowRight size={20} />
+                    </button>
+                </div>
 
                 {/* Panel de Aprobaciones (Solo si aplica) */}
                 {(solicitudesPendientes.length > 0) && (
