@@ -59,68 +59,33 @@ export default function FormularioHojaDeVida() {
 
     // NIVEL EDUCATIVO - EDUCACIÓN BÁSICA
     'completa/incompleta': 'completa',
-    grado1: '', grado2: '', grado3: '', grado4: '', grado5: '', // Primaria
-    grado6: '', grado7: '', grado8: '', grado9: '', // Secundaria
-    grado10: '', grado11: '', // Media
+    ...Array.from({ length: 11 }, (_, i) => ({ [`grado${i + 1}`]: '' })).reduce((a, b) => ({ ...a, ...b }), {}),
     fecha_mes_grado: '',
     fecha_año_grado: '',
+    nivel_educacion_superior: 'sin_estudios',
+    nombreTitulo_1: '', numero_aprobado_1: '', graduadoSi_1: false, graduadoNo_1: false,
+    nombreTitulo_2: '', numero_aprobado_2: '', graduadoSi_2: false, graduadoNo_2: false,
+    nombreTitulo_3: '', numero_aprobado_3: '', graduadoSi_3: false, graduadoNo_3: false,
 
-    // EDUCACIÓN SUPERIOR
-    seleccionar_tecnica: false, seleccionar_tecnologica: false, seleccionar_universitario: false, seleccionar_posgrado: false,
-    numero_aprobado_1: '', graduadoSi_1: false, graduadoNo_1: false, nombreTitulo_1: '',
-    numero_aprobado_2: '', graduadoSi_2: false, graduadoNo_2: false, nombreTitulo_2: '',
-    numero_aprobado_3: '', graduadoSi_3: false, graduadoNo_3: false, nombreTitulo_3: '',
-
-    // EXPERIENCIA - PRÁCTICAS
+    // Prácticas y Experiencia
+    modo_practicas1: 'sin_experiencia', modo_practicas2: 'sin_experiencia', modo_practicas3: 'sin_experiencia',
     'aplica/noAplica1': '', numero_horas1: '', exp_si1: false, exp_no1: false,
     'aplica/noAplica2': '', numero_horas2: '', exp_si2: false, exp_no2: false,
     'aplica/noAplica3': '', numero_horas3: '', exp_si3: false, exp_no3: false,
 
-    // EXPERIENCIA LABORAL 1
-    empresa_actual: '', departamento_empresa: '', municipio_empresa: '', email_empresa: '',
-    telefono_empresa: '', dia_inicio: '', mes_inicio: '', año_inicio: '',
-    dia_fin: '', mes_fin: '', año_fin: '', cargo_empresa: '', direccion_empresa: '',
-    sector_empresa: 'privada', 
+    modo_experiencia: 'sin_experiencia', modo_experiencia2: 'sin_experiencia', modo_experiencia3: 'sin_experiencia',
+    empresa_actual: '', sector_empresa: 'privada', cargo_empresa: '', departamento_empresa: '', municipio_empresa: '', email_empresa: '', telefono_empresa: '', dia_inicio: '', mes_inicio: '', año_inicio: '', dia_fin: '', mes_fin: '', año_fin: '', trabajando_actualmente: false, direccion_empresa: '',
+    empresa_dos: '', sector_empresa2: 'privada', cargo_empresa2: '', departamento_empresa2: '', municipio_empresa2: '', email_empresa2: '', telefono_empresa2: '', dia_inicio2: '', mes_inicio2: '', año_inicio2: '', dia_fin2: '', mes_fin2: '', año_fin2: '', trabajando_actualmente2: false, direccion_empresa2: '',
+    empresa_tres: '', sector_empresa3: 'privada', cargo_empresa3: '', departamento_empresa3: '', municipio_empresa3: '', email_empresa3: '', telefono_empresa3: '', dia_inicio3: '', mes_inicio3: '', año_inicio3: '', dia_fin3: '', mes_fin3: '', año_fin3: '', trabajando_actualmente3: false, direccion_empresa3: '',
 
-    // EXPERIENCIA LABORAL 2
-    empresa_dos: '', departamento_empresa2: '', municipio_empresa2: '', email_empresa2: '',
-    telefono_empresa2: '', dia_inicio2: '', mes_inicio2: '', año_inicio2: '',
-    dia_fin2: '', mes_fin2: '', año_fin2: '', cargo_empresa2: '', direccion_empresa2: '',
-    sector_empresa2: 'privada',
+    nombre_iglesia: '', nombre_pastor: '', telefono_pastor: '', país_iglesia: '', ciudad_iglesia: '', estado_iglesia: '', direccion_iglesia: '',
+    
+    modo_talleres: 'sin_datos',
+    ...Array.from({ length: 8 }, (_, i) => ({ [`academia_${i + 1}`]: '', [`titulo_obtenido${i + 1}`]: '', [`intensidad_horaria${i + 1}`]: '', [`añoTaller${i + 1}`]: '' })).reduce((a, b) => ({ ...a, ...b }), {}),
 
-    // EXPERIENCIA LABORAL 3
-    empresa_tres: '', departamento_empresa3: '', municipio_empresa3: '', email_empresa3: '',
-    telefono_empresa3: '', dia_inicio3: '', mes_inicio3: '', año_inicio3: '',
-    dia_fin3: '', mes_fin3: '', año_fin3: '', cargo_empresa3: '', direccion_empresa3: '',
-    sector_empresa3: 'privada',
-
-    // DATOS DE LA IGLESIA
-    nombre_iglesia: '', nombre_pastor: '', telefono_pastor: '',
-    país_iglesia: '', direccion_iglesia: '', ciudad_iglesia: '', estado_iglesia: '',
-
-    // TALLERES MINISTERIALES
-    academia_1: '', titulo_obtenido1: '', intensidad_horaria1: '', añoTaller1: '',
-    academia_2: '', titulo_obtenido2: '', intensidad_horaria2: '', añoTaller2: '',
-    academia_3: '', titulo_obtenido3: '', intensidad_horaria3: '', añoTaller3: '',
-    academia_4: '', titulo_obtenido4: '', intensidad_horaria4: '', añoTaller4: '',
-
-    // TALLERES PROFESIONALES
-    academia_5: '', titulo_obtenido5: '', intensidad_horaria5: '', añoTaller5: '',
-    academia_6: '', titulo_obtenido6: '', intensidad_horaria6: '', añoTaller6: '',
-    academia_7: '', titulo_obtenido7: '', intensidad_horaria7: '', añoTaller7: '',
-    academia_8: '', titulo_obtenido8: '', intensidad_horaria8: '', añoTaller8: '',
-
-    // IDIOMAS
-    idioma_1: '', habla_1: '', lee_1: '', escribe_1: '',
-    idioma_2: '', habla_2: '', lee_2: '', escribe_2: '',
-    idioma_3: '', habla_3: '', lee_3: '', escribe_3: '',
-
-    // CARGO Y AUTORIZACION
-    cargo_en_FHISYL: '',
-    autorizo_si: false,
-    autorizo_no: false,
-
-    // REFERENCIAS FAMILIARES
+    modo_idiomas: 'sin_datos',
+    ...Array.from({ length: 3 }, (_, i) => ({ [`idioma_${i + 1}`]: '', [`habla_${i + 1}`]: '', [`lee_${i + 1}`]: '', [`escribe_${i + 1}`]: '' })).reduce((a, b) => ({ ...a, ...b }), {}),
+    
     nombre_familia_1: '', parentezco_1: '', profesion_1: '', telefonofam_1: '',
     nombre_familia_2: '', parentezco_2: '', profesion_2: '', telefonofam_2: '',
     nombre_familia_3: '', parentezco_3: '', profesion_3: '', telefonofam_3: '',
@@ -266,7 +231,53 @@ export default function FormularioHojaDeVida() {
 
     if (!silent) setLoading(true);
     try {
-      const response = await userService.saveHojaDeVida(formData);
+      const dataToSave = { ...formData };
+      
+      // Procesar Educación Superior
+      if (formData.nivel_educacion_superior === 'sin_estudios') {
+        [1,2,3].forEach(i => {
+          dataToSave[`nombreTitulo_${i}`] = 'Sin datos';
+          dataToSave[`numero_aprobado_${i}`] = '---';
+        });
+      } else {
+        [2,3].forEach(i => {
+          if (!dataToSave[`nombreTitulo_${i}`]) dataToSave[`nombreTitulo_${i}`] = 'Sin datos';
+        });
+      }
+
+      // Procesar Prácticas
+      [1,2,3].forEach(i => {
+        if (formData[`modo_practicas${i}`] === 'sin_experiencia') {
+          dataToSave[`aplica/noAplica${i}`] = 'Sin experiencia Laboral de practicas';
+          dataToSave[`numero_horas${i}`] = '0';
+        }
+      });
+
+      // Procesar Experiencia Laboral
+      const expKeys = ['', '2', '3'];
+      expKeys.forEach(p => {
+        const modoKey = p === '' ? 'modo_experiencia' : `modo_experiencia${p}`;
+        const empKey = p === '' ? 'empresa_actual' || 'empresa_actual' : `empresa_${p === '2' ? 'dos' : 'tres'}`;
+        
+        if (formData[modoKey] === 'sin_experiencia') {
+          dataToSave[empKey] = 'Sin experiencia Laboral/Ministerial';
+          dataToSave[`cargo_empresa${p}`] = 'N/A';
+        } else if (formData[p === '' ? 'trabajando_actualmente' : `trabajando_actualmente${p}`]) {
+          dataToSave[`dia_fin${p}`] = '---';
+          dataToSave[`mes_fin${p}`] = 'Trabajando Actualmente';
+          dataToSave[`año_fin${p}`] = '---';
+        }
+      });
+
+      // Procesar Talleres e Idiomas
+      if (formData.modo_talleres === 'sin_datos') {
+        Array.from({ length: 8 }).forEach((_, i) => { dataToSave[`academia_${i+1}`] = 'Sin datos'; });
+      }
+      if (formData.modo_idiomas === 'sin_datos') {
+        Array.from({ length: 3 }).forEach((_, i) => { dataToSave[`idioma_${i+1}`] = 'Sin datos'; });
+      }
+
+      const response = await userService.saveHojaDeVida(dataToSave);
       if (response?.success && response?.data) updateUser(response.data);
       try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
       if (!silent) toast.success('Información guardada correctamente');
@@ -483,10 +494,11 @@ export default function FormularioHojaDeVida() {
               ))}
             </div>
             <label className="label-premium mb-3">Grados Aprobados (Clic para marcar)</label>
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-11 gap-2 mb-6">
+            <div className={`grid grid-cols-4 sm:grid-cols-6 md:grid-cols-11 gap-2 mb-6 ${formData['completa/incompleta'] === 'completa' ? 'opacity-40 pointer-events-none' : ''}`}>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => (
                 <button
                   key={num}
+                  disabled={formData['completa/incompleta'] === 'completa'}
                   onClick={() => setFormData(prev => ({ ...prev, [`grado${num}`]: prev[`grado${num}`] === 'X' ? '' : 'X' }))}
                   className={`py-3 rounded-xl text-xs font-black border-2 transition-all ${formData[`grado${num}`] === 'X' ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 text-gray-400'}`}
                 >
@@ -494,48 +506,59 @@ export default function FormularioHojaDeVida() {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div> <label className="label-premium text-[10px]">Mes de Grado</label> <input name="fecha_mes_grado" value={formData.fecha_mes_grado} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: Diciembre" /> </div>
-              <div> <label className="label-premium text-[10px]">Año de Grado</label> <input name="fecha_año_grado" value={formData.fecha_año_grado} onChange={handleChange} className="form-input-premium w-full" placeholder="AAAA" /> </div>
+            <div className={`grid grid-cols-2 gap-4 ${formData['completa/incompleta'] === 'incompleta' ? 'opacity-40 pointer-events-none' : ''}`}>
+              <div> <label className="label-premium text-[10px]">Mes de Grado</label> <input name="fecha_mes_grado" disabled={formData['completa/incompleta'] === 'incompleta'} value={formData.fecha_mes_grado} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: Diciembre" /> </div>
+              <div> <label className="label-premium text-[10px]">Año de Grado</label> <input name="fecha_año_grado" disabled={formData['completa/incompleta'] === 'incompleta'} value={formData.fecha_año_grado} onChange={handleChange} className="form-input-premium w-full" placeholder="AAAA" /> </div>
             </div>
         </div>
 
         <div className="md:col-span-2 lg:col-span-3 mt-4">
           <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Educación Superior</h4>
-          <div className="flex flex-wrap gap-6 mb-6 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-50 dark:border-gray-700">
+          <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-50 dark:border-gray-700">
               {[
-                { id: 'seleccionar_tecnica', label: 'Técnica' },
-                { id: 'seleccionar_tecnologica', label: 'Tecnológica' },
-                { id: 'seleccionar_universitario', label: 'Pregrado' },
-                { id: 'seleccionar_posgrado', label: 'Posgrado' }
+                { id: 'tecnica', label: 'Técnica' },
+                { id: 'tecnologica', label: 'Tecnológica' },
+                { id: 'pregrado', label: 'Pregrado' },
+                { id: 'posgrado', label: 'Posgrado' },
+                { id: 'sin_estudios', label: 'Sin estudios' }
               ].map(item => (
                 <label key={item.id} className="flex items-center gap-2 cursor-pointer group">
-                  <input type="checkbox" name={item.id} checked={formData[item.id]} onChange={handleChange} className="w-5 h-5 rounded-lg border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <input 
+                    type="radio" 
+                    name="nivel_educacion_superior" 
+                    value={item.id}
+                    checked={formData.nivel_educacion_superior === item.id} 
+                    onChange={handleChange} 
+                    className="w-5 h-5 rounded-full border-gray-300 text-blue-600 focus:ring-blue-500" 
+                  />
                   <span className="text-xs font-black text-gray-600 dark:text-gray-300 group-hover:text-blue-600 transition tracking-tight">{item.label}</span>
                 </label>
               ))}
           </div>
           
-          <div className="space-y-4">
+          <div className={`space-y-4 ${formData.nivel_educacion_superior === 'sin_estudios' ? 'opacity-40 pointer-events-none' : ''}`}>
             {[1, 2, 3].map(i => (
               <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div className="md:col-span-2">
                   <label className="label-premium text-[10px]">Título u Obra Realizada {i}</label>
-                  <input name={`nombreTitulo_${i}`} value={formData[`nombreTitulo_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
+                  <input name={`nombreTitulo_${i}`} value={formData[`nombreTitulo_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder={i > 1 ? "Opcional (Sin datos)" : "Ingrese el título"} />
                 </div>
                 <div>
                   <label className="label-premium text-[10px]">Semestres / Años</label>
                   <input name={`numero_aprobado_${i}`} value={formData[`numero_aprobado_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
                 </div>
-                <div className="flex justify-center gap-4 bg-white dark:bg-gray-800 p-3 rounded-2xl border border-gray-100 dark:border-gray-700">
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input type="checkbox" checked={formData[`graduadoSi_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoSi_${i}`]: !prev[`graduadoSi_${i}`], [`graduadoNo_${i}`]: false }))} className="rounded" />
-                    <span className="text-[10px] font-black text-green-600">SÍ</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input type="checkbox" checked={formData[`graduadoNo_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoNo_${i}`]: !prev[`graduadoNo_${i}`], [`graduadoSi_${i}`]: false }))} className="rounded" />
-                    <span className="text-[10px] font-black text-red-600">NO</span>
-                  </label>
+                <div>
+                  <label className="label-premium text-[10px] block text-center mb-2">TERMINADA</label>
+                  <div className="flex justify-center gap-4 bg-white dark:bg-gray-800 p-3 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input type="checkbox" checked={formData[`graduadoSi_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoSi_${i}`]: !prev[`graduadoSi_${i}`], [`graduadoNo_${i}`]: false }))} className="rounded" />
+                      <span className="text-[10px] font-black text-green-600">SÍ</span>
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <input type="checkbox" checked={formData[`graduadoNo_${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`graduadoNo_${i}`]: !prev[`graduadoNo_${i}`], [`graduadoSi_${i}`]: false }))} className="rounded" />
+                      <span className="text-[10px] font-black text-red-600">NO</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             ))}
@@ -547,26 +570,44 @@ export default function FormularioHojaDeVida() {
       <FormSection title="Experiencia Laboral" icon={Briefcase}>
         <div className="md:col-span-2 lg:col-span-3">
           <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Prácticas Formativas (Solo Estudiantes)</h4>
-          <div className="space-y-3">
+          <div className="space-y-6">
              {[1, 2, 3].map(i => (
-                <div key={i} className="flex flex-col md:flex-row gap-3 p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700">
-                  <div className="flex-1">
-                    <label className="label-premium text-[9px]">Corporación / Empresa {i}</label>
-                    <input name={`aplica/noAplica${i}`} value={formData[`aplica/noAplica${i}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" />
+                <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-1">
+                       <label className="label-premium text-[10px]">Modo de Práctica {i}</label>
+                       <select 
+                         name={`modo_practicas${i}`} 
+                         value={formData[`modo_practicas${i}`]} 
+                         onChange={handleChange} 
+                         className="form-input-premium w-full bg-white dark:bg-gray-800 text-xs font-bold"
+                       >
+                         <option value="sin_experiencia">🚫 Sin experiencia Laboral de practicas</option>
+                         <option value="ingresar_datos">✍️ Ingresar datos</option>
+                       </select>
+                    </div>
                   </div>
-                  <div className="w-full md:w-32">
-                    <label className="label-premium text-[9px]">Horas Totales</label>
-                    <input name={`numero_horas${i}`} value={formData[`numero_horas${i}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" />
-                  </div>
-                  <div className="flex items-center gap-4 px-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <label className="flex items-center gap-1.5 cursor-pointer">
-                      <input type="checkbox" checked={formData[`exp_si${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_si${i}`]: !prev[`exp_si${i}`], [`exp_no${i}`]: false }))} className="rounded" />
-                      <span className="text-[10px] font-black text-green-600">SÍ</span>
-                    </label>
-                    <label className="flex items-center gap-1.5 cursor-pointer">
-                      <input type="checkbox" checked={formData[`exp_no${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_no${i}`]: !prev[`exp_no${i}`], [`exp_si${i}`]: false }))} className="rounded" />
-                      <span className="text-[10px] font-black text-red-600">NO</span>
-                    </label>
+
+                  <div className={`grid grid-cols-1 md:grid-cols-4 gap-4 items-end ${formData[`modo_practicas${i}`] === 'sin_experiencia' ? 'opacity-30 pointer-events-none' : ''}`}>
+                    <div className="md:col-span-2">
+                       <label className="label-premium text-[9px]">Corporación / Empresa {i}</label>
+                       <input name={`aplica/noAplica${i}`} value={formData[`aplica/noAplica${i}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" />
+                    </div>
+                    <div className="w-full">
+                       <label className="label-premium text-[9px]">Horas Totales</label>
+                       <input name={`numero_horas${i}`} value={formData[`numero_horas${i}`]} onChange={handleChange} className="form-input-premium w-full text-sm bg-white dark:bg-gray-800" />
+                    </div>
+                    <div className="flex items-center justify-center gap-4 h-11 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
+                      <span className="text-[10px] font-black text-gray-400 mr-2">TERMINÓ</span>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" checked={formData[`exp_si${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_si${i}`]: !prev[`exp_si${i}`], [`exp_no${i}`]: false }))} className="rounded" />
+                        <span className="text-[10px] font-black text-green-600">SÍ</span>
+                      </label>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" checked={formData[`exp_no${i}`]} onChange={() => setFormData(prev => ({ ...prev, [`exp_no${i}`]: !prev[`exp_no${i}`], [`exp_si${i}`]: false }))} className="rounded" />
+                        <span className="text-[10px] font-black text-red-600">NO</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
              ))}
@@ -577,13 +618,27 @@ export default function FormularioHojaDeVida() {
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6">Trayectoria Profesional / Ministerial</h4>
             <div className="space-y-12">
               {[
-                { prefix: '', label: 'Actual o Último Cargo' },
-                { prefix: '2', label: 'Cargo Anterior' },
-                { prefix: '3', label: 'Cargo Anterior' }
+                { prefix: '', label: 'Cargo Actual o Último', modoKey: 'modo_experiencia' },
+                { prefix: '2', label: 'Cargo Anterior (2)', modoKey: 'modo_experiencia2' },
+                { prefix: '3', label: 'Cargo Anterior (3)', modoKey: 'modo_experiencia3' }
               ].map((exp, idx) => (
                 <div key={idx} className="relative p-6 md:p-8 bg-gray-50 dark:bg-gray-900/40 rounded-[2.5rem] border border-gray-100 dark:border-gray-700">
                   <span className="absolute -top-3 left-8 px-4 py-1 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase shadow-lg">{exp.label}</span>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  
+                  <div className="mb-6 max-w-xs">
+                    <label className="label-premium text-[10px]">Historial Laboral</label>
+                    <select 
+                      name={exp.modoKey} 
+                      value={formData[exp.modoKey]} 
+                      onChange={handleChange} 
+                      className="form-input-premium w-full bg-white dark:bg-gray-800 font-bold text-xs"
+                    >
+                      <option value="sin_experiencia">🚫 Sin Experiencia Laboral/Ministerial</option>
+                      <option value="cargar_datos">✍️ Cargar datos</option>
+                    </select>
+                  </div>
+
+                  <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ${formData[exp.modoKey] === 'sin_experiencia' ? 'opacity-30 pointer-events-none' : ''}`}>
                     <div className="lg:col-span-2">
                        <label className="label-premium">Empresa o Entidad</label>
                        <input name={exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`} value={formData[exp.prefix === '' ? 'empresa_actual' : `empresa_${exp.prefix === '2' ? 'dos' : 'tres'}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" />
@@ -612,8 +667,19 @@ export default function FormularioHojaDeVida() {
                        </div>
                     </div>
                     <div className="lg:col-span-2">
-                       <label className="label-premium text-[9px]">Fecha de Retiro (DD/MM/AAAA)</label>
-                       <div className="grid grid-cols-3 gap-2">
+                       <label className="label-premium text-[9px] flex justify-between items-center">
+                          Fecha de Retiro (DD/MM/AAAA)
+                          <div className="flex items-center gap-1.5 cursor-pointer">
+                             <input 
+                               type="checkbox" 
+                               checked={formData[exp.prefix === '' ? 'trabajando_actualmente' : `trabajando_actualmente${exp.prefix}`]} 
+                               onChange={() => setFormData(prev => ({ ...prev, [exp.prefix === '' ? 'trabajando_actualmente' : `trabajando_actualmente${exp.prefix}`]: !prev[exp.prefix === '' ? 'trabajando_actualmente' : `trabajando_actualmente${exp.prefix}`] }))} 
+                               className="rounded w-3 h-3" 
+                             />
+                             <span className="text-[8px] font-black text-blue-600 dark:text-blue-400">TRABAJANDO ACTUALMENTE</span>
+                          </div>
+                       </label>
+                       <div className={`grid grid-cols-3 gap-2 ${formData[exp.prefix === '' ? 'trabajando_actualmente' : `trabajando_actualmente${exp.prefix}`] ? 'opacity-20 pointer-events-none' : ''}`}>
                           <input name={`dia_fin${exp.prefix}`} value={formData[`dia_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="DD" />
                           <input name={`mes_fin${exp.prefix}`} value={formData[`mes_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="MM" />
                           <input name={`año_fin${exp.prefix}`} value={formData[`año_fin${exp.prefix}`]} onChange={handleChange} className="form-input-premium w-full text-center bg-white dark:bg-gray-800" placeholder="AAAA" />
@@ -644,7 +710,14 @@ export default function FormularioHojaDeVida() {
 
          <div className="md:col-span-2 lg:col-span-3 mt-8">
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Talleres y Congresos Ministeriales</h4>
-            <div className="space-y-3">
+            <div className="mb-4 max-w-xs">
+              <label className="label-premium text-[10px]">Formación Ministerial</label>
+              <select name="modo_talleres" value={formData.modo_talleres} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
+                <option value="sin_datos">🚫 Sin datos / No aplica</option>
+                <option value="cargar_datos">✍️ Cargar datos de talleres</option>
+              </select>
+            </div>
+            <div className={`space-y-3 ${formData.modo_talleres === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
                {[1, 2, 3, 4].map(i => (
                   <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                     <div className="md:col-span-4"> <label className="label-premium text-[8px]">Academia / Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
@@ -675,7 +748,14 @@ export default function FormularioHojaDeVida() {
 
          <div className="md:col-span-2 lg:col-span-3 mt-8">
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Idiomas</h4>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="mb-4 max-w-xs">
+              <label className="label-premium text-[10px]">Dominio de Idiomas</label>
+              <select name="modo_idiomas" value={formData.modo_idiomas} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
+                <option value="sin_datos">🚫 Sin datos adicional</option>
+                <option value="cargar_datos">✍️ Cargar idiomas</option>
+              </select>
+            </div>
+            <div className={`grid grid-cols-1 gap-4 ${formData.modo_idiomas === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
                {[1, 2, 3].map(i => (
                   <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                     <div> <label className="label-premium">Idioma {i}</label> <input name={`idioma_${i}`} value={formData[`idioma_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
