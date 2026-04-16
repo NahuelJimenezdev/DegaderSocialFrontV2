@@ -2,7 +2,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import DocumentCards from '../components/DocumentCards';
 import { useFundacion } from '../hooks/useFundacion';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronLeft } from 'lucide-react';
 
 const DocumentosPage = () => {
     const { user, updateUser } = useAuth();
@@ -21,17 +21,32 @@ const DocumentosPage = () => {
     }
 
   return (
-    <div className="page-container max-w-7xl mx-auto px-4 py-8">
-      {/* Sección de Documentos */}
-      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-6 flex items-center gap-2">
-          <span className="w-1.5 h-6 bg-blue-600 rounded-full"></span>
-          Documentación Requerida
-      </h3>
-      
-      <DocumentCards 
-          user={user} 
-          onNavigate={(path, options) => navigate(path, options)} 
-      />
+    <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header con Botón Volver */}
+        <div className="flex items-center gap-4 mb-10">
+            <button 
+                onClick={() => navigate('/fundacion')}
+                className="p-2.5 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-gray-50 transition-all text-gray-600 dark:text-gray-400 active:scale-95"
+            >
+                <ChevronLeft size={24} />
+            </button>
+            <div>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    Documentación Requerida
+                </h1>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                    Completa los pasos obligatorios para tu ingreso a la Fundación.
+                </p>
+            </div>
+        </div>
+
+        <div className="page-container px-0 shadow-none border-none bg-transparent">
+            {/* Sección de Documentos */}
+            <DocumentCards 
+                user={user} 
+                onNavigate={(path, options) => navigate(path, options)} 
+            />
+        </div>
     </div>
   )
 }

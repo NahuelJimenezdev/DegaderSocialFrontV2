@@ -51,6 +51,7 @@ import PrivacidadPage from './features/perfilUsuario/pages/PrivacidadPage'
 import ResetPasswordPage from './features/auth/pages/ResetPasswordPage'
 import PublicRoute from './features/auth/components/PublicRoute'
 import DocumentosPage from './features/fundacion/pages/DocumentosPage'
+import SolicitudesPendientesPage from './features/fundacion/pages/SolicitudesPendientesPage'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register) - Protected from authenticated users
@@ -97,8 +98,9 @@ export const router = createBrowserRouter([
       { path: '/Mis_grupos/:id', element: <GroupDetail /> },
       { path: '/Mi_iglesia', element: <IglesiaPage /> },
       { path: '/fundacion', element: <FundacionPage /> },
-      { path: '/fundacion/documentos', element: <DocumentosPage /> },
       { path: '/fundacion/admin', element: <FundacionAdminDashboard /> },
+      { path: '/fundacion/documentos', element: <DocumentosPage /> },
+      { path: '/fundacion/solicitudes-pendientes', element: <SolicitudesPendientesPage /> },
       { path: '/fundacion/admin/usuario/:id/documentacion', element: <UserDocumentationView /> },
       { path: '/fundacion/solicitud', element: <FormularioSolicitud /> },
       { path: '/fundacion/documentacion-fhsyl', element: <FormularioFHSYL /> },

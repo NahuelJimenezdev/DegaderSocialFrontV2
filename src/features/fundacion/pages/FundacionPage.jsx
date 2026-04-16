@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { Heart, ShieldCheck, ArrowRight, FileText, Loader2 } from 'lucide-react';
+import { Heart, ShieldCheck, ArrowRight, FileText, Loader2, CheckCircle } from 'lucide-react';
 import { useFundacion } from '../hooks/useFundacion';
-import SolicitudesList from '../components/SolicitudesList';
 import '../../../shared/styles/headers.style.css';
 
 export default function FundacionPage() {
@@ -12,8 +11,7 @@ export default function FundacionPage() {
     // Hook de Fundación
     const {
         loading,
-        solicitudesPendientes,
-        handleGestionarSolicitud
+        solicitudesPendientes
     } = useFundacion(user, updateUser);
 
     // Condicion para ver panel admin: Aceptado + Posee cargo (Director, Coordinador, etc.)
@@ -100,22 +98,30 @@ export default function FundacionPage() {
                         onClick={() => navigate('/fundacion/documentos')}
                         className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition flex items-center gap-2 shadow-md active:scale-95"
                     >
-                        Completar Documentación
+                        Llenar Documentos
                         <ArrowRight size={20} />
                     </button>
                 </div>
 
                 {/* Panel de Aprobaciones (Solo si aplica) */}
                 {(solicitudesPendientes.length > 0) && (
-                    <div className="mt-12">
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-6 flex items-center gap-2">
-                            <span className="w-1.5 h-6 bg-amber-500 rounded-full"></span>
-                            Solicitudes Pendientes de Revisión
-                        </h3>
-                        <SolicitudesList
-                            solicitudes={solicitudesPendientes}
-                            onGestionarSolicitud={handleGestionarSolicitud}
-                        />
+                    <div className="mb-10 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-transform hover:scale-[1.01]">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                                <CheckCircle size={32} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Solicitudes Pendientes de Revisión</h3>
+                                <p className="text-gray-600 dark:text-gray-400 font-medium">Gestiona las solicitudes de los nuevos integrantes.</p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={() => navigate('/fundacion/solicitudes-pendientes')}
+                            className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition flex items-center gap-2 shadow-md active:scale-95"
+                        >
+                            Gestionar Solicitudes
+                            <ArrowRight size={20} />
+                        </button>
                     </div>
                 )}
             </div>
