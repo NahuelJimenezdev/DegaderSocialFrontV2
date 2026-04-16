@@ -24,6 +24,7 @@ export default function FundacionPage() {
         user?.fundacion?.nivel !== 'afiliado' &&
         (user?.fundacion?.cargo?.includes('Director') || 
          user?.fundacion?.cargo?.includes('Coordinador') || 
+         user?.fundacion?.cargo?.toLowerCase().includes('secretario') ||
          user?.seguridad?.rolSistema === 'Founder');
 
     return (
