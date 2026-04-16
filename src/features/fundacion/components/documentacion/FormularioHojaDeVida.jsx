@@ -80,11 +80,21 @@ export default function FormularioHojaDeVida() {
 
     nombre_iglesia: '', nombre_pastor: '', telefono_pastor: '', país_iglesia: '', ciudad_iglesia: '', estado_iglesia: '', direccion_iglesia: '',
     
-    modo_talleres: 'sin_datos',
-    ...Array.from({ length: 8 }, (_, i) => ({ [`academia_${i + 1}`]: '', [`titulo_obtenido${i + 1}`]: '', [`intensidad_horaria${i + 1}`]: '', [`añoTaller${i + 1}`]: '' })).reduce((a, b) => ({ ...a, ...b }), {}),
+    ...Array.from({ length: 8 }, (_, i) => ({ 
+      [`modo_talleres${i + 1}`]: 'sin_datos',
+      [`academia_${i + 1}`]: '', 
+      [`titulo_obtenido${i + 1}`]: '', 
+      [`intensidad_horaria${i + 1}`]: '', 
+      [`añoTaller${i + 1}`]: '' 
+    })).reduce((a, b) => ({ ...a, ...b }), {}),
 
-    modo_idiomas: 'sin_datos',
-    ...Array.from({ length: 3 }, (_, i) => ({ [`idioma_${i + 1}`]: '', [`habla_${i + 1}`]: '', [`lee_${i + 1}`]: '', [`escribe_${i + 1}`]: '' })).reduce((a, b) => ({ ...a, ...b }), {}),
+    ...Array.from({ length: 3 }, (_, i) => ({ 
+      [`modo_idiomas${i + 1}`]: 'sin_datos',
+      [`idioma_${i + 1}`]: '', 
+      [`habla_${i + 1}`]: '', 
+      [`lee_${i + 1}`]: '', 
+      [`escribe_${i + 1}`]: '' 
+    })).reduce((a, b) => ({ ...a, ...b }), {}),
     
     nombre_familia_1: '', parentezco_1: '', profesion_1: '', telefonofam_1: '',
     nombre_familia_2: '', parentezco_2: '', profesion_2: '', telefonofam_2: '',
@@ -269,13 +279,18 @@ export default function FormularioHojaDeVida() {
         }
       });
 
-      // Procesar Talleres e Idiomas
-      if (formData.modo_talleres === 'sin_datos') {
-        Array.from({ length: 8 }).forEach((_, i) => { dataToSave[`academia_${i+1}`] = 'Sin datos'; });
-      }
-      if (formData.modo_idiomas === 'sin_datos') {
-        Array.from({ length: 3 }).forEach((_, i) => { dataToSave[`idioma_${i+1}`] = 'Sin datos'; });
-      }
+      // Procesar Talleres e Idiomas de forma independiente
+      Array.from({ length: 8 }).forEach((_, i) => { 
+        if (formData[`modo_talleres${i+1}`] === 'sin_datos') {
+          dataToSave[`academia_${i+1}`] = 'Sin datos';
+          dataToSave[`titulo_obtenido${i+1}`] = 'Sin datos';
+        }
+      });
+      Array.from({ length: 3 }).forEach((_, i) => { 
+        if (formData[`modo_idiomas${i+1}`] === 'sin_datos') {
+          dataToSave[`idioma_${i+1}`] = 'Sin datos adicionales';
+        }
+      });
 
       const response = await userService.saveHojaDeVida(dataToSave);
       if (response?.success && response?.data) updateUser(response.data);
@@ -710,20 +725,22 @@ export default function FormularioHojaDeVida() {
 
          <div className="md:col-span-2 lg:col-span-3 mt-8">
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Talleres y Congresos Ministeriales</h4>
-            <div className="mb-4 max-w-xs">
-              <label className="label-premium text-[10px]">Formación Ministerial</label>
-              <select name="modo_talleres" value={formData.modo_talleres} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
-                <option value="sin_datos">🚫 Sin datos / No aplica</option>
-                <option value="cargar_datos">✍️ Cargar datos de talleres</option>
-              </select>
-            </div>
-            <div className={`space-y-3 ${formData.modo_talleres === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
+            <div className="space-y-6">
                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Academia / Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
-                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Título Obtenido</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
-                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">H. Inten.</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
-                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                  <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700">
+                    <div className="mb-4 max-w-xs">
+                      <label className="label-premium text-[10px]">Taller Ministerial {i}</label>
+                      <select name={`modo_talleres${i}`} value={formData[`modo_talleres${i}`]} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
+                        <option value="sin_datos">🚫 Sin datos / No aplica</option>
+                        <option value="cargar_datos">✍️ Cargar datos</option>
+                      </select>
+                    </div>
+                    <div className={`grid grid-cols-1 md:grid-cols-12 gap-3 items-end ${formData[`modo_talleres${i}`] === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
+                      <div className="md:col-span-4"> <label className="label-premium text-[8px]">Academia / Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                      <div className="md:col-span-4"> <label className="label-premium text-[8px]">Título Obtenido</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                      <div className="md:col-span-2"> <label className="label-premium text-[8px]">H. Inten.</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                      <div className="md:col-span-2"> <label className="label-premium text-[8px]">Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                    </div>
                   </div>
                ))}
             </div>
@@ -734,13 +751,22 @@ export default function FormularioHojaDeVida() {
       <FormSection title="Habilidades y Aspiración" icon={FileText}>
           <div className="md:col-span-2 lg:col-span-3">
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Talleres y Congresos Profesionales</h4>
-            <div className="space-y-3">
+            <div className="space-y-6">
                {[5, 6, 7, 8].map(i => (
-                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
-                    <div className="md:col-span-4"> <label className="label-premium text-[8px]">Título Obtenido</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
-                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">Horas</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
-                    <div className="md:col-span-2"> <label className="label-premium text-[8px]">Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                  <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700">
+                    <div className="mb-4 max-w-xs">
+                      <label className="label-premium text-[10px]">Taller Profesional {i}</label>
+                      <select name={`modo_talleres${i}`} value={formData[`modo_talleres${i}`]} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
+                        <option value="sin_datos">🚫 Sin datos / No aplica</option>
+                        <option value="cargar_datos">✍️ Cargar datos</option>
+                      </select>
+                    </div>
+                    <div className={`grid grid-cols-1 md:grid-cols-12 gap-3 items-end ${formData[`modo_talleres${i}`] === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
+                      <div className="md:col-span-4"> <label className="label-premium text-[8px]">Entidad</label> <input name={`academia_${i}`} value={formData[`academia_${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                      <div className="md:col-span-4"> <label className="label-premium text-[8px]">Título Obtenido</label> <input name={`titulo_obtenido${i}`} value={formData[`titulo_obtenido${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs bg-white dark:bg-gray-800" /> </div>
+                      <div className="md:col-span-2"> <label className="label-premium text-[8px]">Horas</label> <input name={`intensidad_horaria${i}`} value={formData[`intensidad_horaria${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                      <div className="md:col-span-2"> <label className="label-premium text-[8px]">Año</label> <input name={`añoTaller${i}`} value={formData[`añoTaller${i}`]} onChange={handleChange} className="form-input-premium w-full text-xs text-center bg-white dark:bg-gray-800" /> </div>
+                    </div>
                   </div>
                ))}
             </div>
@@ -748,20 +774,22 @@ export default function FormularioHojaDeVida() {
 
          <div className="md:col-span-2 lg:col-span-3 mt-8">
             <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Idiomas</h4>
-            <div className="mb-4 max-w-xs">
-              <label className="label-premium text-[10px]">Dominio de Idiomas</label>
-              <select name="modo_idiomas" value={formData.modo_idiomas} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
-                <option value="sin_datos">🚫 Sin datos adicional</option>
-                <option value="cargar_datos">✍️ Cargar idiomas</option>
-              </select>
-            </div>
-            <div className={`grid grid-cols-1 gap-4 ${formData.modo_idiomas === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
+            <div className="grid grid-cols-1 gap-6">
                {[1, 2, 3].map(i => (
-                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div> <label className="label-premium">Idioma {i}</label> <input name={`idioma_${i}`} value={formData[`idioma_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
-                    <div> <label className="label-premium text-[10px]">Habla (%)</label> <input name={`habla_${i}`} value={formData[`habla_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 80%" /> </div>
-                    <div> <label className="label-premium text-[10px]">Lee (%)</label> <input name={`lee_${i}`} value={formData[`lee_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 90%" /> </div>
-                    <div> <label className="label-premium text-[10px]">Escribe (%)</label> <input name={`escribe_${i}`} value={formData[`escribe_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 70%" /> </div>
+                  <div key={i} className="p-6 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-gray-100 dark:border-gray-700">
+                    <div className="mb-4 max-w-xs">
+                      <label className="label-premium text-[10px]">Idioma {i}</label>
+                      <select name={`modo_idiomas${i}`} value={formData[`modo_idiomas${i}`]} onChange={handleChange} className="form-input-premium w-full font-bold text-xs bg-white dark:bg-gray-800">
+                        <option value="sin_datos">🚫 Sin datos adicional</option>
+                        <option value="cargar_datos">✍️ Cargar datos</option>
+                      </select>
+                    </div>
+                    <div className={`grid grid-cols-1 md:grid-cols-4 gap-4 items-end ${formData[`modo_idiomas${i}`] === 'sin_datos' ? 'opacity-30 pointer-events-none' : ''}`}>
+                      <div> <label className="label-premium">Nombre Idioma</label> <input name={`idioma_${i}`} value={formData[`idioma_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" /> </div>
+                      <div> <label className="label-premium text-[10px]">Habla (%)</label> <input name={`habla_${i}`} value={formData[`habla_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 80%" /> </div>
+                      <div> <label className="label-premium text-[10px]">Lee (%)</label> <input name={`lee_${i}`} value={formData[`lee_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 90%" /> </div>
+                      <div> <label className="label-premium text-[10px]">Escribe (%)</label> <input name={`escribe_${i}`} value={formData[`escribe_${i}`]} onChange={handleChange} className="form-input-premium w-full bg-white dark:bg-gray-800" placeholder="Ej: 70%" /> </div>
+                    </div>
                   </div>
                ))}
             </div>
