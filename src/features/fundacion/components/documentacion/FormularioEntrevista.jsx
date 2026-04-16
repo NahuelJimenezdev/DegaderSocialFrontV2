@@ -117,19 +117,14 @@ export default function FormularioEntrevista() {
   const handleSave = async () => {
     // Validación mínima: Al menos los campos básicos
     const required = [
-      { key: 'nombre', label: 'Nombre Completo' },
       { key: 'fechaNacimiento', label: 'Fecha de Nacimiento' },
       { key: 'upzLocalidad', label: 'UPZ / Localidad' },
-      { key: 'celular', label: 'Celular' },
-      { key: 'email', label: 'E-mail' },
-      { key: 'direccion', label: 'Dirección' },
-      { key: 'estadoCivil', label: 'Estado Civil' },
-      { key: 'ocupacion', label: 'Ocupación' },
-      { key: 'tiempoEnPaz', label: '¿Cuánto tiempo lleva en la Fundación?' },
-      { key: 'comoLlego', label: '¿Cómo llegó a la Fundación?' },
-      { key: 'porqueDeseaIngresar', label: '¿Por qué desea oficializar su ingreso?' },
-      { key: 'llamado', label: '¿Cuál cree que es su llamado espiritual?' },
-      { key: 'areaInteres', label: 'Área de interés institucional' }
+      { key: 'llamado', label: '¿Cuál es su llamado espiritual?' },
+      { key: 'autoridadEspiritual', label: 'Autoridad Espiritual' },
+      { key: 'profesion', label: 'Profesión u Oficio' },
+      { key: 'vinculoFamiliar', label: 'Vínculo Familiar' },
+      { key: 'porqueCoordinador', label: '¿Por qué desea ser Coordinador?' },
+      { key: 'disponibilidadTiempo', label: 'Disponibilidad de Tiempo' }
     ];
 
     const missing = required.filter(f => !respuestas[f.key]?.trim());
