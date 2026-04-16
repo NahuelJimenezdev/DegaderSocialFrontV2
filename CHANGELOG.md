@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.94.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.93.1...v1.94.0) (2026-04-16)
+
+
+### Features
+
+* **fundacion:** overhaul de lógica en Hoja de Vida con independencia de grupos y validación condicional ([65d1b1a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/65d1b1ac7a6740d31ff656612a80ae1a25024fc0))
+
+
+### Bug Fixes
+
+* **fundacion:** corregir lista de campos obligatorios en Entrevista ([636ec1b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/636ec1b687824ed66089031cab549ff2cd607847))
+* **fundacion:** corregir posicionamiento del panel de acciones en Hoja de Vida ([9015836](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/90158361c6835330045cbcbbf8a9717a7d982de3))
+* **fundacion:** expandir campos en previsualización y descarga de Entrevista ([8eae5c6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8eae5c6d10cd46f18d90fbde2d8addd7342ebdaa))
+* **fundacion:** implementar validacion estricta en formularios de Hoja de Vida, Entrevista y Aplicativo FHSYL ([1b34b94](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/1b34b940a880277020eaa6eb7968cf413ed2cba2))
+* **fundacion:** normalizar campos de hoja de vida y mejorar mapeo de Word ([111fbdc](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/111fbdc8463176fa3ecd2efbe33b801e166634f2))
+* **fundacion:** rediseño profundo de lógica y validación en Hoja de Vida ([be37362](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/be37362470fc7326aa49cd9d9985ec512d0b2077))
+* **fundacion:** sincronizar estados de documentacion y mejorar generacion de Word ([5949eaf](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5949eafb950414cdb8b882cb46762f0d0828fe84))
+
 ### [1.93.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.93.0...v1.93.1) (2026-04-15)
 
 
