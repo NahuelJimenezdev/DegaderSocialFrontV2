@@ -1,5 +1,6 @@
 import { Users, Check, X, Clock } from 'lucide-react';
 import { getTerritorioString } from '../../../shared/utils/userUtils';
+import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 
 /**
  * Formatea una fecha en formato "HH:mm DD/MM/YY"
@@ -90,57 +91,65 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                             className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
                         >
                             <div className="flex-1">
-                                <p className="font-semibold text-gray-900 dark:text-white uppercase text-lg">
-                                    {solicitud.nombres.primero} {solicitud.apellidos.primero}
-                                </p>
+                                {/* FILA SUPERIOR: Avatar y Nombre */}
+                                <div className="flex items-center gap-3 mb-2">
+                                    <img 
+                                        src={getUserAvatar(solicitud)} 
+                                        alt={`${solicitud.nombres.primero} ${solicitud.apellidos.primero}`}
+                                        className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-600 shadow-sm shrink-0"
+                                        onError={handleImageError}
+                                    />
+                                    <p className="font-semibold text-gray-900 dark:text-white uppercase text-lg">
+                                        {solicitud.nombres.primero} {solicitud.apellidos.primero}
+                                    </p>
+                                </div>
                                 
+                                {/* RESTO DE INFORMACIÓN DEBAJO */}
                                 <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1.5 font-medium">
                                     <Clock size={12} className="text-amber-500" />
                                     {formatFechaSolicitud(solicitud.fundacion?.fechaSolicitud || solicitud.fundacion?.fechaIngreso || solicitud.createdAt)}
                                 </p>
 
                                 <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">
-                                    {/* Ternario de la funcion Solicitud */}
                                     Solicita: {f.nivel === 'afiliado' ? textoAfiliado : textoNormal}
-                                    {/* Ternario de la funcion Solicitud */}
                                 </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50 mr-4">
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(solicitud.fundacion.cargo) ? 'Dirección General' : 'N/A')}
-                                </p>
-                                {solicitud.fundacion.subArea && (
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50 mr-4">
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Sub-Área:</span> {solicitud.fundacion.subArea}
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(solicitud.fundacion.cargo) ? 'Dirección General' : 'N/A')}
                                     </p>
-                                )}
-                                {solicitud.fundacion.programa && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Proyecto:</span> {solicitud.fundacion.programa}
-                                    </p>
-                                )}
-                                
-                                {solicitud.fundacion.territorio?.pais && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">País:</span> {solicitud.fundacion.territorio.pais}
-                                    </p>
-                                )}
-                                {solicitud.fundacion.territorio?.departamento && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Departamento:</span> {solicitud.fundacion.territorio.departamento}
-                                    </p>
-                                )}
-                                {solicitud.fundacion?.nivel && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Nivel:</span> <span className="capitalize">{solicitud.fundacion.nivel}</span>
-                                    </p>
-                                )}
-                                {getTerritorioString(solicitud) && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Territorio:</span> {getTerritorioString(solicitud)}
-                                    </p>
-                                )}
+                                    {solicitud.fundacion.subArea && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">Sub-Área:</span> {solicitud.fundacion.subArea}
+                                        </p>
+                                    )}
+                                    {solicitud.fundacion.programa && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">Proyecto:</span> {solicitud.fundacion.programa}
+                                        </p>
+                                    )}
+                                    {solicitud.fundacion.territorio?.pais && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">País:</span> {solicitud.fundacion.territorio.pais}
+                                        </p>
+                                    )}
+                                    {solicitud.fundacion.territorio?.departamento && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">Departamento:</span> {solicitud.fundacion.territorio.departamento}
+                                        </p>
+                                    )}
+                                    {solicitud.fundacion?.nivel && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">Nivel:</span> <span className="capitalize">{solicitud.fundacion.nivel}</span>
+                                        </p>
+                                    )}
+                                    {getTerritorioString(solicitud) && (
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate pr-2">
+                                            <span className="font-semibold text-gray-700 dark:text-gray-300">Territorio:</span> {getTerritorioString(solicitud)}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => onGestionarSolicitud(solicitud._id, 'rechazar')}
