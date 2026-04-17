@@ -299,7 +299,7 @@ export default function FormularioHojaDeVida() {
 
       const response = await userService.saveHojaDeVida(dataToSave);
       if (response?.success && response?.data) updateUser(response.data);
-      try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
+      // 🔧 MANTENER BACKUP: Ya no borramos el localStorage para que sirva de respaldo permanente
       if (!silent) toast.success('Información guardada correctamente');
       return true;
     } catch (error) {

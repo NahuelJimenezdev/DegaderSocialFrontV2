@@ -139,9 +139,9 @@ export default function FormularioEntrevista() {
       const response = await userService.saveInterview(respuestas);
       if (response.success) {
         if (response.data) updateUser(response.data);
-        try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
+        // 🔧 MANTENER BACKUP: No borramos localmente por seguridad
         toast.success('Entrevista guardada exitosamente');
-        navigate('/fundacion');
+        // navigate('/fundacion'); // No navegamos para que el usuario vea que sus datos siguen ahí
       }
     } catch (error) {
       console.error(error);

@@ -96,7 +96,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
                                     <img 
                                         src={getUserAvatar(solicitud)} 
                                         alt={`${solicitud.nombres.primero} ${solicitud.apellidos.primero}`}
-                                        className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-600 shadow-sm shrink-0"
+                                        className="w-10 h-10 rounded object-cover border border-gray-200 dark:border-gray-600 shadow-sm shrink-0"
                                         onError={handleImageError}
                                     />
                                     <p className="font-semibold text-gray-900 dark:text-white uppercase text-lg">

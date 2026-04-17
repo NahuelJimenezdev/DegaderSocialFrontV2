@@ -285,10 +285,9 @@ const FormularioFHSYL = () => {
         if (response.data) {
           updateUser(response.data);
         }
-        // 🔧 FIX: Limpiar localStorage — guardado exitoso confirmado por backend
-        try { localStorage.removeItem(LOCALSTORAGE_KEY); } catch (e) { /* noop */ }
+        // 🔧 MANTENER BACKUP: Permanente como solicitado
         toast.success('Documentación guardada correctamente');
-        setTimeout(() => navigate('/fundacion'), 2000);
+        // setTimeout(() => navigate('/fundacion'), 2000); 
       }
     } catch (err) {
       console.error(err);
