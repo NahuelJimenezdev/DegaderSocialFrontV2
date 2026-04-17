@@ -376,7 +376,7 @@ const CommentSection = ({ comments = [], postId, onAddComment, currentUser, isMo
 
             {/* Mobile: Fixed Bottom Input */}
             {isMobileFormat && (
-                <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-black p-3 pb-6 safe-area-bottom w-full shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+                <div className="fixed bottom-0 left-0 right-0 z-[1001] border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-black p-3 pb-6 safe-area-bottom w-full shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
                     {/* Quick Reactions Bar - Optional Extra */}
                     <div className="flex justify-between px-2 mb-3 overflow-x-auto no-scrollbar gap-4">
                         {['❤️', '🙌', '🔥', '👏', '😢', '😍', '😮', '😂'].map(emoji => (

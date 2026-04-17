@@ -249,7 +249,7 @@ const BirthdayPostCard = ({
     };
 
     const MobileCommentModal = () => (
-        <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col animate-in slide-in-from-bottom-full duration-300">
+        <div className="fixed inset-0 z-[1000] bg-white dark:bg-black flex flex-col animate-in slide-in-from-bottom-full duration-300">
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center gap-4">
                     <button onClick={handleCloseModal} className="text-gray-900 dark:text-white">
