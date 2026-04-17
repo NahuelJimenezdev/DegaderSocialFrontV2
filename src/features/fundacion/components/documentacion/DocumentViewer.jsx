@@ -589,7 +589,7 @@ export default function DocumentViewer() {
   return (
     <div className="max-w-5xl mx-auto px-4 pt-16 pb-8 md:py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <button onClick={() => navigate('/fundacion')} className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-bold transition-colors">
+        <button onClick={() => navigate(`/fundacion/admin/usuario/${targetUser._id}/documentacion`)} className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-bold transition-colors">
           <ChevronLeft size={20} />
           Volver a Fundación
         </button>
