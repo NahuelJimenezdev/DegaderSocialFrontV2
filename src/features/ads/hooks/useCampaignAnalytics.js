@@ -43,10 +43,10 @@ export const useCampaignAnalytics = (campaignId, dateRange) => {
     };
 
     // Calculate metrics
-    const metrics = stats?.metrics || {
-        totalImpressions: campaign?.metricas?.impresiones || 0,
-        totalClicks: campaign?.metricas?.clicks || 0,
-        ctr: campaign?.metricas?.ctr || 0,
+    const metrics = {
+        totalImpressions: stats?.metricas?.impresiones || 0,
+        totalClicks: stats?.metricas?.clicks || 0,
+        ctr: stats?.metricas?.ctr || 0,
         creditsSpent: campaign?.creditosGastados || 0
     };
 
