@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.95.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.94.3...v1.95.0) (2026-04-20)
+
+
+### Features
+
+* **ads:** Plataforma Publicitaria Evolucionada ([0ca4035](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/0ca40359fbd8054a5fa4f9cbafdf4394beb8a2e4))
+* blindaje de persistencia local y mejoras en UI de formularios de fundacion ([28ff54b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/28ff54b510a776d2a570d6c9dd87287b33286eab))
+* mejoras en el flujo de navegacion administrativa y visor de documentos ([63c5e93](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/63c5e93cc64a8e655422955750131c0510d8693a))
+
+
+### Bug Fixes
+
+* corregida superposicion de capas (z-index) en comentarios y alertas ([a35918a](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a35918ac1353e54731764ecac37ba8ed376b5d8f))
+
 ### [1.94.3](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.94.2...v1.94.3) (2026-04-17)
 
 ### [1.94.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.94.1...v1.94.2) (2026-04-16)
