@@ -17,10 +17,13 @@ const COLORS = {
 /**
  * Componente para mostrar gráfica de tendencias en el tiempo
  */
-const PerformanceCharts = ({ trendsData }) => {
+const PerformanceCharts = ({ trendsData, isGratuito = false }) => {
     if (!trendsData || trendsData.length === 0) {
         return null;
     }
+
+    const impressionColor = isGratuito ? '#10b981' : COLORS.primary;
+    const clickColor = isGratuito ? '#f59e0b' : COLORS.success;
 
     return (
         <div style={{
@@ -29,7 +32,7 @@ const PerformanceCharts = ({ trendsData }) => {
             borderRadius: '12px',
             marginBottom: '2rem'
         }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem', color: isGratuito ? '#10b981' : 'var(--text-primary)' }}>
                 Tendencias en el Tiempo
             </h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -53,18 +56,18 @@ const PerformanceCharts = ({ trendsData }) => {
                     <Line
                         type="monotone"
                         dataKey="impressions"
-                        stroke={COLORS.primary}
-                        strokeWidth={2}
+                        stroke={impressionColor}
+                        strokeWidth={isGratuito ? 3 : 2}
                         name="Impresiones"
-                        dot={{ fill: COLORS.primary }}
+                        dot={{ fill: impressionColor }}
                     />
                     <Line
                         type="monotone"
                         dataKey="clicks"
-                        stroke={COLORS.success}
+                        stroke={clickColor}
                         strokeWidth={2}
                         name="Clicks"
-                        dot={{ fill: COLORS.success }}
+                        dot={{ fill: clickColor }}
                     />
                 </LineChart>
             </ResponsiveContainer>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Globe } from 'lucide-react';
+import { ArrowLeft, Calendar, Globe, ShieldCheck, HeartHandshake } from 'lucide-react';
 import { AlertDialog } from '../../shared/components/AlertDialog';
 import { useCampaignAnalytics } from './hooks/useCampaignAnalytics';
 import MetricsOverview from './components/MetricsOverview';
@@ -115,15 +115,32 @@ export default function CampaignAnalyticsPage() {
           Volver
         </button>
 
+        {/* Banner Patrocinio */}
+        {campaign.isGratuito && (
+          <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+             <ShieldCheck size={28} color="#10b981" style={{marginTop: '4px'}}/>
+             <div>
+                <h3 style={{color: '#10b981', fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px'}}>
+                  <HeartHandshake size={18}/>
+                  Campaña Institucional (Patrocinio Oficial)
+                </h3>
+                <p style={{color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px'}}>
+                  Aviso: Esta campaña no descuenta DegaCoins del balance. El tráfico servido ha generado un ahorro orgánico (Virtual Value) equivalente a <b>{(metrics?.impresiones || 0) * 1}💎</b>.
+                </p>
+             </div>
+          </div>
+        )}
+
         <h1 style={{
           fontSize: '2rem',
           fontWeight: 'bold',
-          marginBottom: '0.5rem'
+          marginBottom: '0.5rem',
+          color: campaign.isGratuito ? '#10b981' : 'var(--text-primary)'
         }}>
-          Estadísticas Detalladas
+          Estadísticas de Rendimiento {campaign.isGratuito && <ShieldCheck size={24} style={{display:'inline', verticalAlign: '-10%'}}/>}
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-          {campaign.nombreCliente}
+          Identidad: <span style={{fontWeight: 'bold'}}>{campaign.nombreCliente}</span>
         </p>
       </div>
 
@@ -179,7 +196,7 @@ export default function CampaignAnalyticsPage() {
       <PerformanceAnalysis metrics={metrics} campaign={campaign} />
 
       {/* Performance Charts */}
-      <PerformanceCharts trendsData={trendsData} />
+      <PerformanceCharts trendsData={trendsData} isGratuito={campaign.isGratuito} />
 
       {/* Audience Insights */}
       <AudienceInsights deviceData={deviceData} browserData={browserData} />
