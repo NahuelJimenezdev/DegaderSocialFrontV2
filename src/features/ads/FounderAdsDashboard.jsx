@@ -198,7 +198,7 @@ const FounderAdsDashboard = () => {
             <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#9ca3af' }}>Global</span>
           </div>
           <p style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-primary)', position: 'relative', zIndex: 1 }}>
-            $4.20 <span style={{fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: '500'}}>/ mil</span>
+            {revenue?.cpmPromedio ? `${revenue.cpmPromedio.toFixed(2)}💎` : '0💎'} <span style={{fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: '500'}}>/ mil</span>
           </p>
           <TinyChart data={trendDataNeutral} color="#6366f1" />
         </div>
