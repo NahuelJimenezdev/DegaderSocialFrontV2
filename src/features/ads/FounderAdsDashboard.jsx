@@ -10,6 +10,7 @@ import adService from '../../api/adService';
 import CampaignReviewModal from './CampaignReviewModal';
 import CreateCampaignModal from './CreateCampaignModal';
 import ProgressiveImage from '../../shared/components/ProgressiveImage';
+import IOSConfirmationModal from '../../shared/components/IOSConfirmationModal';
 
 // Datos falsos para generar las "Líneas de tendencia" visuales en las tarjetas
 const trendDataSuccess = [{v: 10},{v: 25},{v: 15},{v: 30},{v: 28},{v: 45},{v: 60}];
@@ -27,6 +28,7 @@ const FounderAdsDashboard = () => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [deleteAlert, setDeleteAlert] = useState({ isOpen: false, adId: null, adName: '' });
 
   useEffect(() => {
     fetchData();
@@ -62,12 +64,18 @@ const FounderAdsDashboard = () => {
     }
   };
 
-  const handleDeleteCampaign = async (campaignId) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar esta campaña? Esta acción es irreversible.')) return;
-    
+  const handleDeleteCampaign = (campaign) => {
+    setDeleteAlert({
+      isOpen: true,
+      adId: campaign._id,
+      adName: campaign.nombreCliente
+    });
+  };
+
+  const confirmDeletion = async () => {
     try {
-      await adService.deleteCampaign(campaignId);
-      setCampaigns(prev => prev.filter(c => c._id !== campaignId));
+      await adService.deleteCampaign(deleteAlert.adId);
+      setCampaigns(prev => prev.filter(c => c._id !== deleteAlert.adId));
       fetchData(); // Recargar métricas globales
     } catch (error) {
       logger.error('Error al eliminar campaña:', error);
@@ -426,7 +434,7 @@ const FounderAdsDashboard = () => {
                           </button>
 
                           <button
-                            onClick={(e) => { e.stopPropagation(); handleDeleteCampaign(campaign._id); }}
+                            onClick={(e) => { e.stopPropagation(); handleDeleteCampaign(campaign); }}
                             style={{ padding: '8px', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444', transition: 'all 0.2s' }}
                             onMouseEnter={(e)=> e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
                             onMouseLeave={(e)=> e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
@@ -461,6 +469,18 @@ const FounderAdsDashboard = () => {
         onSuccess={fetchData}
         currentBalance={9999999}
         isFounderView={true}
+      />
+
+      {/* Alerta de Confirmación Premium */}
+      <IOSConfirmationModal 
+        isOpen={deleteAlert.isOpen}
+        title="Eliminar Campaña"
+        message={`¿Estás seguro de que deseas eliminar definitivamente la campaña "${deleteAlert.adName}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar Campaña"
+        cancelText="Cancelar"
+        onConfirm={confirmDeletion}
+        onClose={() => setDeleteAlert({ ...deleteAlert, isOpen: false })}
+        variant="danger"
       />
     </div>
   );
