@@ -3,7 +3,7 @@ import { logger } from '../../shared/utils/logger';
 import { useNavigate } from 'react-router-dom';
 import { 
   BarChart3, DollarSign, TrendingUp, Eye, Filter, Search, 
-  CheckCircle, XCircle, Settings, ShieldCheck, ShieldAlert, PlusCircle, Zap
+  CheckCircle, XCircle, Settings, ShieldCheck, ShieldAlert, PlusCircle, Zap, Trash2
 } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 import adService from '../../api/adService';
@@ -53,11 +53,24 @@ const FounderAdsDashboard = () => {
   const handleCampaignClick = (campaign) => setSelectedCampaign(campaign);
   const handleCloseModal = () => setSelectedCampaign(null);
 
-  const handleApproveCampaign = (campaignId, actionType = 'aprobar') => {
-    if(actionType === 'aprobar'){
-      setCampaigns(prev => prev.map(c => c._id === campaignId ? { ...c, estado: 'activo' } : c));
-    } else {
-      setCampaigns(prev => prev.map(c => c._id === campaignId ? { ...c, estado: 'rechazado' } : c));
+  const handleApproveCampaign = async (campaignId, actionType = 'aprobar') => {
+    try {
+      await adService.approveCampaign(campaignId, { accion: actionType });
+      fetchData(); // Recargar datos reales
+    } catch (error) {
+      logger.error('Error al procesar campaña:', error);
+    }
+  };
+
+  const handleDeleteCampaign = async (campaignId) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar esta campaña? Esta acción es irreversible.')) return;
+    
+    try {
+      await adService.deleteCampaign(campaignId);
+      setCampaigns(prev => prev.filter(c => c._id !== campaignId));
+      fetchData(); // Recargar métricas globales
+    } catch (error) {
+      logger.error('Error al eliminar campaña:', error);
     }
   };
 
@@ -410,6 +423,16 @@ const FounderAdsDashboard = () => {
                             title="Ver Analytics Completos"
                           >
                             <BarChart3 size={18} />
+                          </button>
+
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleDeleteCampaign(campaign._id); }}
+                            style={{ padding: '8px', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '8px', cursor: 'pointer', color: '#ef4444', transition: 'all 0.2s' }}
+                            onMouseEnter={(e)=> e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
+                            onMouseLeave={(e)=> e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
+                            title="Eliminar Campaña Definitivamente"
+                          >
+                            <Trash2 size={18} />
                           </button>
                         </div>
                       </td>
