@@ -128,7 +128,7 @@ export function MeetingCreatorModal({ meeting: initialMeeting, isOpen, onClose, 
                     <textarea
                       value={editData.description}
                       onChange={e => setEditData(p => ({ ...p, description: e.target.value }))}
-                      rows={3}
+                      rows={3} maxLength={2000}
                       className="w-full mt-1 border dark:border-gray-600 rounded-lg p-2.5 bg-white dark:bg-[#0a0e27] dark:text-white text-sm resize-none outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>

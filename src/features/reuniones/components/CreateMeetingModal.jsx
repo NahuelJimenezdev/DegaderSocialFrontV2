@@ -216,7 +216,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descripción (Opcional)</label>
             <textarea name="description" rows="2" value={formData.description} onChange={handleChange}
-              placeholder="Agenda o propósito"
+              placeholder="Agenda o propósito" maxLength={2000}
               className="w-full border dark:border-gray-700 rounded-lg p-3 resize-none bg-white dark:bg-[#0a0e27] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
           </div>
 
