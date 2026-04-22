@@ -273,14 +273,24 @@ export const useGroupChat = (groupData, user, targetMessageId, onClearTargetMess
         }
     };
 
-    const handleDeleteMessage = async (messageId) => {
-        if (!window.confirm('¿Eliminar este mensaje?')) return;
-        try {
-            await groupService.deleteMessage(groupData._id, messageId);
-        } catch (err) {
-            logger.error('Error al eliminar mensaje:', err);
-            setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el mensaje' });
-        }
+    const handleDeleteMessage = (messageId) => {
+        setAlertConfig({
+            isOpen: true,
+            variant: 'warning',
+            title: 'Eliminar mensaje',
+            message: '¿Eliminar este mensaje?',
+            showCancelButton: true,
+            confirmText: 'Eliminar',
+            cancelText: 'Cancelar',
+            onConfirm: async () => {
+                try {
+                    await groupService.deleteMessage(groupData._id, messageId);
+                } catch (err) {
+                    logger.error('Error al eliminar mensaje:', err);
+                    setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el mensaje' });
+                }
+            }
+        });
     };
 
     const handleReaction = async (messageId, emoji) => {

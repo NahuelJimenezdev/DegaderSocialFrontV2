@@ -1,4 +1,5 @@
 import { AlertDialog } from '../../../shared/components/AlertDialog';
+import IosModal from '../../../shared/components/IosModal';
 import { useGroupSettings } from '../hooks/useGroupSettings';
 import GroupGeneralSettings from './GroupGeneralSettings';
 import GroupPermissionsPanel from './GroupPermissionsPanel';
@@ -28,7 +29,14 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
     cancelEdit,
     showTransferModal,
     setShowTransferModal,
-    handleTransferSuccess
+    handleTransferSuccess,
+    confirmDialog,
+    closeConfirmDialog,
+    showDeleteGroupDialog,
+    setShowDeleteGroupDialog,
+    deleteGroupName,
+    setDeleteGroupName,
+    confirmDeleteGroup
   } = useGroupSettings(groupData, refetch, user, isOwner);
 
   // No bloqueamos acceso global, pero renderizamos condicionalmente las secciones
@@ -86,6 +94,56 @@ const GroupSettings = ({ groupData, refetch, user, userRole, isAdmin, isOwner })
         variant={alertConfig.variant}
         message={alertConfig.message}
       />
+
+      <AlertDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={closeConfirmDialog}
+        variant={confirmDialog.variant}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        showCancelButton={true}
+        confirmText={confirmDialog.confirmText}
+        cancelText={confirmDialog.cancelText}
+        onConfirm={confirmDialog.onConfirm}
+      />
+
+      {/* Delete Group Prompt Modal */}
+      <IosModal
+        isOpen={showDeleteGroupDialog}
+        onClose={() => setShowDeleteGroupDialog(false)}
+        title="Eliminar Grupo"
+      >
+        <div className="space-y-4">
+          <p className="text-sm font-medium text-red-600 dark:text-red-400 mb-2">
+            ⚠️ Esta acción es irreversible.
+          </p>
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            Para confirmar, escribe el nombre del grupo: <strong>{groupData.nombre}</strong>
+          </p>
+          <input
+            type="text"
+            className="w-full mt-2 p-3 border rounded-lg focus:ring-2 focus:ring-red-500 bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+            placeholder={groupData.nombre}
+            value={deleteGroupName}
+            onChange={(e) => setDeleteGroupName(e.target.value)}
+          />
+          <div className="flex justify-end gap-2 mt-6">
+            <button
+              onClick={() => setShowDeleteGroupDialog(false)}
+              className="px-4 py-2 text-gray-600 bg-gray-100 dark:bg-gray-800 rounded-lg"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={confirmDeleteGroup}
+              disabled={deleteGroupName !== groupData.nombre || loading}
+              className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg disabled:opacity-50"
+            >
+              {loading ? 'Eliminando...' : 'Eliminar grupo'}
+            </button>
+          </div>
+        </div>
+      </IosModal>
 
       {/* Transfer Ownership Modal */}
       {showTransferModal && (

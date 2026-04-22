@@ -24,6 +24,15 @@ export const useGroupSettings = (groupData, refetch, user, isOwner) => {
         variant: 'info',
         message: ''
     });
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        variant: 'warning',
+        title: '',
+        message: '',
+        confirmText: 'Aceptar',
+        cancelText: 'Cancelar',
+        onConfirm: null
+    });
 
     const [formData, setFormData] = useState({
         nombre: groupData?.nombre || '',
@@ -78,98 +87,124 @@ export const useGroupSettings = (groupData, refetch, user, isOwner) => {
     };
 
     // Delete avatar
-    const handleDeleteAvatar = async () => {
-        if (window.confirm('¿Estás seguro de que quieres eliminar la imagen del grupo?')) {
-            try {
-                setLoading(true);
-                await groupService.deleteGroupAvatar(groupData._id);
-                await refetch();
-                setAlertConfig({ isOpen: true, variant: 'success', message: 'Imagen eliminada exitosamente' });
-            } catch (err) {
-                logger.error('Error deleting avatar:', err);
-                setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar la imagen' });
-            } finally {
-                setLoading(false);
+    const handleDeleteAvatar = () => {
+        setConfirmDialog({
+            isOpen: true,
+            variant: 'warning',
+            title: 'Eliminar imagen',
+            message: '¿Estás seguro de que quieres eliminar la imagen del grupo?',
+            confirmText: 'Eliminar',
+            cancelText: 'Cancelar',
+            onConfirm: async () => {
+                try {
+                    setLoading(true);
+                    await groupService.deleteGroupAvatar(groupData._id);
+                    await refetch();
+                    setAlertConfig({ isOpen: true, variant: 'success', message: 'Imagen eliminada exitosamente' });
+                } catch (err) {
+                    logger.error('Error deleting avatar:', err);
+                    setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar la imagen' });
+                } finally {
+                    setLoading(false);
+                }
             }
-        }
+        });
     };
 
     // Delete group
-    const handleDeleteGroup = async () => {
+    const [deleteGroupName, setDeleteGroupName] = useState('');
+    const [showDeleteGroupDialog, setShowDeleteGroupDialog] = useState(false);
+
+    const handleDeleteGroup = () => {
         if (!isOwner) {
             setAlertConfig({ isOpen: true, variant: 'warning', message: 'Solo el propietario puede eliminar el grupo' });
             return;
         }
+        setDeleteGroupName('');
+        setShowDeleteGroupDialog(true);
+    };
 
-        const confirmation = window.prompt(
-            `Esta acción es irreversible. Para confirmar, escribe el nombre del grupo: "${groupData.nombre}"`
-        );
-
-        if (confirmation === groupData.nombre) {
-            try {
-                setLoading(true);
-                await groupService.deleteGroup(groupData._id);
-                setAlertConfig({ isOpen: true, variant: 'success', message: 'Grupo eliminado exitosamente' });
-                navigate('/Mis_grupos');
-            } catch (err) {
-                logger.error('Error deleting group:', err);
-
-                // Si el error es 409 (Conflicto - tiene miembros), ofrecer opciones
-                if (err.response?.status === 409) {
-                    const shouldTransfer = window.confirm(
-                        `No se puede eliminar el grupo porque tiene otros miembros.\n\n` +
-                        `¿Deseas transferir la administración a otro miembro primero?\n\n` +
-                        `- Aceptar: Transferir administración\n` +
-                        `- Cancelar: Eliminar definitivamente (y expulsar a todos)`
-                    );
-
-                    if (shouldTransfer) {
-                        setShowTransferModal(true);
-                    } else {
-                        // Intentar eliminación forzada
-                        if (window.confirm('¿Estás SEGURO de eliminar definitivamente? Se eliminará todo el contenido y los miembros perderán acceso.')) {
-                            try {
-                                setLoading(true);
-                                await groupService.deleteGroup(groupData._id, true); // force=true logic needs backend support or query param
-                                setAlertConfig({ isOpen: true, variant: 'success', message: 'Grupo eliminado exitosamente' });
-                                navigate('/Mis_grupos');
-                            } catch (forceErr) {
-                                logger.error('Error preventing force delete:', forceErr);
-                                setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el grupo forzosamente' });
-                            }
-                        }
-                    }
-                } else {
-                    setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el grupo' });
-                }
-            } finally {
-                setLoading(false);
-            }
-        } else if (confirmation !== null) {
+    const confirmDeleteGroup = async () => {
+        if (deleteGroupName !== groupData.nombre) {
             setAlertConfig({ isOpen: true, variant: 'warning', message: 'El nombre no coincide. Operación cancelada.' });
+            return;
+        }
+        setShowDeleteGroupDialog(false);
+        try {
+            setLoading(true);
+            await groupService.deleteGroup(groupData._id);
+            setAlertConfig({ isOpen: true, variant: 'success', message: 'Grupo eliminado exitosamente' });
+            navigate('/Mis_grupos');
+        } catch (err) {
+            logger.error('Error deleting group:', err);
+            if (err.response?.status === 409) {
+                setConfirmDialog({
+                    isOpen: true,
+                    variant: 'warning',
+                    title: 'Grupo con miembros',
+                    message: 'No se puede eliminar el grupo porque tiene otros miembros.\n\n¿Deseas transferir la administración a otro miembro primero?',
+                    confirmText: 'Transferir',
+                    cancelText: 'Eliminar definitivamente',
+                    onConfirm: () => setShowTransferModal(true),
+                    onCancel: () => {
+                        setConfirmDialog({
+                            isOpen: true,
+                            variant: 'error',
+                            title: 'Eliminar definitivamente',
+                            message: '¿Estás SEGURO? Se eliminará todo el contenido y los miembros perderán acceso.',
+                            confirmText: 'Sí, eliminar todo',
+                            cancelText: 'Cancelar',
+                            onConfirm: async () => {
+                                try {
+                                    setLoading(true);
+                                    await groupService.deleteGroup(groupData._id, true);
+                                    setAlertConfig({ isOpen: true, variant: 'success', message: 'Grupo eliminado exitosamente' });
+                                    navigate('/Mis_grupos');
+                                } catch (forceErr) {
+                                    logger.error('Error force delete:', forceErr);
+                                    setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el grupo forzosamente' });
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al eliminar el grupo' });
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
     // Leave group
-    const handleLeaveGroup = async () => {
+    const handleLeaveGroup = () => {
         if (isOwner) {
-            // Si es propietario, mostrar modal de transferencia en lugar de alerta de bloqueo
             setShowTransferModal(true);
             return;
         }
 
-        if (window.confirm('¿Estás seguro de que quieres abandonar este grupo?')) {
-            try {
-                setLoading(true);
-                await groupService.leaveGroup(groupData._id);
-                navigate('/Mis_grupos');
-            } catch (err) {
-                logger.error('Error leaving group:', err);
-                setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al abandonar el grupo' });
-            } finally {
-                setLoading(false);
+        setConfirmDialog({
+            isOpen: true,
+            variant: 'warning',
+            title: 'Abandonar grupo',
+            message: '¿Estás seguro de que quieres abandonar este grupo?',
+            confirmText: 'Abandonar',
+            cancelText: 'Cancelar',
+            onConfirm: async () => {
+                try {
+                    setLoading(true);
+                    await groupService.leaveGroup(groupData._id);
+                    navigate('/Mis_grupos');
+                } catch (err) {
+                    logger.error('Error leaving group:', err);
+                    setAlertConfig({ isOpen: true, variant: 'error', message: 'Error al abandonar el grupo' });
+                } finally {
+                    setLoading(false);
+                }
             }
-        }
+        });
     };
 
     // Cancel edit mode
@@ -192,6 +227,9 @@ export const useGroupSettings = (groupData, refetch, user, isOwner) => {
         // Por ahora, solo cerramos el modal y refrescamos. El usuario puede volver a dar click en "Abandonar" si quiere salir.
     };
 
+    // Helper para cerrar confirmDialog
+    const closeConfirmDialog = () => setConfirmDialog(prev => ({ ...prev, isOpen: false }));
+
     return {
         // State
         loading,
@@ -202,12 +240,17 @@ export const useGroupSettings = (groupData, refetch, user, isOwner) => {
         alertConfig,
         showTransferModal,
         formData,
+        confirmDialog,
+        showDeleteGroupDialog,
+        deleteGroupName,
 
         // Setters
         setEditMode,
         setImageError,
         setAlertConfig,
         setShowTransferModal,
+        setDeleteGroupName,
+        closeConfirmDialog,
 
         // Handlers
         handleChange,
@@ -215,9 +258,10 @@ export const useGroupSettings = (groupData, refetch, user, isOwner) => {
         handleSubmit,
         handleDeleteAvatar,
         handleDeleteGroup,
-        handleDeleteGroup,
+        confirmDeleteGroup,
         handleLeaveGroup,
         handleTransferSuccess,
-        cancelEdit
+        cancelEdit,
+        setShowDeleteGroupDialog
     };
 };

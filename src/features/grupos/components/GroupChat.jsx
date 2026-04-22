@@ -106,7 +106,12 @@ const GroupChat = ({ groupData, refetch, user, userRole, isAdmin, isOwner, targe
         isOpen={alertConfig.isOpen}
         onClose={() => setAlertConfig({ ...alertConfig, isOpen: false })}
         variant={alertConfig.variant}
+        title={alertConfig.title}
         message={alertConfig.message}
+        showCancelButton={alertConfig.showCancelButton}
+        confirmText={alertConfig.confirmText}
+        cancelText={alertConfig.cancelText}
+        onConfirm={alertConfig.onConfirm}
       />
     </div>
   );
