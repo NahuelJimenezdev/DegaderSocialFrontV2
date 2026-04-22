@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.96.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.95.1...v1.96.0) (2026-04-22)
+
+
+### Features
+
+* **ads:** Boton de eliminacion Definitiva en Dashboard Founder ([f1317b6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/f1317b6666001834f794a19c88a02f12a7f88af6))
+* **ads:** Implementacion de IOSConfirmationModal premium para eliminacion ([5e447c9](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/5e447c90074fce009106552f03e60ebdf63ae3f1))
+* **meetings:** ampliar limite limite caracteres descripcion a 2000 ([a77e175](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/a77e1759590b43f3b99570a9c00c53a265862fe8))
+* soporte para notificaciones actualizables (estilo whatsapp) ([4ab27c7](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4ab27c7cf26ec3ddf0e51c574e7859ab149055e8))
+
+
+### Bug Fixes
+
+* **ads:** Des-harcodear metricas de CPM en Analytics Maestro ([81a9d93](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/81a9d9384e6f4326a9c994905c9bd094a3df62e6))
+* **ads:** Mapeo de metricas solucionado en el frontend Dashboard ([835e94b](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/835e94baa52f58f6b2805ab15a19c3a6e9b5216d))
+* **fundacion:** eliminar persistencia de datos huerfanos al cambiar jerarquias ([6bf20a0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6bf20a0521894dc2d485dfd2468cda335c1542a8))
+
 ### [1.95.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.95.0...v1.95.1) (2026-04-20)
 
 ## [1.95.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.94.3...v1.95.0) (2026-04-20)
