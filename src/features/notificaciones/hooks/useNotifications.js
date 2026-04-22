@@ -141,7 +141,13 @@ export const useNotifications = (user) => {
 
 
             setNotifications(prev => {
-                if (prev.some(existingNoti => existingNoti._id === noti._id)) return prev;
+                const existingIndex = prev.findIndex(existingNoti => existingNoti._id === noti._id);
+                if (existingIndex !== -1) {
+                    // WhatsApp-Style: actualizar notificación existente y mover al tope
+                    const updated = [...prev];
+                    updated.splice(existingIndex, 1);
+                    return [{ ...noti, leido: false }, ...updated];
+                }
                 return [noti, ...prev];
             });
         };
