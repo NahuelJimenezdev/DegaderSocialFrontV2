@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.97.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.96.0...v1.97.0) (2026-04-22)
+
+
+### Features
+
+* **grupos:** modernizar alertas de grupo a estilo iOS ([cf23f12](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cf23f12139545bb49a2c1d81f8aae7a1e4dade13))
+
 ## [1.96.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.95.1...v1.96.0) (2026-04-22)
 
 
