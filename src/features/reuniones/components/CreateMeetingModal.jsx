@@ -336,7 +336,7 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
               Cancelar
             </button>
             <button type="submit" disabled={isSubmitting}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-yellow-500 text-black dark:text-gray-900 px-6 py-3 rounded-lg shadow-lg text-lg font-semibold hover:from-blue-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600 px-6 py-3 rounded-lg shadow-lg text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               <Send className="w-5" />
               {isSubmitting ? 'Creando...' : 'Programar Reunión'}
             </button>
