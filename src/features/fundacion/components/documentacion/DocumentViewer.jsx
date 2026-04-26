@@ -66,25 +66,87 @@ export default function DocumentViewer() {
 
   const renderContent = () => {
     switch (type) {
-      case 'Aplicativo':
       case 'Solicitud':
-        const appData = targetUser.fundacion?.documentacionFHSYL || {};
+        const solData = targetUser.fundacion || {};
+        const territorio = solData.territorio || {};
         return (
           <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
             <div className="text-center mb-10">
               <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 dark:text-blue-400 mb-1">
-                APLICATIVO REPUBLICA ARGENTINA
+                SOLICITUD DE INGRESO
               </h1>
-              <h2 className="text-xl font-medium text-gray-700 dark:text-gray-300">
-                Fundación Humanitaria Sol y Luna
-              </h2>
+              <p className="text-sm text-gray-500 uppercase font-bold tracking-widest">Información de Estructura Jerárquica</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 mb-8 text-[15px]">
+              <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="font-bold text-xs text-blue-600 uppercase">Postulante:</span>
+                <span className="text-lg">
+                  {[targetUser.nombres?.primero, targetUser.nombres?.segundo, targetUser.apellidos?.primero, targetUser.apellidos?.segundo].filter(Boolean).join(' ')}
+                </span>
+              </div>
+              <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="font-bold text-xs text-blue-600 uppercase">Estado:</span>
+                <span className="capitalize">{solData.estadoAprobacion || 'Pendiente'}</span>
+              </div>
+              <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="font-bold text-xs text-blue-600 uppercase">Nivel Jerárquico:</span>
+                <span className="capitalize">{solData.nivel?.replace(/_/g, ' ') || '---'}</span>
+              </div>
+              <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="font-bold text-xs text-blue-600 uppercase">Cargo al que aspira:</span>
+                <span>{solData.cargo || '---'}</span>
+              </div>
+              <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                <span className="font-bold text-xs text-blue-600 uppercase">Área:</span>
+                <span>{solData.area || '---'}</span>
+              </div>
+              {solData.subArea && (
+                <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                  <span className="font-bold text-xs text-blue-600 uppercase">Sub-Área:</span>
+                  <span>{solData.subArea}</span>
+                </div>
+              )}
+              {solData.programa && (
+                <div className="flex flex-col border-b border-gray-100 dark:border-gray-700 pb-2">
+                  <span className="font-bold text-xs text-blue-600 uppercase">Programa:</span>
+                  <span>{solData.programa}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-8 p-6 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700">
+              <h3 className="font-bold text-blue-900 dark:text-blue-400 mb-4 text-sm uppercase tracking-wider border-b border-gray-200 dark:border-gray-600 pb-2">Jurisdicción Territorial</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div><span className="font-bold">Continente:</span> {territorio.continente || '---'}</div>
+                <div><span className="font-bold">País:</span> {territorio.pais || '---'}</div>
+                {territorio.region && <div><span className="font-bold">Región:</span> {territorio.region}</div>}
+                {territorio.departamento && <div><span className="font-bold">Departamento/Estado:</span> {territorio.departamento}</div>}
+                {territorio.municipio && <div><span className="font-bold">Municipio/Ciudad:</span> {territorio.municipio}</div>}
+                {territorio.barrio && <div><span className="font-bold">Localidad/Barrio:</span> {territorio.barrio}</div>}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'Aplicativo':
+        const appData = targetUser.fundacion?.documentacionFHSYL || {};
+        const userCountry = targetUser.fundacion?.territorio?.pais || targetUser.personal?.ubicacion?.pais || 'REPUBLICA ARGENTINA';
+        return (
+          <div id="document-preview" className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800">
+            <div className="text-center mb-10">
+              <h1 className="text-2xl font-bold uppercase tracking-tight text-blue-900 dark:text-blue-400 mb-1">
+                APLICATIVO {userCountry.toUpperCase()}
+              </h1>
             </div>
             
             {/* Informacion Basica */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 mb-8 text-[15px]">
               <div className="flex flex-col">
                 <span className="font-bold">Nombre:</span>
-                <span className="border-b border-gray-300 dark:border-gray-600 flex-1 min-w-[150px]">{targetUser.nombres?.primero} {targetUser.nombres?.segundo} {targetUser.apellidos?.primero} {targetUser.apellidos?.segundo}</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1 min-w-[150px]">
+                  {[targetUser.nombres?.primero, targetUser.nombres?.segundo, targetUser.apellidos?.primero, targetUser.apellidos?.segundo].filter(Boolean).join(' ')}
+                </span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Dirección:</span>
@@ -109,6 +171,14 @@ export default function DocumentViewer() {
               <div className="flex flex-col">
                 <span className="font-bold">Email:</span>
                 <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{targetUser.email || '---'}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold">Tipo de Documento:</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.tipoDocumento || '---'}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold">Número de Documento:</span>
+                <span className="border-b border-gray-300 dark:border-gray-600 flex-1">{appData.numeroDocumento || '---'}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold">Ocupación:</span>

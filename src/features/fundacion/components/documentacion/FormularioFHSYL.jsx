@@ -25,6 +25,8 @@ const FormularioFHSYL = () => {
   // Form State
   const [formData, setFormData] = useState({
     nombreCompleto: '',
+    tipoDocumento: '',
+    numeroDocumento: '',
     direccion: '',
     localidad: '', 
     barrio: '',
@@ -86,6 +88,8 @@ const FormularioFHSYL = () => {
           email: user.email || '',
           
           upz: docFHSYL.upz || '',
+          tipoDocumento: docFHSYL.tipoDocumento || '',
+          numeroDocumento: docFHSYL.numeroDocumento || user.personal?.documentoNumero || '',
           ocupacion: docFHSYL.ocupacion || user.fundacion?.entrevista?.respuestas?.profesion || '',
           estadoCivil: docFHSYL.estadoCivil || user.personal?.estadoCivil || '',
           nombreConyuge: docFHSYL.nombreConyuge || '',
@@ -208,6 +212,8 @@ const FormularioFHSYL = () => {
     // 🔍 VALIDACIÓN ESTRICTA: Todos los campos deben estar llenos
     const requiredFields = [
       { key: 'direccion', label: 'Dirección de Residencia' },
+      { key: 'tipoDocumento', label: 'Tipo de Documento' },
+      { key: 'numeroDocumento', label: 'Número de Documento' },
       { key: 'localidad', label: 'Localidad' },
       { key: 'barrio', label: 'Barrio' },
       { key: 'celular', label: 'Celular' },
@@ -252,6 +258,8 @@ const FormularioFHSYL = () => {
     try {
       const payload = {
         direccion: formData.direccion,
+        tipoDocumento: formData.tipoDocumento,
+        numeroDocumento: formData.numeroDocumento,
         localidad: formData.localidad,
         barrio: formData.barrio,
         celular: formData.celular,
@@ -298,11 +306,12 @@ const FormularioFHSYL = () => {
   };
 
   const exportToWord = () => {
+    const userCountry = user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'República Argentina';
     const content = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head>
         <meta charset='utf-8'>
-        <title>Aplicativo FHSYL</title>
+        <title>Aplicativo ${userCountry}</title>
         <style>
           body { font-family: 'Arial', sans-serif; padding: 20px; line-height: 1.5; }
           h1 { text-align: center; color: #1e3a8a; }
@@ -313,9 +322,10 @@ const FormularioFHSYL = () => {
         </style>
       </head>
       <body>
-        <h1>APLICATIVO REPUBLICA ARGENTINA<br>Fundación Humanitaria Sol y Luna</h1>
+        <h1>APLICATIVO ${userCountry.toUpperCase()}</h1>
         
         <div class="field"><span class="label">Nombre:</span> <span class="value">${formData.nombreCompleto}</span></div>
+        <div class="field"><span class="label">Documento:</span> <span class="value">${formData.tipoDocumento} ${formData.numeroDocumento}</span></div>
         <div class="field"><span class="label">Dirección:</span> <span class="value">${formData.direccion}</span></div>
         <div class="field"><span class="label">Localidad:</span> <span class="value">${formData.localidad}</span></div>
         <div class="field"><span class="label">Barrio:</span> <span class="value">${formData.barrio}</span> <span class="label">UPZ:</span> <span class="value">${formData.upz}</span></div>
@@ -427,14 +437,14 @@ const FormularioFHSYL = () => {
         <div className="bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md shrink-0">
-              <Heart size={32} className="text-white" />
+              <FileText size={32} className="text-white" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold leading-tight text-white">
-                Aplicativo República Argentina
+              <h1 className="text-2xl md:text-3xl font-bold leading-tight text-white uppercase tracking-tight">
+                Aplicativo {user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'República Argentina'}
               </h1>
               <p className="text-blue-50 font-medium">
-                Fundación Humanitaria Sol y Luna
+                Documentación Oficial de Ingreso
               </p>
             </div>
           </div>
@@ -467,8 +477,8 @@ const FormularioFHSYL = () => {
                 <input type="text" name="barrio" value={formData.barrio} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">UPZ</label>
-                <input type="text" name="upz" value={formData.upz} onChange={handleChange} className={inputClasses} />
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">UPZ / Localidad (Sector Urbano)</label>
+                <input type="text" name="upz" value={formData.upz} onChange={handleChange} className={inputClasses} placeholder="Ej: UPZ 45 - Kennedy (Ubicación Urbana)" />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Celular</label>
@@ -485,6 +495,14 @@ const FormularioFHSYL = () => {
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Estado Civil</label>
                 <input type="text" name="estadoCivil" value={formData.estadoCivil} onChange={handleChange} className={inputClasses} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Tipo de Documento (DNI/Cédula)</label>
+                <input type="text" name="tipoDocumento" value={formData.tipoDocumento} onChange={handleChange} className={inputClasses} placeholder="Ej: DNI, Cédula de Ciudadanía" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Número de Documento</label>
+                <input type="text" name="numeroDocumento" value={formData.numeroDocumento} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Nombre del Cónyugue</label>

@@ -130,8 +130,8 @@ export default function DocumentCards({ user, onNavigate }) {
     {
       id: 1,
       type: 'Aplicativo',
-      title: "Aplicativo República Argentina",
-      description: "Completa y actualiza tu documentación específica para la Fundación Humanitaria Internacional Sol y Luna en Argentina.",
+      title: `Aplicativo ${user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'República Argentina'}`,
+      description: `Completa y actualiza tu documentación específica para la Fundación en ${user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'tu país'}.`,
       buttonText: "Rellenar formulario",
       status: isFHSYLDone ? 'Completado' : 'Pendiente',
       icon: FileText,

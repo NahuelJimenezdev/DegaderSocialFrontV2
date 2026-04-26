@@ -45,6 +45,7 @@ export default function FormularioHojaDeVida() {
   const [formData, setFormData] = useState({
     // DATOS GENERALES
     nombre_completo: '',
+    tipo_documento: '',
     documento_num: '',
     lugar_expedicion: '',
     fecha_nacimiento: '',
@@ -142,6 +143,7 @@ export default function FormularioHojaDeVida() {
         departamento_estado_provincia: user.personal?.ubicacion?.departamento || user.personal?.ubicacion?.provincia || user.fundacion?.territorio?.region || user.personal?.ubicacion?.estado || '',
         municipio: user.personal?.ubicacion?.ciudad || user.personal?.ubicacion?.municipio || user.fundacion?.territorio?.zona || user.fundacion?.territorio?.municipio || '',
         documento_num: user.personal?.documentoNumero || user.personal?.documento || user.documento || '',
+        tipo_documento: user.fundacion?.documentacionFHSYL?.tipoDocumento || user.personal?.tipoDocumento || '',
         lugar_expedicion: user.personal?.lugarExpedicion || user.personal?.expedicion || '',
         estado_civil: user.fundacion?.documentacionFHSYL?.estadoCivil || user.personal?.estadoCivil || '',
         nombre_personales_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.nombre || '',
@@ -451,6 +453,10 @@ export default function FormularioHojaDeVida() {
         <div className="md:col-span-2 lg:col-span-3">
           <label className="label-premium">Nombre Completo</label>
           <input name="nombre_completo" value={formData.nombre_completo} onChange={handleChange} className="form-input-premium w-full" />
+        </div>
+        <div>
+          <label className="label-premium">Tipo de Documento</label>
+          <input name="tipo_documento" value={formData.tipo_documento} onChange={handleChange} className="form-input-premium w-full" placeholder="DNI / Cédula" />
         </div>
         <div>
           <label className="label-premium">Número de Documento</label>

@@ -70,9 +70,10 @@ export default function UserDocumentationView() {
           setDownloading(false);
           return; // downloadCV ya maneja el saveAs
         case 'fhsyl':
-          console.log('Generando Aplicativo Argentina...');
+          const fhsylCountry = targetUser.fundacion?.territorio?.pais || targetUser.personal?.ubicacion?.pais || 'Argentina';
+          console.log(`Generando Aplicativo ${fhsylCountry}...`);
           blob = await generateFHSYL(targetUser);
-          filename = `FHSYL_Argentina_${nameStr}.doc`;
+          filename = `FHSYL_${fhsylCountry.replace(/\s+/g, '_')}_${nameStr}.doc`;
           break;
         case 'entrevista':
           console.log('Generando Entrevista...');
@@ -172,8 +173,8 @@ export default function UserDocumentationView() {
     },
     { 
       id: 'fhsyl', 
-      title: 'Aplicativo Argentina', 
-      desc: 'Información pastoral y aplicativo FHSYL.', 
+      title: `Aplicativo ${targetUser?.fundacion?.territorio?.pais || targetUser?.personal?.ubicacion?.pais || 'Argentina'}`, 
+      desc: 'Información pastoral y aplicativo específico por país.', 
       status: targetUser?.fundacion?.documentacionFHSYL?.completado || !!targetUser?.fundacion?.documentacionFHSYL?.testimonioConversion 
     },
     { 

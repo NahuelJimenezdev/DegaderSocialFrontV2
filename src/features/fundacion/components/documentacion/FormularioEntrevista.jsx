@@ -176,7 +176,7 @@ export default function FormularioEntrevista() {
           <div>
             <h3 className="text-xl font-bold">¡Bienvenido al Proceso de Selección!</h3>
             <p className="text-blue-100 text-sm mt-1 max-w-md">
-              Esta entrevista es fundamental para conocer tu corazón, tu llamado y cómo podemos servir juntos en la Fundación.
+              Esta entrevista es fundamental para conocer tu corazón, tu llamado y cómo podemos servir juntos en la obra social.
             </p>
           </div>
         </div>
@@ -193,8 +193,8 @@ export default function FormularioEntrevista() {
           <input type="date" name="fechaNacimiento" value={respuestas.fechaNacimiento} onChange={handleChange} className="form-input-premium w-full" />
         </div>
         <div>
-          <label className="label-premium">UPZ y Localidad / Sector</label>
-          <input name="upzLocalidad" value={respuestas.upzLocalidad} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: UPZ 45 - Kennedy" />
+          <label className="label-premium">UPZ y Localidad / Sector (Solo Ubicación)</label>
+          <input name="upzLocalidad" value={respuestas.upzLocalidad} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: UPZ 45 - Kennedy (Ubicación Urbana)" />
         </div>
       </FormSection>
 
@@ -335,7 +335,7 @@ export default function FormularioEntrevista() {
 
       <div className="mt-8 text-center">
         <p className="text-gray-400 text-xs font-medium uppercase tracking-tighter">
-          Fundación Humanitaria Internacional Sol y Luna • Todos los derechos reservados
+          Degader Social • Todos los derechos reservados
         </p>
       </div>
     </div>

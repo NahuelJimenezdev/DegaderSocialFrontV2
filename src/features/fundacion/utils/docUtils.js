@@ -397,7 +397,7 @@ const getHtmlBase = (title, bodyContent) => `
 <body>
     <div class="header">
         <h1 class="title">${title}</h1>
-        <p style="margin:0; font-weight:bold; color:#1e3a8a;">FUNDACIÓN HUMANITARIA INTERNOS SOL Y LUNA</p>
+        <p style="margin:0; font-weight:bold; color:#1e3a8a;">DOCUMENTACIÓN OFICIAL - DEGADER SOCIAL</p>
     </div>
     ${bodyContent}
     <div class="footer">
@@ -443,9 +443,11 @@ export const generateFHSYL = async (userData, firmaB64 = null) => {
     `;
   }
 
-  const content = getHtmlBase('Aplicativo República Argentina', `
+  const userCountry = userData.fundacion?.territorio?.pais || userData.personal?.ubicacion?.pais || 'República Argentina';
+  const content = getHtmlBase(`Aplicativo ${userCountry}`, `
     <div class="section">1. DATOS PERSONALES</div>
     <div class="field"><span class="label">Nombre completo:</span> <span class="value">${data.nombreCompleto || nombreC}</span></div>
+    <div class="field"><span class="label">Documento:</span> <span class="value">${data.tipoDocumento || ''} ${data.numeroDocumento || userData.personal?.documentoNumero || ''}</span></div>
     <div class="field"><span class="label">Dirección:</span> <span class="value">${data.direccion || ''}</span></div>
     <div class="field"><span class="label">Localidad / Barrio:</span> <span class="value">${data.localidad || ''} / ${data.barrio || ''}</span></div>
     <div class="field"><span class="label">UPZ:</span> <span class="value">${data.upz || ''}</span></div>
@@ -710,7 +712,8 @@ export const generateUserZip = async (userData) => {
   
   // 2. FHSYL (Word .doc vía HTML mejorado)
   const fhsylBlob = await generateFHSYL(userData, firmaB64);
-  zip.file(`2.Aplicativo_FHSYL_${name}.doc`, await fhsylBlob.arrayBuffer());
+  const userCountry = userData.fundacion?.territorio?.pais || userData.personal?.ubicacion?.pais || 'Argentina';
+  zip.file(`2.Aplicativo_${userCountry.replace(/\s+/g, '_')}_${name}.doc`, await fhsylBlob.arrayBuffer());
   
   // 3. Entrevista (Word .doc vía HTML mejorado)
   const entrevistaBlob = await generateEntrevista(userData, firmaB64);

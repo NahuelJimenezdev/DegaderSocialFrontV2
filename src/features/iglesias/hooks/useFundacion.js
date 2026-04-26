@@ -723,7 +723,10 @@ export const useFundacion = (user, updateUser) => {
         getProgramasDisponibles,
         getCargosDisponibles,
         getRolesDisponibles: () => ROLES_FUNCIONALES,
-        getNivelesDisponibles: () => Object.keys(ESTRUCTURA_FUNDACION),
+        getNivelesDisponibles: () => Object.keys(ESTRUCTURA_FUNDACION).map(k => ({
+            value: k,
+            label: k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+        })),
 
         // Funciones para Directores Generales (Territorios)
         esDirectorGeneral,
