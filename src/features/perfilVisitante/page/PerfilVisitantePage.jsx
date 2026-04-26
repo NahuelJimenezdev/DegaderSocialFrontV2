@@ -20,7 +20,7 @@ import PostCard from '../../../shared/components/Post/PostCard';
 import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import useFeed from '../../feed/hooks/useFeed';
 
-import obtenerNivel, { formatNivelDetallado } from "../../fundacion/utils/obtenerNivel";  
+import obtenerNivel, { formatNivelDetallado, formatDescripcionInstitucional } from "../../fundacion/utils/obtenerNivel";  
 
 const PerfilVisitantePage = () => {
   const { id } = useParams();
@@ -176,12 +176,7 @@ const PerfilVisitantePage = () => {
               {usuario.esMiembroFundacion ? (
                 <InfoItem
                   label="Fundación"
-                  // value={`FHISYL - ${usuario.fundacion?.cargo || 'Miembro'}`}
-                  value={usuario.fundacion?.nivel === 'afiliado' 
-                    ? `Actualmente Afiliado a la Fundación Humanitaria Internacional Sol y Luna${usuario.fundacion?.territorio?.pais ? ` — ${usuario.fundacion.territorio.pais}` : ''}`
-                    : `Se desempeña como ${usuario.fundacion?.cargo || 'Miembro'} ${
-                    usuario.fundacion?.area ? `en la ${usuario.fundacion.area}` : ''
-                  } ${formatNivelDetallado(usuario)}`}
+                  value={formatDescripcionInstitucional(usuario)}
                   icon={Building2Icon}  
                 />
               ) : (

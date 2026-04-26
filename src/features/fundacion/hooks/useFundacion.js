@@ -37,6 +37,12 @@ export const ESTRUCTURA_FUNDACION = {
             "Misión Internacional de Paz": { subAreas: {}, programas: {} }
         }
     },
+    internacional: {
+        areas: {}
+    },
+    continental: {
+        areas: {}
+    },
 
     // Niveles Operativos (Nacional, Regional, Departamental, Municipal)
     nacional: {
@@ -331,15 +337,17 @@ export const ESTRUCTURA_FUNDACION = {
 };
 
 export const CARGOS_POR_NIVEL = {
-    directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
-    organo_control: ["Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
-    organismo_internacional: ["Salvación Mundial", "Secretario Salvación Mundial", "Misión Internacional de Paz", "Secretario Misión Internacional de Paz"],
-    nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
-    regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General"],
-    departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    local: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
-    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Sub-Director de Áreas", "Secretario/a Sub-Director de Áreas", "Director General", "Sub-Director General", "secretario Director General", "secretario Sub-Director General", "Coordinador"],
+    directivo_general: ["Presidente-Representante Legal", "Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
+    organo_control: ["Auditor", "Miembro Comité Ético", "Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
+    organismo_internacional: ["Delegado", "Director", "Secretario/a"],
+    internacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+    continental: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+    nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+    regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+    departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+    municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+    local: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
     afiliado: ["Afiliado"]
 };
 
@@ -403,11 +411,11 @@ export const useFundacion = (user, updateUser) => {
             if (cargo.includes("Misión Internacional de Paz")) return ["FHISYL", "Nacional"];
         }
 
-        if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
-            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || cargo === "Sub-Director de Áreas" || cargo === "Secretario/a Sub-Director de Áreas" || cargo === "Director de Areas") {
+        if (["internacional", "continental", "nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
+            if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || cargo === "Subdirector de Áreas" || cargo === "Secretario/a Subdirector de Áreas" || cargo === "Sub-Director de Áreas") {
                  return Object.keys(ESTRUCTURA_FUNDACION[nivel]?.areas || {});
             }
-            if (cargo === "Director General" || cargo.includes("Sub-Director") || cargo.includes("secretario Director") || cargo === "Director General (Pastor)") {
+            if (cargo === "Director General" || cargo.includes("Subdirector") || cargo.includes("Secretario Director") || cargo === "Director General (Pastor)") {
                  return [];
             }
         }
@@ -435,7 +443,7 @@ export const useFundacion = (user, updateUser) => {
              }
         }
 
-        if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
+        if (["internacional", "continental", "nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
             if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || !cargo.includes("General")) {
                 const areaData = ESTRUCTURA_FUNDACION[nivel]?.areas?.[area];
                 return Object.keys(areaData?.subAreas || {});
@@ -454,7 +462,7 @@ export const useFundacion = (user, updateUser) => {
         const area = formData.area;
         const subArea = formData.subArea;
 
-        if (["nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
+        if (["internacional", "continental", "nacional", "regional", "departamental", "municipal", "local", "barrial"].includes(nivel)) {
              if (cargo === "Director de Áreas" || cargo === "Secretario/a Director de Áreas" || !cargo.includes("General")) {
                   const areaData = ESTRUCTURA_FUNDACION[nivel]?.areas?.[area];
                   if (subArea && areaData?.subAreas?.[subArea]) {
@@ -486,7 +494,7 @@ export const useFundacion = (user, updateUser) => {
         }
 
         // Control and Internacional typically don't default need it, unless they specify Nacional
-        if (["organo_control", "organismo_internacional"].includes(formData.nivel)) {
+        if (["organo_control", "organismo_internacional", "internacional", "continental"].includes(formData.nivel)) {
              if (formData.area === 'Nacional' || formData.subArea === 'Nacional') return true;
              return false;
         }
@@ -577,7 +585,7 @@ export const useFundacion = (user, updateUser) => {
     // ==========================================
 
     const esDirectorGeneral = () => {
-        return formData.cargo === "Director General (Pastor)";
+        return formData.cargo === "Director General" || formData.cargo === "Director General (Pastor)";
     };
 
     const getPaisesDisponibles = () => {

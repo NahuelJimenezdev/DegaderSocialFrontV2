@@ -47,6 +47,12 @@ export const useFundacion = (user, updateUser) => {
                 "Misión Internacional de Paz": { subAreas: {}, programas: {} }
             }
         },
+        internacional: {
+            areas: {}
+        },
+        continental: {
+            areas: {}
+        },
 
         // Niveles Operativos (Nacional, Regional, Departamental, Municipal)
         nacional: {
@@ -336,15 +342,18 @@ export const useFundacion = (user, updateUser) => {
     };
 
     const CARGOS_POR_NIVEL = {
-        directivo_general: ["Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva"],
+        directivo_general: ["Presidente-Representante Legal", "Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
         organo_control: ["Auditor", "Secretario/a", "Miembro Comité Ético"],
-        organismo_internacional: ["Delegado Internacional", "Secretario/a"],
-        nacional: ["Director", "Secretario/a", "Director General (Pastor)"],
-        regional: ["Director", "Secretario/a", "Director General (Pastor)"],
-        departamental: ["Director", "Coordinador", "Secretario/a", "Director General (Pastor)"],
-        municipal: ["Coordinador", "Secretario/a", "Director General (Pastor)"],
-        local: ["Coordinador", "Secretario/a", "Director General (Pastor)"],
-        barrial: ["Coordinador", "Secretario/a", "Director General (Pastor)"]
+        organismo_internacional: ["Delegado", "Director", "Secretario/a"],
+        internacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+        continental: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+        nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+        regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
+        departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+        municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+        local: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+        barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+        afiliado: ["Afiliado"]
     };
 
     const ROLES_FUNCIONALES = ["profesional", "encargado", "asistente", "secretario/a", "voluntario", "pastor"];
@@ -414,7 +423,7 @@ export const useFundacion = (user, updateUser) => {
     // ==========================================
 
     const esDirectorGeneral = () => {
-        return formData.cargo === "Director General (Pastor)";
+        return formData.cargo === "Director General" || formData.cargo === "Director General (Pastor)";
     };
 
     const getPaisesDisponibles = () => {
@@ -497,8 +506,7 @@ export const useFundacion = (user, updateUser) => {
         e.preventDefault();
         setLoading(true);
         try {
-            // Para Director General (Pastor), área puede estar vacía
-            const esDirectorGen = formData.cargo === "Director General (Pastor)";
+            const esDirectorGen = formData.cargo === "Director General" || formData.cargo === "Director General (Pastor)";
 
             const updatedData = {
                 esMiembroFundacion: true,
@@ -575,7 +583,7 @@ export const useFundacion = (user, updateUser) => {
 
     // Auto-seleccionar rol "pastor" cuando se elige Director General
     useEffect(() => {
-        if (formData.cargo === "Director General (Pastor)" && formData.rolFuncional !== "pastor") {
+        if ((formData.cargo === "Director General" || formData.cargo === "Director General (Pastor)") && formData.rolFuncional !== "pastor") {
             setFormData(prev => ({ ...prev, rolFuncional: "pastor" }));
         }
     }, [formData.cargo]);

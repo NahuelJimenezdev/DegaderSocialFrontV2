@@ -18,6 +18,7 @@ import fundacionService from '../../../api/fundacionService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 import { getTerritorioString } from '../../../shared/utils/userUtils';
+import { esCargoDirectivo } from '../../../shared/constants/fundacionConstants';
 
 export default function FundacionAdminDashboard() {
   const { user } = useAuth();
@@ -256,22 +257,19 @@ export default function FundacionAdminDashboard() {
                 <option value="Miembro Comité Ético">Miembro Comité Ético</option>
               </optgroup>
               <optgroup label="Organismos Internacionales">
-                <option value="Salvación Mundial">Salvación Mundial</option>
-                <option value="Secretario Salvación Mundial">Secretario Salvación Mundial</option>
-                <option value="Misión Internacional de Paz">Misión Internacional de Paz</option>
-                <option value="Secretario Misión Internacional de Paz">Secretario Misión Internacional de Paz</option>
-                <option value="Delegado Internacional">Delegado Internacional</option>
+                <option value="Delegado">Delegado</option>
+                <option value="Director">Director</option>
+                <option value="Secretario/a">Secretario/a</option>
               </optgroup>
               <optgroup label="Direcciones Territoriales">
-                <option value="Director General (Pastor)">Director General (Pastor)</option>
                 <option value="Director General">Director General</option>
-                <option value="Sub-Director General">Sub-Director General</option>
-                <option value="secretario Director General">Secretario Director General</option>
-                <option value="secretario Sub-Director General">Secretario Sub-Director General</option>
+                <option value="Subdirector General">Subdirector General</option>
+                <option value="Secretario Director General">Secretario Director General</option>
+                <option value="Secretario Subdirector General">Secretario Subdirector General</option>
                 <option value="Director de Áreas">Director de Áreas</option>
                 <option value="Secretario/a Director de Áreas">Secretario/a Director de Áreas</option>
-                <option value="Sub-Director de Áreas">Sub-Director de Áreas</option>
-                <option value="Secretario/a Sub-Director de Áreas">Secretario/a Sub-Director de Áreas</option>
+                <option value="Subdirector de Áreas">Subdirector de Áreas</option>
+                <option value="Secretario/a Subdirector de Áreas">Secretario/a Subdirector de Áreas</option>
               </optgroup>
               <optgroup label="Niveles Operativos">
                 <option value="Director Nacional">Director Nacional</option>
@@ -361,7 +359,7 @@ export default function FundacionAdminDashboard() {
                   <div className="flex-1 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50 mb-4 text-xs space-y-2">
                     <div className="flex flex-col">
                       <span className="text-gray-400 dark:text-gray-500 uppercase text-[10px] font-bold tracking-wider mb-0.5">Área / Dirección</span>
-                      <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(u.fundacion?.cargo) ? 'Dirección General' : 'N/A')}</span>
+                      <span className="text-gray-800 dark:text-gray-200 font-medium">{u.fundacion?.area || (esCargoDirectivo(u.fundacion?.cargo) ? 'Dirección General' : 'N/A')}</span>
                     </div>
                     {u.fundacion?.subArea && (
                       <div className="flex flex-col border-t border-gray-100 dark:border-gray-800 pt-2">
@@ -442,7 +440,7 @@ export default function FundacionAdminDashboard() {
                           {u.fundacion?.cargo || 'Sin Cargo'}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {u.fundacion?.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(u.fundacion?.cargo) ? 'Dirección General' : 'N/A')}
+                          <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {u.fundacion?.area || (esCargoDirectivo(u.fundacion?.cargo) ? 'Dirección General' : 'N/A')}
                         </p>
                         {u.fundacion?.subArea && (
                           <p className="text-xs text-gray-500 dark:text-gray-400 truncate">

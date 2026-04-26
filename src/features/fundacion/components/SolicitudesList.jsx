@@ -1,6 +1,7 @@
 import { Users, Check, X, Clock } from 'lucide-react';
 import { getTerritorioString } from '../../../shared/utils/userUtils';
 import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
+import { esCargoDirectivo } from '../../../shared/constants/fundacionConstants';
 
 /**
  * Formatea una fecha en formato "HH:mm DD/MM/YY"
@@ -116,7 +117,7 @@ const SolicitudesList = ({ solicitudes, onGestionarSolicitud }) => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700/50 mr-4">
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(solicitud.fundacion.cargo) ? 'Dirección General' : 'N/A')}
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">Área:</span> {solicitud.fundacion.area || (esCargoDirectivo(solicitud.fundacion.cargo) ? 'Dirección General' : 'N/A')}
                                     </p>
                                     {solicitud.fundacion.subArea && (
                                         <p className="text-xs text-gray-500 dark:text-gray-400">

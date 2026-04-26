@@ -8,6 +8,7 @@ import fundacionService from '../../../api/fundacionService';
 import notificationService from '../../../api/notificationService';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
+import { esCargoDirectivo } from '../../../shared/constants/fundacionConstants';
 
 const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => {
     const navigate = useNavigate();
@@ -147,7 +148,7 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
                                     </span>
                                     {' '}
                                     <span className="text-gray-600 dark:text-gray-400">
-                                        en {area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(cargo) ? 'Dirección General' : 'un área')}
+                                        en {area || (esCargoDirectivo(cargo) ? 'Dirección General' : 'un área')}
                                     </span>
                                 </>
                             )}
@@ -156,7 +157,7 @@ const FundacionNotificationCard = ({ notification, onAction, onMarkAsRead }) => 
                         {/* Mostrar detalles adicionales para solicitudes */}
                         {tipo === 'solicitud_fundacion' && (nivel || area) && (
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                Nivel: {nivel} • Área: {area || (['Director General (Pastor)', 'Director General', 'Sub-Director General'].includes(cargo) ? 'Dirección General' : 'N/A')}
+                                Nivel: {nivel} • Área: {area || (esCargoDirectivo(cargo) ? 'Dirección General' : 'N/A')}
                                 {metadata?.subArea && ` • Sub-Área: ${metadata.subArea}`}
                                 {metadata?.programa && ` • Programa: ${metadata.programa}`}
                                 {getTerritorioString(emisor) && ` • ${getTerritorioString(emisor)}`}
