@@ -43,6 +43,7 @@ export default function FundacionAdminDashboard() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [downloading, setDownloading] = useState(false);
+  const [availableCountries, setAvailableCountries] = useState([]);
   
   // Rango de permisos del usuario logueado
   const isPrivileged = user?.seguridad?.rolSistema === 'Founder' || user?.fundacion?.nivel === 'directivo_general';
@@ -65,6 +66,20 @@ export default function FundacionAdminDashboard() {
   useEffect(() => {
     cargarUsuarios();
   }, [filters]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const res = await fundacionService.getPaisesJurisdiccion();
+        if (res.success) {
+          setAvailableCountries(res.data.paises);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+    fetchCountries();
+  }, []);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -217,8 +232,9 @@ export default function FundacionAdminDashboard() {
                 className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-none rounded-xl focus:ring-2 focus:ring-blue-500 dark:text-white"
               >
                 <option value="">País (Todos)</option>
-                <option value="Argentina">Argentina</option>
-                <option value="Colombia">Colombia</option>
+                {availableCountries.map(p => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
               </select>
             )}
             

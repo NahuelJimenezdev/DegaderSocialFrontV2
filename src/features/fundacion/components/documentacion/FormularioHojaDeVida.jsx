@@ -456,7 +456,21 @@ export default function FormularioHojaDeVida() {
         </div>
         <div>
           <label className="label-premium">Tipo de Documento</label>
-          <input name="tipo_documento" value={formData.tipo_documento} onChange={handleChange} className="form-input-premium w-full" placeholder="DNI / Cédula" />
+          <select 
+            name="tipo_documento" 
+            value={formData.tipo_documento} 
+            onChange={handleChange} 
+            className="form-input-premium w-full"
+          >
+            <option value="">Seleccione...</option>
+            <option value="DNI">DNI (Documento Nacional de Identidad)</option>
+            <option value="Cédula de Ciudadanía">Cédula de Ciudadanía</option>
+            <option value="Cédula de Extranjería">Cédula de Extranjería</option>
+            <option value="Pasaporte">Pasaporte</option>
+            <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+            <option value="Registro Civil">Registro Civil</option>
+            <option value="Otro">Otro</option>
+          </select>
         </div>
         <div>
           <label className="label-premium">Número de Documento</label>

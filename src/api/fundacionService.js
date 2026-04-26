@@ -85,6 +85,14 @@ const fundacionService = {
       responseType: 'blob'
     });
     return response;
+  },
+
+  /**
+   * Obtener lista de países únicos disponibles bajo jurisdicción
+   */
+  getPaisesJurisdiccion: async () => {
+    const response = await api.get('/fundacion/admin/paises-jurisdiccion');
+    return response.data;
   }
 };
 

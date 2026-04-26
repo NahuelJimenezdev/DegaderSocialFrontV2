@@ -497,8 +497,22 @@ const FormularioFHSYL = () => {
                 <input type="text" name="estadoCivil" value={formData.estadoCivil} onChange={handleChange} className={inputClasses} />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Tipo de Documento (DNI/Cédula)</label>
-                <input type="text" name="tipoDocumento" value={formData.tipoDocumento} onChange={handleChange} className={inputClasses} placeholder="Ej: DNI, Cédula de Ciudadanía" />
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Tipo de Documento</label>
+                <select 
+                  name="tipoDocumento" 
+                  value={formData.tipoDocumento} 
+                  onChange={handleChange} 
+                  className={inputClasses}
+                >
+                  <option value="">Seleccione...</option>
+                  <option value="DNI">DNI (Documento Nacional de Identidad)</option>
+                  <option value="Cédula de Ciudadanía">Cédula de Ciudadanía</option>
+                  <option value="Cédula de Extranjería">Cédula de Extranjería</option>
+                  <option value="Pasaporte">Pasaporte</option>
+                  <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+                  <option value="Registro Civil">Registro Civil</option>
+                  <option value="Otro">Otro</option>
+                </select>
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Número de Documento</label>
