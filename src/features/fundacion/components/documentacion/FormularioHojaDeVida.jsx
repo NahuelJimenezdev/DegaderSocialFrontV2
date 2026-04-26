@@ -61,6 +61,8 @@ export default function FormularioHojaDeVida() {
     descripcion_breve_ministerio_profesion: '',
     autorizo_si: false,
     autorizo_no: false,
+    rh: '',
+    genero: '',
 
     // NIVEL EDUCATIVO - EDUCACIÓN BÁSICA
     'completa/incompleta': 'completa',
@@ -146,6 +148,8 @@ export default function FormularioHojaDeVida() {
         tipo_documento: user.fundacion?.documentacionFHSYL?.tipoDocumento || user.personal?.tipoDocumento || '',
         lugar_expedicion: user.personal?.lugarExpedicion || user.personal?.expedicion || '',
         estado_civil: user.fundacion?.documentacionFHSYL?.estadoCivil || user.personal?.estadoCivil || '',
+        rh: user.personal?.rh || '',
+        genero: user.personal?.genero || 'Otro',
         nombre_personales_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.nombre || '',
         profesion_personal_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.relacion || '',
         telefonopers_1: user.fundacion?.documentacionFHSYL?.referencias?.[0]?.contacto || '',
@@ -501,8 +505,26 @@ export default function FormularioHojaDeVida() {
           <input name="municipio" value={formData.municipio} onChange={handleChange} className="form-input-premium w-full" />
         </div>
         <div className="md:col-span-2">
-          <label className="label-premium">Dirección de Residencia</label>
-          <input name="direccion" value={formData.direccion} onChange={handleChange} className="form-input-premium w-full" />
+          <label className="label-premium">Dirección de Residencia / Barrio</label>
+          <input name="direccion" value={formData.direccion} onChange={handleChange} className="form-input-premium w-full" placeholder="Ej: Calle 123 #45-67 - Barrio El Sol" />
+        </div>
+        <div>
+          <label className="label-premium">RH (Grupo Sanguíneo)</label>
+          <select name="rh" value={formData.rh} onChange={handleChange} className="form-input-premium w-full">
+            <option value="">Seleccione RH...</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+        <div>
+          <label className="label-premium">Género (Desde Perfil)</label>
+          <input name="genero" value={formData.genero} disabled className="form-input-premium w-full opacity-70 bg-gray-50 cursor-not-allowed" />
         </div>
         <div>
           <label className="label-premium">Teléfono</label>

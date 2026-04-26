@@ -11,7 +11,8 @@ import {
   UserCheck,
   LayoutGrid,
   List,
-  Loader2
+  Loader2,
+  Star
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import fundacionService from '../../../api/fundacionService';

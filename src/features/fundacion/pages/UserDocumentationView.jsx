@@ -11,7 +11,8 @@ import {
   AlertCircle,
   Loader2,
   MessageCircle,
-  Mail
+  Mail,
+  Star
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import userService from '../../../api/userService';
@@ -23,6 +24,8 @@ import {
   generateUserZip,
   downloadCV
 } from '../utils/docUtils';
+import fundacionService from '../../../api/fundacionService';
+import { Calendar, Award, Star as StarIcon } from 'lucide-react';
 import { getWhatsAppLink } from '../../whatsapp/utils/whatsappHelper';
 import { getUserAvatar, handleImageError } from '../../../shared/utils/avatarUtils';
 
@@ -32,14 +35,24 @@ export default function UserDocumentationView() {
   const [targetUser, setTargetUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  const [evalData, setEvalData] = useState({
+    fechaIngresoReal: '',
+    puntajeCompromiso: 0,
+    puntajeParticipacion: 0
+  });
+  const [savingEval, setSavingEval] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await userService.getUserById(id);
-        // Extraer los datos del usuario del wrapper de la respuesta {success, message, data}
+        const res = await fundacionService.getUsuarioJurisdiccionDetalle(id);
         if (res.success) {
           setTargetUser(res.data);
+          setEvalData({
+            fechaIngresoReal: res.data.fundacion?.fechaIngresoReal ? new Date(res.data.fundacion.fechaIngresoReal).toISOString().split('T')[0] : '',
+            puntajeCompromiso: res.data.fundacion?.puntajeCompromiso || 0,
+            puntajeParticipacion: res.data.fundacion?.puntajeParticipacion || 0
+          });
         } else {
           toast.error('No se pudo cargar la información del usuario');
           navigate('/fundacion/admin');
@@ -140,6 +153,39 @@ export default function UserDocumentationView() {
     }
   };
 
+  const handleSaveEval = async () => {
+    setSavingEval(true);
+    try {
+      const res = await fundacionService.updateValoracionManual(id, evalData);
+      if (res.success) {
+        toast.success('Valoración actualizada correctamente');
+        setTargetUser(prev => ({
+          ...prev,
+          fundacion: { ...prev.fundacion, ...res.data }
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al guardar la valoración');
+    } finally {
+      setSavingEval(false);
+    }
+  };
+
+  const getAntiguedad = () => {
+    if (!targetUser?.fundacion?.fechaIngresoReal) return 'No registrada';
+    const ingreso = new Date(targetUser.fundacion.fechaIngresoReal);
+    const hoy = new Date();
+    const diffTime = Math.abs(hoy - ingreso);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 30) return `${diffDays} días`;
+    const diffMonths = Math.floor(diffDays / 30);
+    if (diffMonths < 12) return `${diffMonths} meses`;
+    const diffYears = Math.floor(diffMonths / 12);
+    const remainingMonths = diffMonths % 12;
+    return `${diffYears} años ${remainingMonths > 0 ? `y ${remainingMonths} meses` : ''}`;
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-vh-[60vh] gap-4">
@@ -203,8 +249,14 @@ export default function UserDocumentationView() {
             <ChevronLeft size={24} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex flex-wrap items-center gap-2">
               Documentación: <span className="text-blue-600">{targetUser.nombres?.primero || ''} {targetUser.apellidos?.primero || ''}</span>
+              {targetUser.fundacion?.puntajeGestion > 0 && (
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-xl text-xs font-black shadow-sm border border-amber-200 dark:border-amber-800 ml-2">
+                  <Star size={14} fill="currentColor" />
+                  <span>Valoración: {targetUser.fundacion.puntajeGestion.toFixed(1)}</span>
+                </div>
+              )}
             </h1>
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
               Visualiza y descarga los documentos oficiales requeridos.
@@ -220,6 +272,96 @@ export default function UserDocumentationView() {
           {downloading ? <Loader2 className="animate-spin" size={20} /> : <Package size={20} />}
           Descargar Todo el Paquete
         </button>
+      </div>
+
+      {/* --- SECCIÓN DE VALORACIÓN Y DESEMPEÑO --- */}
+      <div className="mb-10 bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-700 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 dark:bg-amber-900/10 rounded-full blur-3xl" />
+        
+        <div className="flex flex-col lg:flex-row gap-10 relative">
+          {/* Columna Izquierda: Información de Antigüedad */}
+          <div className="lg:w-1/3 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-amber-100 dark:bg-amber-900/30 text-amber-600 rounded-2xl">
+                <Calendar size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white uppercase tracking-tight">Antigüedad Fundación</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-xs">Tiempo real de servicio activo</p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-900/50 p-6 rounded-3xl border border-gray-100 dark:border-gray-700 space-y-4">
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Fecha de Ingreso Real</label>
+                <input 
+                  type="date" 
+                  value={evalData.fechaIngresoReal}
+                  onChange={(e) => setEvalData(prev => ({ ...prev, fechaIngresoReal: e.target.value }))}
+                  className="w-full bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm font-bold focus:border-amber-500 transition-all outline-none"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-1 ml-1">Tiempo Calculado</span>
+                <span className="text-2xl font-black text-gray-800 dark:text-gray-200 ml-1">{getAntiguedad()}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Columna Derecha: Calificaciones Manuales */}
+          <div className="lg:w-2/3 space-y-6">
+             <div className="flex items-center gap-3">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl">
+                <Award size={24} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white uppercase tracking-tight">Criterios de Desempeño</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-xs">Valoración subjetiva del superior jerárquico</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div className="space-y-4">
+                  <div className="flex justify-between items-end">
+                    <label className="text-[11px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest ml-1">Nivel de Compromiso</label>
+                    <span className="text-lg font-black text-blue-600 dark:text-blue-400">{evalData.puntajeCompromiso}/10</span>
+                  </div>
+                  <input 
+                    type="range" min="0" max="10" step="0.5"
+                    value={evalData.puntajeCompromiso}
+                    onChange={(e) => setEvalData(prev => ({ ...prev, puntajeCompromiso: e.target.value }))}
+                    className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  />
+                  <p className="text-[10px] text-gray-400 italic px-1">Lealtad, cumplimiento de normas y sentido de pertenencia.</p>
+               </div>
+
+               <div className="space-y-4">
+                  <div className="flex justify-between items-end">
+                    <label className="text-[11px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest ml-1">Participación Activa</label>
+                    <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">{evalData.puntajeParticipacion}/10</span>
+                  </div>
+                  <input 
+                    type="range" min="0" max="10" step="0.5"
+                    value={evalData.puntajeParticipacion}
+                    onChange={(e) => setEvalData(prev => ({ ...prev, puntajeParticipacion: e.target.value }))}
+                    className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                  />
+                  <p className="text-[10px] text-gray-400 italic px-1">Asistencia a reuniones, aporte de ideas y proactividad.</p>
+               </div>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+               <button 
+                onClick={handleSaveEval}
+                disabled={savingEval}
+                className="flex items-center gap-2 px-8 py-3 bg-gray-900 dark:bg-blue-600 text-white rounded-2xl font-bold hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 shadow-xl"
+               >
+                 {savingEval ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle size={20} />}
+                 Guardar Valoraciones
+               </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Grid of Documents */}

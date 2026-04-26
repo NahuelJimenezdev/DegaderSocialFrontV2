@@ -93,6 +93,22 @@ const fundacionService = {
   getPaisesJurisdiccion: async () => {
     const response = await api.get('/fundacion/admin/paises-jurisdiccion');
     return response.data;
+  },
+
+  /**
+   * Actualizar valoración manual de un usuario
+   */
+  updateValoracionManual: async (userId, data) => {
+    const response = await api.put(`/fundacion/admin/usuario/${userId}/valoracion`, data);
+    return response.data;
+  },
+
+  /**
+   * Obtener detalle de usuario bajo jurisdicción
+   */
+  getUsuarioJurisdiccionDetalle: async (userId) => {
+    const response = await api.get(`/fundacion/admin/usuario/${userId}`);
+    return response.data;
   }
 };
 
