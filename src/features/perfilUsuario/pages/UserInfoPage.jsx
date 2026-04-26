@@ -11,11 +11,7 @@ import {
     Building2,
     Heart
 } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { userService } from '../../../api';
-import { getUserAvatar } from '../../../shared/utils/avatarUtils';
-import { logger } from '../../../shared/utils/logger';
+import { safeFormatDate, formatDateRelative, isDateValid } from '../utils/dateFormatter';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage';
 import '../../../shared/styles/layout.mobile.css';
 
@@ -62,40 +58,7 @@ const UserInfoPage = () => {
         }
     };
 
-    const formatDate = (date) => {
-        if (!date) return 'No disponible';
-        try {
-            // Extraer solo la parte de fecha (YYYY-MM-DD) para evitar problemas de zona horaria
-            const dateStr = typeof date === 'string' ? date.split('T')[0] : date.toISOString().split('T')[0];
-            const [year, month, day] = dateStr.split('-').map(Number);
-            const localDate = new Date(year, month - 1, day);
-            return format(localDate, "d 'de' MMMM 'de' yyyy", { locale: es });
-        } catch {
-            return 'Fecha inválida';
-        }
-    };
-
-    const calculateTimeSince = (date) => {
-        if (!date) return 'No disponible';
-        try {
-            const start = new Date(date);
-            const now = new Date();
-            const diffTime = Math.abs(now - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const diffMonths = Math.floor(diffDays / 30);
-            const diffYears = Math.floor(diffDays / 365);
-
-            if (diffYears > 0) {
-                return `${diffYears} ${diffYears === 1 ? 'año' : 'años'}`;
-            } else if (diffMonths > 0) {
-                return `${diffMonths} ${diffMonths === 1 ? 'mes' : 'meses'}`;
-            } else {
-                return `${diffDays} ${diffDays === 1 ? 'día' : 'días'}`;
-            }
-        } catch {
-            return 'No disponible';
-        }
-    };
+    // Utilidades locales movidas a utils/dateFormatter.js para robustez
 
     if (loading) {
         return (
@@ -206,15 +169,15 @@ const UserInfoPage = () => {
                             <InfoItem
                                 icon={Clock}
                                 label="Miembro desde"
-                                value={formatDate(userInfo.fechaRegistro || userInfo.createdAt)}
-                                subtitle={`Hace ${calculateTimeSince(userInfo.fechaRegistro || userInfo.createdAt)}`}
+                                value={safeFormatDate(userInfo.fechaRegistro || userInfo.createdAt)}
+                                subtitle={`Hace ${formatDateRelative(userInfo.fechaRegistro || userInfo.createdAt)}`}
                             />
                             {userInfo.fechaAmistad && (
                                 <InfoItem
                                     icon={Heart}
                                     label="Amigos desde"
-                                    value={formatDate(userInfo.fechaAmistad)}
-                                    subtitle={`Hace ${calculateTimeSince(userInfo.fechaAmistad)}`}
+                                    value={safeFormatDate(userInfo.fechaAmistad)}
+                                    subtitle={`Hace ${formatDateRelative(userInfo.fechaAmistad)}`}
                                 />
                             )}
                         </InfoCard>
@@ -229,7 +192,7 @@ const UserInfoPage = () => {
                             <InfoItem
                                 icon={Cake}
                                 label="Cumpleaños"
-                                value={userInfo.personal?.fechaNacimiento ? formatDate(userInfo.personal.fechaNacimiento) : null}
+                                value={userInfo.personal?.fechaNacimiento ? safeFormatDate(userInfo.personal.fechaNacimiento) : null}
                                 notConfirmed={!userInfo.personal?.fechaNacimiento}
                             />
                             <InfoItem
@@ -266,8 +229,8 @@ const UserInfoPage = () => {
                                 <InfoItem
                                     icon={Clock}
                                     label="Miembro desde"
-                                    value={formatDate(userInfo.eclesiastico.fechaUnion)}
-                                    subtitle={`Hace ${calculateTimeSince(userInfo.eclesiastico.fechaUnion)}`}
+                                    value={safeFormatDate(userInfo.eclesiastico.fechaUnion)}
+                                    subtitle={`Hace ${formatDateRelative(userInfo.eclesiastico.fechaUnion)}`}
                                 />
                             </InfoCard>
                         )}
@@ -296,8 +259,8 @@ const UserInfoPage = () => {
                                     <InfoItem
                                         icon={Clock}
                                         label="Miembro desde"
-                                        value={formatDate(userInfo.fundacion.fechaIngreso)}
-                                        subtitle={`Hace ${calculateTimeSince(userInfo.fundacion.fechaIngreso)}`}
+                                        value={safeFormatDate(userInfo.fundacion.fechaIngreso)}
+                                        subtitle={`Hace ${formatDateRelative(userInfo.fundacion.fechaIngreso)}`}
                                     />
                                 )}
                             </InfoCard>

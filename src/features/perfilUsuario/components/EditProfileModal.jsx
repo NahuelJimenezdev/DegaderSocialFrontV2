@@ -4,6 +4,7 @@ import { X, Camera, Save, Loader } from 'lucide-react';
 import { API_BASE_URL } from '../../../shared/config/env';
 import { userService } from '../../../api';
 import ProgressiveImage from '../../../shared/components/ProgressiveImage/ProgressiveImage';
+import { dateToInputString } from '../utils/dateFormatter';
 
 const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
     telefono: user?.personal?.celular || '',
     ciudad: user?.personal?.ubicacion?.ciudad || '',
     pais: user?.personal?.ubicacion?.pais || '',
-    fechaNacimiento: user?.personal?.fechaNacimiento ? new Date(user.personal.fechaNacimiento).toISOString().split('T')[0] : ''
+    fechaNacimiento: dateToInputString(user?.personal?.fechaNacimiento)
   });
 
   const [avatarFile, setAvatarFile] = useState(null);
@@ -298,7 +299,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onUpdate }) => {
                   name="fechaNacimiento"
                   value={formData.fechaNacimiento}
                   onChange={handleChange}
-                  max={new Date().toISOString().split('T')[0]}
+                  max={dateToInputString(new Date())}
                   className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-gray-100"
                 />
               </div>

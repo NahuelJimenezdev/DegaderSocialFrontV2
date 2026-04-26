@@ -21,6 +21,7 @@ import BirthdayPostCard from '../../../shared/components/Post/BirthdayPostCard';
 import useFeed from '../../feed/hooks/useFeed';
 
 import obtenerNivel, { formatNivelDetallado, formatDescripcionInstitucional } from "../../fundacion/utils/obtenerNivel";  
+import { safeFormatDate } from '../../perfilUsuario/utils/dateFormatter';
 
 const PerfilVisitantePage = () => {
   const { id } = useParams();
@@ -59,13 +60,7 @@ const PerfilVisitantePage = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'No especificada';
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'UTC'
-    });
+    return safeFormatDate(dateString);
   };
 
   if (loading) return <div className="p-6 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div></div>;
