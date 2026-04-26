@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.97.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.97.0...v1.97.1) (2026-04-26)
+
+
+### Bug Fixes
+
+* **meetings:** mejorar accesibilidad y contraste del boton programar reunion ([44b1b36](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/44b1b36eee4ada28571e090c927c11d31ca751d1))
+
 ## [1.97.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.96.0...v1.97.0) (2026-04-22)
 
 
