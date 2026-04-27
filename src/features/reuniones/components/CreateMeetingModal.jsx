@@ -37,18 +37,41 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
 
   const availableTypes = isChurchContext ? churchMeetingTypes : globalMeetingTypes;
 
-  const [formData, setFormData] = useState({
+  const getInitialDateTime = () => {
+    const now = new Date();
+    // Sugerimos la próxima hora en punto
+    const suggestion = new Date(now);
+    suggestion.setHours(now.getHours() + 1);
+    suggestion.setMinutes(0);
+    
+    const year = suggestion.getFullYear();
+    const month = String(suggestion.getMonth() + 1).padStart(2, '0');
+    const day = String(suggestion.getDate()).padStart(2, '0');
+    const hours = String(suggestion.getHours()).padStart(2, '0');
+    const minutes = String(suggestion.getMinutes()).padStart(2, '0');
+    
+    return {
+      date: `${year}-${month}-${day}`,
+      time: `${hours}:${minutes}`
+    };
+  };
+
+  const { date: defaultDate, time: defaultTime } = getInitialDateTime();
+
+  const initialFormState = {
     title: '',
     description: '',
-    date: '',
-    time: '10:00',
+    date: defaultDate,
+    time: defaultTime,
     duration: meetingDurations[1],
     type: availableTypes[0].value,
     meetLink: 'https://meet.google.com/',
-    attendees: [],   // IDs de invitados (capacitacion)
-    group: '',       // ID de grupo (grupal)
+    attendees: [],
+    group: '',
     targetMinistry: 'todos',
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [submitError, setSubmitError] = useState(null);
@@ -60,8 +83,12 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
   // Resetear al abrir
   useEffect(() => {
     if (isOpen) {
-      setFormData(prev => ({ ...prev, type: availableTypes[0].value, attendees: [], group: '' }));
+      setFormData({
+        ...initialFormState,
+        type: availableTypes[0].value
+      });
       setSubmitError(null);
+      setSearchTerm('');
     }
   }, [isOpen, isChurchContext]);
 
@@ -102,6 +129,18 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
     e.preventDefault();
     setSubmitError(null);
     setIsSubmitting(true);
+
+    // Validación de fecha y hora futura
+    const [year, month, day] = formData.date.split('-').map(Number);
+    const [hours, minutes] = formData.time.split(':').map(Number);
+    const selectedDate = new Date(year, month - 1, day, hours, minutes);
+    const now = new Date();
+
+    if (selectedDate <= now) {
+      setSubmitError('La reunión debe programarse para una fecha y hora futura.');
+      setIsSubmitting(false);
+      return;
+    }
 
     // Validación de grupo
     if (formData.type === 'grupal' && !formData.group) {
@@ -224,8 +263,15 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Calendar className="w-4" /> Fecha</label>
-              <input name="date" type="date" value={formData.date} onChange={handleChange} required
-                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none" />
+              <input 
+                name="date" 
+                type="date" 
+                value={formData.date} 
+                onChange={handleChange} 
+                required
+                min={defaultDate}
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none" 
+              />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Clock className="w-4" /> Hora</label>

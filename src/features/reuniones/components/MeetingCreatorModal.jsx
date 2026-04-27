@@ -33,9 +33,24 @@ export function MeetingCreatorModal({ meeting: initialMeeting, isOpen, onClose, 
   const approvedAttendees = meeting.attendees || [];
 
   const handleSave = async () => {
+    // Validación de hora futura si la reunión es hoy
+    const now = new Date();
+    const [year, month, day] = meeting.date.split('T')[0].split('-').map(Number);
+    const [hours, minutes] = editData.time.split(':').map(Number);
+    const selectedDate = new Date(year, month - 1, day, hours, minutes);
+
+    if (selectedDate <= now) {
+      setSaveError('La nueva hora debe ser en el futuro.');
+      return;
+    }
+
+    // Recalcular startsAt para el servidor (UTC)
+    const startsAt = selectedDate.toISOString();
+    const payload = { ...editData, startsAt };
+
     setIsSaving(true);
     setSaveError(null);
-    const result = await onUpdate(meeting._id, editData);
+    const result = await onUpdate(meeting._id, payload);
     setIsSaving(false);
     if (result?.success) {
       setMeeting(prev => ({ ...prev, ...editData }));
