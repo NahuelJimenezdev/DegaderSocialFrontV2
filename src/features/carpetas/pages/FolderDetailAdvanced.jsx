@@ -98,6 +98,15 @@ const FolderDetailAdvanced = () => {
     });
   };
 
+  const handleFileDownload = async (archivo) => {
+    try {
+      await folderService.downloadFile(id, archivo);
+    } catch (err) {
+      logger.error('Error al descargar archivo:', err);
+      setAlertConfig({ isOpen: true, variant: 'error', message: 'No se pudo iniciar la descarga' });
+    }
+  };
+
   const tienePermisoEscritura = () => {
     if (!carpeta || !user) return false;
     const userId = (user._id || user.id || '').toString();
@@ -217,6 +226,7 @@ const FolderDetailAdvanced = () => {
             files={filteredFiles}
             onPreview={setPreviewFile}
             onDelete={handleFileDelete}
+            onDownload={handleFileDownload}
             canEdit={canEdit}
           />
         ) : (
@@ -224,6 +234,7 @@ const FolderDetailAdvanced = () => {
             files={filteredFiles}
             onPreview={setPreviewFile}
             onDelete={handleFileDelete}
+            onDownload={handleFileDownload}
             canEdit={canEdit}
           />
         )}
@@ -233,6 +244,7 @@ const FolderDetailAdvanced = () => {
       <FilePreviewModal
         file={previewFile}
         onClose={() => setPreviewFile(null)}
+        onDownload={handleFileDownload}
       />
 
       {/* AlertDialog Component */}

@@ -101,6 +101,34 @@ const folderService = {
   leaveFolder: async (id) => {
     const response = await api.post(`/folders/${id}/leave`);
     return response.data;
+  },
+
+  /**
+   * Descargar archivo (vía proxy del servidor para asegurar Content-Disposition)
+   * @param {string} folderId 
+   * @param {Object} file - Objeto archivo completo
+   */
+  downloadFile: async (folderId, file) => {
+    try {
+      const response = await api.get(`/folders/${folderId}/files/${file._id}/download`, {
+        responseType: 'blob'
+      });
+      
+      // Crear un link temporal para la descarga
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', file.originalName);
+      document.body.appendChild(link);
+      link.click();
+      
+      // Limpieza
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar el archivo:', error);
+      throw error;
+    }
   }
 };
 

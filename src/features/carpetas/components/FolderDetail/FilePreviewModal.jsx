@@ -4,7 +4,7 @@ import { Download, X, Music, File, HardDrive, Calendar } from 'lucide-react';
 import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
 import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
-const FilePreviewModal = ({ file, onClose }) => {
+const FilePreviewModal = ({ file, onClose, onDownload }) => {
     if (!file) return null;
 
     const rawUrl = file.url || '';
@@ -50,14 +50,13 @@ const FilePreviewModal = ({ file, onClose }) => {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <a
-                            href={file.url}
-                            download
+                        <button
+                            onClick={() => onDownload(file)}
                             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors font-medium text-white"
                         >
                             <Download size={18} />
                             Descargar
-                        </a>
+                        </button>
                         <button
                             onClick={onClose}
                             className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
@@ -108,14 +107,13 @@ const FilePreviewModal = ({ file, onClose }) => {
                             <File size={80} className="mx-auto mb-6 text-gray-600" />
                             <h3 className="text-xl font-semibold mb-2 text-white">Vista previa no disponible</h3>
                             <p className="text-gray-400 mb-6">Este tipo de archivo no se puede previsualizar en el navegador.</p>
-                            <a
-                                href={file.url}
-                                download
+                            <button
+                                onClick={() => onDownload(file)}
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors font-medium text-white"
                             >
                                 <Download size={20} />
                                 Descargar archivo
-                            </a>
+                            </button>
                         </div>
                     )}
                 </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Eye, Download, Trash2, HardDrive, Calendar } from 'lucide-react';
 import { getFileIcon, getFileColor, formatSize, formatDate, getUserInitials, getUserName } from '../../utils/fileUtils.jsx';
 
-const FileGrid = ({ files, onPreview, onDelete, canEdit }) => {
+const FileGrid = ({ files, onPreview, onDelete, onDownload, canEdit }) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {files.map((archivo) => (
@@ -36,14 +36,13 @@ const FileGrid = ({ files, onPreview, onDelete, canEdit }) => {
                             >
                                 <Eye size={20} />
                             </button>
-                            <a
-                                href={archivo.url}
-                                download
+                            <button
+                                onClick={() => onDownload(archivo)}
                                 className="p-2 bg-white/20 hover:bg-white/30 rounded-lg backdrop-blur-sm transition-colors"
                                 title="Descargar"
                             >
                                 <Download size={20} />
-                            </a>
+                            </button>
                             {canEdit && (
                                 <button
                                     onClick={() => onDelete(archivo._id)}
