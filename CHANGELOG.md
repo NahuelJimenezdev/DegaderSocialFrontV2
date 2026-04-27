@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.98.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.97.1...v1.98.0) (2026-04-27)
+
+
+### Features
+
+* Filtro de países dinámico y estandarización de tipo de documento ([d4fde53](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d4fde530b616247a8b5d9a739d1c31281c532c73))
+* **meetings:** añadir restricciones dinamicas de min/max al selector de hora segun el dia ([7586ab0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/7586ab06325b40103a66c302daad5ca894069bb0))
+* **meetings:** bloquear seleccion de fechas pasadas, validar hora futura y resetear formulario al abrir ([8bd4df0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/8bd4df0a876fb704a914d3512989a3cb1b0be912))
+* mejora formulario Hoja de Vida con RH y sincronizacion de genero ([c746860](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/c74686026b611bbd81862e5cfd1e88e9d3b9b8d0))
+
+
+### Bug Fixes
+
+* corregir crash 'Invalid time value' en perfiles y centralizar utilidades de fecha ([cb396c2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/cb396c23a8bb0b2a91c3ef519259ba4ab9713ca6))
+
 ### [1.97.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.97.0...v1.97.1) (2026-04-26)
 
 
