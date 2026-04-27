@@ -1,10 +1,10 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { Download, X, Music, File, HardDrive, Calendar } from 'lucide-react';
+import { Download, X, Music, File, HardDrive, Calendar, Loader2 } from 'lucide-react';
 import { formatSize, formatDate } from '../../utils/fileUtils.jsx';
 import ProgressiveImage from '../../../../shared/components/ProgressiveImage';
 
-const FilePreviewModal = ({ file, onClose, onDownload }) => {
+const FilePreviewModal = ({ file, onClose, onDownload, isDownloading }) => {
     if (!file) return null;
 
     const rawUrl = file.url || '';
@@ -20,13 +20,14 @@ const FilePreviewModal = ({ file, onClose, onDownload }) => {
     const isPPT = tipo === 'presentation' || /\.(ppt|pptx)$/i.test(name);
     const isPDF = tipo === 'pdf' || /\.pdf$/i.test(name);
     const isWord = tipo === 'document' || /\.(doc|docx)$/i.test(name);
+    const isWordLegacy = tipo === 'document' || /\.(doc)$/i.test(name);
     const isText = tipo === 'text' || /\.txt$/i.test(name);
 
     let viewerUrl = null;
     if (isExcel || isPPT) {
         // Para Office pesado, priorizamos Microsoft (mejor renderizado)
         viewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(url)}`;
-    } else if (isPDF || isWord || isText) {
+    } else if (isPDF || isWord || isWordLegacy || isText) {
         // Para lectura fija/móvil, priorizamos Google (mejor carga en mobile)
         viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
     }
@@ -52,10 +53,20 @@ const FilePreviewModal = ({ file, onClose, onDownload }) => {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => onDownload(file)}
-                            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors font-medium text-white"
+                            disabled={isDownloading}
+                            className={`flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors font-medium text-white ${isDownloading ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
-                            <Download size={18} />
-                            Descargar
+                            {isDownloading ? (
+                                <>
+                                    <Loader2 size={18} className="animate-spin" />
+                                    Descargando...
+                                </>
+                            ) : (
+                                <>
+                                    <Download size={18} />
+                                    Descargar
+                                </>
+                            )}
                         </button>
                         <button
                             onClick={onClose}
@@ -109,10 +120,20 @@ const FilePreviewModal = ({ file, onClose, onDownload }) => {
                             <p className="text-gray-400 mb-6">Este tipo de archivo no se puede previsualizar en el navegador.</p>
                             <button
                                 onClick={() => onDownload(file)}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors font-medium text-white"
+                                disabled={isDownloading}
+                                className={`inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors font-medium text-white ${isDownloading ? 'opacity-70 cursor-not-allowed' : ''}`}
                             >
-                                <Download size={20} />
-                                Descargar archivo
+                                {isDownloading ? (
+                                    <>
+                                        <Loader2 size={20} className="animate-spin" />
+                                        Descargando archivo...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download size={20} />
+                                        Descargar archivo
+                                    </>
+                                )}
                             </button>
                         </div>
                     )}

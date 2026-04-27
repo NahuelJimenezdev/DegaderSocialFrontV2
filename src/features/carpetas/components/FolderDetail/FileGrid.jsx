@@ -1,8 +1,8 @@
 import React from 'react';
-import { Eye, Download, Trash2, HardDrive, Calendar } from 'lucide-react';
+import { Eye, Download, Trash2, HardDrive, Calendar, Loader2 } from 'lucide-react';
 import { getFileIcon, getFileColor, formatSize, formatDate, getUserInitials, getUserName } from '../../utils/fileUtils.jsx';
 
-const FileGrid = ({ files, onPreview, onDelete, onDownload, canEdit }) => {
+const FileGrid = ({ files, onPreview, onDelete, onDownload, downloadingId, canEdit }) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {files.map((archivo) => (
@@ -38,10 +38,15 @@ const FileGrid = ({ files, onPreview, onDelete, onDownload, canEdit }) => {
                             </button>
                             <button
                                 onClick={() => onDownload(archivo)}
-                                className="p-2 bg-white/20 hover:bg-white/30 rounded-lg backdrop-blur-sm transition-colors"
+                                disabled={downloadingId === archivo._id}
+                                className={`p-2 bg-white/20 hover:bg-white/30 rounded-lg backdrop-blur-sm transition-colors ${downloadingId === archivo._id ? 'cursor-not-allowed opacity-50' : ''}`}
                                 title="Descargar"
                             >
-                                <Download size={20} />
+                                {downloadingId === archivo._id ? (
+                                    <Loader2 size={20} className="animate-spin" />
+                                ) : (
+                                    <Download size={20} />
+                                )}
                             </button>
                             {canEdit && (
                                 <button

@@ -24,6 +24,7 @@ const FolderDetailAdvanced = () => {
   const [error, setError] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
+  const [downloadingId, setDownloadingId] = useState(null);
 
   // View & Filter States
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
@@ -99,11 +100,15 @@ const FolderDetailAdvanced = () => {
   };
 
   const handleFileDownload = async (archivo) => {
+    if (downloadingId) return;
     try {
+      setDownloadingId(archivo._id);
       await folderService.downloadFile(id, archivo);
     } catch (err) {
       logger.error('Error al descargar archivo:', err);
       setAlertConfig({ isOpen: true, variant: 'error', message: 'No se pudo iniciar la descarga' });
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -227,6 +232,7 @@ const FolderDetailAdvanced = () => {
             onPreview={setPreviewFile}
             onDelete={handleFileDelete}
             onDownload={handleFileDownload}
+            downloadingId={downloadingId}
             canEdit={canEdit}
           />
         ) : (
@@ -235,6 +241,7 @@ const FolderDetailAdvanced = () => {
             onPreview={setPreviewFile}
             onDelete={handleFileDelete}
             onDownload={handleFileDownload}
+            downloadingId={downloadingId}
             canEdit={canEdit}
           />
         )}
@@ -245,6 +252,7 @@ const FolderDetailAdvanced = () => {
         file={previewFile}
         onClose={() => setPreviewFile(null)}
         onDownload={handleFileDownload}
+        isDownloading={downloadingId === previewFile?._id}
       />
 
       {/* AlertDialog Component */}

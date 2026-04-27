@@ -1,8 +1,8 @@
 import React from 'react';
-import { Eye, Download, Trash2 } from 'lucide-react';
+import { Eye, Download, Trash2, Loader2 } from 'lucide-react';
 import { getFileIcon, getFileColor, formatSize, formatDate, getUserInitials, getUserName } from '../../utils/fileUtils.jsx';
 
-const FileList = ({ files, onPreview, onDelete, onDownload, canEdit }) => {
+const FileList = ({ files, onPreview, onDelete, onDownload, downloadingId, canEdit }) => {
     return (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm dark:shadow-none">
             <table className="w-full">
@@ -73,10 +73,15 @@ const FileList = ({ files, onPreview, onDelete, onDownload, canEdit }) => {
                                     </button>
                                     <button
                                         onClick={() => onDownload(archivo)}
-                                        className="p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                        disabled={downloadingId === archivo._id}
+                                        className={`p-2 text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ${downloadingId === archivo._id ? 'cursor-not-allowed opacity-50' : ''}`}
                                         title="Descargar"
                                     >
-                                        <Download size={18} />
+                                        {downloadingId === archivo._id ? (
+                                            <Loader2 size={18} className="animate-spin text-indigo-500" />
+                                        ) : (
+                                            <Download size={18} />
+                                        )}
                                     </button>
                                     {canEdit && (
                                         <button
