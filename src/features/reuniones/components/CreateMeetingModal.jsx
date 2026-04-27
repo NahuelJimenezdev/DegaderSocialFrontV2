@@ -275,8 +275,16 @@ export function CreateMeetingModal({ isOpen, onClose, onCreate, isChurchContext 
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1"><Clock className="w-4" /> Hora</label>
-              <input name="time" type="time" value={formData.time} onChange={handleChange} required
-                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none" />
+              <input 
+                name="time" 
+                type="time" 
+                value={formData.time} 
+                onChange={handleChange} 
+                required
+                min={formData.date === defaultDate ? defaultTime : "00:00"}
+                max="23:59"
+                className="w-full border dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-[#0a0e27] dark:text-white outline-none" 
+              />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Duración</label>

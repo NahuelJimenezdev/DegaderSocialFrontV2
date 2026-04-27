@@ -166,6 +166,10 @@ export function MeetingCreatorModal({ meeting: initialMeeting, isOpen, onClose, 
                       value={editData.time}
                       onChange={e => setEditData(p => ({ ...p, time: e.target.value }))}
                       type="time"
+                      min={meeting.date.split('T')[0] === new Date().toISOString().split('T')[0] 
+                        ? new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }) 
+                        : "00:00"}
+                      max="23:59"
                       className="w-full mt-1 border dark:border-gray-600 rounded-lg p-2.5 bg-white dark:bg-[#0a0e27] dark:text-white text-sm outline-none"
                     />
                   </div>
