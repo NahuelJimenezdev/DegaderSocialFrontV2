@@ -36,7 +36,7 @@ export const useMessageCounter = (userId) => {
       logger.log('💬 [useMessageCounter] Nuevo mensaje recibido:', message);
 
       // Solo incrementar si el mensaje NO es del usuario actual
-      if (message.emisor && String(message.emisor._id || message.emisor) !== String(userId)) {
+      if (message.sender && String(message.sender._id || message.sender) !== String(userId)) {
         setUnreadCount(prev => prev + 1);
       }
     };
