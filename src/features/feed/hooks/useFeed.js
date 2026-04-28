@@ -9,6 +9,9 @@ const useFeed = (userId = null, currentUser) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  const [pendingPosts, setPendingPosts] = useState([]);
+  const [newPostsCount, setNewPostsCount] = useState(0);
+
   const fetchFeed = useCallback(async (pageNum = 1, reset = false) => {
     try {
       setLoading(true);
@@ -21,6 +24,12 @@ const useFeed = (userId = null, currentUser) => {
       setPosts(prev => reset ? newPosts : [...prev, ...newPosts]);
       setHasMore(data.data.pagination.hasMore !== undefined ? data.data.pagination.hasMore : data.data.pagination.page < data.data.pagination.pages);
       setPage(pageNum);
+      
+      // Si estamos reseteando (ej: al aplicar pendientes), limpiar contadores
+      if (reset) {
+        setPendingPosts([]);
+        setNewPostsCount(0);
+      }
     } catch (err) {
       logger.error('Error fetching feed:', err);
       setError(err.message);
@@ -35,6 +44,15 @@ const useFeed = (userId = null, currentUser) => {
     }
   }, [loading, hasMore, page, fetchFeed]);
 
+  const applyPendingPosts = useCallback(() => {
+    if (pendingPosts.length > 0) {
+      setPosts(prev => [...pendingPosts, ...prev]);
+      setPendingPosts([]);
+      setNewPostsCount(0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [pendingPosts]);
+
   useEffect(() => {
     fetchFeed(1, true);
   }, [fetchFeed]);
@@ -43,32 +61,51 @@ const useFeed = (userId = null, currentUser) => {
   useEffect(() => {
     const handlePostUpdate = (event) => {
       const updatedPost = event.detail;
-      setPosts(prevPosts => {
-        // ... (lógica existente)
-        const exists = prevPosts.some(p => p._id === updatedPost._id);
-        if (exists) {
-          return prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p);
+      
+      // Verificar si el post ya existe en la lista actual
+      const existsInPosts = posts.some(p => p._id === updatedPost._id);
+      
+      if (existsInPosts) {
+        // Si ya existe, es una actualización (like, comentario, etc), actualizamos en caliente
+        setPosts(prevPosts => prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p));
+        return;
+      }
+
+      // Si NO existe, es un post NUEVO
+      // Estrategia: Si estamos en la página 1, lo ponemos en pendientes para avisar al usuario
+      // excepto si es el propio usuario el autor (en ese caso lo mostramos directo)
+      if (page === 1) {
+        const isMyPost = currentUser && (updatedPost.usuario?._id === currentUser._id || updatedPost.usuario === currentUser._id);
+        
+        if (isMyPost) {
+          setPosts(prev => [updatedPost, ...prev]);
+        } else {
+          setPendingPosts(prev => {
+            // Evitar duplicados en pendientes
+            if (prev.some(p => p._id === updatedPost._id)) return prev;
+            return [updatedPost, ...prev];
+          });
+          setNewPostsCount(prev => prev + 1);
         }
-        if (page === 1) {
-          return [updatedPost, ...prevPosts];
-        }
-        return prevPosts;
-      });
+      }
     };
 
     const handlePostDelete = (event) => {
       const deletedPostId = event.detail;
-      setPosts(prevPosts => prevPosts.filter(p => p._id !== deletedPostId && (typeof deletedPostId === 'string' ? p._id !== deletedPostId : true))); // Robustez extra
+      setPosts(prevPosts => prevPosts.filter(p => p._id !== deletedPostId));
+      setPendingPosts(prev => prev.filter(p => p._id !== deletedPostId));
     };
 
     window.addEventListener('socket:post:updated', handlePostUpdate);
+    window.addEventListener('socket:post:created', handlePostUpdate); // También escuchamos created
     window.addEventListener('socket:post:deleted', handlePostDelete);
 
     return () => {
       window.removeEventListener('socket:post:updated', handlePostUpdate);
+      window.removeEventListener('socket:post:created', handlePostUpdate);
       window.removeEventListener('socket:post:deleted', handlePostDelete);
     };
-  }, [page]);
+  }, [page, currentUser, posts]);
 
   const handleLike = async (postId) => {
     try {
@@ -148,7 +185,7 @@ const useFeed = (userId = null, currentUser) => {
     }
   };
 
-  return { posts, loading, error, hasMore, loadMore, fetchFeed, handleLike, handleAddComment, handleShare, handleCreatePost };
+  return { posts, loading, error, hasMore, loadMore, fetchFeed, handleLike, handleAddComment, handleShare, handleCreatePost, newPostsCount, applyPendingPosts };
 };
 
 export default useFeed;

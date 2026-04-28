@@ -9,7 +9,10 @@ import UserCarousel from '../../recommendations/components/UserCarousel';
 
 const FeedPage = () => {
   const { user } = useAuth();
-  const { posts, loading, error, hasMore, loadMore, fetchFeed, handleLike, handleAddComment, handleShare, handleCreatePost } = useFeed(null, user);
+  const { 
+    posts, loading, error, hasMore, loadMore, fetchFeed, handleLike, 
+    handleAddComment, handleShare, handleCreatePost, newPostsCount, applyPendingPosts 
+  } = useFeed(null, user);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
 
@@ -42,7 +45,22 @@ const FeedPage = () => {
       </div>
 
       {/* Listado de Posts */}
-      <div className="w-full max-w-2xl flex flex-col gap-6 mt-6">
+      <div className="w-full max-w-2xl flex flex-col gap-6 mt-6 relative">
+        
+        {/* Botón flotante de nuevas publicaciones (Estilo Instagram/Facebook) */}
+        {newPostsCount > 0 && (
+          <div className="sticky top-20 z-40 flex justify-center w-full pointer-events-none">
+            <button
+              onClick={applyPendingPosts}
+              className="pointer-events-auto flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full shadow-lg shadow-indigo-200 dark:shadow-none animate-in fade-in zoom-in slide-in-from-top-4 duration-300 transition-all active:scale-95"
+            >
+              <div className="bg-white/20 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold">
+                {newPostsCount}
+              </div>
+              <span className="text-sm font-medium">Nuevas publicaciones</span>
+            </button>
+          </div>
+        )}
 
         {posts.map((post, index) => {
           const isLast = posts.length === index + 1;
