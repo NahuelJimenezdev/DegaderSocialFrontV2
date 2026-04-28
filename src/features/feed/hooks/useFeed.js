@@ -19,7 +19,7 @@ const useFeed = (userId = null, currentUser) => {
       const newPosts = data.data.posts;
 
       setPosts(prev => reset ? newPosts : [...prev, ...newPosts]);
-      setHasMore(data.data.pagination.page < data.data.pagination.pages);
+      setHasMore(data.data.pagination.hasMore !== undefined ? data.data.pagination.hasMore : data.data.pagination.page < data.data.pagination.pages);
       setPage(pageNum);
     } catch (err) {
       logger.error('Error fetching feed:', err);
