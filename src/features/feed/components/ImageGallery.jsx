@@ -184,9 +184,9 @@ const ImageGallery = ({ images = [] }) => {
 
       {/* Lightbox Modal */}
       {showLightbox && createPortal(
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center backdrop-blur-sm" onClick={closeLightbox}>
+        <div className="fixed inset-0 z-[1000] bg-black/95 flex items-center justify-center backdrop-blur-sm" onClick={closeLightbox}>
           <button
-            className="absolute top-4 right-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors z-50"
+            className="absolute top-4 right-4 text-white p-2 hover:bg-white/10 rounded-full transition-colors z-[1010]"
             onClick={closeLightbox}
           >
             <span className="material-symbols-outlined text-3xl">close</span>
