@@ -337,17 +337,15 @@ export const ESTRUCTURA_FUNDACION = {
 };
 
 export const CARGOS_POR_NIVEL = {
-    directivo_general: ["Presidente-Representante Legal", "Director Ejecutivo", "Secretario Ejecutivo", "Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"],
-    organo_control: ["Auditor", "Miembro Comité Ético", "Dirección de Control Interno y Seguimiento", "Dirección Asuntos Ético"],
-    organismo_internacional: ["Delegado", "Director", "Secretario/a"],
-    internacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
-    continental: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
-    nacional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
-    regional: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General"],
-    departamental: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
-    municipal: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
-    local: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
-    barrial: ["Director de Áreas", "Secretario/a Director de Áreas", "Subdirector de Áreas", "Secretario/a Subdirector de Áreas", "Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Coordinador"],
+    directivo_general: ["Presidente-Representante Legal", "Miembro de Junta Directiva", "Director Financiero", "Director Jurídico", "Director Administrativo", "Director Ejecutivo", "Canciller", "Subdirector Financiero", "Subdirector Jurídico", "Subdirector Administrativo", "Secretario Ejecutivo"],
+    organo_control: ["Auditor", "Miembro Comité Ético"],
+    organismo_internacional: ["Director", "Secretario/a", "Delegado"],
+    internacional: ["Director de Áreas", "Subdirector de Áreas", "Secretario/a Director de Áreas", "Secretario/a Subdirector de Áreas"],
+    continental: ["Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Director de Áreas", "Subdirector de Áreas", "Secretario/a Director de Áreas", "Secretario/a Subdirector de Áreas"],
+    nacional: ["Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Director de Áreas", "Subdirector de Áreas", "Secretario/a Director de Áreas", "Secretario/a Subdirector de Áreas"],
+    regional: ["Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Director de Áreas", "Subdirector de Áreas", "Secretario/a Director de Áreas", "Secretario/a Subdirector de Áreas"],
+    departamental: ["Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Director de Áreas", "Subdirector de Áreas", "Secretario/a Director de Áreas", "Secretario/a Subdirector de Áreas"],
+    municipal: ["Director General", "Subdirector General", "Secretario Director General", "Secretario Subdirector General", "Director de Áreas", "Subdirector de Áreas", "Secretario/a Director de Áreas", "Secretario/a Subdirector de Áreas"],
     afiliado: ["Afiliado"]
 };
 
@@ -381,6 +379,29 @@ export const useFundacion = (user, updateUser) => {
     // Estado para lista de directores del país (para Afiliados)
     const [directoresPais, setDirectoresPais] = useState([]);
     const [loadingDirectores, setLoadingDirectores] = useState(false);
+
+    // Estado para límites de cargos
+    const [disponibilidadCargos, setDisponibilidadCargos] = useState({
+        presidenteDisponible: true,
+        juntaDirectivaDisponibles: 5
+    });
+
+    useEffect(() => {
+        const fetchDisponibilidad = async () => {
+            try {
+                const res = await fundacionService.getCargosLimitados();
+                if (res?.success && res?.data) {
+                    setDisponibilidadCargos({
+                        presidenteDisponible: res.data.presidente.disponible,
+                        juntaDirectivaDisponibles: res.data.juntaDirectiva.limite - res.data.juntaDirectiva.ocupados
+                    });
+                }
+            } catch (error) {
+                logger.error('Error fetching cargos limitados:', error);
+            }
+        };
+        fetchDisponibilidad();
+    }, []);
 
     // ==========================================
     // 🔹 LÓGICA DE FILTRADO DINÁMICO
@@ -487,10 +508,7 @@ export const useFundacion = (user, updateUser) => {
 
         // Directivo General requires location only for specific roles
         if (formData.nivel === "directivo_general") {
-            if (["Miembro de Junta Directiva", "Equipo de Licitación y Adquisiciones"].includes(formData.cargo)) {
-                return true;
-            }
-            return false; // Exec Director / Sec Ejec do not require location
+            return false; // Directivo General nunca requiere ubicación territorial específica
         }
 
         // Control and Internacional typically don't default need it, unless they specify Nacional
@@ -568,8 +586,20 @@ export const useFundacion = (user, updateUser) => {
         if (!formData.nivel) return [];
         const cargos = CARGOS_POR_NIVEL[formData.nivel] || [];
 
+        // Filtrar cargos limitados (Presidente y Junta Directiva)
+        // Permitimos mantener el cargo en la lista si el usuario ACTUALMENTE tiene ese cargo (para edición sin error)
+        const cargosFiltrados = cargos.filter(cargo => {
+            if (cargo === "Presidente-Representante Legal" && !disponibilidadCargos.presidenteDisponible) {
+                return formData.cargo === "Presidente-Representante Legal"; 
+            }
+            if (cargo === "Miembro de Junta Directiva" && disponibilidadCargos.juntaDirectivaDisponibles <= 0) {
+                return formData.cargo === "Miembro de Junta Directiva";
+            }
+            return true;
+        });
+
         // Ajustar género para "Secretario/a"
-        return cargos.map(cargo => {
+        return cargosFiltrados.map(cargo => {
             if (cargo === "Secretario/a") {
                 const genero = user?.personal?.genero;
                 if (genero === 'M') return "Secretario";

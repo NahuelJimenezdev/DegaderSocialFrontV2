@@ -109,6 +109,14 @@ const fundacionService = {
   getUsuarioJurisdiccionDetalle: async (userId) => {
     const response = await api.get(`/fundacion/admin/usuario/${userId}`);
     return response.data;
+  },
+
+  /**
+   * Obtener disponibilidad de cargos limitados (Presidente, Junta Directiva)
+   */
+  getCargosLimitados: async () => {
+    const response = await api.get('/fundacion/cargos-limitados');
+    return response.data;
   }
 };
 
