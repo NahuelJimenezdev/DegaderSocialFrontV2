@@ -117,6 +117,22 @@ const fundacionService = {
   getCargosLimitados: async () => {
     const response = await api.get('/fundacion/cargos-limitados');
     return response.data;
+  },
+
+  /**
+   * Obtener el estado del bloqueo de mantenimiento
+   */
+  getSystemLock: async () => {
+    const response = await api.get('/fundacion/system-lock');
+    return response.data;
+  },
+
+  /**
+   * Cambiar el estado del bloqueo de mantenimiento (Solo Founder)
+   */
+  toggleSystemLock: async () => {
+    const response = await api.post('/founder/system-lock/toggle');
+    return response.data;
   }
 };
 

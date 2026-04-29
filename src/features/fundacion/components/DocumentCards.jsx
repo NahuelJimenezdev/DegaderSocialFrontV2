@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import fundacionService from '../../../api/fundacionService';
 import { FileText, UserCircle, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 const DocumentCard = ({ title, description, buttonText, onClick, status, icon: Icon, locked, overrideButtonText, disableAction }) => {
@@ -50,9 +51,9 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
               </div>
             )}
           </div>
-          <p className={`leading-relaxed max-w-2xl ${locked ? 'text-gray-400 dark:text-gray-600' : 'text-gray-600 dark:text-gray-400'}`}>
+          <div className={`leading-relaxed max-w-2xl ${locked ? 'text-gray-400 dark:text-gray-600' : 'text-gray-600 dark:text-gray-400'}`}>
             {description}
-          </p>
+          </div>
         </div>
         
         {/* Acción */}
@@ -96,6 +97,30 @@ const DocumentCard = ({ title, description, buttonText, onClick, status, icon: I
 };
 
 export default function DocumentCards({ user, onNavigate }) {
+  const [systemLocked, setSystemLocked] = useState(false);
+  const isFounder = user?.email === 'founderdegader@degadersocial.com';
+
+  useEffect(() => {
+    const fetchLockStatus = async () => {
+      try {
+        const res = await fundacionService.getSystemLock();
+        if (res?.success) setSystemLocked(res.data.locked);
+      } catch (error) {
+        console.error('Error fetching system lock', error);
+      }
+    };
+    fetchLockStatus();
+  }, []);
+
+  const handleToggleLock = async () => {
+    try {
+      const res = await fundacionService.toggleSystemLock();
+      if (res?.success) setSystemLocked(res.locked);
+    } catch (error) {
+      console.error('Error toggling system lock', error);
+    }
+  };
+
   // Prerrequisitos completados
   const isFHSYLDone = !!user?.fundacion?.documentacionFHSYL?.ultimaActualizacion;
   const isEntrevistaDone = !!user?.fundacion?.entrevista?.completado;
@@ -125,40 +150,53 @@ export default function DocumentCards({ user, onNavigate }) {
       solicitudStatus = 'Pendiente';
   }
 
+  // Mantenimiento global
+  const maintenanceMessage = (
+    <span className="inline-block bg-[#ccff00] text-black font-bold px-3 py-1 rounded shadow-sm border border-[#aacc00]">
+      Estamos actualizando el sistema, por estos momentos no hay acceso.
+    </span>
+  );
+
   // Documentos lógica de estado
   const docs = [
     {
       id: 1,
       type: 'Aplicativo',
       title: `Aplicativo ${user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'República Argentina'}`,
-      description: `Completa y actualiza tu documentación específica para la Fundación en ${user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'tu país'}.`,
+      description: systemLocked ? maintenanceMessage : `Completa y actualiza tu documentación específica para la Fundación en ${user.fundacion?.territorio?.pais || user.personal?.ubicacion?.pais || 'tu país'}.`,
       buttonText: "Rellenar formulario",
       status: isFHSYLDone ? 'Completado' : 'Pendiente',
       icon: FileText,
       path: '/fundacion/documentacion-fhsyl',
-      locked: false
+      locked: systemLocked,
+      overrideButtonText: systemLocked ? 'Mantenimiento' : null,
+      disableAction: systemLocked
     },
     {
       id: 2,
       type: 'Entrevista',
       title: "Entrevista Fundación",
-      description: "Completa la entrevista inicial requerida para formar parte de la fundación.",
+      description: systemLocked ? maintenanceMessage : "Completa la entrevista inicial requerida para formar parte de la fundación.",
       buttonText: "Realizar entrevista",
       status: isEntrevistaDone ? 'Completado' : 'Pendiente',
       icon: UserCircle,
       path: '/fundacion/entrevista',
-      locked: false
+      locked: systemLocked,
+      overrideButtonText: systemLocked ? 'Mantenimiento' : null,
+      disableAction: systemLocked
     },
     {
       id: 3,
       type: 'HojaDeVida',
       title: "Formato de Hoja de Vida",
-      description: "Completa tu hoja de vida con tu información personal, profesional y ministerial.",
+      description: systemLocked ? maintenanceMessage : "Completa tu hoja de vida con tu información personal, profesional y ministerial.",
       buttonText: "Completar hoja de vida",
       status: isHojaDeVidaDone ? 'Completado' : 'Pendiente',
       icon: FileText,
       path: '/fundacion/hoja-de-vida',
-      locked: false
+      locked: systemLocked,
+      overrideButtonText: systemLocked ? 'Mantenimiento' : null,
+      disableAction: systemLocked
     },
     {
       id: 4,
@@ -191,6 +229,25 @@ export default function DocumentCards({ user, onNavigate }) {
 
   return (
     <div className="flex flex-col gap-4 mb-10">
+      {isFounder && (
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between mb-2">
+          <div>
+            <h4 className="font-bold text-gray-900 dark:text-white">Panel Founder: Modo Mantenimiento</h4>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Bloquea los formularios temporalmente para todos los usuarios.</p>
+          </div>
+          <button
+            onClick={handleToggleLock}
+            className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${
+              systemLocked
+                ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300'
+                : 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300'
+            }`}
+          >
+            {systemLocked ? 'Desactivar Bloqueo' : 'Activar Bloqueo'}
+          </button>
+        </div>
+      )}
+
       {docs.map((doc) => (
         <DocumentCard 
           key={doc.id}
