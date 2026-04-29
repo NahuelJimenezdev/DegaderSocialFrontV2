@@ -345,6 +345,7 @@ const Register = () => {
                 src="https://vientodevida.org/servidorimagenes/imagenes/Degader_0.0.1.png"
                 alt="Degader Logo"
                 className="logo-img"
+                noBackground={true}
                 style={{ width: '100%', objectFit: 'contain' }}
               />
             </div>
