@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.99.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.98.0...v1.99.0) (2026-04-29)
+
+
+### Features
+
+* **carpetas:** agregar feedback visual de carga durante las descargas ([2904755](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/29047555c9c34102456429252725af350cec8275))
+* **carpetas:** implementar descargas autenticadas a través del servidor ([4470cee](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/4470ceeb7a656173471abb7880b4bd49fe712362))
+* **feed:** add 'New Posts' floating notification system like Facebook/Instagram ([9978dbe](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/9978dbe83dcadf057802dce6725a383528049b6d))
+* **fundacion:** estandarización de jerarquía, sistema de cupos limitados y correcciones en la UI ([625ae58](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/625ae58cdffb0c8ac008636f34d6108c27e980a1))
+
+
+### Bug Fixes
+
+* **feed:** improve infinite scroll robustness in useFeed hook ([b70c331](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/b70c331f101284dcb27640f82d499f97ab980e8c))
+* **messaging:** corregir campo de emisor en el contador de mensajes no leídos para sincronización real-time ([af653c8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/af653c882f571e7900bcab9c0b736c7a12b18464))
+* **ui:** corregir z-index de modales y visor de imágenes para evitar superposición con navbars ([79a8a63](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/79a8a63e700e608797545b237a7f1884402c27bf))
+
 ## [1.98.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.97.1...v1.98.0) (2026-04-27)
 
 
