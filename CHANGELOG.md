@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.100.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.99.0...v1.100.0) (2026-04-30)
+
+
+### Features
+
+* **fundacion:** UI del modo mantenimiento con boton toggle para Founder y estilo neon ([6f553a8](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/6f553a89e5c851ef80186b677e946940795b7caa))
+
 ## [1.99.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.98.0...v1.99.0) (2026-04-29)
 
 
