@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.101.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.100.0...v1.101.0) (2026-04-30)
+
+
+### Features
+
+* **founder:** rediseño total del dashboard geográfico, mapa interactivo y estadísticas territoriales precisas ([d497d6f](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d497d6fa16ea70da49dfd271cea9f43041410a51))
+
+
+### Bug Fixes
+
+* **founder:** refinamiento de UI en mapa interactivo y corrección de datos de ubicación ([d45d5af](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/d45d5af56128cbb1f4ae0c05a8539cc066549264))
+
 ## [1.100.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.99.0...v1.100.0) (2026-04-30)
 
 
