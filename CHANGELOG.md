@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.101.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.101.0...v1.101.1) (2026-04-30)
+
+
+### Bug Fixes
+
+* **founder:** renderizado de fotos de perfil en la tabla de usuarios por país ([46299e0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/46299e02f95c0a450cbabb3aee23e7462c1657f4))
+
 ## [1.101.0](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.100.0...v1.101.0) (2026-04-30)
 
 
