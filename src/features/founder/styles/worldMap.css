@@ -1,0 +1,230 @@
+/* ======================================= */
+/* 🗺️  Mapa Mundial Interactivo — Estilos  */
+/* ======================================= */
+
+.world-map-section {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  border-radius: 24px;
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+/* ---- Contenedor del Mapa ---- */
+.world-map-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 300px); /* Altura dinámica para ajustarse a la pantalla */
+  min-height: 400px; /* Reducimos el mínimo para evitar problemas en monitores pequeños */
+  overflow: hidden;
+  border-radius: 24px;
+  background: #f8fafc; /* Fondo claro por defecto */
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: background 0.3s ease;
+}
+
+:root[data-theme="dark"] .world-map-container,
+.dark .world-map-container {
+  background: #0f172a; /* Fondo oscuro */
+  border-color: rgba(255,255,255,0.05);
+}
+
+.world-map-container svg {
+  display: block;
+  width: 100%;
+  height: 100%; /* El SVG ocupa el 100% del contenedor dinámico */
+}
+
+/* ---- Floating Overlays (Estilo Imagen) ---- */
+.map-floating-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  animation: fadeInRight 0.4s ease-out;
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.map-floating-card {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.85); /* Fondo claro glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+  color: #1e293b; /* Texto oscuro */
+  transition: all 0.3s ease;
+}
+
+:root[data-theme="dark"] .map-floating-card,
+.dark .map-floating-card {
+  background: rgba(30, 41, 59, 0.75); /* Fondo oscuro glass */
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.map-floating-card h3 {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.map-floating-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.map-floating-stat-item {
+  padding: 8px 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.map-floating-stat-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  color: #64748b; /* Gris medio claro */
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+:root[data-theme="dark"] .map-floating-stat-label,
+.dark .map-floating-stat-label {
+  color: #94a3b8;
+}
+
+.map-floating-stat-value {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* Colores de roles/estados */
+.stat-moderador { color: #3b82f6; }
+.stat-admin { color: #ef4444; }
+.stat-suspendido { color: #f97316; }
+.stat-director { color: #6366f1; }
+.stat-secretario { color: #10b981; }
+.stat-afiliado { color: #f59e0b; }
+
+.map-floating-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-floating-user-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.map-floating-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: white;
+  border: 1.5px solid rgba(255,255,255,0.1);
+}
+
+.map-floating-user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+:root[data-theme="dark"] .map-floating-user-name,
+.dark .map-floating-user-name {
+  color: #e2e8f0;
+}
+
+.map-floating-view-all {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #60a5fa;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.map-floating-view-all:hover {
+  color: #93c5fd;
+}
+
+/* ---- Marcadores (Dots) ---- */
+.map-marker-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+.map-marker-dot.selected {
+  animation: pulse-selected 1s infinite;
+  fill: #6366f1;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+@keyframes pulse-selected {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulse-dot {
+  0% { r: 3; fill-opacity: 1; }
+  50% { r: 5; fill-opacity: 0.6; }
+  100% { r: 3; fill-opacity: 1; }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .world-map-container {
+    height: 480px; /* Altura fija optimizada para celulares */
+    min-height: auto;
+  }
+
+  .map-floating-overlay {
+    position: absolute;
+    bottom: 20px;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    margin-top: 0;
+    padding: 0;
+  }
+}

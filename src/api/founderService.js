@@ -12,6 +12,7 @@ export const getAllUsers = async (filters = {}) => {
     if (filters.estado) params.append('estado', filters.estado);
     if (filters.verificado !== undefined) params.append('verificado', filters.verificado);
     if (filters.search) params.append('search', filters.search);
+    if (filters.pais) params.append('pais', filters.pais);
     if (filters.page) params.append('page', filters.page);
     if (filters.limit) params.append('limit', filters.limit);
 
@@ -43,6 +44,12 @@ export const deleteUser = async (userId) => {
     return response.data;
 };
 
+// Obtener estadísticas geográficas por país
+export const getGeoStats = async () => {
+    const response = await api.get('/founder/users/geo-stats');
+    return response.data;
+};
+
 // Enviar alerta de seguridad
 export const sendSecurityAlert = async (data) => {
     try {
@@ -58,5 +65,6 @@ export default {
     getUserById,
     updateUserRole,
     deleteUser,
+    getGeoStats,
     sendSecurityAlert
 };

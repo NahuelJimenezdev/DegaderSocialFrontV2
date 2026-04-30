@@ -33,6 +33,7 @@ import MisCarpetasPage from './features/carpetas/pages/MisCarpetasPage'
 import { ReunionesPage } from './features/reuniones/pages/ReunionesPage'
 import CampaignAnalyticsPage from './features/ads/CampaignAnalyticsPage'
 import FounderUsersPage from './features/founder/pages/FounderUsersPage'
+import FounderCountryUsersPage from './features/founder/pages/FounderCountryUsersPage'
 import TicketDetailPage from './features/tickets/pages/TicketDetailPage'
 import SuspendedUsersPage from './features/admin/pages/SuspendedUsersPage'
 import IglesiaExMiembros from './features/iglesias/pages/IglesiaExMiembros'
@@ -138,6 +139,7 @@ export const router = createBrowserRouter([
       // Founder Panel
       { path: '/admin/logs', element: <FounderRoute><AuditLogsPage /></FounderRoute> }, // Solo Founder/Audit
       { path: '/founder/users', element: <FounderRoute><FounderUsersPage /></FounderRoute> },
+      { path: '/founder/users/country/:countryName', element: <FounderRoute><FounderCountryUsersPage /></FounderRoute> },
       { path: '/arena', element: <ArenaPage /> }
     ],
   },

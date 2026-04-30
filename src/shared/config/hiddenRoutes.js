@@ -14,11 +14,11 @@ export const hideAdsSidebarRoutes = [
   /^\/arena$/i,
   // Fundación - Secciones de documentos y admin (Vista limpia y centrada)
   /^\/fundacion\/(visor|entrevista|hoja-de-vida|documentacion-fhsyl|admin(\/.*)?)$/i,
+  // Founder - Panel de gestión (mapa interactivo necesita ancho completo)
+  /^\/founder(\/.*)?$/i,
 ]
 
 export const hideSidebarRoutes = [
   // Ocultar sidebar global en la sección de miembros salidos (ya tiene sidebar de iglesia)
   /^\/Mi_iglesia\/[a-zA-Z0-9_-]+\/miembros_salidos.*$/,
 ]
-
-
