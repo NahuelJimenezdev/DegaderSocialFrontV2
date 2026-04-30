@@ -204,11 +204,19 @@ export default function FounderCountryUsersPage() {
                                         <tr key={user._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-black shadow-lg shadow-blue-500/20 overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
-                                                        {user.social?.fotoPerfil ? (
-                                                            <img src={user.social.fotoPerfil} alt={user.username} className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            user.username?.[0]?.toUpperCase() || 'U'
+                                                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-black shadow-lg shadow-blue-500/20 overflow-hidden bg-blue-600 bg-gradient-to-br from-blue-500 to-indigo-600 text-white relative">
+                                                        {/* Letra inicial siempre de fondo como respaldo definitivo con contorno/sombra para máximo contraste */}
+                                                        <span className="absolute z-0" style={{ textShadow: '0px 0px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.5)' }}>
+                                                            {user.username?.[0]?.toUpperCase() || 'U'}
+                                                        </span>
+                                                        {/* Imagen superpuesta (si existe). Si falla la carga, se oculta y deja ver la letra */}
+                                                        {user.social?.fotoPerfil && (
+                                                            <img 
+                                                                src={user.social.fotoPerfil} 
+                                                                alt={user.username} 
+                                                                className="w-full h-full object-cover absolute inset-0 z-10 bg-white dark:bg-gray-800"
+                                                                onError={(e) => { e.target.style.display = 'none'; }}
+                                                            />
                                                         )}
                                                     </div>
                                                     <div>
