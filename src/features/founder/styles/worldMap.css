@@ -15,8 +15,8 @@
 .world-map-container {
   position: relative;
   width: 100%;
-  height: calc(100vh - 300px); /* Altura dinámica para ajustarse a la pantalla */
-  min-height: 400px; /* Reducimos el mínimo para evitar problemas en monitores pequeños */
+  height: calc(100vh - 200px); /* Altura dinámica para ajustarse a la pantalla (reducida resta) */
+  min-height: 550px; /* Incrementamos el mínimo para que las tarjetas no se corten */
   overflow: hidden;
   border-radius: 24px;
   background: #f8fafc; /* Fondo claro por defecto */

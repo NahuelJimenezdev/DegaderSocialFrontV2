@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Users, Shield, Ban, Search, Edit2, Trash2, ChevronLeft } from 'lucide-react';
+import { Users, Shield, Search, ChevronLeft, Edit2, Trash2 } from 'lucide-react';
 import { useFounderUsers } from '../../../shared/hooks/useFounderUsers';
 import RoleBadge from '../components/RoleBadge';
 import IosModal from '../../../shared/components/IosModal';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
+import nivelesPorPais from '../../fundacion/utils/nivelesPorPais';
 
 export default function FounderCountryUsersPage() {
     const { countryName } = useParams();
     const navigate = useNavigate();
     const toast = useToast();
+
+    // Normalizar el nombre del país para buscar la terminología
+    const countryKey = countryName ? countryName.replace(/\s+/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
+    const locationLabel = nivelesPorPais[countryKey]?.departamental || 'Departamento / Provincia';
     
     const [filters, setFilters] = useState({
         search: '',
@@ -153,8 +158,8 @@ export default function FounderCountryUsersPage() {
             {/* Filtros */}
             <div className="max-w-7xl mx-auto px-4 py-6">
                 <div className="flex flex-col md:flex-row gap-3 mb-6">
-                    <div className="flex-1 relative">
-                        <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <div className="flex-1 relative flex items-center">
+                        <Search size={20} className="absolute left-3 text-gray-400" />
                         <input
                             type="text"
                             placeholder="Buscar por email, username o nombre..."
@@ -188,7 +193,7 @@ export default function FounderCountryUsersPage() {
                                     <tr>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Usuario</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Email</th>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Departamento / Provincia</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">{locationLabel}</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Rol</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Estado</th>
                                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-widest">Acciones</th>
@@ -213,7 +218,7 @@ export default function FounderCountryUsersPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                                 <div className="flex flex-col">
-                                                    <span className="font-medium">{user.personal?.ubicacion?.departamento || 'No especificado'}</span>
+                                                    <span className="font-medium">{user.personal?.ubicacion?.estado || 'No especificado'}</span>
                                                     <span className="text-[10px] text-gray-400">{user.personal?.ubicacion?.ciudad}</span>
                                                 </div>
                                             </td>
