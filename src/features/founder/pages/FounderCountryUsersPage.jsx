@@ -204,8 +204,12 @@ export default function FounderCountryUsersPage() {
                                         <tr key={user._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-black shadow-lg shadow-blue-500/20">
-                                                        {user.username?.[0]?.toUpperCase() || 'U'}
+                                                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-black shadow-lg shadow-blue-500/20 overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
+                                                        {user.social?.fotoPerfil ? (
+                                                            <img src={user.social.fotoPerfil} alt={user.username} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            user.username?.[0]?.toUpperCase() || 'U'
+                                                        )}
                                                     </div>
                                                     <div>
                                                         <p className="font-bold text-gray-900 dark:text-white">@{user.username}</p>
