@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.101.2](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.101.1...v1.101.2) (2026-04-30)
+
+
+### Bug Fixes
+
+* **founder:** manejo de errores de imagen y mejora de contraste en iniciales de avatar ([97d23a6](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/commit/97d23a6f8fd1a19e6480d32c5ee0cafb3206db4c))
+
 ### [1.101.1](https://github.com/NahuelJimenezdev/DegaderSocialFrontV2/compare/v1.101.0...v1.101.1) (2026-04-30)
 
 
