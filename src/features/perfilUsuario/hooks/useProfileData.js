@@ -15,11 +15,12 @@ export const useProfileData = (user) => {
 
   // Cargar publicaciones del usuario
   const loadUserPosts = async () => {
-    if (!user) return;
+    const userId = user?._id?.toString() || user?.id?.toString();
+    if (!userId) return;
 
     try {
       setLoading(true);
-      const response = await postService.getUserPosts(user._id);
+      const response = await postService.getUserPosts(userId);
       setPosts(response.data.posts || []);
     } catch (error) {
       logger.error('Error al cargar publicaciones:', error);
@@ -30,10 +31,11 @@ export const useProfileData = (user) => {
 
   // Cargar estadísticas del usuario
   const loadUserStats = async () => {
-    if (!user) return;
+    const userId = user?._id?.toString() || user?.id?.toString();
+    if (!userId) return;
 
     try {
-      const response = await userService.getUserStats(user._id);
+      const response = await userService.getUserStats(userId);
       setUserStats(response.data);
     } catch (error) {
       logger.error('Error al cargar estadísticas:', error);

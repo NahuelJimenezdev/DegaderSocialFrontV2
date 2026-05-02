@@ -68,7 +68,8 @@ export default function WorldMapSection({ geoStats = [] }) {
       .map(stat => {
         const mapName = getMapName(stat.pais);
         const coords = COUNTRY_CENTERS[mapName];
-        return coords ? { name: mapName, dbName: stat.pais, coordinates: coords, total: stat.total } : null;
+        const iso = getCountryIso(mapName);
+        return coords ? { name: mapName, dbName: stat.pais, coordinates: coords, total: stat.total, iso } : null;
       })
       .filter(Boolean);
   }, [geoStats]);
@@ -91,29 +92,6 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
-          {/* DEFINICIONES GLOBALES - AL PRINCIPIO DEL SVG */}
-          <defs>
-            {geoStats.filter(s => s.total > 0).map(stat => {
-              const mapName = getMapName(stat.pais);
-              const iso = getCountryIso(mapName);
-              if (!iso) return null;
-              return (
-                <pattern 
-                  key={`pattern-flag-${iso}`}
-                  id={`pattern-flag-${iso}`} 
-                  patternUnits="objectBoundingBox" 
-                  width="1" height="1"
-                >
-                  <image 
-                    href={`/flags/${iso}.svg`} 
-                    x="0" y="0" width="100%" height="100%" 
-                    preserveAspectRatio="xMidYMid slice"
-                  />
-                </pattern>
-              );
-            })}
-          </defs>
-
           <ZoomableGroup center={[-40, 10]} zoom={1.3} minZoom={1} maxZoom={6}>
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
@@ -122,30 +100,30 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const stats = statsLookup[mapName];
                   const count = stats?.total || 0;
                   const isSelected = selectedCountry?.name === mapName;
-                  const iso = getCountryIso(mapName);
                   const flagColor = getFlagColor(mapName, true, isDark);
 
-                  // DETERMINAR EL RELLENO FINAL
-                  const fillValue = (count > 0 && iso) ? `url(#pattern-flag-${iso})` : 'transparent';
+                  // FALLBACK SÓLIDO (PASO 1)
+                  const baseColor = isDark ? '#1e293b' : '#f1f5f9';
+                  const highlightColor = flagColor;
 
                   return (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
                       onClick={() => selectCountry(mapName, getDbName(mapName))}
-                      // INYECTAMOS LOS ATRIBUTOS DIRECTAMENTE, NO SOLO EN STYLE
-                      fill={fillValue}
-                      fillOpacity={count > 0 ? (isSelected ? 1 : 0.75) : 0}
-                      stroke={count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1')}
-                      strokeWidth={isSelected ? 0.8 : 0.4}
                       style={{
                         default: {
+                          fill: count > 0 ? (isSelected ? highlightColor : baseColor) : baseColor,
+                          fillOpacity: count > 0 ? (isSelected ? 0.3 : 0.1) : 0.05,
+                          stroke: count > 0 ? highlightColor : (isDark ? '#334155' : '#e2e8f0'),
+                          strokeWidth: isSelected ? 0.8 : 0.4,
                           outline: 'none',
                           transition: 'all 0.3s ease',
                         },
                         hover: {
-                          fillOpacity: 1,
-                          stroke: count > 0 ? flagColor : (isDark ? '#334155' : '#94a3b8'),
+                          fill: count > 0 ? highlightColor : (isDark ? '#334155' : '#e2e8f0'),
+                          fillOpacity: count > 0 ? 0.4 : 0.1,
+                          stroke: count > 0 ? highlightColor : (isDark ? '#475569' : '#cbd5e1'),
                           strokeWidth: 0.8,
                           outline: 'none',
                           cursor: count > 0 ? 'pointer' : 'default',
@@ -157,18 +135,41 @@ export default function WorldMapSection({ geoStats = [] }) {
               }
             </Geographies>
 
+            {/* ALTERNATIVA PRO: BANDERAS COMO OVERLAY MARKERS */}
             {markers.map(marker => (
               <Marker
                 key={marker.name}
                 coordinates={marker.coordinates}
                 onClick={() => selectCountry(marker.name, marker.dbName)}
               >
-                <circle
-                  r={selectedCountry?.name === marker.name ? 5 : 3}
-                  fill={getFlagColor(marker.name, true, isDark)}
-                  stroke="#fff"
-                  strokeWidth={1}
+                {/* Sombra/Borde de la bandera */}
+                <rect
+                  x="-13" y="-10"
+                  width="26" height="20"
+                  fill="white"
+                  rx="2"
+                  className="shadow-sm"
                 />
+                {/* Imagen de la Bandera Real */}
+                <image
+                  href={`/flags/${marker.iso}.svg`}
+                  x="-12" y="-9"
+                  width="24" height="18"
+                  preserveAspectRatio="xMidYMid slice"
+                  style={{ cursor: 'pointer' }}
+                />
+                
+                {/* Badge de contador (opcional, muy profesional) */}
+                <g transform="translate(12, -9)">
+                    <circle r="7" fill={getFlagColor(marker.name, true, isDark)} stroke="white" strokeWidth="1" />
+                    <text
+                        textAnchor="middle"
+                        y="3"
+                        style={{ fontSize: '7px', fontWeight: 'bold', fill: 'white', fontFamily: 'sans-serif' }}
+                    >
+                        {marker.total}
+                    </text>
+                </g>
               </Marker>
             ))}
           </ZoomableGroup>

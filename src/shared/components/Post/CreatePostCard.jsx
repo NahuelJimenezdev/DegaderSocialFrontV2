@@ -203,7 +203,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                             className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                             onError={(e) => {
                                 e.target.onerror = null;
-                                const name = currentUser?.nombreCompleto || currentUser?.email?.split('@')[0] || 'Usuario';
+                                    const name = currentUser?.nombreCompleto || currentUser?.email?.split('@')[0] || 'Usuario';
                                 e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
                             }}
                         />
@@ -236,7 +236,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, alwaysExpanded = false, er
                                 className="w-10 h-10 rounded-full object-cover flex-shrink-0 block"
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    const name = currentUser?.nombreCompleto || currentUser?.email?.split('@')[0] || 'Usuario';
+                                        const name = currentUser?.nombreCompleto || currentUser?.email?.split('@')[0] || 'Usuario';
                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
                                 }}
                             />
