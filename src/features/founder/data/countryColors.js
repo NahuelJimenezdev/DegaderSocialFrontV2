@@ -6,7 +6,7 @@ export const COUNTRY_DATA = {
   'Bolivia': { iso: 'bo', color: '#007A33' },
   'Brazil': { iso: 'br', color: '#009739' },
   'Chile': { iso: 'cl', color: '#0039A6' },
-  'Colombia': { iso: 'co', color: '#FCD116' },
+  'Colombia': { iso: 'co', color: '#FF0000' },
   'Costa Rica': { iso: 'cr', color: '#EF3340' },
   'Cuba': { iso: 'cu', color: '#002590' },
   'Ecuador': { iso: 'ec', color: '#FFDD00' },
