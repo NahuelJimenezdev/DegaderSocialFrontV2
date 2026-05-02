@@ -153,6 +153,24 @@ export default function WorldMapSection({ geoStats = [] }) {
               }
             </Geographies>
 
+            {geoStats.filter(s => s.total > 0).map(stat => {
+              const mapName = getMapName(stat.pais);
+              const coords = COUNTRY_CENTERS[mapName];
+              if (!coords) return null;
+              
+              return (
+                <Marker key={mapName} coordinates={coords} onClick={() => selectCountry(mapName, stat.pais)}>
+                   <g transform="translate(0, -5)" style={{ cursor: 'pointer' }}>
+                      {/* Efecto de pulso (Foco de vida) */}
+                      <circle r="5" fill="#6366f1">
+                          <animate attributeName="r" from="5" to="15" dur="2s" repeatCount="indefinite" />
+                          <animate attributeName="opacity" from="0.8" to="0" dur="2s" repeatCount="indefinite" />
+                      </circle>
+                      <circle r="4" fill="#818cf8" stroke="white" strokeWidth="1" />
+                  </g>
+                </Marker>
+              );
+            })}
           </ZoomableGroup>
         </ComposableMap>
 
