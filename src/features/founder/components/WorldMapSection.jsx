@@ -62,7 +62,6 @@ export default function WorldMapSection({ geoStats = [] }) {
     return map;
   }, [geoStats]);
 
-  // Extraer los países con datos para crear los patrones una sola vez
   const countriesWithData = useMemo(() => {
     return geoStats
       .filter(s => s.total > 0)
@@ -92,13 +91,13 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
-          {/* PASO 1: Consolidar todos los patrones al inicio del SVG */}
           <defs>
-            {countriesWithData.map(({ iso, mapName }) => (
+            {countriesWithData.map(({ iso }) => (
               <pattern
                 key={`pattern-${iso}`}
                 id={`flag-${iso}`}
                 patternUnits="objectBoundingBox"
+                patternContentUnits="objectBoundingBox"
                 width="1"
                 height="1"
               >
@@ -125,10 +124,8 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const iso = getCountryIso(mapName);
                   const flagColor = getFlagColor(mapName, true, isDark);
 
-                  // PASO 2: Referencia robusta al patrón
-                  // Usamos window.location.pathname para evitar fallos de resolución de ID en SPAs
                   const fillValue = (count > 0 && iso) 
-                    ? `url(${window.location.pathname}#flag-${iso})` 
+                    ? `url(#flag-${iso})` 
                     : (isDark ? '#1e293b' : '#f1f5f9');
 
                   return (
