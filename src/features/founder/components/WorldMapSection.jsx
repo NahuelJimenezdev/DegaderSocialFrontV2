@@ -62,17 +62,6 @@ export default function WorldMapSection({ geoStats = [] }) {
     return map;
   }, [geoStats]);
 
-  const activeCountries = useMemo(() => {
-    return geoStats
-      .filter(s => s.total > 0)
-      .map(stat => {
-        const mapName = getMapName(stat.pais);
-        const iso = getCountryIso(mapName);
-        return iso ? { name: mapName, iso, total: stat.total, dbName: stat.pais } : null;
-      })
-      .filter(Boolean);
-  }, [geoStats]);
-
   const selectCountry = (name, dbName) => {
     const stats = statsLookup[name];
     if (stats?.total > 0) {
@@ -91,27 +80,6 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
-          <defs>
-            {activeCountries.map(country => (
-              <pattern
-                key={`pattern-${country.iso}`}
-                id={`pattern-${country.iso}`}
-                patternUnits="objectBoundingBox"
-                width="1"
-                height="1"
-              >
-                <image
-                  href={`/flags/${country.iso}.svg`}
-                  x="0"
-                  y="0"
-                  width="1"
-                  height="1"
-                  preserveAspectRatio="none" // Para que rellene TODO el territorio como en tu imagen
-                />
-              </pattern>
-            ))}
-          </defs>
-
           <ZoomableGroup center={[-40, 10]} zoom={1.3} minZoom={1} maxZoom={6}>
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
@@ -123,48 +91,69 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const iso = getCountryIso(mapName);
                   const flagColor = getFlagColor(mapName, true, isDark);
 
-                  // LOGICA DE RELLENO "FLAG MAP"
-                  const fillValue = (count > 0 && iso) ? `url(#pattern-${iso})` : (isDark ? '#1e293b' : '#f1f5f9');
+                  const patternId = `pattern-${iso}-${geo.rsmKey}`;
 
                   return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      onClick={() => selectCountry(mapName, getDbName(mapName))}
-                      fill={fillValue}
-                      fillOpacity={count > 0 ? (isSelected ? 1 : 0.9) : 0.1}
-                      stroke={count > 0 ? (isSelected ? '#fff' : flagColor) : (isDark ? '#334155' : '#e2e8f0')}
-                      strokeWidth={isSelected ? 1 : 0.4}
-                      style={{
-                        default: { outline: 'none', transition: 'all 0.3s ease' },
-                        hover: {
-                          fillOpacity: 1,
-                          stroke: '#fff',
-                          strokeWidth: 1,
-                          outline: 'none',
-                          cursor: count > 0 ? 'pointer' : 'default',
-                        }
-                      }}
-                    />
+                    <React.Fragment key={geo.rsmKey}>
+                      {count > 0 && iso && (
+                        <defs>
+                          <pattern
+                            id={patternId}
+                            patternUnits="objectBoundingBox"
+                            width="1"
+                            height="1"
+                          >
+                            <image
+                              href={`/flags/${iso}.svg`}
+                              width="1"
+                              height="1"
+                              x="0"
+                              y="0"
+                              preserveAspectRatio="none"
+                            />
+                          </pattern>
+                        </defs>
+                      )}
+
+                      <Geography
+                        geography={geo}
+                        onClick={() => selectCountry(mapName, getDbName(mapName))}
+                        fill={count > 0 && iso ? `url(#${patternId})` : (isDark ? '#1e293b' : '#f1f5f9')}
+                        fillOpacity={count > 0 ? 1 : (isDark ? 0.3 : 0.5)}
+                        stroke={count > 0 ? (isSelected ? '#fff' : flagColor) : (isDark ? '#334155' : '#e2e8f0')}
+                        strokeWidth={isSelected ? 1 : 0.4}
+                        style={{
+                          default: { outline: 'none', transition: 'all 0.3s ease' },
+                          hover: {
+                            fillOpacity: 1,
+                            stroke: '#fff',
+                            strokeWidth: 1,
+                            outline: 'none',
+                            cursor: count > 0 ? 'pointer' : 'default',
+                          }
+                        }}
+                      />
+                    </React.Fragment>
                   );
                 })
               }
             </Geographies>
 
-            {/* Solo dejamos los badges de números, sin la bandera flotante para que se vea el territorio */}
-            {activeCountries.map(country => {
-              const coords = COUNTRY_CENTERS[country.name];
+            {/* BADGES DE NÚMEROS */}
+            {geoStats.filter(s => s.total > 0).map(stat => {
+              const mapName = getMapName(stat.pais);
+              const coords = COUNTRY_CENTERS[mapName];
               if (!coords) return null;
               return (
-                <Marker key={country.name} coordinates={coords}>
+                <Marker key={mapName} coordinates={coords}>
                    <g transform="translate(0, -10)">
-                      <circle r="8" fill="rgba(0,0,0,0.6)" stroke="white" strokeWidth="1" />
+                      <circle r="9" fill="rgba(0,0,0,0.8)" stroke="white" strokeWidth="1.5" />
                       <text
                           textAnchor="middle"
                           y="3"
                           style={{ fontSize: '8px', fontWeight: 'bold', fill: 'white', fontFamily: 'sans-serif' }}
                       >
-                          {country.total}
+                          {stat.total}
                       </text>
                   </g>
                 </Marker>
