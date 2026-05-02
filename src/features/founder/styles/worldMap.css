@@ -193,7 +193,6 @@
 
 .map-marker-dot.selected {
   animation: pulse-selected 1s infinite;
-  fill: #6366f1;
   stroke: #fff;
   stroke-width: 2;
 }

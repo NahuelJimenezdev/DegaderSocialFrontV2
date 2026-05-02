@@ -7,6 +7,7 @@ import {
   Marker
 } from 'react-simple-maps';
 import { getMapName, getDbName } from '../data/countryMapping';
+import { getFlagColor, getCountryIso } from '../data/countryColors';
 import CountryTooltip from './CountryTooltip';
 import CountryUsersPanel from './CountryUsersPanel';
 import { useNavigate } from 'react-router-dom';
@@ -60,16 +61,10 @@ const useIsDarkMode = () => {
   return isDark;
 };
 
-// Color único para países CON usuarios, gris para los que no
-const getCountryColor = (count, isSelected, isDark) => {
-  if (isSelected) return '#6366f1'; // Indigo para seleccionado
-  if (count > 0) return isDark ? '#1e3a5f' : '#bfdbfe'; // Un solo color claro
-  return 'transparent'; // Sin usuarios = transparente (se ve el fondo)
-};
-
-const getStroke = (count, isSelected, isDark) => {
-  if (isSelected) return '#818cf8';
-  if (count > 0) return isDark ? '#3b82f6' : '#60a5fa';
+// Estilo del borde basado en el estado
+const getStroke = (count, isSelected, isDark, mapName) => {
+  if (isSelected) return getFlagColor(mapName, true, isDark);
+  if (count > 0) return getFlagColor(mapName, true, isDark); // Borde con color de bandera pero fino
   return isDark ? '#1e293b' : '#cbd5e1';
 };
 
@@ -151,6 +146,33 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
+          <defs>
+            {/* Definición de patrones de banderas para países con usuarios */}
+            {geoStats.filter(s => s.total > 0).map(stat => {
+              const mapName = getMapName(stat.pais);
+              const iso = getCountryIso(mapName);
+              if (!iso) return null;
+              return (
+                <pattern 
+                  key={`pattern-${iso}`}
+                  id={`flag-${iso}`} 
+                  patternUnits="objectBoundingBox" 
+                  width="1" 
+                  height="1"
+                >
+                  <image 
+                    href={`https://flagcdn.com/w320/${iso}.png`} 
+                    x="0" 
+                    y="0" 
+                    width="100%" 
+                    height="100%" 
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                </pattern>
+              );
+            })}
+          </defs>
+
           {/* Zoom: 1.3, Center: [-40, 10] enfoca perfectamente LatAm y Europa/España */}
           <ZoomableGroup center={[-40, 10]} zoom={1.3} minZoom={1} maxZoom={6}>
             {/* Países */}
@@ -162,6 +184,8 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const count = stats?.total || 0;
                   const isSelected = selectedCountry?.name === mapName;
 
+                  const iso = getCountryIso(mapName);
+
                   return (
                     <Geography
                       key={geo.rsmKey}
@@ -169,18 +193,29 @@ export default function WorldMapSection({ geoStats = [] }) {
                       onClick={(e) => handleCountryClick(geo, e)}
                       style={{
                         default: {
-                          fill: getCountryColor(count, isSelected, isDark),
-                          stroke: getStroke(count, isSelected, isDark),
-                          strokeWidth: 0.4,
+                          fill: (count > 0 && iso) 
+                            ? `url(#flag-${iso})` 
+                            : 'transparent',
+                          fillOpacity: isSelected ? 1 : 0.4,
+                          stroke: getStroke(count, isSelected, isDark, mapName),
+                          strokeWidth: isSelected ? 0.8 : 0.4,
                           outline: 'none',
-                          transition: 'all 0.2s ease',
+                          transition: 'all 0.3s ease',
                         },
                         hover: {
-                          fill: count > 0 ? '#2563eb' : (isDark ? '#1e293b' : '#e2e8f0'),
-                          stroke: count > 0 ? '#6366f1' : (isDark ? '#334155' : '#94a3b8'),
+                          fill: (count > 0 && iso) 
+                            ? `url(#flag-${iso})` 
+                            : (isDark ? '#1e293b' : '#e2e8f0'),
+                          fillOpacity: 1,
+                          stroke: count > 0 
+                            ? getFlagColor(mapName, true, isDark) 
+                            : (isDark ? '#334155' : '#94a3b8'),
                           strokeWidth: 0.8,
                           outline: 'none',
                           cursor: count > 0 ? 'pointer' : 'default',
+                        },
+                        pressed: {
+                          outline: 'none'
                         }
                       }}
                     />
@@ -200,7 +235,7 @@ export default function WorldMapSection({ geoStats = [] }) {
                 <circle
                   className={`map-marker-dot ${selectedCountry?.name === marker.name ? 'selected' : ''}`}
                   r={selectedCountry?.name === marker.name ? 5 : 3}
-                  fill={selectedCountry?.name === marker.name ? '#6366f1' : '#60a5fa'}
+                  fill={getFlagColor(marker.name, true, isDark)}
                   stroke="#fff"
                   strokeWidth={1}
                 />
