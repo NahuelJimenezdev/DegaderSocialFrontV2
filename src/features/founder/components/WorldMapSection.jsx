@@ -153,19 +153,43 @@ export default function WorldMapSection({ geoStats = [] }) {
               }
             </Geographies>
 
-            {/* BADGES DE NÚMEROS */}
             {geoStats.filter(s => s.total > 0).map(stat => {
               const mapName = getMapName(stat.pais);
               const coords = COUNTRY_CENTERS[mapName];
               if (!coords) return null;
+              
+              // Ajustar el tamaño si el número es de 3 cifras
+              const radius = stat.total > 99 ? 12 : 10;
+              
               return (
-                <Marker key={mapName} coordinates={coords}>
-                   <g transform="translate(0, -10)">
-                      <circle r="9" fill="rgba(0,0,0,0.8)" stroke="white" strokeWidth="1.5" />
+                <Marker key={mapName} coordinates={coords} onClick={() => selectCountry(mapName, stat.pais)}>
+                   <g transform="translate(0, -5)" style={{ cursor: 'pointer', transition: 'all 0.3s ease' }} className="hover:scale-110">
+                      {/* Animación de latido (Radar) */}
+                      <circle r={radius} fill="#6366f1">
+                          <animate attributeName="r" from={radius} to={radius + 15} dur="2s" repeatCount="indefinite" />
+                          <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite" />
+                      </circle>
+
+                      {/* Fondo premium del badge */}
+                      <circle 
+                        r={radius} 
+                        fill="rgba(15, 23, 42, 0.95)" 
+                        stroke="#818cf8" 
+                        strokeWidth="1.5" 
+                        className="drop-shadow-lg"
+                      />
+                      
+                      {/* Texto brillante */}
                       <text
                           textAnchor="middle"
-                          y="3"
-                          style={{ fontSize: '8px', fontWeight: 'bold', fill: 'white', fontFamily: 'sans-serif' }}
+                          y="3.5"
+                          style={{ 
+                            fontSize: stat.total > 99 ? '8.5px' : '9px', 
+                            fontWeight: '800', 
+                            fill: '#ffffff', 
+                            fontFamily: "'Inter', sans-serif",
+                            textShadow: '0px 1px 2px rgba(0,0,0,0.9)'
+                          }}
                       >
                           {stat.total}
                       </text>
