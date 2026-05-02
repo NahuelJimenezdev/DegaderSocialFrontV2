@@ -21,6 +21,10 @@ const COUNTRY_CENTERS = {
   'Honduras': [-87, 15], 'Mexico': [-102, 23], 'Nicaragua': [-85, 13],
   'Panama': [-80, 9], 'Paraguay': [-58, -23], 'Peru': [-76, -10],
   'Dominican Rep.': [-70, 19], 'Uruguay': [-56, -33], 'Venezuela': [-67, 8],
+  'Canada': [-106, 56], 'Guatemala': [-90, 15],
+  'Russia': [105, 61], 'India': [79, 21], 'China': [104, 35],
+  'Germany': [10, 51], 'France': [2, 47], 'Italy': [12, 43],
+  'United Kingdom': [-3, 54], 'Australia': [134, -25],
 };
 
 const useIsDarkMode = () => {
@@ -100,8 +104,7 @@ export default function WorldMapSection({ geoStats = [] }) {
                   width="1" height="1"
                 >
                   <image 
-                    href={`https://flagcdn.com/${iso}.svg`} 
-                    crossOrigin="anonymous"
+                    href={`/flags/${iso}.svg`} 
                     x="0" y="0" width="100%" height="100%" 
                     preserveAspectRatio="xMidYMid slice"
                   />
@@ -128,9 +131,8 @@ export default function WorldMapSection({ geoStats = [] }) {
                       onClick={() => selectCountry(mapName, getDbName(mapName))}
                       style={{
                         default: {
-                          // Fallback: Si el pattern falla por CORS, mostramos el color sólido del país
+                          // USAMOS LAS BANDERAS LOCALES DESCARGADAS
                           fill: (count > 0 && iso) ? `url(#flag-${iso})` : (isDark ? 'transparent' : 'transparent'),
-                          backgroundColor: count > 0 ? flagColor : 'transparent',
                           fillOpacity: count > 0 ? (isSelected ? 1 : 0.6) : 0,
                           stroke: count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1'),
                           strokeWidth: isSelected ? 0.8 : 0.4,
