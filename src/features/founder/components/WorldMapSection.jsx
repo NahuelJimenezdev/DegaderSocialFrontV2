@@ -131,7 +131,6 @@ export default function WorldMapSection({ geoStats = [] }) {
                       onClick={() => selectCountry(mapName, getDbName(mapName))}
                       style={{
                         default: {
-                          // USAMOS LAS BANDERAS LOCALES DESCARGADAS
                           fill: (count > 0 && iso) ? `url(#flag-${iso})` : (isDark ? 'transparent' : 'transparent'),
                           fillOpacity: count > 0 ? (isSelected ? 1 : 0.6) : 0,
                           stroke: count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1'),
@@ -171,20 +170,67 @@ export default function WorldMapSection({ geoStats = [] }) {
           </ZoomableGroup>
         </ComposableMap>
 
+        {/* RESTAURACIÓN DEL DISEÑO ORIGINAL DE LAS TARJETAS (OVERLAYS) */}
         {selectedCountry && (
-          <div className="map-floating-overlay" style={{ pointerEvents: 'none' }}>
-            <div className="map-floating-card" style={{ pointerEvents: 'auto' }}>
+          <div className="map-floating-overlay">
+            {/* Card 1: Vista de País con Contadores */}
+            <div className="map-floating-card">
               <h3>
-                <span>País: {selectedCountry.dbName}</span>
-                <button onClick={() => setSelectedCountry(null)}>✕</button>
+                <span>Vista de País: {selectedCountry.dbName}</span>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setSelectedCountry(null); }}
+                  className="text-gray-400 hover:text-white"
+                >
+                  ✕
+                </button>
               </h3>
-              <p className="text-[11px] text-gray-400 mb-2">Usuarios: {selectedCountry.stats.total}</p>
+              <p className="text-[11px] text-gray-400 mb-2">Total de Usuarios en {selectedCountry.dbName}: {selectedCountry.stats.total}</p>
+
+              <div className="map-floating-stats-grid">
+                <div className="map-floating-stat-item">
+                  <p className="map-floating-stat-label">Directores</p>
+                  <p className="map-floating-stat-value stat-director">{selectedCountry.stats.directores || 0}</p>
+                </div>
+                <div className="map-floating-stat-item">
+                  <p className="map-floating-stat-label">Secretarios</p>
+                  <p className="map-floating-stat-value stat-secretario">{selectedCountry.stats.secretarios || 0}</p>
+                </div>
+                <div className="map-floating-stat-item">
+                  <p className="map-floating-stat-label">Afiliados</p>
+                  <p className="map-floating-stat-value stat-afiliado">{selectedCountry.stats.afiliados || 0}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Listado Detallado de Usuarios */}
+            <div className="map-floating-card">
+              <h3>Listado Detallado de Usuarios</h3>
+              <div className="map-floating-users-list">
+                {loadingCountryUsers ? (
+                  <p className="text-[11px] text-center py-4 animate-pulse">Cargando...</p>
+                ) : countryUsers.length > 0 ? (
+                  countryUsers.slice(0, 6).map((user) => (
+                    <div key={user._id} className="map-floating-user-item">
+                      {user.social?.fotoPerfil ? (
+                        <img src={user.social.fotoPerfil} className="map-floating-user-avatar" alt={user.username} />
+                      ) : (
+                        <div className="map-floating-user-avatar">
+                          {user.username?.[0]?.toUpperCase()}
+                        </div>
+                      )}
+                      <span className="map-floating-user-name">@{user.username}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-[11px] text-center py-4 text-gray-500">Sin usuarios</p>
+                )}
+              </div>
+
               <div 
-                onClick={() => navigate(`/founder/users/country/${selectedCountry.dbName}`)}
+                onClick={(e) => { e.stopPropagation(); navigate(`/founder/users/country/${selectedCountry.dbName}`); }}
                 className="map-floating-view-all"
-                style={{ cursor: 'pointer' }}
               >
-                Ver todos →
+                Ver todos los usuarios →
               </div>
             </div>
           </div>
