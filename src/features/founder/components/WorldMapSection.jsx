@@ -87,7 +87,6 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
-          {/* DEFINICIONES GLOBALES DE BANDERAS */}
           <defs>
             {geoStats.filter(s => s.total > 0).map(stat => {
               const mapName = getMapName(stat.pais);
@@ -95,13 +94,14 @@ export default function WorldMapSection({ geoStats = [] }) {
               if (!iso) return null;
               return (
                 <pattern 
-                  key={`flag-pattern-${iso}`}
-                  id={`flag-pattern-${iso}`} 
+                  key={`flag-${iso}`}
+                  id={`flag-${iso}`} 
                   patternUnits="objectBoundingBox" 
                   width="1" height="1"
                 >
                   <image 
-                    href={`https://flagcdn.com/w640/${iso}.png`} 
+                    href={`https://flagcdn.com/${iso}.svg`} 
+                    crossOrigin="anonymous"
                     x="0" y="0" width="100%" height="100%" 
                     preserveAspectRatio="xMidYMid slice"
                   />
@@ -128,8 +128,9 @@ export default function WorldMapSection({ geoStats = [] }) {
                       onClick={() => selectCountry(mapName, getDbName(mapName))}
                       style={{
                         default: {
-                          // TRUCO: Si la bandera falla, se ve el color de fondo sólido
-                          fill: (count > 0 && iso) ? `url(#flag-pattern-${iso})` : (isDark ? 'transparent' : 'transparent'),
+                          // Fallback: Si el pattern falla por CORS, mostramos el color sólido del país
+                          fill: (count > 0 && iso) ? `url(#flag-${iso})` : (isDark ? 'transparent' : 'transparent'),
+                          backgroundColor: count > 0 ? flagColor : 'transparent',
                           fillOpacity: count > 0 ? (isSelected ? 1 : 0.6) : 0,
                           stroke: count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1'),
                           strokeWidth: isSelected ? 0.8 : 0.4,
@@ -137,7 +138,7 @@ export default function WorldMapSection({ geoStats = [] }) {
                           transition: 'all 0.3s ease',
                         },
                         hover: {
-                          fill: (count > 0 && iso) ? `url(#flag-pattern-${iso})` : (isDark ? '#1e293b' : '#e2e8f0'),
+                          fill: (count > 0 && iso) ? `url(#flag-${iso})` : (isDark ? '#1e293b' : '#e2e8f0'),
                           fillOpacity: 1,
                           stroke: count > 0 ? flagColor : (isDark ? '#334155' : '#94a3b8'),
                           strokeWidth: 0.8,
@@ -156,7 +157,6 @@ export default function WorldMapSection({ geoStats = [] }) {
                 key={marker.name}
                 coordinates={marker.coordinates}
                 onClick={() => selectCountry(marker.name, marker.dbName)}
-                style={{ cursor: 'pointer' }}
               >
                 <circle
                   r={selectedCountry?.name === marker.name ? 5 : 3}
@@ -173,24 +173,10 @@ export default function WorldMapSection({ geoStats = [] }) {
           <div className="map-floating-overlay" style={{ pointerEvents: 'none' }}>
             <div className="map-floating-card" style={{ pointerEvents: 'auto' }}>
               <h3>
-                <span>Vista de País: {selectedCountry.dbName}</span>
+                <span>País: {selectedCountry.dbName}</span>
                 <button onClick={() => setSelectedCountry(null)}>✕</button>
               </h3>
               <p className="text-[11px] text-gray-400 mb-2">Usuarios: {selectedCountry.stats.total}</p>
-              <div className="map-floating-stats-grid">
-                <div className="map-floating-stat-item">
-                  <p className="map-floating-stat-label">Directores</p>
-                  <p className="map-floating-stat-value">{selectedCountry.stats.directores || 0}</p>
-                </div>
-                <div className="map-floating-stat-item">
-                  <p className="map-floating-stat-label">Secretarios</p>
-                  <p className="map-floating-stat-value">{selectedCountry.stats.secretarios || 0}</p>
-                </div>
-                <div className="map-floating-stat-item">
-                  <p className="map-floating-stat-label">Afiliados</p>
-                  <p className="map-floating-stat-value">{selectedCountry.stats.afiliados || 0}</p>
-                </div>
-              </div>
               <div 
                 onClick={() => navigate(`/founder/users/country/${selectedCountry.dbName}`)}
                 className="map-floating-view-all"
