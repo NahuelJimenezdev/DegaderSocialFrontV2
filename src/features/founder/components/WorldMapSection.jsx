@@ -8,14 +8,11 @@ import {
 } from 'react-simple-maps';
 import { getMapName, getDbName } from '../data/countryMapping';
 import { getFlagColor, getCountryIso } from '../data/countryColors';
-import CountryTooltip from './CountryTooltip';
-import CountryUsersPanel from './CountryUsersPanel';
 import { useNavigate } from 'react-router-dom';
 import { useFounderUsers } from '../../../shared/hooks/useFounderUsers';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
-// Coordenadas centrales de países con usuarios (para los dots/labels)
 const COUNTRY_CENTERS = {
   'Argentina': [-64, -34], 'Bolivia': [-65, -17], 'Brazil': [-51, -14],
   'Chile': [-71, -35], 'Colombia': [-74, 4], 'Costa Rica': [-84, 10],
@@ -24,23 +21,8 @@ const COUNTRY_CENTERS = {
   'Honduras': [-87, 15], 'Mexico': [-102, 23], 'Nicaragua': [-85, 13],
   'Panama': [-80, 9], 'Paraguay': [-58, -23], 'Peru': [-76, -10],
   'Dominican Rep.': [-70, 19], 'Uruguay': [-56, -33], 'Venezuela': [-67, 8],
-  // Otros comunes
-  'Canada': [-106, 56], 'Guatemala': [-90, 15],
-  'Russia': [105, 61], 'India': [79, 21], 'China': [104, 35],
-  'Germany': [10, 51], 'France': [2, 47], 'Italy': [12, 43],
-  'United Kingdom': [-3, 54], 'Australia': [134, -25],
-  'Japan': [138, 36], 'South Korea': [128, 36],
-  'South Africa': [25, -29], 'Nigeria': [8, 10], 'Kenya': [38, 0],
-  'Egypt': [30, 26], 'Turkey': [35, 39], 'Saudi Arabia': [45, 24],
-  'Indonesia': [120, -5], 'Philippines': [122, 12],
-  'Thailand': [101, 15], 'Vietnam': [108, 16],
-  'Poland': [20, 52], 'Ukraine': [32, 49],
-  'Portugal': [-8, 39], 'Netherlands': [5, 52],
-  'Belgium': [4, 51], 'Switzerland': [8, 47],
-  'Sweden': [18, 62], 'Norway': [8, 61],
 };
 
-// Detectar modo oscuro
 const useIsDarkMode = () => {
   const [isDark, setIsDark] = useState(() => {
     return document.documentElement.getAttribute('data-theme') === 'dark'
@@ -61,28 +43,12 @@ const useIsDarkMode = () => {
   return isDark;
 };
 
-// Estilo del borde basado en el estado
-const getStroke = (count, isSelected, isDark, mapName) => {
-  if (isSelected) return getFlagColor(mapName, true, isDark);
-  if (count > 0) return getFlagColor(mapName, true, isDark); // Borde con color de bandera pero fino
-  return isDark ? '#1e293b' : '#cbd5e1';
-};
-
-/**
- * Mapa mundial interactivo con distribución de usuarios por país
- */
 export default function WorldMapSection({ geoStats = [] }) {
   const navigate = useNavigate();
   const isDark = useIsDarkMode();
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const { countryUsers, loadingCountryUsers, fetchUsersByCountry } = useFounderUsers();
 
-  const {
-    countryUsers,
-    loadingCountryUsers,
-    fetchUsersByCountry
-  } = useFounderUsers();
-
-  // Lookup: nombre SVG → stats
   const statsLookup = useMemo(() => {
     const map = {};
     geoStats.forEach(stat => {
@@ -92,20 +58,13 @@ export default function WorldMapSection({ geoStats = [] }) {
     return map;
   }, [geoStats]);
 
-  // Lista de marcadores (dots) para países con usuarios
   const markers = useMemo(() => {
     return geoStats
       .filter(s => s.total > 0)
       .map(stat => {
         const mapName = getMapName(stat.pais);
         const coords = COUNTRY_CENTERS[mapName];
-        if (!coords) return null;
-        return {
-          name: mapName,
-          dbName: stat.pais,
-          coordinates: coords,
-          total: stat.total
-        };
+        return coords ? { name: mapName, dbName: stat.pais, coordinates: coords, total: stat.total } : null;
       })
       .filter(Boolean);
   }, [geoStats]);
@@ -120,24 +79,6 @@ export default function WorldMapSection({ geoStats = [] }) {
     }
   };
 
-  const handleCountryClick = useCallback((geo, e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    const mapName = geo.properties.name;
-    const dbName = getDbName(mapName);
-    selectCountry(mapName, dbName);
-  }, [statsLookup, fetchUsersByCountry]);
-
-  const handleMarkerClick = useCallback((marker, e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    selectCountry(marker.name, marker.dbName);
-  }, [statsLookup, fetchUsersByCountry]);
-
   return (
     <div className="world-map-section">
       <div className="world-map-container" style={{ position: 'relative' }}>
@@ -146,26 +87,22 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
+          {/* DEFINICIONES GLOBALES DE BANDERAS */}
           <defs>
-            {/* Definición de patrones de banderas para países con usuarios */}
             {geoStats.filter(s => s.total > 0).map(stat => {
               const mapName = getMapName(stat.pais);
               const iso = getCountryIso(mapName);
               if (!iso) return null;
               return (
                 <pattern 
-                  key={`pattern-${iso}`}
-                  id={`flag-${iso}`} 
+                  key={`flag-pattern-${iso}`}
+                  id={`flag-pattern-${iso}`} 
                   patternUnits="objectBoundingBox" 
-                  width="1" 
-                  height="1"
+                  width="1" height="1"
                 >
                   <image 
-                    href={`https://flagcdn.com/w320/${iso}.png`} 
-                    x="0" 
-                    y="0" 
-                    width="100%" 
-                    height="100%" 
+                    href={`https://flagcdn.com/w640/${iso}.png`} 
+                    x="0" y="0" width="100%" height="100%" 
                     preserveAspectRatio="xMidYMid slice"
                   />
                 </pattern>
@@ -173,9 +110,7 @@ export default function WorldMapSection({ geoStats = [] }) {
             })}
           </defs>
 
-          {/* Zoom: 1.3, Center: [-40, 10] enfoca perfectamente LatAm y Europa/España */}
           <ZoomableGroup center={[-40, 10]} zoom={1.3} minZoom={1} maxZoom={6}>
-            {/* Países */}
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map(geo => {
@@ -183,39 +118,31 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const stats = statsLookup[mapName];
                   const count = stats?.total || 0;
                   const isSelected = selectedCountry?.name === mapName;
-
                   const iso = getCountryIso(mapName);
+                  const flagColor = getFlagColor(mapName, true, isDark);
 
                   return (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      onClick={(e) => handleCountryClick(geo, e)}
+                      onClick={() => selectCountry(mapName, getDbName(mapName))}
                       style={{
                         default: {
-                          fill: (count > 0 && iso) 
-                            ? `url(#flag-${iso})` 
-                            : 'transparent',
-                          fillOpacity: isSelected ? 1 : 0.4,
-                          stroke: getStroke(count, isSelected, isDark, mapName),
+                          // TRUCO: Si la bandera falla, se ve el color de fondo sólido
+                          fill: (count > 0 && iso) ? `url(#flag-pattern-${iso})` : (isDark ? 'transparent' : 'transparent'),
+                          fillOpacity: count > 0 ? (isSelected ? 1 : 0.6) : 0,
+                          stroke: count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1'),
                           strokeWidth: isSelected ? 0.8 : 0.4,
                           outline: 'none',
                           transition: 'all 0.3s ease',
                         },
                         hover: {
-                          fill: (count > 0 && iso) 
-                            ? `url(#flag-${iso})` 
-                            : (isDark ? '#1e293b' : '#e2e8f0'),
+                          fill: (count > 0 && iso) ? `url(#flag-pattern-${iso})` : (isDark ? '#1e293b' : '#e2e8f0'),
                           fillOpacity: 1,
-                          stroke: count > 0 
-                            ? getFlagColor(mapName, true, isDark) 
-                            : (isDark ? '#334155' : '#94a3b8'),
+                          stroke: count > 0 ? flagColor : (isDark ? '#334155' : '#94a3b8'),
                           strokeWidth: 0.8,
                           outline: 'none',
                           cursor: count > 0 ? 'pointer' : 'default',
-                        },
-                        pressed: {
-                          outline: 'none'
                         }
                       }}
                     />
@@ -224,100 +151,52 @@ export default function WorldMapSection({ geoStats = [] }) {
               }
             </Geographies>
 
-            {/* Dots + Labels para países con usuarios */}
             {markers.map(marker => (
               <Marker
                 key={marker.name}
                 coordinates={marker.coordinates}
-                onClick={(e) => handleMarkerClick(marker, e)}
+                onClick={() => selectCountry(marker.name, marker.dbName)}
                 style={{ cursor: 'pointer' }}
               >
                 <circle
-                  className={`map-marker-dot ${selectedCountry?.name === marker.name ? 'selected' : ''}`}
                   r={selectedCountry?.name === marker.name ? 5 : 3}
                   fill={getFlagColor(marker.name, true, isDark)}
                   stroke="#fff"
                   strokeWidth={1}
                 />
-                <text
-                  textAnchor="middle"
-                  y={-8}
-                  style={{
-                    fontFamily: 'Inter, system-ui, sans-serif',
-                    fontSize: '7px',
-                    fontWeight: 600,
-                    fill: isDark ? '#94a3b8' : '#475569',
-                    pointerEvents: 'none'
-                  }}
-                >
-                  {marker.dbName}
-                </text>
               </Marker>
             ))}
           </ZoomableGroup>
         </ComposableMap>
 
-        {/* Tarjetas Flotantes (Overlays) */}
         {selectedCountry && (
-          <div className="map-floating-overlay">
-            {/* Card 1: Vista de País */}
-            <div className="map-floating-card">
+          <div className="map-floating-overlay" style={{ pointerEvents: 'none' }}>
+            <div className="map-floating-card" style={{ pointerEvents: 'auto' }}>
               <h3>
                 <span>Vista de País: {selectedCountry.dbName}</span>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setSelectedCountry(null); }}
-                  className="text-gray-400 hover:text-white"
-                >
-                  ✕
-                </button>
+                <button onClick={() => setSelectedCountry(null)}>✕</button>
               </h3>
-              <p className="text-[11px] text-gray-400 mb-2">Total de Usuarios en {selectedCountry.dbName}: {selectedCountry.stats.total}</p>
-
+              <p className="text-[11px] text-gray-400 mb-2">Usuarios: {selectedCountry.stats.total}</p>
               <div className="map-floating-stats-grid">
                 <div className="map-floating-stat-item">
                   <p className="map-floating-stat-label">Directores</p>
-                  <p className="map-floating-stat-value stat-director">{selectedCountry.stats.directores || 0}</p>
+                  <p className="map-floating-stat-value">{selectedCountry.stats.directores || 0}</p>
                 </div>
                 <div className="map-floating-stat-item">
                   <p className="map-floating-stat-label">Secretarios</p>
-                  <p className="map-floating-stat-value stat-secretario">{selectedCountry.stats.secretarios || 0}</p>
+                  <p className="map-floating-stat-value">{selectedCountry.stats.secretarios || 0}</p>
                 </div>
                 <div className="map-floating-stat-item">
                   <p className="map-floating-stat-label">Afiliados</p>
-                  <p className="map-floating-stat-value stat-afiliado">{selectedCountry.stats.afiliados || 0}</p>
+                  <p className="map-floating-stat-value">{selectedCountry.stats.afiliados || 0}</p>
                 </div>
               </div>
-            </div>
-
-            {/* Card 2: Listado Detallado */}
-            <div className="map-floating-card">
-              <h3>Listado Detallado de Usuarios</h3>
-              <div className="map-floating-users-list">
-                {loadingCountryUsers ? (
-                  <p className="text-[11px] text-center py-4 animate-pulse">Cargando...</p>
-                ) : countryUsers.length > 0 ? (
-                  countryUsers.slice(0, 6).map((user) => (
-                    <div key={user._id} className="map-floating-user-item">
-                      {user.social?.fotoPerfil ? (
-                        <img src={user.social.fotoPerfil} className="map-floating-user-avatar" alt={user.username} />
-                      ) : (
-                        <div className="map-floating-user-avatar">
-                          {user.username?.[0]?.toUpperCase()}
-                        </div>
-                      )}
-                      <span className="map-floating-user-name">@{user.username}</span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-[11px] text-center py-4 text-gray-500">Sin usuarios</p>
-                )}
-              </div>
-
               <div 
-                onClick={(e) => { e.stopPropagation(); navigate(`/founder/users/country/${selectedCountry.dbName}`); }}
+                onClick={() => navigate(`/founder/users/country/${selectedCountry.dbName}`)}
                 className="map-floating-view-all"
+                style={{ cursor: 'pointer' }}
               >
-                Ver todos los usuarios →
+                Ver todos →
               </div>
             </div>
           </div>
