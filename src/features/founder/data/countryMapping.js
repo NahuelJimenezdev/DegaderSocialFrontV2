@@ -87,6 +87,8 @@ export const DB_TO_MAP = {
   'Moldavia': 'Moldova',
   'Rusia': 'Russia',
   'Turquía': 'Turkey',
+  'Turquia': 'Turkey',
+  'Turkey': 'Turkey',
   'Chipre': 'Cyprus',
   'Kosovo': 'Kosovo',
 
