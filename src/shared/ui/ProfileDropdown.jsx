@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star, Shield, ShieldAlert, Compass, Smartphone } from 'lucide-react';
+import { Settings, Bell, Lock, HelpCircle, LogOut, Home, Users, MessageCircle, Video, Building2, Folder, User, Megaphone, Star, Shield, ShieldAlert, Compass, Smartphone, Activity } from 'lucide-react';
 import { useUserRole } from '../hooks/useUserRole';
 import { getUserAvatar } from '../utils/avatarUtils';
 import { getNombreCompleto } from '../utils/userUtils';
@@ -18,7 +18,7 @@ const ProfileDropdown = () => {
   const { restartTour, isMobile } = useOnboardingContext();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBtn, setShowInstallBtn] = useState(false);
-  const { canModerate, isFounder } = useUserRole();
+  const { canModerate, isFounder, hasPermission } = useUserRole();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -104,6 +104,10 @@ const ProfileDropdown = () => {
 
   if (isFounder()) {
     sidebarItems.push({ icon: ShieldAlert, label: 'Gestión Usuarios', path: '/founder/users' });
+  }
+
+  if (isFounder() || hasPermission('security_dashboard_view')) {
+    sidebarItems.push({ icon: Activity, label: 'Security Dashboard', path: '/admin/security-dashboard' });
   }
 
   const menuItems = [

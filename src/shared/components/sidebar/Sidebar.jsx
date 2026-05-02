@@ -1,4 +1,4 @@
-import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert, HelpCircle, Smartphone } from "lucide-react";
+import { Building2, Folder, Home, Settings, User, Users, MessageCircle, Video, Star, Shield, ShieldAlert, HelpCircle, Smartphone, Activity } from "lucide-react";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavItem from "../navItem/NavItem";
@@ -13,7 +13,7 @@ import '../../../shared/styles/sidebar.style.css';
 const Sidebar = () => {
   const { user } = useAuth();
   const pendingCount = usePendingMessageCounter(user?._id || user?.id);
-  const { canModerate, isFounder } = useUserRole();
+  const { canModerate, isFounder, hasPermission } = useUserRole();
   const [showComingSoonAlert, setShowComingSoonAlert] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBtn, setShowInstallBtn] = useState(false);
@@ -98,6 +98,12 @@ const Sidebar = () => {
           {isFounder() && (
             <div className="sidebar-items">
               <NavItem to="/founder/users" icon={ShieldAlert} label="Gestión Usuarios" />
+            </div>
+          )}
+
+          {(isFounder() || hasPermission('security_dashboard_view')) && (
+            <div className="sidebar-items">
+              <NavItem to="/admin/security-dashboard" icon={Activity} label="Security Dashboard" />
             </div>
           )}
         </div>

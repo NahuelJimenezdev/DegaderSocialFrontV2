@@ -1,0 +1,171 @@
+.dashboardContainer {
+  padding: 24px;
+  background-color: var(--bg-app);
+  min-height: 100vh;
+  color: var(--text-primary);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Zone A: Command Header */
+.commandHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-card);
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.statusGroup {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.statusItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.statusLabel {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.statusValue {
+  font-size: 1.1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Zone B: Core Observability */
+.observabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1280px) {
+  .observabilityGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 20px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chartContainer {
+  flex: 1;
+  width: 100%;
+}
+
+/* Zone C: Intelligence */
+.intelligencePanel {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .intelligencePanel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.intelligenceCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.eventStream {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-card);
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-primary);
+  font-size: 0.85rem;
+}
+
+.table tr:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Semantic Badges */
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.severityHigh { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
+.severityMedium { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); }
+.severityLow { color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+/* Animations */
+@keyframes pulse-red {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.pulseRed {
+  animation: pulse-red 2s infinite;
+  color: #ef4444;
+}
+
+.incidentMode {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+}
