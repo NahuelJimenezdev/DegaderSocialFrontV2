@@ -91,6 +91,7 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
+          {/* DEFINICIONES GLOBALES - AL PRINCIPIO DEL SVG */}
           <defs>
             {geoStats.filter(s => s.total > 0).map(stat => {
               const mapName = getMapName(stat.pais);
@@ -98,8 +99,8 @@ export default function WorldMapSection({ geoStats = [] }) {
               if (!iso) return null;
               return (
                 <pattern 
-                  key={`flag-${iso}`}
-                  id={`flag-${iso}`} 
+                  key={`pattern-flag-${iso}`}
+                  id={`pattern-flag-${iso}`} 
                   patternUnits="objectBoundingBox" 
                   width="1" height="1"
                 >
@@ -124,22 +125,25 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const iso = getCountryIso(mapName);
                   const flagColor = getFlagColor(mapName, true, isDark);
 
+                  // DETERMINAR EL RELLENO FINAL
+                  const fillValue = (count > 0 && iso) ? `url(#pattern-flag-${iso})` : 'transparent';
+
                   return (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
                       onClick={() => selectCountry(mapName, getDbName(mapName))}
+                      // INYECTAMOS LOS ATRIBUTOS DIRECTAMENTE, NO SOLO EN STYLE
+                      fill={fillValue}
+                      fillOpacity={count > 0 ? (isSelected ? 1 : 0.75) : 0}
+                      stroke={count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1')}
+                      strokeWidth={isSelected ? 0.8 : 0.4}
                       style={{
                         default: {
-                          fill: (count > 0 && iso) ? `url(#flag-${iso})` : (isDark ? 'transparent' : 'transparent'),
-                          fillOpacity: count > 0 ? (isSelected ? 1 : 0.6) : 0,
-                          stroke: count > 0 ? flagColor : (isDark ? '#1e293b' : '#cbd5e1'),
-                          strokeWidth: isSelected ? 0.8 : 0.4,
                           outline: 'none',
                           transition: 'all 0.3s ease',
                         },
                         hover: {
-                          fill: (count > 0 && iso) ? `url(#flag-${iso})` : (isDark ? '#1e293b' : '#e2e8f0'),
                           fillOpacity: 1,
                           stroke: count > 0 ? flagColor : (isDark ? '#334155' : '#94a3b8'),
                           strokeWidth: 0.8,
@@ -170,10 +174,8 @@ export default function WorldMapSection({ geoStats = [] }) {
           </ZoomableGroup>
         </ComposableMap>
 
-        {/* RESTAURACIÓN DEL DISEÑO ORIGINAL DE LAS TARJETAS (OVERLAYS) */}
         {selectedCountry && (
           <div className="map-floating-overlay">
-            {/* Card 1: Vista de País con Contadores */}
             <div className="map-floating-card">
               <h3>
                 <span>Vista de País: {selectedCountry.dbName}</span>
@@ -184,7 +186,7 @@ export default function WorldMapSection({ geoStats = [] }) {
                   ✕
                 </button>
               </h3>
-              <p className="text-[11px] text-gray-400 mb-2">Total de Usuarios en {selectedCountry.dbName}: {selectedCountry.stats.total}</p>
+              <p className="text-[11px] text-gray-400 mb-2">Total de Usuarios: {selectedCountry.stats.total}</p>
 
               <div className="map-floating-stats-grid">
                 <div className="map-floating-stat-item">
@@ -202,9 +204,8 @@ export default function WorldMapSection({ geoStats = [] }) {
               </div>
             </div>
 
-            {/* Card 2: Listado Detallado de Usuarios */}
             <div className="map-floating-card">
-              <h3>Listado Detallado de Usuarios</h3>
+              <h3>Listado Detallado</h3>
               <div className="map-floating-users-list">
                 {loadingCountryUsers ? (
                   <p className="text-[11px] text-center py-4 animate-pulse">Cargando...</p>
