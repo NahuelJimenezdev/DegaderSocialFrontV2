@@ -53,6 +53,8 @@ import ResetPasswordPage from './features/auth/pages/ResetPasswordPage'
 import PublicRoute from './features/auth/components/PublicRoute'
 import DocumentosPage from './features/fundacion/pages/DocumentosPage'
 import SolicitudesPendientesPage from './features/fundacion/pages/SolicitudesPendientesPage'
+import SecurityDashboardPage from './features/SecurityDashboard/pages/SecurityDashboardPage'
+import SecurityRoute from './features/SecurityDashboard/components/SecurityRoute'
 
 export const router = createBrowserRouter([
   // Public routes (Login & Register) - Protected from authenticated users
@@ -138,6 +140,7 @@ export const router = createBrowserRouter([
       { path: '/admin/tickets/:id', element: <ModeratorRoute><TicketDetailPage /></ModeratorRoute> }, // Vista admin
       // Founder Panel
       { path: '/admin/logs', element: <FounderRoute><AuditLogsPage /></FounderRoute> }, // Solo Founder/Audit
+      { path: '/admin/security-dashboard', element: <SecurityRoute><SecurityDashboardPage /></SecurityRoute> },
       { path: '/founder/users', element: <FounderRoute><FounderUsersPage /></FounderRoute> },
       { path: '/founder/users/country/:countryName', element: <FounderRoute><FounderCountryUsersPage /></FounderRoute> },
       { path: '/arena', element: <ArenaPage /> }

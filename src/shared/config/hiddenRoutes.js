@@ -16,6 +16,8 @@ export const hideAdsSidebarRoutes = [
   /^\/fundacion\/(visor|entrevista|hoja-de-vida|documentacion-fhsyl|admin(\/.*)?)$/i,
   // Founder - Panel de gestión (mapa interactivo necesita ancho completo)
   /^\/founder(\/.*)?$/i,
+  // Security Dashboard
+  /^\/admin\/security-dashboard$/i,
 ]
 
 export const hideSidebarRoutes = [

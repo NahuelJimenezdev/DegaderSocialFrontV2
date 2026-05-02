@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Users, Shield, Search, ChevronLeft, Edit2, Trash2 } from 'lucide-react';
+import { Users, Shield, Search, ChevronLeft, Edit2, Trash2, Download } from 'lucide-react';
 import { useFounderUsers } from '../../../shared/hooks/useFounderUsers';
 import RoleBadge from '../components/RoleBadge';
 import IosModal from '../../../shared/components/IosModal';
 import { useToast } from '../../../shared/components/Toast/ToastProvider';
 import nivelesPorPais from '../../fundacion/utils/nivelesPorPais';
+import founderService from '../../../api/founderService';
+import * as XLSX from 'xlsx';
 
 export default function FounderCountryUsersPage() {
     const { countryName } = useParams();
@@ -28,6 +30,7 @@ export default function FounderCountryUsersPage() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showResetModal, setShowResetModal] = useState(false);
     const [newPassword, setNewPassword] = useState('');
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const {
         users,
@@ -90,6 +93,59 @@ export default function FounderCountryUsersPage() {
             setNewPassword('');
         } catch (err) {
             toast.error(err.message);
+        }
+    };
+
+    const handleDownloadData = async () => {
+        try {
+            setIsDownloading(true);
+            const data = await founderService.getAllUsers({ 
+                ...filters, 
+                limit: 2000, 
+                page: 1 
+            });
+
+            const usersToExport = data.users || [];
+            if (usersToExport.length === 0) {
+                toast.error('No hay datos para descargar');
+                return;
+            }
+
+            // Preparar los datos para XLSX
+            const exportData = usersToExport.map(u => ({
+                'Usuario': `@${u.username}`,
+                'Nombre Completo': `${u.nombres?.primero || ''} ${u.nombres?.segundo || ''} ${u.apellidos?.primero || ''} ${u.apellidos?.segundo || ''}`.trim().replace(/\s+/g, ' '),
+                'Email': u.email || 'N/A',
+                [locationLabel]: u.personal?.ubicacion?.estado || 'N/A',
+                'Rol': u.rol || 'usuario',
+                'Telefono': u.personal?.celular || 'N/A'
+            }));
+
+            // Crear libro y hoja
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Usuarios');
+
+            // Ajustar anchos de columna automáticamente
+            const colWidths = [
+                { wch: 20 }, // Usuario
+                { wch: 35 }, // Nombre Completo
+                { wch: 35 }, // Email
+                { wch: 25 }, // Departamental
+                { wch: 15 }, // Rol
+                { wch: 20 }, // Telefono
+            ];
+            worksheet['!cols'] = colWidths;
+
+            // Generar archivo y descargar
+            XLSX.writeFile(workbook, `Usuarios_${countryName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
+
+            toast.success('Excel generado correctamente');
+        } catch (err) {
+            console.error('Error downloading:', err);
+            toast.error('Error al generar el archivo Excel');
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -168,16 +224,28 @@ export default function FounderCountryUsersPage() {
                             className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                         />
                     </div>
-                    <select
-                        value={filters.rol}
-                        onChange={(e) => setFilters({ ...filters, rol: e.target.value, page: 1 })}
-                        className="px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                    >
-                        <option value="">Todos los roles</option>
-                        <option value="moderador">Moderador</option>
-                        <option value="admin">Admin</option>
-                        <option value="usuario">Usuario</option>
-                    </select>
+                    <div className="flex items-center gap-2">
+                        <select
+                            value={filters.rol}
+                            onChange={(e) => setFilters({ ...filters, rol: e.target.value, page: 1 })}
+                            className="px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                        >
+                            <option value="">Todos los roles</option>
+                            <option value="moderador">Moderador</option>
+                            <option value="admin">Admin</option>
+                            <option value="usuario">Usuario</option>
+                        </select>
+                        
+                        <button
+                            onClick={handleDownloadData}
+                            disabled={isDownloading || users.length === 0}
+                            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Descargar datos en CSV"
+                        >
+                            <Download size={20} />
+                            <span className="hidden sm:inline">{isDownloading ? 'Descargando...' : 'Descargar'}</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Tabla de Usuarios */}
@@ -196,6 +264,7 @@ export default function FounderCountryUsersPage() {
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">{locationLabel}</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Rol</th>
                                         <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Estado</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Teléfono</th>
                                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-widest">Acciones</th>
                                     </tr>
                                 </thead>
@@ -221,7 +290,9 @@ export default function FounderCountryUsersPage() {
                                                     </div>
                                                     <div>
                                                         <p className="font-bold text-gray-900 dark:text-white">@{user.username}</p>
-                                                        <p className="text-xs text-gray-500">{user.nombres?.primero} {user.apellidos?.primero}</p>
+                                                        <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                                                            {user.nombres?.primero} {user.nombres?.segundo || ''} {user.apellidos?.primero} {user.apellidos?.segundo || ''}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </td>
@@ -245,6 +316,9 @@ export default function FounderCountryUsersPage() {
                                                 }`}>
                                                     {user.seguridad?.estadoCuenta}
                                                 </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                {user.personal?.celular || 'No registrado'}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-3">
