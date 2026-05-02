@@ -62,6 +62,18 @@ export default function WorldMapSection({ geoStats = [] }) {
     return map;
   }, [geoStats]);
 
+  // Extraer los países con datos para crear los patrones una sola vez
+  const countriesWithData = useMemo(() => {
+    return geoStats
+      .filter(s => s.total > 0)
+      .map(stat => {
+        const mapName = getMapName(stat.pais);
+        const iso = getCountryIso(mapName);
+        return iso ? { iso, mapName } : null;
+      })
+      .filter(Boolean);
+  }, [geoStats]);
+
   const selectCountry = (name, dbName) => {
     const stats = statsLookup[name];
     if (stats?.total > 0) {
@@ -80,6 +92,28 @@ export default function WorldMapSection({ geoStats = [] }) {
           projectionConfig={{ scale: 120, center: [0, 25] }}
           style={{ width: '100%', height: '100%' }}
         >
+          {/* PASO 1: Consolidar todos los patrones al inicio del SVG */}
+          <defs>
+            {countriesWithData.map(({ iso, mapName }) => (
+              <pattern
+                key={`pattern-${iso}`}
+                id={`flag-${iso}`}
+                patternUnits="objectBoundingBox"
+                width="1"
+                height="1"
+              >
+                <image
+                  href={`/flags/${iso}.svg`}
+                  x="0"
+                  y="0"
+                  width="1"
+                  height="1"
+                  preserveAspectRatio="none"
+                />
+              </pattern>
+            ))}
+          </defs>
+
           <ZoomableGroup center={[-40, 10]} zoom={1.3} minZoom={1} maxZoom={6}>
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
@@ -91,49 +125,32 @@ export default function WorldMapSection({ geoStats = [] }) {
                   const iso = getCountryIso(mapName);
                   const flagColor = getFlagColor(mapName, true, isDark);
 
-                  const patternId = `pattern-${iso}-${geo.rsmKey}`;
+                  // PASO 2: Referencia robusta al patrón
+                  // Usamos window.location.pathname para evitar fallos de resolución de ID en SPAs
+                  const fillValue = (count > 0 && iso) 
+                    ? `url(${window.location.pathname}#flag-${iso})` 
+                    : (isDark ? '#1e293b' : '#f1f5f9');
 
                   return (
-                    <React.Fragment key={geo.rsmKey}>
-                      {count > 0 && iso && (
-                        <defs>
-                          <pattern
-                            id={patternId}
-                            patternUnits="objectBoundingBox"
-                            width="1"
-                            height="1"
-                          >
-                            <image
-                              href={`/flags/${iso}.svg`}
-                              width="1"
-                              height="1"
-                              x="0"
-                              y="0"
-                              preserveAspectRatio="none"
-                            />
-                          </pattern>
-                        </defs>
-                      )}
-
-                      <Geography
-                        geography={geo}
-                        onClick={() => selectCountry(mapName, getDbName(mapName))}
-                        fill={count > 0 && iso ? `url(#${patternId})` : (isDark ? '#1e293b' : '#f1f5f9')}
-                        fillOpacity={count > 0 ? 1 : (isDark ? 0.3 : 0.5)}
-                        stroke={count > 0 ? (isSelected ? '#fff' : flagColor) : (isDark ? '#334155' : '#e2e8f0')}
-                        strokeWidth={isSelected ? 1 : 0.4}
-                        style={{
-                          default: { outline: 'none', transition: 'all 0.3s ease' },
-                          hover: {
-                            fillOpacity: 1,
-                            stroke: '#fff',
-                            strokeWidth: 1,
-                            outline: 'none',
-                            cursor: count > 0 ? 'pointer' : 'default',
-                          }
-                        }}
-                      />
-                    </React.Fragment>
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      onClick={() => selectCountry(mapName, getDbName(mapName))}
+                      fill={fillValue}
+                      fillOpacity={count > 0 ? 1 : (isDark ? 0.3 : 0.5)}
+                      stroke={count > 0 ? (isSelected ? '#fff' : flagColor) : (isDark ? '#334155' : '#e2e8f0')}
+                      strokeWidth={isSelected ? 1 : 0.4}
+                      style={{
+                        default: { outline: 'none', transition: 'all 0.3s ease' },
+                        hover: {
+                          fillOpacity: 1,
+                          stroke: '#fff',
+                          strokeWidth: 1,
+                          outline: 'none',
+                          cursor: count > 0 ? 'pointer' : 'default',
+                        }
+                      }}
+                    />
                   );
                 })
               }
