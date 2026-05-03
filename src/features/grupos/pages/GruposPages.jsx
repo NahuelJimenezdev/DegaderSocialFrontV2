@@ -193,12 +193,11 @@ const GruposPages = () => {
   const handleJoinGroup = async (e, groupId) => {
     e.stopPropagation();
     try {
+      // Optimistic update: marcar como pendiente localmente si es posible
+      // Pero mejor esperar a la respuesta para saber si fue exitoso o solicitud
       const response = await groupService.joinGroup(groupId);
       logger.log('📥 Respuesta de joinGroup:', response);
 
-      // El backend devuelve diferentes mensajes según el tipo de grupo:
-      // - Grupo público: "Te has unido al grupo exitosamente"
-      // - Grupo privado: "Solicitud enviada. Espera la aprobación de un administrador"
       const message = response?.message || '';
 
       // Si se unió exitosamente (grupo público), recargar grupos
@@ -209,9 +208,21 @@ const GruposPages = () => {
         setAllGroups(Array.isArray(groups) ? groups : []);
         setAlertConfig({ isOpen: true, variant: 'success', message: '¡Te has unido al grupo exitosamente!' });
       }
-      // Si envió solicitud (grupo privado), NO recargar grupos
+      // Si envió solicitud (grupo privado), actualizar estado local
       else if (message.toLowerCase().includes('solicitud')) {
         logger.log('📨 Solicitud enviada - esperando aprobación');
+        
+        // Actualizar el estado local del grupo específico para mostrar "Pendiente" sin recargar todo
+        setAllGroups(prev => prev.map(g => {
+          if (String(g._id) === String(groupId)) {
+            return {
+              ...g,
+              solicitudesPendientes: [...(g.solicitudesPendientes || []), { usuario: user._id }]
+            };
+          }
+          return g;
+        }));
+
         setAlertConfig({ isOpen: true, variant: 'info', message: 'Solicitud enviada. Espera la aprobación del administrador del grupo.' });
       }
       // Fallback
@@ -220,7 +231,6 @@ const GruposPages = () => {
         const groupsResponse = await groupService.getAllGroups();
         const groups = groupsResponse?.data?.groups || groupsResponse?.groups || groupsResponse || [];
         setAllGroups(Array.isArray(groups) ? groups : []);
-        setAlertConfig({ isOpen: true, variant: 'info', message: message || 'Operación completada' });
       }
     } catch (err) {
       logger.error('❌ Error joining group:', err);
@@ -278,18 +288,31 @@ const GruposPages = () => {
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
               {group.descripcion || 'Sin descripción'}
             </p>
-            <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
               <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
                 <span className="material-symbols-outlined text-sm">group</span>
                 <span>{memberCount} miembros</span>
               </div>
               {canJoin && (
-                <button
-                  onClick={(e) => handleJoinGroup(e, group._id)}
-                  className="px-3 py-1 bg-primary text-white text-xs rounded-md hover:bg-primary/90 transition-colors"
-                >
-                  Unirse
-                </button>
+                (() => {
+                  const isPending = group.solicitudesPendientes?.some(s => 
+                    String(s.usuario?._id || s.usuario) === String(user?._id)
+                  );
+                  
+                  return isPending ? (
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded-md border border-gray-200 dark:border-gray-600 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">hourglass_top</span>
+                      Pendiente
+                    </span>
+                  ) : (
+                    <button
+                      onClick={(e) => handleJoinGroup(e, group._id)}
+                      className="px-3 py-1 bg-primary text-white text-xs rounded-md hover:bg-primary/90 transition-colors"
+                    >
+                      Unirse
+                    </button>
+                  );
+                })()
               )}
             </div>
           </div>
@@ -332,12 +355,25 @@ const GruposPages = () => {
 
           {/* Botón */}
           {canJoin && (
-            <button
-              onClick={(e) => handleJoinGroup(e, group._id)}
-              className="px-4 py-2 bg-primary text-white text-xs rounded-md hover:bg-primary/90 transition-colors flex-shrink-0"
-            >
-              Unirse
-            </button>
+            (() => {
+              const isPending = group.solicitudesPendientes?.some(s => 
+                String(s.usuario?._id || s.usuario) === String(user?._id)
+              );
+
+              return isPending ? (
+                <span className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded-md border border-gray-200 dark:border-gray-600 flex items-center gap-1 flex-shrink-0">
+                  <span className="material-symbols-outlined text-sm">hourglass_top</span>
+                  Pendiente
+                </span>
+              ) : (
+                <button
+                  onClick={(e) => handleJoinGroup(e, group._id)}
+                  className="px-4 py-2 bg-primary text-white text-xs rounded-md hover:bg-primary/90 transition-colors flex-shrink-0"
+                >
+                  Unirse
+                </button>
+              );
+            })()
           )}
         </div>
       );

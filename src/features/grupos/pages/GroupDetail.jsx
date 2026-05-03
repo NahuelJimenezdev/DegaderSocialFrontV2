@@ -109,11 +109,21 @@ const GroupDetail = () => {
   useEffect(() => {
     if (groupData && !loading) {
       const isMember = userMember || isOwner || isAdmin;
+      
+      // Verificar si ya tiene una solicitud pendiente en el servidor
+      const isServerPending = groupData.solicitudesPendientes?.some(s => 
+        String(s.usuario?._id || s.usuario) === String(user?._id)
+      );
+      
+      if (isServerPending) {
+        setRequestSent(true);
+      }
+
       if (!isMember && groupData.tipo !== 'publico') {
         setAlertOpen(true);
       }
     }
-  }, [groupData, loading, userMember, isOwner, isAdmin]);
+  }, [groupData, loading, userMember, isOwner, isAdmin, user?._id]);
 
   const handleCancelJoin = () => {
     navigate('/Mis_grupos'); // Volver a la lista si cancela
