@@ -97,31 +97,34 @@ const GruposPages = () => {
     };
   }, []);
 
-  // Filtrar grupos: "Mis grupos" vs "Grupos para unirse"
-  const myGroups = (Array.isArray(allGroups) ? allGroups : []).filter((group) => {
-    if (!user || !user._id) return false;
-    // El backend devuelve 'miembros' con estructura { usuario: ObjectId, rol, fechaUnion }
-    const miembros = group.miembros || group.members || [];
-    return miembros.some(
-      (member) => {
-        const memberId = member.usuario?._id || member.usuario || member.user?._id || member.user;
-        return String(memberId) === String(user._id);
-      }
-    );
-  });
+  // Helper para verificar membresía de forma robusta
+  const isUserInGroup = (group) => {
+    if (!user || !user._id || !group) return false;
+    const userId = String(user._id);
 
-  const joinableGroups = (Array.isArray(allGroups) ? allGroups : []).filter((group) => {
-    if (!user || !user._id) return false; // No mostrar grupos si no hay usuario autenticado
-    // Grupos en los que NO es miembro
+    // 1. Verificar si es el creador
+    const creatorId = group.creador?._id || group.creador;
+    if (creatorId && String(creatorId) === userId) return true;
+
+    // 2. Verificar en administradores (si existe el array)
+    const admins = group.administradores || [];
+    if (admins.some(admin => {
+      const adminId = admin?._id || admin;
+      return adminId && String(adminId) === userId;
+    })) return true;
+
+    // 3. Verificar en el array de miembros (soporta 'miembros' y 'members')
     const miembros = group.miembros || group.members || [];
-    const isMember = miembros.some(
-      (member) => {
-        const memberId = member.usuario?._id || member.usuario || member.user?._id || member.user;
-        return String(memberId) === String(user._id);
-      }
-    );
-    return !isMember;
-  });
+    return miembros.some(m => {
+      const mId = m.usuario?._id || m.usuario || m.user?._id || m.user || m._id;
+      return mId && String(mId) === userId;
+    });
+  };
+
+  // Filtrar grupos: "Mis grupos" vs "Grupos para unirse"
+  const myGroups = (Array.isArray(allGroups) ? allGroups : []).filter(isUserInGroup);
+
+  const joinableGroups = (Array.isArray(allGroups) ? allGroups : []).filter(group => !isUserInGroup(group));
 
   // Filtrar "Mis Grupos" por búsqueda
   const filteredMyGroups = myGroups.filter((group) => {
