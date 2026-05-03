@@ -111,4 +111,21 @@ class TerritoryManager {
   }
 }
 
-export const territoryManager = new TerritoryManager();
+let _territoryManagerInstance = null;
+
+const getTerritoryManager = () => {
+  if (!_territoryManagerInstance) {
+    _territoryManagerInstance = new TerritoryManager();
+  }
+  return _territoryManagerInstance;
+};
+
+// Exportamos un Proxy que delega todo a la instancia perezosa
+export const territoryManager = new Proxy({}, {
+  get: (target, prop) => {
+    const instance = getTerritoryManager();
+    const value = instance[prop];
+    return typeof value === 'function' ? value.bind(instance) : value;
+  }
+});
+

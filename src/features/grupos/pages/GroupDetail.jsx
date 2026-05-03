@@ -66,27 +66,6 @@ const GroupDetail = () => {
 
   // ... (existing code)
 
-  // Si hay ALERTA DE ACCESO DENEGADO (IOS Style)
-  if (alertOpen) {
-    return (
-      <IOSAlert
-        isOpen={alertOpen}
-        title={requestSent ? "Solicitud Pendiente" : "Acceso Restringido"}
-        message={requestSent
-          ? "Tu solicitud para unirte a este grupo ha sido enviada y está pendiente de aprobación por un administrador."
-          : "No puedes ingresar a este grupo a menos que te unas. Haz clic en unirse para enviar una solicitud o entrar."
-        }
-        onJoin={handleJoinGroup}
-        onCancel={handleCancelJoin}
-        isJoining={joining}
-      // Custom props handled by generic IOSAlert logic or we can add specific props if needed
-      // For now, we control texts via props. 
-      // We'll modify IOSAlert to accept custom button text if generic props aren't enough, 
-      // BUT better to just handle logic here:
-      />
-    );
-  }
-
   // Detectar si es mobile/tablet o desktop
   useEffect(() => {
     const checkMobile = () => {
@@ -99,40 +78,38 @@ const GroupDetail = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+
   // Usar custom hook para obtener los datos del grupo (incluyendo error)
   const { groupData, loading, error, refetch } = useGroupData(id)
 
-  // Determinar si hay error de acceso (403 o mensaje específico)
-  useEffect(() => {
-    if (error && (
-      error.includes('No tienes acceso') ||
-      error.includes('403') ||
-      error.includes('privado')
-    )) {
-      setAlertOpen(true);
-    }
-  }, [error]);
-
   // Determinar rol del usuario en el grupo
+  const userMember = groupData?.members?.find(m =>
+    String(m.user?._id || m.user) === String(user?._id)
+  );
+  
   const isOwner = String(groupData?.creador?._id) === String(user?._id);
   const isAdmin = groupData?.administradores?.some(admin =>
     String(admin._id || admin) === String(user?._id)
   ) || false;
 
-  const userMember = groupData?.members?.find(m =>
-    String(m.user?._id || m.user) === String(user?._id)
-  );
-
-  // BUG FIX: Si no es miembro, role debería ser null/undefined, no 'member'
   const userRole = isOwner ? 'owner' : (isAdmin ? 'admin' : (userMember?.role || (userMember ? 'member' : null)));
+
+  // Determinar si hay error de acceso (403 o mensaje específico)
+  useEffect(() => {
+    if (error && (
+      String(error).includes('No tienes acceso') ||
+      String(error).includes('403') ||
+      String(error).includes('privado')
+    )) {
+      setAlertOpen(true);
+    }
+  }, [error]);
 
   // Verificar si el usuario debe ver el alert (ej: grupo privado y no es miembro)
   useEffect(() => {
     if (groupData && !loading) {
       const isMember = userMember || isOwner || isAdmin;
       if (!isMember && groupData.tipo !== 'publico') {
-        // Si tengo datos pero no soy miembro y no es público, mostrar alert
-        // (Aunque normalmente el backend bloquearía esto antes)
         setAlertOpen(true);
       }
     }
